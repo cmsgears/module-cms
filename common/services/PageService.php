@@ -1,13 +1,11 @@
 <?php
-namespace cmsgears\modules\cms\common\services;
-
-// Yii Imports
-use \Yii;
+namespace cmsgears\cms\common\services;
 
 // CMG Imports
-use cmsgears\modules\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\CmsTables;
+use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class PageService extends Service {
 
@@ -15,46 +13,24 @@ class PageService extends Service {
 
 	// Read ----------------
 
-    public static function findBySlug( $slug ) {
-
-		$page 	= Page::findBySlug( $slug );
-
-		return $page;
-    }
-
 	public static function findById( $id ) {
 
 		return Page::findOne( $id );
 	}
 
+    public static function findBySlug( $slug ) {
+
+		return Page::findBySlug( $slug );
+    }
+
 	public static function getIdList() {
 
-		$pagesList	= array();
-
-		// Execute the command
-		$pages 		= Page::find()->all();
-
-		foreach ( $pages as $page ) {
-			
-			array_push( $pagesList, $page->getId() );
-		}
-
-		return $pagesList;
+		return self::findList( "id", CmsTables::TABLE_PAGE );
 	}
 
-	public static function getIdNameMap() {
+	public static function getIdNameList() {
 
-		$pagesMap 		= array();
-
-		// Execute the command
-		$pages 		= Page::find()->all();
-
-		foreach ( $pages as $page ) {
-
-			$pagesMap[] = [ "id" => $page->getId(), "name" => $page->getName() ];
-		}
-
-		return $pagesMap;
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE );
 	}
 }
 

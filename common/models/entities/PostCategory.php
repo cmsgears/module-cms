@@ -1,54 +1,34 @@
 <?php
-namespace cmsgears\modules\cms\common\models\entities;
+namespace cmsgears\cms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
+// CMG Imports
+use cmsgears\core\common\models\entities\CmgEntity;
 
-class PostCategory extends ActiveRecord {
+class PostCategory extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getPostId() {
-
-		return $this->post_id;
-	}
-
-	public function setPostId( $postId ) {
-
-		$this->post_id = $postId;
-	}
-
-	public function getCategoryId() {
-
-		return $this->category_id;
-	}
-
-	public function setCategoryId( $categoryId ) {
-
-		$this->category_id = $categoryId;
-	}
-
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
-		return CMSTables::TABLE_POST_CATEGORY;
+		return CmsTables::TABLE_POST_CATEGORY;
 	}
+
+	// PostCategory ----------------------
 
 	// Delete
 
 	public static function deleteByPostId( $postId ) {
 
-		self::deleteAll( 'post_id=:id', [ ':id' => $postId ] );
+		self::deleteAll( 'postId=:id', [ ':id' => $postId ] );
 	}
 
 	public static function deleteByCategoryId( $categoryId ) {
 
-		self::deleteAll( 'category_id=:id', [ ':id' => $categoryId ] );
+		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
 	}
 }
 

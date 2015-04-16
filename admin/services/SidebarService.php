@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\cms\admin\services;
+namespace cmsgears\cms\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\cms\common\models\entities\Sidebar;
-use cmsgears\modules\cms\common\models\entities\SidebarWidget;
+use cmsgears\cms\common\models\entities\Sidebar;
+use cmsgears\cms\common\models\entities\SidebarWidget;
 
-class SidebarService extends \cmsgears\modules\cms\common\services\SidebarService {
+class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 
 	// Static Methods ----------------------------------------------
 
@@ -20,21 +20,21 @@ class SidebarService extends \cmsgears\modules\cms\common\services\SidebarServic
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'sidebar_name' => SORT_ASC ],
-	                'desc' => ['sidebar_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'active' => [
-	                'asc' => [ 'sidebar_active' => SORT_ASC ],
-	                'desc' => ['sidebar_active' => SORT_DESC ],
+	                'asc' => [ 'active' => SORT_ASC ],
+	                'desc' => ['active' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'active',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Sidebar(), [ 'sort' => $sort, 'search-col' => 'sidebar_name' ] );
+		return self::getPaginationDetails( new Sidebar(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
@@ -43,42 +43,40 @@ class SidebarService extends \cmsgears\modules\cms\common\services\SidebarServic
 
 		$sidebar->save();
 
-		return true;
+		return $sidebar;
 	}
 
 	// Update -----------
 
 	public static function update( $sidebar ) {
 		
-		$sidebarToUpdate	= self::findById( $sidebar->getId() );
+		$sidebarToUpdate	= self::findById( $sidebar->id );
 		
-		$sidebarToUpdate->setName( $sidebar->getName() );
-		$sidebarToUpdate->setDesc( $sidebar->getDesc() );
-		$sidebarToUpdate->setActive( $sidebar->isActive() );
+		$sidebarToUpdate->copyForUpdateFrom( $sidebar, [ 'name', 'description', 'active' ] );
 
 		$sidebarToUpdate->update();
 
-		return true;
+		return $sidebarToUpdate;
 	}
 
 	public static function bindWidgets( $binder ) {
 
 		$sidebarId	= $binder->sidebarId;
 		$widgets	= $binder->bindedData;
-	
+
 		// Clear all existing mappings
-		SidebarWidget::deleteBySidebar( $sidebarId );
+		SidebarWidget::deleteBySidebarId( $sidebarId );
 
 		if( isset( $widgets ) && count( $widgets ) > 0 ) {
 
 			foreach ( $widgets as $key => $value ) {
-				
+
 				if( isset( $value ) ) {
 
 					$toSave	= new SidebarWidget();
-	
-					$toSave->setSidebarId( $sidebarId );
-					$toSave->setWidgetId( $value );
+
+					$toSave->sidebarId	= $sidebarId;
+					$toSave->widgetId	= $value;
 	
 					$toSave->save();
 				}
@@ -92,8 +90,7 @@ class SidebarService extends \cmsgears\modules\cms\common\services\SidebarServic
 
 	public static function delete( $sidebar ) {
 
-		$sidebarId			= $sidebar->getId();
-		$existingSidebar	= self::findById( $sidebarId );
+		$existingSidebar	= self::findById( $sidebar->id );
 
 		// Delete Sidebar
 		$existingSidebar->delete();

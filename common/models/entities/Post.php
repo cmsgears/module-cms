@@ -1,27 +1,22 @@
 <?php
-namespace cmsgears\modules\cms\common\models\entities;
-
-// Yii Imports
-use yii\db\ActiveRecord;
+namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Option;
+use cmsgears\core\common\models\entities\Category;
 
 class Post extends Content {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
 	public function getCategories() {
 
-    	return $this->hasMany( Option::className(), [ 'option_id' => 'category_id' ] )
-					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'post_id' => 'page_id' ] );
+    	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'pageId' => 'id' ] );
 	}
 
 	public function getCategoriesMap() {
 
-    	return $this->hasMany( PostCategory::className(), [ 'post_id' => 'page_id' ] );
+    	return $this->hasMany( PostCategory::className(), [ 'pageId' => 'id' ] );
 	}
 
 	public function getCategoriesIdList() {
@@ -31,7 +26,7 @@ class Post extends Content {
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->category_id );
+			array_push( $categoriesList, $category->id );
 		}
 
 		return $categoriesList;
@@ -44,7 +39,7 @@ class Post extends Content {
 
 		foreach ( $categories as $category ) {
 
-			$categoriesMap[] = [ 'id' => $category->getId(), 'name' => $category->getKey() ];
+			$categoriesMap[] = [ 'id' => $category->id, 'name' => $category->name ];
 		}
 
 		return $categoriesMap;
@@ -52,39 +47,29 @@ class Post extends Content {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\BaseActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function find() {
 
 		return parent::find()->where( [ 'page_type' => Page::TYPE_POST ] );
 	}
 
-	// Post
+	// Post ------------------------------
 
 	public static function blogQuery() {
 
-		return Post::find()->joinWith('author')->joinWith('author.avatar')->joinWith('bannerWithAlias')->joinWith('categories')->joinWith('categories.category')
-							 ->where( [ 'page_type' => Page::TYPE_POST, 'page_status' => Content::STATUS_PUBLISHED, 'page_visibility' => Content::VISIBILITY_PUBLIC ] );
-	}
-
-	public static function findById( $id ) {
-
-		return Post::find()->where( 'page_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->joinWith('author')->joinWith('author.avatarId')->joinWith('bannerWithAlias')->joinWith('categories')->joinWith('categories.categoryId')
+							 ->where( [ 'type' => Page::TYPE_POST, 'status' => Content::STATUS_PUBLISHED, 'visibility' => Content::VISIBILITY_PUBLIC ] );
 	}
 
 	public static function findBySlug( $slug ) {
 
-		return Post::find()->where( 'page_slug=:slug', [ ':slug' => $slug ] )->one();
-	}
-
-	public static function findByName( $name ) {
-
-		return Post::find()->where( 'page_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( 'page_slug=:slug', [ ':slug' => $slug ] )->one();
 	}
 
 	public static function findByCategoryName( $name ) {
 
-		return Post::find()->joinWith( 'categories' )->where( 'option_key=:name', [ ':name' => $name ] )->all();
+		return self::find()->joinWith( 'categories' )->where( 'name=:name', [ ':name' => $name ] )->all();
 	}
 }
 

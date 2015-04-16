@@ -1,54 +1,35 @@
 <?php
-namespace cmsgears\modules\cms\common\models\entities;
+namespace cmsgears\cms\common\models\entities;
 
-// Yii imports
+// Yii Imports
 use yii\db\ActiveRecord;
 
 class MenuPage extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getMenuId() {
-
-		return $this->menu_id;
-	}
-
-	public function setMenuId( $menuId ) {
-
-		$this->menu_id = $menuId;
-	}
-
-	public function getPageId() {
-
-		return $this->page_id;
-	}
-
-	public function setPageId( $pageId ) {
-
-		$this->page_id = $pageId;
-	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
-		return CMSTables::TABLE_MENU_PAGE;
+		return CmsTables::TABLE_MENU_PAGE;
 	}
 	
+	// MenuPage --------------------------
+
 	// Delete
-	
-	public static function deleteByMenu( $menuId ) {
 
-		self::deleteAll( 'menu_id=:id', [ ':id' => $menuId ] );
+	public static function deleteByMenuId( $menuId ) {
+
+		self::deleteAll( 'menuId=:id', [ ':id' => $menuId ] );
 	}
-	
-	public static function deleteByPage( $pageId ) {
 
-		self::deleteAll( 'page_id=:id', [ ':id' => $pageId ] );
+	public static function deleteByPageId( $pageId ) {
+
+		self::deleteAll( 'pageId=:id', [ ':id' => $pageId ] );
 	}
 }
 

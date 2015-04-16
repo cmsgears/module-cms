@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers;
+namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,23 +7,19 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\cms\common\models\entities\Menu;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\cms\common\models\entities\Menu;
 
-use cmsgears\modules\cms\admin\models\forms\PageBinderForm;
+use cmsgears\cms\admin\models\forms\PageBinderForm;
 
-use cmsgears\modules\cms\admin\services\PageService;
-use cmsgears\modules\cms\admin\services\MenuService;
+use cmsgears\cms\admin\services\PageService;
+use cmsgears\cms\admin\services\MenuService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
-
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
 class MenuController extends BaseController {
-	
-	const URL_ALL 		= 'all';
 		
 	// Constructor and Initialisation ------------------------------
 
@@ -34,7 +30,7 @@ class MenuController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -42,11 +38,11 @@ class MenuController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'permissions' => [
-	                'index'  => CMSPermission::PERM_CMS_MENU,
-	                'all'   => CMSPermission::PERM_CMS_MENU,
-	                'create' => CMSPermission::PERM_CMS_MENU,
-	                'update' => CMSPermission::PERM_CMS_MENU,
-	                'delete' => CMSPermission::PERM_CMS_MENU
+	                'index'  => CmsGlobal::PERM_CMS,
+	                'all'   => CmsGlobal::PERM_CMS,
+	                'create' => CmsGlobal::PERM_CMS,
+	                'update' => CmsGlobal::PERM_CMS,
+	                'delete' => CmsGlobal::PERM_CMS
                 ]
             ],
             'verbs' => [
@@ -62,11 +58,11 @@ class MenuController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionIndex() {
 
-		$this->redirect( self::URL_ALL );
+		$this->redirect( "all" );
 	}
 
 	public function actionAll() {
@@ -97,7 +93,7 @@ class MenuController extends BaseController {
 
 				MenuService::bindPages( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
@@ -143,7 +139,7 @@ class MenuController extends BaseController {
 		}
 		
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -154,11 +150,11 @@ class MenuController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset( $_POST ) && count( $_POST ) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Menu" ), "" ) ) {
 	
 				if( MenuService::delete( $model ) ) {
 		
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
@@ -171,7 +167,7 @@ class MenuController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 }
 

@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\cms\admin\services;
+namespace cmsgears\cms\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\cms\common\models\entities\Widget;
-use cmsgears\modules\cms\common\models\entities\SidebarWidget;
+use cmsgears\cms\common\models\entities\Widget;
+use cmsgears\cms\common\models\entities\SidebarWidget;
 
-class WidgetService extends \cmsgears\modules\cms\common\services\WidgetService {
+class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
 	// Static Methods ----------------------------------------------
 
@@ -20,15 +20,15 @@ class WidgetService extends \cmsgears\modules\cms\common\services\WidgetService 
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'widget_name' => SORT_ASC ],
-	                'desc' => ['widget_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Widget(), [ 'sort' => $sort, 'search-col' => 'widget_name' ] );
+		return self::getPaginationDetails( new Widget(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
@@ -37,7 +37,7 @@ class WidgetService extends \cmsgears\modules\cms\common\services\WidgetService 
 
 		$widget->save();
 
-		return true;
+		return $widget;
 	}
 
 	// Update -----------
@@ -45,51 +45,49 @@ class WidgetService extends \cmsgears\modules\cms\common\services\WidgetService 
 	public static function update( $widget ) {
 
 		$widgetToUpdate	= self::findById( $widget->getId() );
-
-		$widgetToUpdate->setName( $widget->getName() );
-		$widgetToUpdate->setDesc( $widget->getDesc() );
-		$widgetToUpdate->setTemplate( $widget->getTemplate() );
-		$widgetToUpdate->setMeta( $widget->getMeta() );
+		
+		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId', 'meta' ] );
 
 		$widgetToUpdate->update();
 
-		return true;
+		return $widgetToUpdate;
 	}
 
 	public static function updateMeta( $widget ) {
 
 		$widgetToUpdate	= self::findById( $widget->getId() );
 
-		$meta 			= $widget->getMetaMap();
+		// Generate meta json
+		$meta 			= $widget->metaMap;
 		$meta			= json_encode( $meta );
 		$meta			= '{ "metaMap":' . $meta . '}';
-		
-		$widgetToUpdate->setMeta( $meta );
+
+		$widgetToUpdate->meta = $meta;
 
 		$widgetToUpdate->update();
 
-		return true;
+		return $widgetToUpdate;
 	}
 
 	public static function bindSidebars( $binder ) {
 
 		$widgetId	= $binder->widgetId;
 		$sidebars	= $binder->bindedData;
-	
+
 		// Clear all existing mappings
-		SidebarWidget::deleteByWidget( $widgetId );
+		SidebarWidget::deleteByWidgetId( $widgetId );
 
 		if( isset( $sidebars ) && count( $sidebars ) > 0 ) {
 
 			foreach ( $sidebars as $key => $value ) {
-				
+
 				if( isset( $value ) ) {
 
 					$toSave	= new SidebarWidget();
-	
-					$toSave->setWidgetId( $widgetId );
-					$toSave->setSidebarId( $value );
-	
+
+					$toSave->widgetId	= $widgetId;
+					$toSave->sidebarId	= $value;
+
 					$toSave->save();
 				}
 			}
@@ -102,8 +100,7 @@ class WidgetService extends \cmsgears\modules\cms\common\services\WidgetService 
 
 	public static function delete( $widget ) {
 
-		$widgetId		= $widget->getId();
-		$existingWidget	= self::findById( $widgetId );
+		$existingWidget	= self::findById( $widget->id );
 
 		// Delete Widget
 		$existingWidget->delete();

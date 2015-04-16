@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers;
+namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,25 +7,20 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\cms\common\models\entities\Widget;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\cms\common\models\entities\Widget;
 
-use cmsgears\modules\cms\admin\models\forms\SidebarBinderForm;
+use cmsgears\cms\admin\models\forms\SidebarBinderForm;
 
-use cmsgears\modules\cms\admin\services\SidebarService;
-use cmsgears\modules\cms\admin\services\WidgetService;
+use cmsgears\cms\admin\services\SidebarService;
+use cmsgears\cms\admin\services\WidgetService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
-
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
 class WidgetController extends BaseController {
 
-	const URL_ALL 		= 'all';
-		
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -35,7 +30,7 @@ class WidgetController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -43,13 +38,13 @@ class WidgetController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'permissions' => [
-	                'index'  => CMSPermission::PERM_CMS_SIDEBAR,
-	                'all'    => CMSPermission::PERM_CMS_SIDEBAR,
-	                'matrix' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'create' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'update' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'delete' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'meta'   => CMSPermission::PERM_CMS_SIDEBAR
+	                'index'  => CmsGlobal::PERM_CMS,
+	                'all'    => CmsGlobal::PERM_CMS,
+	                'matrix' => CmsGlobal::PERM_CMS,
+	                'create' => CmsGlobal::PERM_CMS,
+	                'update' => CmsGlobal::PERM_CMS,
+	                'delete' => CmsGlobal::PERM_CMS,
+	                'meta'   => CmsGlobal::PERM_CMS,
                 ]
             ],
             'verbs' => [
@@ -67,11 +62,11 @@ class WidgetController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionIndex() {
 
-		$this->redirect( self::URL_ALL );
+		$this->redirect( "all" );
 	}
 
 	public function actionAll() {
@@ -116,7 +111,7 @@ class WidgetController extends BaseController {
 
 				WidgetService::bindSidebars( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
@@ -162,7 +157,7 @@ class WidgetController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 
 	public function actionDelete( $id ) {
@@ -173,11 +168,11 @@ class WidgetController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset( $_POST ) && count( $_POST ) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Widget" ), "" ) ) {
 
 				if( WidgetService::delete( $model ) ) {
 
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
@@ -190,7 +185,7 @@ class WidgetController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );		
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );		
 	}
 	
 	// Widgets -------------------------------------------------------------------
@@ -223,7 +218,7 @@ class WidgetController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 }
 

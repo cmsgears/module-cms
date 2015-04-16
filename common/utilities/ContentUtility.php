@@ -1,11 +1,11 @@
 <?php
-namespace cmsgears\modules\cms\common\utilities;
+namespace cmsgears\cms\common\utilities;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\cms\common\services\PageService;
+use cmsgears\cms\common\services\PageService;
 
 class ContentUtility {
 
