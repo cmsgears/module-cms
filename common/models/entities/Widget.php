@@ -10,6 +10,14 @@ class Widget extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	public function generateJsonFromMap() {
+
+		$metaJson	= json_encode( $this->metaMap );
+		$metaJson	= "{ \"metaMap\" : $metaJson }";
+
+		return $metaJson;
+	}
+
 	public function generateMapFromJson() {
 
 		$obj 			= json_decode( $this->meta, 'true' );
@@ -44,10 +52,29 @@ class Widget extends NamedCmgEntity {
 
 		foreach ( $widgets as $widget ) {
 
-			array_push( $widgetsList, $widget->id );
+			array_push( $widgetsList, $widget->sidebarId );
 		}
 
 		return $widgetsList;
+	}
+
+	public function getTemplate() {
+
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+
+	public function getTemplateName() {
+
+		$template = $this->template;
+		
+		if( isset( $template ) ) {
+			
+			return $template->name;
+		}
+		else {
+			
+			return '';
+		}
 	}
 
 	// yii\db\ActiveRecord ---------------

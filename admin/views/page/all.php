@@ -1,9 +1,12 @@
 <?php
+// Yii Imports
 use \Yii;
-use yii\helpers\Html; 
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+// CMG Imports
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Pages';
@@ -93,26 +96,30 @@ if( !isset( $sortOrder ) ) {
 			</thead>
 			<tbody>
 				<?php
+					
+					$slugBase	= $siteUrl;
+					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
 
 					foreach( $page as $pag ) {
 
-						$id 		= $pag->getId();
-						$editUrl	= Html::a( $pag->getName(), [ "/cmgcms/page/update?id=$id" ] );
-						$slug		= $pag->getSlug();
-						$slugUrl	= "<a href='" . $siteUrl . "$slug'>$slug</a>";
+						$id 		= $pag->id;
+						$editUrl	= Html::a( $pag->name, [ "/cmgcms/page/update?id=$id" ] );
+						$slug		= $pag->slug;
+						$slugUrl	= "<a href='" . $slugBase . "$slug'>$slug</a>";
+						$tags		= $pag->getTagsMap();
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
 						<td><?= $editUrl ?></td>
 						<td><?= $slugUrl ?></td>						
-						<td><?= $pag->getDesc() ?></td>
+						<td><?= $pag->description ?></td>
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
-						<td><?= $pag->getTemplate() ?></td>
-						<td><?= $pag->getMetaTags() ?></td>
-						<td><?= $pag->getCreatedOn() ?></td>
-						<td><?= $pag->getPublishedOn() ?></td>
-						<td><?= $pag->getUpdatedOn() ?></td>
+						<td><?= $pag->getTemplateName() ?></td>
+						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
+						<td><?= $pag->createdAt ?></td>
+						<td><?= $pag->publishedAt ?></td>
+						<td><?= $pag->updatedAt ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Page"><?= Html::a( "", ["/cmgcms/page/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Page"><?= Html::a( "", ["/cmgcms/page/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
@@ -128,5 +135,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 3 );
+	initSidebar( "sidebar-page-blog", 2 );
 </script>

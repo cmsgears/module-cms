@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use cmsgears\widgets\other\Editor;
+use cmsgears\core\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Post';
@@ -13,24 +13,24 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<h2>Add Post</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-post-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
-    	<?= $form->field( $model, 'page_name' ) ?>
-    	<?= $form->field( $model, 'page_desc' )->textarea() ?>
-    	<?= $form->field( $model, 'page_template' ) ?>
-    	<?= $form->field( $model, 'page_meta_tags' )->textarea() ?>
-    	<?= $form->field( $model, 'page_summary' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+    	<?= $form->field( $model, 'summary' )->textarea() ?>
 
     	<h4>Post Content</h4>
-    	<?= $form->field( $model, 'page_content' )->textarea( [ 'class' => 'content-editor' ] ) ?>
+    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] ) ?>
 
     	<h4>Post Banner</h4>
-		<div id="file-banner" class="file-container" legend="Page Banner" selector="banner" utype="image" btn-class="btn file-input-wrap" btn-text="Choose Banner">
+		<div id="file-banner" class="file-container" legend="Post Banner" selector="banner" utype="image" btn-class="btn file-input-wrap" btn-text="Change Banner">
 			<div class="file-fields">
-				<input type="hidden" name="File[file_name]" class="file-name" value="<?php if( isset( $banner ) ) echo $banner->getName(); ?>" />
-				<input type="hidden" name="File[file_extension]" class="file-extension" value="<?php if( isset( $banner ) ) echo $banner->getExtension(); ?>" />
-				<input type="hidden" name="File[file_directory]" value="banner" value="<?php if( isset( $banner ) ) echo $banner->getDirectory(); ?>" />
+				<input type="hidden" name="File[id]" value="<?php if( isset( $banner ) ) echo $banner->id; ?>" />
+				<input type="hidden" name="File[name]" class="file-name" value="<?php if( isset( $banner ) ) echo $banner->name; ?>" />
+				<input type="hidden" name="File[extension]" class="file-extension" value="<?php if( isset( $banner ) ) echo $banner->extension; ?>" />
+				<input type="hidden" name="File[directory]" value="banner" value="<?php if( isset( $banner ) ) echo $banner->directory; ?>" />
 				<input type="hidden" name="File[changed]" class="file-change" value="<?php if( isset( $banner ) ) echo $banner->changed; ?>" />
-				<label>Banner Description</label> <input type="text" name="File[file_desc]" value="<?php if( isset( $banner ) ) echo $banner->getDesc(); ?>" />
-				<label>Banner Alternate Text</label> <input type="text" name="File[file_alt_text]" value="<?php if( isset( $banner ) ) echo $banner->getAltText(); ?>" />
+				<label>Banner Description</label> <input type="text" name="File[description]" value="<?php if( isset( $banner ) ) echo $banner->description; ?>" />
+				<label>Banner Alternate Text</label> <input type="text" name="File[altText]" value="<?php if( isset( $banner ) ) echo $banner->altText; ?>" />
 			</div>
 		</div>
 
@@ -48,10 +48,10 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 8 );
+	initSidebar( "sidebar-page-blog", 5 );
 	initFileUploader();
 
 	<?php if( isset( $banner ) ) { ?>
-		jQuery("#file-banner .file-image").html( "<img src='<?php echo Yii::$app->fileManager->uploadUrl . $banner->getDisplayUrl(); ?>' />'" );
+		jQuery("#file-banner .file-image").html( "<img src='<?php echo $banner->getFileUrl(); ?>' />'" );
 	<?php } ?>
 </script>

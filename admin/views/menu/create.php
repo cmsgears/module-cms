@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Menu';
 		<h2>Add Menu</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-menu-create', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'menu_name' ) ?>
-    	<?= $form->field( $model, 'menu_desc' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<h4>Link Pages</h4>
 		<?php foreach ( $pages as $page ) { ?>

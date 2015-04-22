@@ -114,7 +114,7 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 		$postToUpdate->copyForUpdateFrom( $post, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
 		$postToUpdate->updatedAt	= $date;
-		$postToUpdate->slug			= CodeGenUtil::generateSlug( $post->getName() );
+		$postToUpdate->slug			= CodeGenUtil::generateSlug( $post->name );
 		$publishDate				= $postToUpdate->publishedAt;
 
     	if( $postToUpdate->isPublished() && !isset( $publishDate ) ) {

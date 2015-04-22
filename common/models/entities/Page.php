@@ -8,7 +8,7 @@ class Page extends Content {
 	public function getMenus() {
 
     	return $this->hasMany( Menu::className(), [ 'id' => 'menuId' ] )
-					->viaTable( CMSTables::TABLE_MENU_PAGE, [ 'id' => 'pageId' ] );
+					->viaTable( CMSTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
 	}
 
 	public function getMenusMap() {
@@ -23,7 +23,7 @@ class Page extends Content {
 
 		foreach ( $menus as $menu ) {
 
-			array_push( $menusList, $menu->id );
+			array_push( $menusList, $menu->menuId );
 		}
 
 		return $menusList;

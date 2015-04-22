@@ -41,8 +41,22 @@ class Template extends NamedCmgEntity {
 		return CmsTables::TABLE_TEMPLATE;
 	}
 
-	// Tag -------------------------------
+	// Template --------------------------
 
+	public static function findByType( $type ) {
+
+		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
+	}
+
+	public static function findForPages() {
+
+		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_PAGE ] )->all();
+	}
+
+	public static function findForWidgets() {
+
+		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_WIDGET ] )->all();
+	}
 }
 
 ?>

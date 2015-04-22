@@ -11,12 +11,12 @@ class Post extends Content {
 	public function getCategories() {
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'pageId' => 'id' ] );
+					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'postId' => 'id' ] );
 	}
 
 	public function getCategoriesMap() {
 
-    	return $this->hasMany( PostCategory::className(), [ 'pageId' => 'id' ] );
+    	return $this->hasMany( PostCategory::className(), [ 'postId' => 'id' ] );
 	}
 
 	public function getCategoriesIdList() {
@@ -26,7 +26,7 @@ class Post extends Content {
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->id );
+			array_push( $categoriesList, $category->categoryId );
 		}
 
 		return $categoriesList;
@@ -57,14 +57,16 @@ class Post extends Content {
 	// Post ------------------------------
 
 	public static function blogQuery() {
-
-		return self::find()->joinWith('author')->joinWith('author.avatarId')->joinWith('bannerWithAlias')->joinWith('categories')->joinWith('categories.categoryId')
-							 ->where( [ 'type' => Page::TYPE_POST, 'status' => Content::STATUS_PUBLISHED, 'visibility' => Content::VISIBILITY_PUBLIC ] );
+		
+		$postTable = CmsTables::TABLE_PAGE;
+		
+		return self::find()->joinWith( 'author' )->joinWith( 'author.avatar' )->joinWith( 'bannerWithAlias' )->joinWith( 'categories' )
+							 ->where( [ "$postTable.type" => Page::TYPE_POST, "$postTable.status" => Content::STATUS_PUBLISHED, "$postTable.visibility" => Content::VISIBILITY_PUBLIC ] );
 	}
 
 	public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'page_slug=:slug', [ ':slug' => $slug ] )->one();
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 	}
 
 	public static function findByCategoryName( $name ) {

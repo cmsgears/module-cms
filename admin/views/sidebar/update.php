@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Sidebar';
 		<h2>Update Sidebar</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-sidebar-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'sidebar_name' ) ?>
-    	<?= $form->field( $model, 'sidebar_desc' )->textarea() ?>
-		<?= $form->field( $model, 'sidebar_active' )->checkbox() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
 		<?php 
@@ -42,5 +42,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Sidebar';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", -1 );
+	initSidebar( "sidebar-sidebar", 1 );
 </script>

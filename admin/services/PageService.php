@@ -88,7 +88,7 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 		$user		= Yii::$app->user->getIdentity();
 
 		$page->createdAt	= $date;
-		$page->type 		= Page::TYPE_POST;
+		$page->type 		= Page::TYPE_PAGE;
 		$page->status 		= Page::STATUS_NEW;
 		$page->visibility 	= Page::VISIBILITY_PRIVATE;
 		$page->authorId		= $user->id;
@@ -111,10 +111,10 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 		$user			= Yii::$app->user->getIdentity();
 		$pageToUpdate	= self::findById( $page->id );
 
-		$pageToUpdate->copyForUpdateFrom( $post, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
+		$pageToUpdate->copyForUpdateFrom( $page, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
 		$pageToUpdate->updatedAt	= $date;
-		$pageToUpdate->slug			= CodeGenUtil::generateSlug( $page->getName() );
+		$pageToUpdate->slug			= CodeGenUtil::generateSlug( $page->name );
 		$publishDate				= $pageToUpdate->publishedAt;
 
     	if( $pageToUpdate->isPublished() && !isset( $publishDate ) ) {

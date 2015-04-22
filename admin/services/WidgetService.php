@@ -44,7 +44,7 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
 	public static function update( $widget ) {
 
-		$widgetToUpdate	= self::findById( $widget->getId() );
+		$widgetToUpdate	= self::findById( $widget->id );
 		
 		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId', 'meta' ] );
 
@@ -55,14 +55,8 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
 	public static function updateMeta( $widget ) {
 
-		$widgetToUpdate	= self::findById( $widget->getId() );
-
-		// Generate meta json
-		$meta 			= $widget->metaMap;
-		$meta			= json_encode( $meta );
-		$meta			= '{ "metaMap":' . $meta . '}';
-
-		$widgetToUpdate->meta = $meta;
+		$widgetToUpdate			= self::findById( $widget->id );
+		$widgetToUpdate->meta 	= $widget->generateJsonFromMap();
 
 		$widgetToUpdate->update();
 

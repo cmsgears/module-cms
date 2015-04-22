@@ -14,6 +14,7 @@ use cmsgears\cms\common\models\entities\Widget;
 
 use cmsgears\cms\admin\models\forms\SidebarBinderForm;
 
+use cmsgears\cms\admin\services\TemplateService;
 use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
 
@@ -37,14 +38,14 @@ class WidgetController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => CmsGlobal::PERM_CMS,
-	                'all'    => CmsGlobal::PERM_CMS,
-	                'matrix' => CmsGlobal::PERM_CMS,
-	                'create' => CmsGlobal::PERM_CMS,
-	                'update' => CmsGlobal::PERM_CMS,
-	                'delete' => CmsGlobal::PERM_CMS,
-	                'meta'   => CmsGlobal::PERM_CMS,
+                'actions' => [
+	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'matrix' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'meta'   => [ 'permission' => CmsGlobal::PERM_CMS ],
                 ]
             ],
             'verbs' => [
@@ -84,7 +85,7 @@ class WidgetController extends BaseController {
 
 		$pagination 	= WidgetService::getPagination();
 		
-		$allSidebars	= SidebarService::getIdNameMap();
+		$allSidebars	= SidebarService::getIdNameList();
 
 	    return $this->render('matrix', [
 	         'page' => $pagination['page'],
@@ -106,7 +107,7 @@ class WidgetController extends BaseController {
 
 				$binder = new SidebarBinderForm();
 
-				$binder->widgetId	= $model->getId();
+				$binder->widgetId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				WidgetService::bindSidebars( $binder );
@@ -115,11 +116,13 @@ class WidgetController extends BaseController {
 			}
 		}
 
-		$sidebars	= SidebarService::getIdNameMap();
+		$sidebars		= SidebarService::getIdNameList();
+		$templatesMap	= TemplateService::getIdNameMapForWidgets();
 
     	return $this->render('create', [
     		'model' => $model,
-    		'sidebars' => $sidebars
+    		'sidebars' => $sidebars,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
@@ -139,7 +142,7 @@ class WidgetController extends BaseController {
 		
 					$binder = new SidebarBinderForm();
 	
-					$binder->widgetId	= $model->getId();
+					$binder->widgetId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 					WidgetService::bindSidebars( $binder );
@@ -148,11 +151,13 @@ class WidgetController extends BaseController {
 				}
 			}
 
-			$sidebars	= SidebarService::getIdNameMap();
+			$sidebars		= SidebarService::getIdNameList();
+			$templatesMap	= TemplateService::getIdNameMapForWidgets();
 
 	    	return $this->render('update', [
 	    		'model' => $model,
-	    		'sidebars' => $sidebars
+	    		'sidebars' => $sidebars,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -176,11 +181,13 @@ class WidgetController extends BaseController {
 				}
 			}
 
-			$sidebars	= SidebarService::getIdNameMap();
+			$sidebars		= SidebarService::getIdNameList();
+			$templatesMap	= TemplateService::getIdNameMapForWidgets();
 
 	    	return $this->render('delete', [
 	    		'model' => $model,
-	    		'sidebars' => $sidebars
+	    		'sidebars' => $sidebars,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -210,7 +217,7 @@ class WidgetController extends BaseController {
 
 			$model->generateMapFromJson();
 
-			$view	= '@templates/widget/' . $model->getTemplate();
+			$view	= '@templates/widget/' . $model->getTemplateName();
 
 	    	return $this->render( $view, [
 	    		'model' => $model

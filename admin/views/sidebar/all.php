@@ -3,7 +3,7 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Sidebars';
@@ -58,12 +58,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $sidebar ) {
 
-						$id = $sidebar->getId();
+						$id = $sidebar->id;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
-						<td><?= $sidebar->getName() ?></td>					
-						<td><?= $sidebar->getDesc() ?></td>
+						<td><?= $sidebar->name ?></td>					
+						<td><?= $sidebar->description ?></td>
 						<td><?= $sidebar->getActiveStr() ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Sidebar" ><?= Html::a( "", ["/cmgcms/sidebar/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>

@@ -1,9 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+// CMG Imports
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Menus';
@@ -52,12 +54,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $menu ) {
 
-						$id = $menu->getId();
+						$id = $menu->id;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
-						<td><?= $menu->getName() ?></td>					
-						<td><?= $menu->getDesc() ?></td>
+						<td><?= $menu->name ?></td>					
+						<td><?= $menu->description ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Menu" ><?= Html::a( "", ["/cmgcms/menu/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Menu" ><?= Html::a( "", ["/cmgcms/menu/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

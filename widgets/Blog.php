@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\widgets;
+namespace cmsgears\cms\widgets;
 
 // Yii Imports
 use \Yii;
@@ -58,7 +58,7 @@ class Blog extends Widget {
 		}
 
 		// Get Posts Pagination
-        $postsPage	= PostService::getPaginationBlog();
+        $postsPage	= PostService::getPagination();
         $page		= $postsPage['page'];
         $pages		= $postsPage['pages'];
         $total		= $postsPage['total'];
@@ -101,15 +101,15 @@ class Blog extends Widget {
 
 		// Post Author
 		$banner			= $post->banner;
-		$title			= Html::a( $post->getName(), [ '/post/' . $post->getSlug() ] );
-		$summary		= $post->getSummary();
-		$postTime		= $post->getPublishedOn();
+		$title			= Html::a( $post->name, [ '/post/' . $post->slug ] );
+		$summary		= $post->summary;
+		$postTime		= $post->publishedAt;
 		$postHtml		= "";
 
 		if( isset( $banner ) ) {
 
-			$bannerUrl	 = $this->uploadUrl . $banner->getThumb();
-			$bannerUrl	 = Html::a( "<img class='fluid' src='$bannerUrl' />", [ '/post/' . $post->getSlug() ] );
+			$bannerUrl	 = $banner->getThumbUrl();
+			$bannerUrl	 = Html::a( "<img class='fluid' src='$bannerUrl' />", [ '/post/' . $post->slug ] );
 			$postHtml	.= "<div class='banner'>$bannerUrl</div><div class='post-content'>";
 		}
 		else {

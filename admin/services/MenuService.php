@@ -45,7 +45,7 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 		
 		$menuToUpdate	= self::findById( $menu->id );
 		
-		$menuToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description' ] );
+		$menuToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
 
 		$menuToUpdate->update();
 

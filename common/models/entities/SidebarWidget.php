@@ -22,12 +22,12 @@ class SidebarWidget extends ActiveRecord {
 
 	// Delete
 
-	public static function deleteBySidebar( $sidebarId ) {
+	public static function deleteBySidebarId( $sidebarId ) {
 
 		self::deleteAll( 'sidebarId=:id', [ ':id' => $sidebarId ] );
 	}
 
-	public static function deleteByWidget( $widgetId ) {
+	public static function deleteByWidgetId( $widgetId ) {
 
 		self::deleteAll( 'widgetId=:id', [ ':id' => $widgetId ] );
 	}

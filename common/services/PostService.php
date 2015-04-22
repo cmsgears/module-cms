@@ -14,7 +14,7 @@ class PostService extends Service {
 
 	public static function findById( $id ) {
 
-		return Post::findOne( $id );
+		return Post::findById( $id );
 	}
 
     public static function findBySlug( $slug ) {

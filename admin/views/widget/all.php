@@ -3,7 +3,7 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Widgets';
@@ -53,13 +53,13 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $widget ) {
 
-						$id = $widget->getId();
+						$id = $widget->id;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
-						<td><?= $widget->getName() ?></td>					
-						<td><?= $widget->getDesc() ?></td>
-						<td><?= $widget->getTemplate() ?></td>
+						<td><?= $widget->name ?></td>					
+						<td><?= $widget->description ?></td>
+						<td><?= $widget->getTemplateName() ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Widget Meta" ><?= Html::a( "", ["/cmgcms/widget/meta?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Update Widget" ><?= Html::a( "", ["/cmgcms/widget/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>

@@ -72,6 +72,58 @@ class Content extends NamedCmgEntity {
 		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
+	public function getTemplateName() {
+
+		$template = $this->template;
+		
+		if( isset( $template ) ) {
+			
+			return $template->name;
+		}
+		else {
+			
+			return '';
+		}
+	}
+
+	public function getTags() {
+
+    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
+					->viaTable( CMSTables::TABLE_PAGE_TAG, [ 'pageId' => 'id' ] );
+	}
+
+	public function getTagsMap() {
+
+    	$tags		= $this->tags;
+		$tagsMap	= [];
+
+		foreach ( $tags as $tag ) {
+
+			$tagsMap[ $tag->name ] = $tag->description; 
+		}
+
+		return $tagsMap;
+	}
+
+	public function getTagsCsv() {
+
+    	$tags		= $this->tags;
+		$tagsCsv	= [];
+
+		foreach ( $tags as $tag ) {
+
+			$tagsCsv[] = $tag->name; 
+		}
+
+		return implode( ",", $tagsCsv );
+	}
+
+	public function getFiles() {
+
+    	return $this->hasMany( CmgFile::className(), [ 'id' => 'fileId' ] )
+					->viaTable( CMSTables::TABLE_PAGE_FILE, [ 'pageId' => 'id' ] );
+	}
+
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];	

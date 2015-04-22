@@ -16,7 +16,7 @@ class Menu extends NamedCmgEntity {
 
 	public function getPagesMap() {
 
-    	return $this->hasMany( MenuPage::className(), [ 'menuId' => 'pageId' ] );
+    	return $this->hasMany( MenuPage::className(), [ 'menuId' => 'id' ] );
 	}
 
 	public function getPagesIdList() {

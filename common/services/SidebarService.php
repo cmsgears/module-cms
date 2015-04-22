@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\Sidebar;
 
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class SidebarService extends Service {
 

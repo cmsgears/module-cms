@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Menu';
 		<h2>Delete Menu</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-menu-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'menu_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'menu_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
 		<h4>Linked Pages</h4>
 		<?php
 			$menuPages	= $model->getPagesIdList();

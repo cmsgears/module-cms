@@ -39,13 +39,13 @@ class SidebarController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => CmsGlobal::PERM_CMS,
-	                'all'    => CmsGlobal::PERM_CMS,
-	                'create' => CmsGlobal::PERM_CMS,
-	                'update' => CmsGlobal::PERM_CMS,
-	                'delete' => CmsGlobal::PERM_CMS
-                ]
+                'actions' => [
+	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
+              	]  
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -90,7 +90,7 @@ class SidebarController extends BaseController {
 
 				$binder = new WidgetBinderForm();
 
-				$binder->sidebarId	= $model->getId();
+				$binder->sidebarId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				SidebarService::bindWidgets( $binder );
@@ -99,7 +99,7 @@ class SidebarController extends BaseController {
 			}
 		}
 
-		$widgets	= WidgetService::getIdNameMap();
+		$widgets	= WidgetService::getIdNameList();
 
     	return $this->render('create', [
     		'model' => $model,
@@ -123,7 +123,7 @@ class SidebarController extends BaseController {
 		
 					$binder = new WidgetBinderForm();
 	
-					$binder->sidebarId	= $model->getId();
+					$binder->sidebarId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					SidebarService::bindWidgets( $binder );
@@ -132,7 +132,7 @@ class SidebarController extends BaseController {
 				}
 			}
 
-			$widgets	= WidgetService::getIdNameMap();
+			$widgets	= WidgetService::getIdNameList();
 	
 	    	return $this->render('update', [
 	    		'model' => $model,
@@ -160,7 +160,7 @@ class SidebarController extends BaseController {
 				}
 			}
 
-			$widgets	= WidgetService::getIdNameMap();
+			$widgets	= WidgetService::getIdNameList();
 
 	    	return $this->render('delete', [
 	    		'model' => $model,

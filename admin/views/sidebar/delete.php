@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Sidebar';
 		<h2>Delete Sidebar</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-sidebar-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'sidebar_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'sidebar_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'sidebar_active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'disabled'=>'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Linked Widgets</h4>
 		<?php foreach ( $widgets as $widget ) { ?>

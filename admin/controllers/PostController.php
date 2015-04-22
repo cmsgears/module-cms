@@ -8,22 +8,20 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CMSGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\Category;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\entities\CMSPermission;
 
 use cmsgears\cms\admin\models\forms\PostCategoryBinderForm;
 
+use cmsgears\cms\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
 
 use cmsgears\core\admin\controllers\BaseController;
-
-use cmsgears\core\common\utilities\MessageUtil;
 
 class PostController extends BaseController {
 
@@ -45,12 +43,12 @@ class PostController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => CmsGlobal::PERM_CMS,
-	                'all'    => CmsGlobal::PERM_CMS,
-	                'create' => CmsGlobal::PERM_CMS,
-	                'update' => CmsGlobal::PERM_CMS,
-	                'delete' => CmsGlobal::PERM_CMS
+                'actions' => [
+	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -87,7 +85,7 @@ class PostController extends BaseController {
 	public function actionMatrix() {
 
 		$pagination 	= PostService::getPagination();
-		$allCategories	= CategoryService::getIdNameMapByType( CMSGlobal::CATEGORY_TYPE_POST );
+		$allCategories	= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
 
 	    return $this->render('matrix', [
 	         'page' => $pagination['page'],
@@ -106,15 +104,13 @@ class PostController extends BaseController {
 
 		if( $model->load( Yii::$app->request->post( "Post" ), "" )  && $model->validate() ) {
 
-			$banner 		= new CmgFile();
-
 			$banner->load( Yii::$app->request->post( "File" ), "" );
 
 			if( PostService::create( $model, $banner ) ) {
 
 				$binder = new PostCategoryBinderForm();
 
-				$binder->pageId	= $model->getId();
+				$binder->pageId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				PostService::bindCategories( $binder );
@@ -123,12 +119,14 @@ class PostController extends BaseController {
 			}
 		}
 
-		$categories	= CategoryService::getIdNameMapByType( CMSGlobal::CATEGORY_TYPE_POST );
+		$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$templatesMap	= TemplateService::getIdNameMapForPages();
 
     	return $this->render('create', [
     		'model' => $model,
     		'banner' => $banner,
-    		'categories' => $categories
+    		'categories' => $categories,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
@@ -145,15 +143,13 @@ class PostController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post( "Post" ), "" )  && $model->validate() ) {
 
-				$banner 		= new CmgFile();		
-
 				$banner->load( Yii::$app->request->post( "File" ), "" );
 
 				if( PostService::update( $model, $banner ) ) {
 
 					$binder = new PostCategoryBinderForm();
 
-					$binder->pageId	= $model->getId();
+					$binder->pageId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 					PostService::bindCategories( $binder );
@@ -162,17 +158,19 @@ class PostController extends BaseController {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameMapByType( CMSGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
+			$templatesMap	= TemplateService::getIdNameMapForPages();
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'banner' => $banner,
 	    		'categories' => $categories,
 	    		'visibilities' => $visibilities,
-	    		'status' => $status
+	    		'status' => $status,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 		
@@ -197,17 +195,19 @@ class PostController extends BaseController {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameMapByType( CMSGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
+			$templatesMap	= TemplateService::getIdNameMapForPages();
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'banner' => $banner,
 	    		'categories' => $categories,
 	    		'visibilities' => $visibilities,
-	    		'status' => $status
+	    		'status' => $status,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -219,13 +219,13 @@ class PostController extends BaseController {
 
 	public function actionCategories() {
 
-		$pagination = CategoryService::getPaginationByType( CMSGlobal::CATEGORY_TYPE_POST );
+		$pagination = CategoryService::getPaginationByType( CmsGlobal::CATEGORY_TYPE_POST );
 
 	    return $this->render('categories', [
 	         'page' => $pagination['page'],
 	         'pages' => $pagination['pages'],
 	         'total' => $pagination['total'],
-	         'type' => CMSGlobal::CATEGORY_TYPE_POST
+	         'type' => CmsGlobal::CATEGORY_TYPE_POST
 	    ]);
 	}
 }
