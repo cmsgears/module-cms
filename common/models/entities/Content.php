@@ -124,14 +124,6 @@ class Content extends NamedCmgEntity {
 					->viaTable( CMSTables::TABLE_PAGE_FILE, [ 'pageId' => 'id' ] );
 	}
 
-	/**
-	 * @return array - list of page meta
-	 */
-	public function getMetas() {
-
-    	return $this->hasMany( ContentMeta::className(), [ 'pageId' => 'id' ] );
-	}
-
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];	
