@@ -11,7 +11,7 @@ class Post extends Content {
 	public function getCategories() {
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'postId' => 'id' ] );
+					->viaTable( CmsTables::TABLE_POST_CATEGORY, [ 'postId' => 'id' ] );
 	}
 
 	public function getCategoriesMap() {

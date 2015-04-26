@@ -46,8 +46,8 @@ CREATE TABLE `cmg_cms_menu` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_menu_1` (`parentId`),
-  CONSTRAINT `fk_menu_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_menu` (`id`)
+  KEY `fk_cms_menu_1` (`parentId`),
+  CONSTRAINT `fk_cms_menu_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_menu` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,14 +77,14 @@ CREATE TABLE `cmg_cms_page` (
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_page_slug` (`slug`),
-  KEY `fk_page_1` (`parentId`),
-  KEY `fk_page_2` (`authorId`),
-  KEY `fk_page_3` (`bannerId`),
-  KEY `fk_page_4` (`templateId`),
-  CONSTRAINT `fk_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_2` FOREIGN KEY (`authorId`) REFERENCES `cmg_user` (`id`),
-  CONSTRAINT `fk_page_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_file` (`id`),
-  CONSTRAINT `fk_page_4` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`)
+  KEY `fk_cms_page_1` (`parentId`),
+  KEY `fk_cms_page_2` (`authorId`),
+  KEY `fk_cms_page_3` (`bannerId`),
+  KEY `fk_cms_page_4` (`templateId`),
+  CONSTRAINT `fk_cms_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
+  CONSTRAINT `fk_cms_page_2` FOREIGN KEY (`authorId`) REFERENCES `cmg_user` (`id`),
+  CONSTRAINT `fk_cms_page_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_file` (`id`),
+  CONSTRAINT `fk_cms_page_4` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,10 +100,10 @@ CREATE TABLE `cmg_cms_menu_page` (
   `pageId` bigint(20) NOT NULL,
   `order` tinyint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`menuId`,`pageId`),
-  KEY `fk_menu_page_1` (`menuId`),
-  KEY `fk_menu_page_2` (`pageId`),
-  CONSTRAINT `fk_menu_page_1` FOREIGN KEY (`menuId`) REFERENCES `cmg_cms_menu` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_menu_page_2` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE
+  KEY `fk_cms_menu_page_1` (`menuId`),
+  KEY `fk_cms_menu_page_2` (`pageId`),
+  CONSTRAINT `fk_cms_menu_page_1` FOREIGN KEY (`menuId`) REFERENCES `cmg_cms_menu` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cms_menu_page_2` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -120,8 +120,8 @@ CREATE TABLE `cmg_cms_page_meta` (
   `name` varchar(255) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_page_meta_1` (`pageId`),
-  CONSTRAINT `fk_page_meta_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`)
+  KEY `fk_cms_page_meta_1` (`pageId`),
+  CONSTRAINT `fk_cms_page_meta_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,10 +137,10 @@ CREATE TABLE `cmg_cms_page_tag` (
   `tagId` bigint(20) NOT NULL,
   `order` tinyint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pageId`,`tagId`),
-  KEY `fk_page_tag_1` (`pageId`),
-  KEY `fk_page_tag_2` (`tagId`),
-  CONSTRAINT `fk_page_tag_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_tag_2` FOREIGN KEY (`tagId`) REFERENCES `cmg_cms_tag` (`id`)
+  KEY `fk_cms_page_tag_1` (`pageId`),
+  KEY `fk_cms_page_tag_2` (`tagId`),
+  CONSTRAINT `fk_cms_page_tag_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
+  CONSTRAINT `fk_cms_page_tag_2` FOREIGN KEY (`tagId`) REFERENCES `cmg_cms_tag` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -156,10 +156,10 @@ CREATE TABLE `cmg_cms_page_file` (
   `fileId` bigint(20) NOT NULL,
   `order` tinyint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pageId`,`fileId`),
-  KEY `fk_page_file_1` (`pageId`),
-  KEY `fk_page_file_2` (`fileId`),
-  CONSTRAINT `fk_page_file_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_file_2` FOREIGN KEY (`fileId`) REFERENCES `cmg_file` (`id`)
+  KEY `fk_cms_page_file_1` (`pageId`),
+  KEY `fk_cms_page_file_2` (`fileId`),
+  CONSTRAINT `fk_cms_page_file_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
+  CONSTRAINT `fk_cms_page_file_2` FOREIGN KEY (`fileId`) REFERENCES `cmg_file` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -174,10 +174,10 @@ CREATE TABLE `cmg_cms_post_category` (
   `postId` bigint(20) NOT NULL,
   `categoryId` bigint(20) NOT NULL,
   PRIMARY KEY (`postId`,`categoryId`),
-  KEY `fk_post_category_1` (`postId`),
-  KEY `fk_post_category_2` (`categoryId`),
-  CONSTRAINT `fk_post_category_1` FOREIGN KEY (`postId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_post_category_2` FOREIGN KEY (`categoryId`) REFERENCES `cmg_category` (`id`) ON DELETE CASCADE
+  KEY `fk_cms_post_category_1` (`postId`),
+  KEY `fk_cms_post_category_2` (`categoryId`),
+  CONSTRAINT `fk_cms_post_category_1` FOREIGN KEY (`postId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cms_post_category_2` FOREIGN KEY (`categoryId`) REFERENCES `cmg_category` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -211,8 +211,8 @@ CREATE TABLE `cmg_cms_widget` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `fk_widget_1` (`templateId`),
-  CONSTRAINT `fk_widget_1` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`)
+  KEY `fk_cms_widget_1` (`templateId`),
+  CONSTRAINT `fk_cms_widget_1` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -227,10 +227,10 @@ CREATE TABLE `cmg_cms_sidebar_widget` (
   `sidebarId` bigint(20) NOT NULL,
   `widgetId` bigint(20) NOT NULL,
   PRIMARY KEY (`sidebarId`,`widgetId`),
-  KEY `fk_sidebar_widget_1` (`sidebarId`),
-  KEY `fk_sidebar_widget_2` (`widgetId`),
-  CONSTRAINT `fk_sidebar_widget_1` FOREIGN KEY (`sidebarId`) REFERENCES `cmg_cms_sidebar` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_sidebar_widget_2` FOREIGN KEY (`widgetId`) REFERENCES `cmg_cms_widget` (`id`) ON DELETE CASCADE
+  KEY `fk_cms_sidebar_widget_1` (`sidebarId`),
+  KEY `fk_cms_sidebar_widget_2` (`widgetId`),
+  CONSTRAINT `fk_cms_sidebar_widget_1` FOREIGN KEY (`sidebarId`) REFERENCES `cmg_cms_sidebar` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cms_sidebar_widget_2` FOREIGN KEY (`widgetId`) REFERENCES `cmg_cms_widget` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
