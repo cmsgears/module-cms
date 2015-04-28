@@ -2,48 +2,17 @@
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\Category;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\CategoryTrait;
 
 class Post extends Content {
 
+	use CategoryTrait;
+
+	public $parentType	= CmsGlobal::CATEGORY_TYPE_POST;
+
 	// Instance Methods --------------------------------------------
-
-	public function getCategories() {
-
-    	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( CMSTables::TABLE_POST_CATEGORY, [ 'postId' => 'id' ] );
-	}
-
-	public function getCategoriesMap() {
-
-    	return $this->hasMany( PostCategory::className(), [ 'postId' => 'id' ] );
-	}
-
-	public function getCategoriesIdList() {
-
-    	$categories 		= $this->categoriesMap;
-		$categoriesList		= array();
-
-		foreach ( $categories as $category ) {
-
-			array_push( $categoriesList, $category->categoryId );
-		}
-
-		return $categoriesList;
-	}
-
-	public function getCategoriesIdNameMap() {
-
-		$categories 	= $this->categories;
-		$categoriesMap	= array();
-
-		foreach ( $categories as $category ) {
-
-			$categoriesMap[] = [ 'id' => $category->id, 'name' => $category->name ];
-		}
-
-		return $categoriesMap;
-	}
 
 	// Static Methods ----------------------------------------------
 
@@ -67,6 +36,11 @@ class Post extends Content {
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	public static function findByAuthorId( $id ) {
+
+		return self::find()->where( 'authorId=:id', [ ':id' => $id ] )->all();
 	}
 
 	public static function findByCategoryName( $name ) {

@@ -164,24 +164,6 @@ CREATE TABLE `cmg_cms_page_file` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cmg_cms_post_category`
---
-
-DROP TABLE IF EXISTS `cmg_cms_post_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_cms_post_category` (
-  `postId` bigint(20) NOT NULL,
-  `categoryId` bigint(20) NOT NULL,
-  PRIMARY KEY (`postId`,`categoryId`),
-  KEY `fk_post_category_1` (`postId`),
-  KEY `fk_post_category_2` (`categoryId`),
-  CONSTRAINT `fk_post_category_1` FOREIGN KEY (`postId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_post_category_2` FOREIGN KEY (`categoryId`) REFERENCES `cmg_category` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_cms_sidebar`
 --
 

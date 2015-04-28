@@ -44,6 +44,11 @@ class Page extends Content {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 	}
+
+	public static function findByAuthorId( $id ) {
+
+		return self::find()->where( 'authorId=:id', [ ':id' => $id ] )->all();
+	}
 }
 
 ?>
