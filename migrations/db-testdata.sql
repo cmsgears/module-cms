@@ -16,7 +16,7 @@ INSERT INTO `cmg_cms_template` VALUES
 --
 
 INSERT INTO `cmg_option` VALUES 
-	(1001,1,'Post','1001');
+	(1001,1,'Post',1001,NULL);
 
 --
 -- Dumping data for table `cmg_role`

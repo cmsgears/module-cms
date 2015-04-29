@@ -7,7 +7,8 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\MetaTrait;
+use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\FileTrait;
 
 class Content extends NamedCmgEntity {
 
@@ -41,6 +42,10 @@ class Content extends NamedCmgEntity {
 	use MetaTrait;
 
 	public $metaType	= CmsGlobal::META_TYPE_PAGE;
+
+	use FileTrait;
+
+	public $fileType	= CmsGlobal::FILE_TYPE_PAGE;
 
 	// Instance Methods --------------------------------------------
 
@@ -91,44 +96,6 @@ class Content extends NamedCmgEntity {
 			
 			return '';
 		}
-	}
-
-	public function getTags() {
-
-    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
-					->viaTable( CMSTables::TABLE_PAGE_TAG, [ 'pageId' => 'id' ] );
-	}
-
-	public function getTagsMap() {
-
-    	$tags		= $this->tags;
-		$tagsMap	= [];
-
-		foreach ( $tags as $tag ) {
-
-			$tagsMap[ $tag->name ] = $tag->description; 
-		}
-
-		return $tagsMap;
-	}
-
-	public function getTagsCsv() {
-
-    	$tags		= $this->tags;
-		$tagsCsv	= [];
-
-		foreach ( $tags as $tag ) {
-
-			$tagsCsv[] = $tag->name; 
-		}
-
-		return implode( ",", $tagsCsv );
-	}
-
-	public function getFiles() {
-
-    	return $this->hasMany( CmgFile::className(), [ 'id' => 'fileId' ] )
-					->viaTable( CMSTables::TABLE_PAGE_FILE, [ 'pageId' => 'id' ] );
 	}
 
 	public function getTypeStr() {

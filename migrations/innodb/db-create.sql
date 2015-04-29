@@ -3,21 +3,6 @@ SET FOREIGN_KEY_CHECKS=0;
 /* ============================= CMSGears CMS ============================================== */
 
 --
--- Table structure for table `cmg_cms_tag`
---
-
-DROP TABLE IF EXISTS `cmg_cms_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_cms_tag` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_cms_template`
 --
 
@@ -104,62 +89,6 @@ CREATE TABLE `cmg_cms_menu_page` (
   KEY `fk_menu_page_2` (`pageId`),
   CONSTRAINT `fk_menu_page_1` FOREIGN KEY (`menuId`) REFERENCES `cmg_cms_menu` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_menu_page_2` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `cmg_cms_page_meta`
---
-
-DROP TABLE IF EXISTS `cmg_cms_page_meta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_cms_page_meta` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `pageId` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_page_meta_1` (`pageId`),
-  CONSTRAINT `fk_page_meta_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `cmg_cms_page_tag`
---
-
-DROP TABLE IF EXISTS `cmg_cms_page_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_cms_page_tag` (
-  `pageId` bigint(20) NOT NULL,
-  `tagId` bigint(20) NOT NULL,
-  `order` tinyint(6) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pageId`,`tagId`),
-  KEY `fk_page_tag_1` (`pageId`),
-  KEY `fk_page_tag_2` (`tagId`),
-  CONSTRAINT `fk_page_tag_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_tag_2` FOREIGN KEY (`tagId`) REFERENCES `cmg_cms_tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `cmg_cms_page_file`
---
-
-DROP TABLE IF EXISTS `cmg_cms_page_file`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_cms_page_file` (
-  `pageId` bigint(20) NOT NULL,
-  `fileId` bigint(20) NOT NULL,
-  `order` tinyint(6) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pageId`,`fileId`),
-  KEY `fk_page_file_1` (`pageId`),
-  KEY `fk_page_file_2` (`fileId`),
-  CONSTRAINT `fk_page_file_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_file_2` FOREIGN KEY (`fileId`) REFERENCES `cmg_file` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

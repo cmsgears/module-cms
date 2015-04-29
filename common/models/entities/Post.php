@@ -4,13 +4,18 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CategoryTrait;
+use cmsgears\core\common\models\traits\CategoryTrait;
+use cmsgears\core\common\models\traits\TagTrait;
 
 class Post extends Content {
 
 	use CategoryTrait;
 
-	public $parentType	= CmsGlobal::CATEGORY_TYPE_POST;
+	public $categoryType	= CmsGlobal::CATEGORY_TYPE_POST;
+
+	use TagTrait;
+
+	public $tagType			= CmsGlobal::TAG_TYPE_POST;
 
 	// Instance Methods --------------------------------------------
 
