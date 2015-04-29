@@ -2,9 +2,12 @@
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\MetaTrait;
 
 class Content extends NamedCmgEntity {
 
@@ -35,8 +38,12 @@ class Content extends NamedCmgEntity {
 		self::VISIBILITY_PUBLIC => "public"
 	];
 
+	use MetaTrait;
+
+	public $metaType	= CmsGlobal::META_TYPE_PAGE;
+
 	// Instance Methods --------------------------------------------
-	
+
 	public function getParent() {
 
 		switch( $row['type'] ) {

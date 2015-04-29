@@ -6,10 +6,12 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\ModelCategory;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\entities\PostCategory;
 
 use cmsgears\core\admin\services\FileService;
 
@@ -136,7 +138,7 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 		$categories		= $binder->bindedData;
 
 		// Clear all existing mappings
-		PostCategory::deleteByPostId( $postId );
+		ModelCategory::deleteByParentIdType( $postId, CmsGlobal::CATEGORY_TYPE_POST );
 
 		if( isset( $categories ) && count( $categories ) > 0 ) {
 
@@ -144,9 +146,10 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 
 				if( isset( $value ) ) {
 
-					$toSave		= new PostCategory();
+					$toSave		= new ModelCategory();
 
-					$toSave->postId		= $postId;
+					$toSave->parentId	= $postId;
+					$toSave->parentType	= CmsGlobal::CATEGORY_TYPE_POST;
 					$toSave->categoryId	= $value;
 
 					$toSave->save();
