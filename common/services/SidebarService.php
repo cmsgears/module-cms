@@ -1,13 +1,14 @@
 <?php
-namespace cmsgears\modules\cms\common\services;
+namespace cmsgears\cms\common\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\cms\common\models\entities\Sidebar;
+use cmsgears\cms\common\models\entities\CmsTables;
+use cmsgears\cms\common\models\entities\Sidebar;
 
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class SidebarService extends Service {
 
@@ -22,32 +23,12 @@ class SidebarService extends Service {
 
 	public static function getIdList() {
 
-		$sidebarsList	= array();
-
-		// Execute the command
-		$sidebars 		= Sidebar::find()->all();
-
-		foreach ( $sidebars as $sidebar ) {
-			
-			array_push( $sidebarsList, $sidebar->getId() );
-		}
-
-		return $sidebarsList;
+		return self::findList( "id", CmsTables::TABLE_SIDEBAR );
 	}
 
-	public static function getIdNameMap() {
+	public static function getIdNameList() {
 
-		$sidebarsMap 	= array();
-
-		// Execute the command
-		$sidebars 		= Sidebar::find()->all();
-
-		foreach ( $sidebars as $sidebar ) {
-
-			$sidebarsMap[] = [ "id" => $sidebar->getId(), "name" => $sidebar->getName() ];
-		}
-
-		return $sidebarsMap;
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_SIDEBAR );
 	}
 }
 

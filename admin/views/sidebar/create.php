@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Sidebar';
 		<h2>Add Sidebar</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-sidebar-create', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'sidebar_name' ) ?>
-    	<?= $form->field( $model, 'sidebar_desc' )->textarea() ?>
-		<?= $form->field( $model, 'sidebar_active' )->checkbox() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
 		<?php foreach ( $widgets as $widget ) { ?>
@@ -28,5 +28,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Sidebar';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 2 );
+	initSidebar( "sidebar-sidebar", 1 );
 </script>

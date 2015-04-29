@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers;
+namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,20 +7,17 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\cms\common\models\entities\Sidebar;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\cms\common\models\entities\Sidebar;
 
-use cmsgears\modules\cms\admin\models\forms\WidgetBinderForm;
+use cmsgears\cms\admin\models\forms\WidgetBinderForm;
 
-use cmsgears\modules\cms\admin\services\SidebarService;
-use cmsgears\modules\cms\admin\services\WidgetService;
+use cmsgears\cms\admin\services\SidebarService;
+use cmsgears\cms\admin\services\WidgetService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
-
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
 class SidebarController extends BaseController {
 	
@@ -35,20 +32,20 @@ class SidebarController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => CMSPermission::PERM_CMS_SIDEBAR,
-	                'all'    => CMSPermission::PERM_CMS_SIDEBAR,
-	                'create' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'update' => CMSPermission::PERM_CMS_SIDEBAR,
-	                'delete' => CMSPermission::PERM_CMS_SIDEBAR
-                ]
+                'actions' => [
+	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
+              	]  
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -63,11 +60,11 @@ class SidebarController extends BaseController {
         ];
     }
 
-	// SidebarController
+	// SidebarController -----------------
 
 	public function actionIndex() {
 
-		$this->redirect( self::URL_ALL );
+		$this->redirect( "all" );
 	}
 
 	public function actionAll() {
@@ -93,16 +90,16 @@ class SidebarController extends BaseController {
 
 				$binder = new WidgetBinderForm();
 
-				$binder->sidebarId	= $model->getId();
+				$binder->sidebarId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				SidebarService::bindWidgets( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$widgets	= WidgetService::getIdNameMap();
+		$widgets	= WidgetService::getIdNameList();
 
     	return $this->render('create', [
     		'model' => $model,
@@ -126,7 +123,7 @@ class SidebarController extends BaseController {
 		
 					$binder = new WidgetBinderForm();
 	
-					$binder->sidebarId	= $model->getId();
+					$binder->sidebarId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					SidebarService::bindWidgets( $binder );
@@ -135,7 +132,7 @@ class SidebarController extends BaseController {
 				}
 			}
 
-			$widgets	= WidgetService::getIdNameMap();
+			$widgets	= WidgetService::getIdNameList();
 	
 	    	return $this->render('update', [
 	    		'model' => $model,
@@ -144,7 +141,7 @@ class SidebarController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -155,15 +152,15 @@ class SidebarController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset( $_POST ) && count( $_POST ) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Sidebar" ), "" ) ) {
 
 				if( SidebarService::delete( $model ) ) {
 
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
-			$widgets	= WidgetService::getIdNameMap();
+			$widgets	= WidgetService::getIdNameList();
 
 	    	return $this->render('delete', [
 	    		'model' => $model,
@@ -172,7 +169,7 @@ class SidebarController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 }
 

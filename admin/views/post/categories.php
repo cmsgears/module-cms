@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\admin\widgets\CategoryCrud;
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\admin\widgets\CategoryCrud;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Post Categories';
@@ -54,12 +54,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $category ) {
 
-						$id = $category->getId();
+						$id = $category->id;
 				?>
 					<tr class="category-<?= $id ?>">
 						<td> <input type='checkbox' /> </td>
-						<td class="cat-name"><?= $category->getName() ?></td>
-						<td class="cat-desc"><?= $category->getDesc() ?></td>
+						<td class="cat-name"><?= $category->name ?></td>
+						<td class="cat-desc"><?= $category->description ?></td>
 						<td>
 							<span class="wrap-icon-action category-update-btn" title="Update Category"> <span class="icon-action icon-action-edit"> </span></span>
 							<span class="wrap-icon-action category-delete-btn" title="Delete Category"><span class="icon-action icon-action-delete" ></span></span>
@@ -78,5 +78,5 @@ if( !isset( $sortOrder ) ) {
 <?= CategoryCrud::widget( [ 'type' => $type ] ); ?>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 6 );
+	initSidebar( "sidebar-page-blog", 4 );
 </script>

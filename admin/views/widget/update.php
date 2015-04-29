@@ -10,10 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
 		<h2>Update Widget</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-widget-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'widget_name' ) ?>
-    	<?= $form->field( $model, 'widget_desc' )->textarea() ?>
-		<?= $form->field( $model, 'widget_template' ) ?>
-		<?= $form->field( $model, 'widget_meta' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 
 		<h4>Link Sidebars</h4>
 		<?php 
@@ -43,5 +42,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", -1 );
+	initSidebar( "sidebar-sidebar", 4 );
 </script>

@@ -10,17 +10,31 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Sidebar';
 		<h2>Delete Sidebar</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-sidebar-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'sidebar_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'sidebar_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'sidebar_active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled'=>'true' ] ) ?>
 
-		<h4>Linked Widgets</h4>
-		<?php foreach ( $widgets as $widget ) { ?>
-			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$widget['id']?>" disabled="true" /><?=$widget['name']?></span>
-		<?php } ?>
+		<h4>Linked Sidebars</h4>
+		<?php 
+			$widgetSidebars	= $model->getSidebarsIdList();
+
+			foreach ( $sidebars as $sidebar ) { 
+
+				if( in_array( $sidebar['id'], $widgetSidebars ) ) {
+		?>		
+					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" checked disabled /><?=$sidebar['name']?></span>
+		<?php
+				}
+				else {
+		?>
+					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" disabled /><?=$sidebar['name']?></span>
+		<?php
+				}
+			}
+		?>
 		<div class="box-filler"></div>
 
-		<?=Html::a( "Cancel", [ '/cmgcms/sidebar/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

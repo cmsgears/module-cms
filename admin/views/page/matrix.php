@@ -3,7 +3,7 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Pages Matrix";
@@ -53,11 +53,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $pag ) {
 
-						$id 		= $pag->getId();
+						$id 		= $pag->id;
 						$menus		= $pag->getMenusIdList();
 				?>
 					<tr>
-						<td><?= $pag->getName() ?></td>
+						<td><?= $pag->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
 								<input type="hidden" name="pageId" value="<?=$id?>" />

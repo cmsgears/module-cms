@@ -1,9 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
-use yii\helpers\Html; 
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Posts';
@@ -94,25 +96,29 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
+					$slugBase	= $siteUrl;
+					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
+
 					foreach( $page as $post ) {
 
-						$id 		= $post->getId();
-						$editUrl	= Html::a( $post->getName(), [ "/cmgcms/post/update?id=$id" ] );
-						$slug		= $post->getSlug();
-						$slugUrl	= "<a href='" . $siteUrl . "post/$slug'>$slug</a>";
+						$id 		= $post->id;
+						$editUrl	= Html::a( $post->name, [ "/cmgcms/post/update?id=$id" ] );
+						$slug		= $post->slug;
+						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
+						$tags		= $post->getTagsMap();
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
 						<td><?= $editUrl ?></td>
 						<td><?= $slugUrl ?></td>						
-						<td><?= $post->getDesc() ?></td>
+						<td><?= $post->description ?></td>
 						<td><?= $post->getVisibilityStr() ?></td>
 						<td><?= $post->getStatusStr() ?></td>
-						<td><?= $post->getTemplate() ?></td>
-						<td><?= $post->getMetaTags() ?></td>
-						<td><?= $post->getCreatedOn() ?></td>
-						<td><?= $post->getPublishedOn() ?></td>
-						<td><?= $post->getUpdatedOn() ?></td>
+						<td><?= $post->getTemplateName() ?></td>
+						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
+						<td><?= $post->createdAt ?></td>
+						<td><?= $post->publishedAt ?></td>
+						<td><?= $post->updatedAt ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
@@ -128,5 +134,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 7 );
+	initSidebar( "sidebar-page-blog", 5 );
 </script>

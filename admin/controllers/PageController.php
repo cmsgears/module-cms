@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers;
+namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,25 +7,22 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\core\common\models\entities\CmgFile;
-use cmsgears\modules\cms\common\models\entities\Page;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\modules\cms\admin\models\forms\MenuBinderForm;
+use cmsgears\cms\admin\models\forms\MenuBinderForm;
 
-use cmsgears\modules\cms\admin\services\PageService;
-use cmsgears\modules\cms\admin\services\MenuService;
+use cmsgears\cms\admin\services\TemplateService;
+use cmsgears\cms\admin\services\PageService;
+use cmsgears\cms\admin\services\MenuService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
-
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
 class PageController extends BaseController {
 	
-	const URL_ALL 		= 'all';
-		
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -35,20 +32,20 @@ class PageController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => CMSPermission::PERM_CMS_PAGE,
-	                'all'    => CMSPermission::PERM_CMS_PAGE,
-	                'matrix' => CMSPermission::PERM_CMS_PAGE,
-	                'create' => CMSPermission::PERM_CMS_PAGE,
-	                'update' => CMSPermission::PERM_CMS_PAGE,
-	                'delete' => CMSPermission::PERM_CMS_PAGE
+                'actions' => [
+	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'matrix' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -65,11 +62,11 @@ class PageController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionIndex() {
 
-		$this->redirect( self::URL_ALL );
+		$this->redirect( "all" );
 	}
 
 	public function actionAll() {
@@ -87,7 +84,7 @@ class PageController extends BaseController {
 
 		$pagination = PageService::getPagination();
 		
-		$allMenus	= MenuService::getIdNameMap();
+		$allMenus	= MenuService::getIdNameList();
 
 	    return $this->render('matrix', [
 	         'page' => $pagination['page'],
@@ -112,21 +109,23 @@ class PageController extends BaseController {
 
 				$binder = new MenuBinderForm();
 
-				$binder->pageId	= $model->getId();
+				$binder->pageId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				PageService::bindMenus( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$menus	= MenuService::getIdNameMap();
+		$menus			= MenuService::getIdNameList();
+		$templatesMap	= TemplateService::getIdNameMapForPages();
 
     	return $this->render('create', [
     		'model' => $model,
     		'banner' => $banner,
-    		'menus' => $menus
+    		'menus' => $menus,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
@@ -149,7 +148,7 @@ class PageController extends BaseController {
 	
 					$binder = new MenuBinderForm();
 	
-					$binder->pageId	= $model->getId();
+					$binder->pageId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					PageService::bindMenus( $binder );
@@ -158,22 +157,24 @@ class PageController extends BaseController {
 				}
 			}
 
-			$menus			= MenuService::getIdNameMap();
+			$menus			= MenuService::getIdNameList();
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
+			$templatesMap	= TemplateService::getIdNameMapForPages();
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'banner' => $banner,
 	    		'menus' => $menus,
 	    		'visibilities' => $visibilities,
-	    		'status' => $status
+	    		'status' => $status,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 		
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -184,30 +185,32 @@ class PageController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset( $_POST ) && count( $_POST ) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Page" ), "" ) ) {
 
 				if( PageService::delete( $model ) ) {
 
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
-			$menus			= MenuService::getIdNameMap();
+			$menus			= MenuService::getIdNameList();
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
-
+			$templatesMap	= TemplateService::getIdNameMapForPages();
+			
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'banner' => $banner,
 	    		'menus' => $menus,
 	    		'visibilities' => $visibilities,
-	    		'status' => $status
+	    		'status' => $status,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

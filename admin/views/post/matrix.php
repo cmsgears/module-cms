@@ -3,7 +3,7 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Posts Matrix";
@@ -51,12 +51,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $post ) {
 
-						$id 		= $post->getId();
+						$id 		= $post->id;
 						$categories	= $post->getCategoriesIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/post/bind-categories" );
 				?>
 					<tr>
-						<td><?= $post->getName() ?></td>
+						<td><?= $post->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
 								<input type="hidden" name="pageId" value="<?=$id?>" />
@@ -90,6 +90,6 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 5 );
+	initSidebar( "sidebar-page-blog", 3 );
 	initMappingsMatrix();
 </script>

@@ -1,21 +1,21 @@
 <?php
-namespace cmsgears\modules\cms\admin\services;
+namespace cmsgears\cms\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\CmgFile;
-use cmsgears\modules\cms\common\models\entities\Page;
-use cmsgears\modules\cms\common\models\entities\MenuPage;
+use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\MenuPage;
 
-use cmsgears\modules\core\admin\services\FileService;
+use cmsgears\core\admin\services\FileService;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
-class PageService extends \cmsgears\modules\cms\common\services\PageService {
+class PageService extends \cmsgears\cms\common\services\PageService {
 
 	// Static Methods ----------------------------------------------
 
@@ -26,57 +26,57 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'page_name' => SORT_ASC ],
-	                'desc' => ['page_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'slug' => [
-	                'asc' => [ 'page_slug' => SORT_ASC ],
-	                'desc' => ['page_slug' => SORT_DESC ],
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'visibility' => [
-	                'asc' => [ 'page_visibility' => SORT_ASC ],
-	                'desc' => ['page_visibility' => SORT_DESC ],
+	                'asc' => [ 'visibility' => SORT_ASC ],
+	                'desc' => ['visibility' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'visibility',
 	            ],
 	            'status' => [
-	                'asc' => [ 'page_status' => SORT_ASC ],
-	                'desc' => ['page_status' => SORT_DESC ],
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'status',
 	            ],
 	            'template' => [
-	                'asc' => [ 'page_template' => SORT_ASC ],
-	                'desc' => ['page_template' => SORT_DESC ],
+	                'asc' => [ 'template' => SORT_ASC ],
+	                'desc' => ['template' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'template',
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'page_created_on' => SORT_ASC ],
-	                'desc' => ['page_created_on' => SORT_DESC ],
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'cdate',
 	            ],
 	            'pdate' => [
-	                'asc' => [ 'page_published_on' => SORT_ASC ],
-	                'desc' => ['page_published_on' => SORT_DESC ],
+	                'asc' => [ 'publishedAt' => SORT_ASC ],
+	                'desc' => ['publishedAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'pdate',
 	            ],
 	            'udate' => [
-	                'asc' => [ 'page_updated_on' => SORT_ASC ],
-	                'desc' => ['page_updated_on' => SORT_DESC ],
+	                'asc' => [ 'updatedAt' => SORT_ASC ],
+	                'desc' => ['updatedAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Page(), [ 'conditions' => [ 'page_type' => Page::TYPE_PAGE ], 'sort' => $sort, 'search-col' => 'page_name' ] );
+		return self::getPaginationDetails( new Page(), [ 'conditions' => [ 'type' => Page::TYPE_PAGE ], 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
@@ -87,28 +87,20 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 		$date 		= DateUtil::getMysqlDate();
 		$user		= Yii::$app->user->getIdentity();
 
-		$page->setCreatedOn( $date );
-		$page->setType( Page::TYPE_PAGE );
-		$page->setStatus( Page::STATUS_NEW );
-		$page->setVisibility( Page::VISIBILITY_PRIVATE );
-		$page->setAuthorId( $user->getId() );
-		$page->setSlug( CodeGenUtil::generateSlug( $page->getName() ) );
+		$page->createdAt	= $date;
+		$page->type 		= Page::TYPE_PAGE;
+		$page->status 		= Page::STATUS_NEW;
+		$page->visibility 	= Page::VISIBILITY_PRIVATE;
+		$page->authorId		= $user->id;
+		$page->slug			= CodeGenUtil::generateSlug( $page->name );
 
 		// Save Banner
-		FileService::saveImage( $banner, $user, Yii::$app->fileManager );
-
-		// New Banner
-		$bannerId 	= $banner->getId();
-
-		if( isset( $bannerId ) && intval( $bannerId ) > 0 ) {
-
-			$page->setBannerId( $banner->getId() );
-		}
+		FileService::saveImage( $banner, $user, [ 'model' => $page, 'attribute' => 'bannerId' ] );
 
 		// commit page
 		$page->save();
 
-		return true;
+		return $page;
 	}
 
 	// Update -----------
@@ -117,41 +109,25 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 
 		$date 			= DateUtil::getMysqlDate();
 		$user			= Yii::$app->user->getIdentity();
-		$pageToUpdate	= self::findById( $page->getId() );
+		$pageToUpdate	= self::findById( $page->id );
 
-		$pageToUpdate->setName( $page->getName() );
-		$pageToUpdate->setDesc( $page->getDesc() );
-		$pageToUpdate->setTemplate( $page->getTemplate() );
-		$pageToUpdate->setMetaTags( $page->getMetaTags() );
-		$pageToUpdate->setSummary( $page->getSummary() );
-		$pageToUpdate->setContent( $page->getContent() );
-		$pageToUpdate->setUpdatedOn( $date );
-		$pageToUpdate->setBannerId( $page->getBannerId() );
-		$pageToUpdate->setVisibility( $page->getVisibility() );
-		$pageToUpdate->setStatus( $page->getStatus() );
-		$pageToUpdate->setSlug( CodeGenUtil::generateSlug( $page->getName() ) );
+		$pageToUpdate->copyForUpdateFrom( $page, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
-		$publishDate	= $pageToUpdate->getPublishedOn();
+		$pageToUpdate->updatedAt	= $date;
+		$pageToUpdate->slug			= CodeGenUtil::generateSlug( $page->name );
+		$publishDate				= $pageToUpdate->publishedAt;
 
     	if( $pageToUpdate->isPublished() && !isset( $publishDate ) ) {
 
-    		$pageToUpdate->setPublishedOn( $date );
+    		$pageToUpdate->publishedAt	= $date;
     	}
 
 		// Save Banner
-		FileService::saveImage( $banner, $user, Yii::$app->fileManager );
-
-		// New Banner
-		$bannerId 	= $banner->getId();
-
-		if( isset( $bannerId ) && intval( $bannerId ) > 0 ) {
-
-			$pageToUpdate->setBannerId( $bannerId );
-		}
+		FileService::saveImage( $banner, $user, [ 'model' => $pageToUpdate, 'attribute' => 'bannerId' ] );
 
 		$pageToUpdate->update();
 
-		return true;
+		return $pageToUpdate;
 	}
 
 	public static function bindMenus( $binder ) {
@@ -160,7 +136,7 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 		$menus	= $binder->bindedData;
 
 		// Clear all existing mappings
-		MenuPage::deleteByPage( $pageId );
+		MenuPage::deleteByPageId( $pageId );
 
 		if( isset( $menus ) && count( $menus ) > 0 ) {
 
@@ -168,10 +144,10 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 
 				if( isset( $value ) ) {
 
-					$toSave				= new MenuPage();
+					$toSave			= new MenuPage();
 
-					$toSave->setPageId( $pageId );
-					$toSave->setMenuId( $value );
+					$toSave->pageId	= $pageId;
+					$toSave->menuId	= $value;
 
 					$toSave->save();
 				}
@@ -185,8 +161,7 @@ class PageService extends \cmsgears\modules\cms\common\services\PageService {
 
 	public static function delete( $page ) {
 
-		$pageId			= $page->getId();
-		$existingPage	= self::findById( $pageId );
+		$existingPage	= self::findById( $page->id );
 
 		// Delete Page
 		$existingPage->delete();

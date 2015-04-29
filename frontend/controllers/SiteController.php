@@ -1,20 +1,20 @@
 <?php
-namespace cmsgears\modules\cms\frontend\controllers;
+namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
 use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\frontend\config\WebGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\modules\cms\common\services\PageService;
-use cmsgears\modules\cms\common\services\PostService;
+use cmsgears\cms\common\services\PageService;
+use cmsgears\cms\common\services\PostService;
 
-use cmsgears\modules\core\frontend\controllers\BaseController;
+use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class SiteController extends BaseController {
 
@@ -39,14 +39,14 @@ class SiteController extends BaseController {
 		if( isset( $page ) ) {
 
 			// Set Layout
-			$template		= $page->getTemplate();
+			$templateName	= $page->getTemplateName();
 
-			if( isset( $template ) && strlen( $template ) > 0 ) {
+			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
 
-				$this->layout	= "/layout-" . $template;
+				$this->layout	= "/$templateName";
 
 				// Render using Template
-		        return $this->render( "template-" . $template, [ 'page' => $page ] );
+		        return $this->render( "template-" . $templateName, [ 'page' => $page ] );
 			}
 			else {
 
@@ -55,7 +55,7 @@ class SiteController extends BaseController {
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	// SiteController
@@ -69,14 +69,14 @@ class SiteController extends BaseController {
 		if( isset( $post ) ) {
 
 			// Set Layout
-			$template		= $post->getTemplate();
+			$templateName	= $post->getTemplateName();
 
-			if( isset( $template ) && strlen( $template ) > 0 ) {
+			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
 
-				$this->layout	= "/layout-" . $template;
+				$this->layout	= "/$templateName";
 
 				// Render using Template
-		        return $this->render( "template-" . $template, [ 'page' => $post ] );
+		        return $this->render( "template-" . $templateName, [ 'page' => $post ] );
 			}
 			else {
 
@@ -85,7 +85,7 @@ class SiteController extends BaseController {
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

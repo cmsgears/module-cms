@@ -14,8 +14,6 @@ DROP TABLE IF EXISTS `cmg_cms_page_meta`;
 
 DROP TABLE IF EXISTS `cmg_cms_page_file`;
 
-DROP TABLE IF EXISTS `cmg_cms_post_category`;
-
 DROP TABLE IF EXISTS `cmg_cms_sidebar`;
 
 DROP TABLE IF EXISTS `cmg_cms_widget`;

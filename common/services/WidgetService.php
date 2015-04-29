@@ -1,13 +1,14 @@
 <?php
-namespace cmsgears\modules\cms\common\services;
+namespace cmsgears\cms\common\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\cms\common\models\entities\Widget;
+use cmsgears\cms\common\models\entities\CmsTables;
+use cmsgears\cms\common\models\entities\Widget;
 
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class WidgetService extends Service {
 
@@ -27,32 +28,12 @@ class WidgetService extends Service {
 
 	public static function getIdList() {
 
-		$widgetsList	= array();
-
-		// Execute the command
-		$widgets 		= Widget::find()->all();
-
-		foreach ( $widgets as $widget ) {
-
-			array_push( $widgetsList, $widget->getId() );
-		}
-
-		return $widgetsList;
+		return self::findList( "id", CmsTables::TABLE_WIDGET );
 	}
 
-	public static function getIdNameMap() {
+	public static function getIdNameList() {
 
-		$widgetsMap 	= array();
-
-		// Execute the command
-		$widgets 		= Widget::find()->all();
-
-		foreach ( $widgets as $widget ) {
-
-			$widgetsMap[] = [ "id" => $widget->getId(), "name" => $widget->getName() ];
-		}
-
-		return $widgetsMap;
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_WIDGET );
 	}
 }
 

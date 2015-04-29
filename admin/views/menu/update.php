@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Menu';
 		<h2>Update Menu</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-menu-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'menu_name' ) ?>
-    	<?= $form->field( $model, 'menu_desc' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<h4>Link Pages</h4>
 		<?php 

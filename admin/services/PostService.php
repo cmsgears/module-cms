@@ -1,22 +1,24 @@
 <?php
-namespace cmsgears\modules\cms\admin\services;
+namespace cmsgears\cms\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\CmgFile;
-use cmsgears\modules\cms\common\models\entities\Page;
-use cmsgears\modules\cms\common\models\entities\Post;
-use cmsgears\modules\cms\common\models\entities\PostCategory;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\core\admin\services\FileService;
+use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\ModelCategory;
+use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\Post;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\admin\services\FileService;
 
-class PostService extends \cmsgears\modules\cms\common\services\PostService {
+use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\DateUtil;
+
+class PostService extends \cmsgears\cms\common\services\PostService {
 
 	// Static Methods ----------------------------------------------
 
@@ -27,131 +29,107 @@ class PostService extends \cmsgears\modules\cms\common\services\PostService {
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'page_name' => SORT_ASC ],
-	                'desc' => ['page_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'slug' => [
-	                'asc' => [ 'page_slug' => SORT_ASC ],
-	                'desc' => ['page_slug' => SORT_DESC ],
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'visibility' => [
-	                'asc' => [ 'page_visibility' => SORT_ASC ],
-	                'desc' => ['page_visibility' => SORT_DESC ],
+	                'asc' => [ 'visibility' => SORT_ASC ],
+	                'desc' => ['visibility' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'visibility',
 	            ],
 	            'status' => [
-	                'asc' => [ 'page_status' => SORT_ASC ],
-	                'desc' => ['page_status' => SORT_DESC ],
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'status',
 	            ],
 	            'template' => [
-	                'asc' => [ 'page_template' => SORT_ASC ],
-	                'desc' => ['page_template' => SORT_DESC ],
+	                'asc' => [ 'template' => SORT_ASC ],
+	                'desc' => ['template' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'template',
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'page_created_on' => SORT_ASC ],
-	                'desc' => ['page_created_on' => SORT_DESC ],
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'cdate',
 	            ],
 	            'pdate' => [
-	                'asc' => [ 'page_published_on' => SORT_ASC ],
-	                'desc' => ['page_published_on' => SORT_DESC ],
+	                'asc' => [ 'publishedAt' => SORT_ASC ],
+	                'desc' => ['publishedAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'pdate',
 	            ],
 	            'udate' => [
-	                'asc' => [ 'page_updated_on' => SORT_ASC ],
-	                'desc' => ['page_updated_on' => SORT_DESC ],
+	                'asc' => [ 'updatedAt' => SORT_ASC ],
+	                'desc' => ['updatedAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Post(), [ 'conditions' => [ 'page_type' => Page::TYPE_POST ], 'sort' => $sort, 'search-col' => 'page_name' ] );
+		return self::getPaginationDetails( new Post(), [ 'conditions' => [ 'type' => Page::TYPE_POST ], 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
 
 	public static function create( $post, $banner ) {
 
-		// Create Post		
+		// Create Post
 		$date 		= DateUtil::getMysqlDate();
 		$user		= Yii::$app->user->getIdentity();
 
-		$post->setCreatedOn( $date );
-		$post->setType( Page::TYPE_POST );
-		$post->setStatus( Page::STATUS_NEW );
-		$post->setVisibility( Page::VISIBILITY_PRIVATE );
-		$post->setAuthorId( $user->getId() );
-		$post->setSlug( CodeGenUtil::generateSlug( $post->getName() ) );
+		$post->createdAt	= $date;
+		$post->type 		= Page::TYPE_POST;
+		$post->status 		= Page::STATUS_NEW;
+		$post->visibility 	= Page::VISIBILITY_PRIVATE;
+		$post->authorId		= $user->id;
+		$post->slug			= CodeGenUtil::generateSlug( $post->name );
 
 		// Save Banner
-		FileService::saveImage( $banner, $user, Yii::$app->fileManager );
-
-		// New Banner
-		$bannerId 	= $banner->getId();
-
-		if( isset( $bannerId ) && intval( $bannerId ) > 0 ) {
-
-			$post->setBannerId( $banner->getId() );
-		}
+		FileService::saveImage( $banner, $user, [ 'model' => $post, 'attribute' => 'bannerId' ] );
 
 		$post->save();
 
-		return true;
+		return $post;
 	}
 
 	// Update -----------
 
 	public static function update( $post, $banner ) {
-		
+
 		$date 			= DateUtil::getMysqlDate();
 		$user			= Yii::$app->user->getIdentity();
-		$postToUpdate	= self::findById( $post->getId() );
+		$postToUpdate	= self::findById( $post->id );
 		
-		$postToUpdate->setName( $post->getName() );
-		$postToUpdate->setDesc( $post->getDesc() );
-		$postToUpdate->setTemplate( $post->getTemplate() );
-		$postToUpdate->setMetaTags( $post->getMetaTags() );
-		$postToUpdate->setSummary( $post->getSummary() );
-		$postToUpdate->setContent( $post->getContent() );
-		$postToUpdate->setUpdatedOn( $date );
-		$postToUpdate->setBannerId( $post->getBannerId() );
-		$postToUpdate->setVisibility( $post->getVisibility() );
-		$postToUpdate->setStatus( $post->getStatus() );
-		$postToUpdate->setSlug( CodeGenUtil::generateSlug( $post->getName() ) );
+		$postToUpdate->copyForUpdateFrom( $post, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
-		$publishDate	= $postToUpdate->getPublishedOn();
+		$postToUpdate->updatedAt	= $date;
+		$postToUpdate->slug			= CodeGenUtil::generateSlug( $post->name );
+		$publishDate				= $postToUpdate->publishedAt;
 
     	if( $postToUpdate->isPublished() && !isset( $publishDate ) ) {
 
-    		$postToUpdate->setPublishedOn( $date );
+    		$postToUpdate->publishedAt	= $date;
     	}
 
 		// Save Banner
-		FileService::saveImage( $banner, $user, Yii::$app->fileManager );
-
-		// New Banner
-		$bannerId 	= $banner->getId();
-
-		if( isset( $bannerId ) && intval( $bannerId ) > 0 ) {
-
-			$postToUpdate->setBannerId( $banner->getId() );
-		}
+		FileService::saveImage( $banner, $user, [ 'model' => $postToUpdate, 'attribute' => 'bannerId' ] );
 
 		$postToUpdate->update();
 
-		return true;
+		return $postToUpdate;
 	}
 
 	public static function bindCategories( $binder ) {
@@ -160,7 +138,7 @@ class PostService extends \cmsgears\modules\cms\common\services\PostService {
 		$categories		= $binder->bindedData;
 
 		// Clear all existing mappings
-		PostCategory::deleteByPostId( $postId );
+		ModelCategory::deleteByParentIdType( $postId, CmsGlobal::CATEGORY_TYPE_POST );
 
 		if( isset( $categories ) && count( $categories ) > 0 ) {
 
@@ -168,10 +146,11 @@ class PostService extends \cmsgears\modules\cms\common\services\PostService {
 
 				if( isset( $value ) ) {
 
-					$toSave		= new PostCategory();
+					$toSave		= new ModelCategory();
 
-					$toSave->setPostId( $postId );
-					$toSave->setCategoryId( $value );
+					$toSave->parentId	= $postId;
+					$toSave->parentType	= CmsGlobal::CATEGORY_TYPE_POST;
+					$toSave->categoryId	= $value;
 
 					$toSave->save();
 				}
@@ -184,9 +163,11 @@ class PostService extends \cmsgears\modules\cms\common\services\PostService {
 	// Delete -----------
 
 	public static function delete( $post ) {
+		
+		$existingPost	= self::findById( $post->id );
 
 		// Delete Page
-		$post->delete();
+		$existingPost->delete();
 
 		return true;
 	}

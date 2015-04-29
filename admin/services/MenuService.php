@@ -1,14 +1,14 @@
 <?php
-namespace cmsgears\modules\cms\admin\services;
+namespace cmsgears\cms\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
-use cmsgears\modules\cms\common\models\entities\Menu;
-use cmsgears\modules\cms\common\models\entities\MenuPage;
+use cmsgears\cms\common\models\entities\Menu;
+use cmsgears\cms\common\models\entities\MenuPage;
 
-class MenuService extends \cmsgears\modules\cms\common\services\MenuService {
+class MenuService extends \cmsgears\cms\common\services\MenuService {
 
 	// Static Methods ----------------------------------------------
 
@@ -19,15 +19,15 @@ class MenuService extends \cmsgears\modules\cms\common\services\MenuService {
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'menu_name' => SORT_ASC ],
-	                'desc' => ['menu_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Menu(), [ 'sort' => $sort, 'search-col' => 'menu_name' ] );
+		return self::getPaginationDetails( new Menu(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
@@ -36,41 +36,40 @@ class MenuService extends \cmsgears\modules\cms\common\services\MenuService {
 
 		$menu->save();
 
-		return true;
+		return $menu;
 	}
 
 	// Update -----------
 
 	public static function update( $menu ) {
 		
-		$menuToUpdate	= self::findById( $menu->getId() );
+		$menuToUpdate	= self::findById( $menu->id );
 		
-		$menuToUpdate->setName( $menu->getName() );
-		$menuToUpdate->setDesc( $menu->getDesc() );
+		$menuToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
 
 		$menuToUpdate->update();
 
-		return true;
+		return $menuToUpdate;
 	}
 
 	public static function bindPages( $binder ) {
 
 		$menuId	= $binder->menuId;
 		$pages	= $binder->bindedData;
-		
+
 		// Clear all existing mappings
-		MenuPage::deleteByMenu( $menuId );
+		MenuPage::deleteByMenuId( $menuId );
 
 		if( isset( $pages ) && count( $pages ) > 0 ) {
 
 			foreach ( $pages as $key => $value ) {
-				
+
 				if( isset( $value ) ) {
 
 					$toSave	= new MenuPage();
-	
-					$toSave->setMenuId( $menuId );
-					$toSave->setPageId( $value );
+
+					$toSave->menuId	= $menuId;
+					$toSave->pageId = $value;
 	
 					$toSave->save();
 				}
@@ -84,8 +83,7 @@ class MenuService extends \cmsgears\modules\cms\common\services\MenuService {
 
 	public static function delete( $menu ) {
 
-		$menuId			= $menu->getId();
-		$existingMenu	= self::findById( $menuId );
+		$existingMenu	= self::findById( $menu->id );
 
 		// Delete Menu
 		$existingMenu->delete();

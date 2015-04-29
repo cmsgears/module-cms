@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\common\models\entities;
+namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -8,47 +8,28 @@ class SidebarWidget extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getSidebarId() {
-
-		return $this->sidebar_id;
-	}
-
-	public function setSidebarId( $sidebarId ) {
-
-		$this->sidebar_id = $sidebarId;
-	}
-
-	public function getWidgetId() {
-
-		return $this->widget_id;
-	}
-
-	public function setWidgetId( $widgetId ) {
-
-		$this->widget_id = $widgetId;
-	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
-		return CMSTables::TABLE_SIDEBAR_WIDGET;
+		return CmsTables::TABLE_SIDEBAR_WIDGET;
 	}
+
+	// SidebarWidget ---------------------
 
 	// Delete
 
-	public static function deleteBySidebar( $sidebarId ) {
+	public static function deleteBySidebarId( $sidebarId ) {
 
-		self::deleteAll( 'sidebar_id=:id', [ ':id' => $sidebarId ] );
+		self::deleteAll( 'sidebarId=:id', [ ':id' => $sidebarId ] );
 	}
 
-	public static function deleteByWidget( $widgetId ) {
+	public static function deleteByWidgetId( $widgetId ) {
 
-		self::deleteAll( 'widget_id=:id', [ ':id' => $widgetId ] );
+		self::deleteAll( 'widgetId=:id', [ ':id' => $widgetId ] );
 	}
 }
 

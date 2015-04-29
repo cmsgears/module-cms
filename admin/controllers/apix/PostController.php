@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers\apix;
+namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
@@ -8,15 +8,14 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\cms\admin\models\forms\PostCategoryBinderForm;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\cms\admin\models\forms\PostCategoryBinderForm;
 
-use cmsgears\modules\cms\admin\services\PostService;
+use cmsgears\cms\admin\services\PostService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class PostController extends Controller {
 
@@ -36,8 +35,8 @@ class PostController extends Controller {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'bindCategories'  => CMSPermission::PERM_CMS_POST
+                'actions' => [
+	                'bindCategories'  => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -60,12 +59,12 @@ class PostController extends Controller {
 			if( PostService::bindCategories( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

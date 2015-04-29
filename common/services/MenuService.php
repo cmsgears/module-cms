@@ -1,12 +1,11 @@
 <?php
-namespace cmsgears\modules\cms\common\services;
+namespace cmsgears\cms\common\services;
 
-// Yii Imports
-use \Yii;
+// CMG Imports
+use cmsgears\cms\common\models\entities\CmsTables;
+use cmsgears\cms\common\models\entities\Menu;
 
-use cmsgears\modules\cms\common\models\entities\Menu;
-
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class MenuService extends Service {
 
@@ -21,32 +20,12 @@ class MenuService extends Service {
 
 	public static function getIdList() {
 
-		$menusList	= array();
-
-		// Execute the command
-		$menus 		= Menu::find()->all();
-
-		foreach ( $menus as $menu ) {
-			
-			array_push( $menusList, $menu->getId() );
-		}
-
-		return $menusList;
+		return self::findList( "id", CmsTables::TABLE_MENU );
 	}
 
-	public static function getIdNameMap() {
+	public static function getIdNameList() {
 
-		$menusMap 		= array();
-
-		// Execute the command
-		$menus 		= Menu::find()->all();
-
-		foreach ( $menus as $menu ) {
-
-			$menusMap[] = [ "id" => $menu->getId(), "name" => $menu->getName() ];
-		}
-
-		return $menusMap;
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_MENU );
 	}
 }
 
