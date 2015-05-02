@@ -31,7 +31,7 @@ class ContentUtil {
 			$coreProperties			= $view->context->getCoreProperties();
 			$view->params[ 'page']	= $page;
 			$view->params[ 'desc']	= $page->description;
-			$view->params[ 'meta']	= $page->getTagsCsv();
+			$view->params[ 'meta']	= $page->getKeywords();
 			$siteTitle				= $coreProperties->getSiteTitle();
 			$view->title			= $siteTitle . " | " . $page->name;
 		}

@@ -15,6 +15,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'keywords' )->textarea( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'visibility' )->dropDownList( $visibilities, [ 'disabled'=>'true' ] ) ?>
     	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled'=>'true' ] ) ?>

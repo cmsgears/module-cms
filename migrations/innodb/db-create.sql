@@ -52,6 +52,7 @@ CREATE TABLE `cmg_cms_page` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `keywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   `visibility` smallint(6) DEFAULT NULL,

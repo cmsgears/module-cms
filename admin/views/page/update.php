@@ -14,6 +14,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+    	<?= $form->field( $model, 'keywords' )->textarea() ?>
     	<?= $form->field( $model, 'visibility' )->dropDownList( $visibilities ) ?>
     	<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>

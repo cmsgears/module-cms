@@ -8,6 +8,7 @@ use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\TagTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 
 class Content extends NamedCmgEntity {
@@ -42,6 +43,10 @@ class Content extends NamedCmgEntity {
 	use MetaTrait;
 
 	public $metaType	= CmsGlobal::META_TYPE_PAGE;
+
+	use TagTrait;
+
+	public $tagType		= CmsGlobal::TAG_TYPE_POST;
 
 	use FileTrait;
 
@@ -154,8 +159,9 @@ class Content extends NamedCmgEntity {
 			'authorId' => 'Author',
 			'bannerId' => 'Banner',
 			'templateId' => 'Template',
-			'name' => 'Name',
+			'name' => 'Title',
 			'description' => 'Description',
+			'keywords' => 'Keywords',
 			'type' => 'Type',
 			'visibility' => 'Visibility', 
 			'status' => 'Status',

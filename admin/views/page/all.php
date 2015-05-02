@@ -73,6 +73,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Keywords</th>
+					<th>Tags</th>
 					<th>Created on
 						<span class='box-icon-sort'>
 							<span sort-order='cdate' class="icon-sort <?php if( strcmp( $sortOrder, 'cdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -116,6 +117,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
 						<td><?= $pag->getTemplateName() ?></td>
+						<td><?= $pag->keywords ?></td>
 						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
 						<td><?= $pag->createdAt ?></td>
 						<td><?= $pag->publishedAt ?></td>
