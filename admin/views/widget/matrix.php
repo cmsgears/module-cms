@@ -3,7 +3,7 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Widgets Matrix";
@@ -53,11 +53,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $widget ) {
 
-						$id 		= $widget->getId();
+						$id 		= $widget->id;
 						$sidebars	= $widget->getSidebarsIdList();
 				?>
 					<tr>
-						<td><?= $widget->getName() ?></td>
+						<td><?= $widget->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
 								<input type="hidden" name="widgetId" value="<?=$id?>" />
