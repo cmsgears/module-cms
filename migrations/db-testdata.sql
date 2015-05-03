@@ -12,13 +12,6 @@ INSERT INTO `cmg_cms_template` VALUES
 	(3,'text','Text layout for text widget.',5);
 
 --
--- Dumping data for table `cmg_option`
---
-
-INSERT INTO `cmg_option` VALUES 
-	(1001,1,'Post',1001,NULL);
-
---
 -- Dumping data for table `cmg_role`
 --
 
