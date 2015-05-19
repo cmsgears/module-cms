@@ -14,7 +14,7 @@ use cmsgears\cms\frontend\services\PostService;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
-class Blog extends Widget {
+class Post extends Widget {
 
 	// Variables ---------------------------------------------------
 
@@ -84,7 +84,7 @@ class Blog extends Widget {
 		// Post Author
 		$author			= $post->author;
 		$avatar			= $author->avatar;
-		$defaultAvatar	= Yii::getAlias('@web') . "/assets/images/avatar.png";
+		$defaultAvatar	= Yii::getAlias('@web') . "/images/avatar.png";
 		$authorInfo		= "";
 
 		if( isset( $avatar ) ) {

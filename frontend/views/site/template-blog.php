@@ -1,5 +1,5 @@
 <?php
-use cmsgears\widgets\cms\Blog;
+use cmsgears\widgets\cms\Post;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | " . $page->getName();
@@ -14,7 +14,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | " . $page->getName();
 			<?=$page->getContent()?>
 		</div>
 		<?php
-		    echo Blog::widget([
+		    echo Post::widget([
 		        'options' => [ 'class' => 'blog-posts' ]
 		    ]);
 		?>

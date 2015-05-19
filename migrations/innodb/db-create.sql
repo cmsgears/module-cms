@@ -68,8 +68,8 @@ CREATE TABLE `cmg_cms_page` (
   KEY `fk_page_3` (`bannerId`),
   KEY `fk_page_4` (`templateId`),
   CONSTRAINT `fk_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
-  CONSTRAINT `fk_page_2` FOREIGN KEY (`authorId`) REFERENCES `cmg_user` (`id`),
-  CONSTRAINT `fk_page_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_file` (`id`),
+  CONSTRAINT `fk_page_2` FOREIGN KEY (`authorId`) REFERENCES `cmg_core_user` (`id`),
+  CONSTRAINT `fk_page_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
   CONSTRAINT `fk_page_4` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

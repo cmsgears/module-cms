@@ -11,11 +11,11 @@ class Post extends Content {
 
 	use CategoryTrait;
 
-	public $categoryType	= CmsGlobal::CATEGORY_TYPE_POST;
+	public $categoryType	= CmsGlobal::TYPE_POST;
 
 	use TagTrait;
 
-	public $tagType		= CmsGlobal::TAG_TYPE_POST;
+	public $tagType			= CmsGlobal::TYPE_POST;
 
 	// Instance Methods --------------------------------------------
 
@@ -30,11 +30,11 @@ class Post extends Content {
 
 	// Post ------------------------------
 
-	public static function blogQuery() {
+	public static function findWithAuthor() {
 		
 		$postTable = CmsTables::TABLE_PAGE;
 		
-		return self::find()->joinWith( 'author' )->joinWith( 'author.avatar' )->joinWith( 'bannerWithAlias' )->joinWith( 'categories' )
+		return self::find()->joinWith( 'author' )->joinWith( 'author.avatar' )->joinWith( 'bannerWithAlias' )
 							 ->where( [ "$postTable.type" => Page::TYPE_POST, "$postTable.status" => Content::STATUS_PUBLISHED, "$postTable.visibility" => Content::VISIBILITY_PUBLIC ] );
 	}
 

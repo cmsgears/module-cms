@@ -2,9 +2,17 @@
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
+use cmsgears\core\common\models\traits\MetaTrait;
+
 class Menu extends NamedCmgEntity {
+
+	use MetaTrait;
+
+	public $metaType	= CmsGlobal::TYPE_MENU;
 
 	// Instance Methods --------------------------------------------
 

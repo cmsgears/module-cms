@@ -2,9 +2,17 @@
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
+use cmsgears\core\common\models\traits\MetaTrait;
+
 class Sidebar extends NamedCmgEntity {
+
+	use MetaTrait;
+
+	public $metaType	= CmsGlobal::TYPE_SIDEBAR;
 
 	// Instance Methods --------------------------------------------
 
@@ -43,7 +51,7 @@ class Sidebar extends NamedCmgEntity {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ 'name', 'alphanumhyphen' ],
+            [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'id', 'description', 'active' ], 'safe' ]

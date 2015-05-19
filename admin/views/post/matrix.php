@@ -52,7 +52,7 @@ if( !isset( $sortOrder ) ) {
 					foreach( $page as $post ) {
 
 						$id 		= $post->id;
-						$categories	= $post->getCategoriesIdList();
+						$categories	= $post->getCategoryIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/post/bind-categories" );
 				?>
 					<tr>

@@ -42,5 +42,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Sidebar';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", -1 );
+	initSidebar( "sidebar-sidebar", 2 );
 </script>

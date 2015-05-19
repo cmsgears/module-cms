@@ -39,7 +39,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
 		<h4>Assign Categories</h4>
 		<?php 
-			$postCategories	= $model->getCategoriesIdList();
+			$postCategories	= $model->getCategoryIdList();
 
 			foreach ( $categories as $category ) { 
 

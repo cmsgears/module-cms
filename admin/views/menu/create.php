@@ -27,5 +27,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Menu';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 2 );
+	initSidebar( "sidebar-page-blog", 1 );
 </script>

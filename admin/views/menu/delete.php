@@ -39,5 +39,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Menu';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-page-blog", -1 );
+	initSidebar( "sidebar-page-blog", 1 );
 </script>

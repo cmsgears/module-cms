@@ -42,5 +42,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 4 );
+	initSidebar( "sidebar-sidebar", 2 );
 </script>

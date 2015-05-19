@@ -4,6 +4,7 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
@@ -41,11 +42,11 @@ class Content extends NamedCmgEntity {
 
 	use MetaTrait;
 
-	public $metaType	= CmsGlobal::META_TYPE_PAGE;
+	public $metaType	= CmsGlobal::TYPE_PAGE;
 
 	use FileTrait;
 
-	public $fileType	= CmsGlobal::FILE_TYPE_PAGE;
+	public $fileType	= CmsGlobal::TYPE_PAGE;
 
 	// Instance Methods --------------------------------------------
 
@@ -76,7 +77,9 @@ class Content extends NamedCmgEntity {
 
 	public function getBannerWithAlias() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] )->from( 'cmg_file banner' );
+		$file = CoreTables::TABLE_FILE;
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] )->from( "$file banner" );
 	}
 
 	public function getTemplate() {
@@ -139,11 +142,11 @@ class Content extends NamedCmgEntity {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'keywords', 'summary', 'content', 'createdAt', 'publishedAt', 'updatedAt' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId', 'authorId', 'bannerId', 'templateId', 'description', 'type', 'visibility', 'status' ], 'safe' ], 
-            [ [ 'id', 'summary', 'content', 'createdAt', 'publishedAt', 'updatedAt' ], 'safe' ]
+            [ [ 'parentId', 'authorId', 'bannerId', 'templateId', 'description', 'type', 'visibility', 'status' ], 'safe' ]
         ];
     }
 

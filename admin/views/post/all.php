@@ -106,7 +106,7 @@ if( !isset( $sortOrder ) ) {
 						$editUrl	= Html::a( $post->name, [ "/cmgcms/post/update?id=$id" ] );
 						$slug		= $post->slug;
 						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
-						$tags		= $post->getTagsMap();
+						$tags		= $post->getTagMap();
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>

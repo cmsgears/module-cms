@@ -111,7 +111,7 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 		$user			= Yii::$app->user->getIdentity();
 		$pageToUpdate	= self::findById( $page->id );
 
-		$pageToUpdate->copyForUpdateFrom( $page, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
+		$pageToUpdate->copyForUpdateFrom( $page, [ 'name', 'description', 'keywords', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
 		$pageToUpdate->updatedAt	= $date;
 		$pageToUpdate->slug			= CodeGenUtil::generateSlug( $page->name );

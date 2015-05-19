@@ -113,7 +113,7 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 		$user			= Yii::$app->user->getIdentity();
 		$postToUpdate	= self::findById( $post->id );
 		
-		$postToUpdate->copyForUpdateFrom( $post, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
+		$postToUpdate->copyForUpdateFrom( $post, [ 'name', 'description', 'keywords', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
 
 		$postToUpdate->updatedAt	= $date;
 		$postToUpdate->slug			= CodeGenUtil::generateSlug( $post->name );

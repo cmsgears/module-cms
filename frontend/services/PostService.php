@@ -73,8 +73,8 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 	        	'pdate' => 'desc'
 	        ]
 	    ]);
-		
-		$query	= Post::blogQuery();
+
+		$query	= Post::findWithAuthor();
 
 		return self::getPaginationDetails( new Post(), [ 'route' => 'blog', 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
 	}

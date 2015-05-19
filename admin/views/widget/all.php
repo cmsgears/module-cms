@@ -76,5 +76,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 3 );
+	initSidebar( "sidebar-sidebar", 2 );
 </script>
