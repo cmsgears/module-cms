@@ -1,7 +1,13 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 class Widget extends NamedCmgEntity {
@@ -79,24 +85,30 @@ class Widget extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ 'name', 'required', 'on' => [ 'create', 'update' ] ],
+            [ [ 'id', 'templateId', 'description', 'meta' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'metaMap', 'required', 'on' => [ 'meta' ] ],
-            [ [ 'id', 'templateId', 'description', 'meta' ], 'safe' ]
+            [ 'metaMap', 'required', 'on' => [ 'meta' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'templateId' => 'Template',
-			'name' => 'Name',
-			'description' => 'Description'
+			'templateId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEMPLATE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -104,6 +116,9 @@ class Widget extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_WIDGET;

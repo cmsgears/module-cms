@@ -23,6 +23,9 @@ class Post extends Content {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function find() {
 
 		return parent::find()->where( [ 'page_type' => Page::TYPE_POST ] );
@@ -30,27 +33,22 @@ class Post extends Content {
 
 	// Post ------------------------------
 
+	/**
+	 * @return array - Post - All posts having author details.
+	 */
 	public static function findWithAuthor() {
-		
+
 		$postTable = CmsTables::TABLE_PAGE;
-		
-		return self::find()->joinWith( 'author' )->joinWith( 'author.avatar' )->joinWith( 'bannerWithAlias' )
-							 ->where( [ "$postTable.type" => Page::TYPE_POST, "$postTable.status" => Content::STATUS_PUBLISHED, "$postTable.visibility" => Content::VISIBILITY_PUBLIC ] );
+
+		return self::find()->joinWith( 'banner' )->joinWith( 'author' )->joinWith( 'author.avatar' )->where( [ "$postTable.type" => Page::TYPE_POST ] );
 	}
 
+	/**
+	 * @return Post - by slug.
+	 */
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
-
-	public static function findByAuthorId( $id ) {
-
-		return self::find()->where( 'authorId=:id', [ ':id' => $id ] )->all();
-	}
-
-	public static function findByCategoryName( $name ) {
-
-		return self::find()->joinWith( 'categories' )->where( 'name=:name', [ ':name' => $name ] )->all();
 	}
 }
 

@@ -8,7 +8,7 @@ class Page extends Content {
 	public function getMenus() {
 
     	return $this->hasMany( Menu::className(), [ 'id' => 'menuId' ] )
-					->viaTable( CMSTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
+					->viaTable( CmsTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
 	}
 
 	public function getMenusMap() {
@@ -33,21 +33,22 @@ class Page extends Content {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function find() {
 
 		return parent::find()->where( [ 'type' => self::TYPE_PAGE ] );
 	}
 
 	// Page ------------------------------
-
+	
+	/**
+	 * @return Page - by slug.
+	 */
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
-
-	public static function findByAuthorId( $id ) {
-
-		return self::find()->where( 'authorId=:id', [ ':id' => $id ] )->all();
 	}
 }
 

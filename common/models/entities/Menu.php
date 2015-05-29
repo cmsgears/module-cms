@@ -1,7 +1,11 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
@@ -19,7 +23,7 @@ class Menu extends NamedCmgEntity {
 	public function getPages() {
 
     	return $this->hasMany( Page::className(), [ 'id' => 'pageId' ] )
-					->viaTable( CMSTables::TABLE_PAGE, [ 'menuId' => 'id' ] );
+					->viaTable( CmsTables::TABLE_PAGE, [ 'menuId' => 'id' ] );
 	}
 
 	public function getPagesMap() {
@@ -42,22 +46,28 @@ class Menu extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'id', 'description' ], 'safe' ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -65,6 +75,9 @@ class Menu extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_MENU;

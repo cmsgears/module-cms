@@ -1,7 +1,12 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 class Template extends NamedCmgEntity {
@@ -13,22 +18,28 @@ class Template extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name', 'type' ], 'required' ],
+            [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'id', 'description' ], 'safe' ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -36,23 +47,35 @@ class Template extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_TEMPLATE;
 	}
 
 	// Template --------------------------
-
+	
+	/**
+	 * @return array - Template by type
+	 */
 	public static function findByType( $type ) {
 
 		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
 	}
 
+	/**
+	 * @return array - Template available for pages
+	 */
 	public static function findForPages() {
 
 		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_PAGE ] )->all();
 	}
 
+	/**
+	 * @return array - Template available for widgets
+	 */
 	public static function findForWidgets() {
 
 		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_WIDGET ] )->all();

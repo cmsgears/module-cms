@@ -1,7 +1,11 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
@@ -15,11 +19,6 @@ class Sidebar extends NamedCmgEntity {
 	public $metaType	= CmsGlobal::TYPE_SIDEBAR;
 
 	// Instance Methods --------------------------------------------
-
-	public function getActiveStr() {
-
-		return $this->active ? "Yes" : "No";	
-	}
 
 	public function getWidgets() {
 
@@ -47,22 +46,28 @@ class Sidebar extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'id', 'description', 'active' ], 'safe' ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -70,6 +75,9 @@ class Sidebar extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_SIDEBAR;

@@ -6,6 +6,7 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\Post;
 
 class PostService extends \cmsgears\cms\common\services\PostService {
@@ -17,6 +18,8 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 	// Pagination -------
 
 	public static function getPagination( $conditions = [] ) {
+		
+		$postTable = CmsTables::TABLE_PAGE;
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -76,7 +79,10 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 
 		$query	= Post::findWithAuthor();
 
-		return self::getPaginationDetails( new Post(), [ 'route' => 'blog', 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
+		$conditions[ "$postTable.status" ] 		= Content::STATUS_PUBLISHED;
+		$conditions[ "$postTable.visibility" ] 	= Content::VISIBILITY_PUBLIC;
+
+		return self::getPaginationDetails( new Post(), [ 'route' => 'blog', 'query' => $query, 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 }
 

@@ -1,7 +1,12 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\behaviors\TimestampBehavior;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
@@ -56,35 +61,28 @@ class Content extends NamedCmgEntity {
 
 			case self::TYPE_PAGE: {
 
-				return $this->hasOne( Page::className(), [ 'id' => 'parentId' ] );
+				return $this->hasOne( Page::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' ppage' );
 			}
 			case self::TYPE_POST: {
 
-				return $this->hasOne( Post::className(), [ 'id' => 'parentId' ] );
+				return $this->hasOne( Post::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' ppage' );
 			}
 		}
 	}
 
 	public function getAuthor() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] )->from( CoreTables::TABLE_USER . ' author' );
 	}
 
 	public function getBanner() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
-
-	public function getBannerWithAlias() {
-
-		$file = CoreTables::TABLE_FILE;
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] )->from( "$file banner" );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] )->from( CmsTables::TABLE_FILE . ' pbanner' );
 	}
 
 	public function getTemplate() {
 
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] )->from( CmsTables::TABLE_TEMPLATE . ' template' );
 	}
 
 	public function getTemplateName() {
@@ -136,36 +134,62 @@ class Content extends NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'keywords', 'summary', 'content', 'createdAt', 'publishedAt', 'updatedAt' ], 'safe' ],
+            [ [ 'id', 'slug', 'type', 'status', 'visibility', 'summary', 'content' ], 'safe' ],
+            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
+            [ [ 'parentId', 'authorId', 'bannerId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId', 'authorId', 'bannerId', 'templateId', 'description', 'type', 'visibility', 'status' ], 'safe' ]
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent Page',
-			'authorId' => 'Author',
-			'bannerId' => 'Banner',
-			'templateId' => 'Template',
-			'name' => 'Title',
-			'description' => 'Description',
-			'keywords' => 'Keywords',
-			'type' => 'Type',
-			'visibility' => 'Visibility', 
-			'status' => 'Status',
-			'slug' => 'Slug',
-			'summary' => 'Summary',
-			'content' => 'Content'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'authorId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'templateId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEMPLATE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'keywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_KEYWORDS ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
+			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'summary' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SUMMARY ),
+			'content' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_CONTENT )
 		];
 	}
 
@@ -173,6 +197,9 @@ class Content extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_PAGE;
