@@ -38,11 +38,13 @@ class Page extends Content {
      */
 	public static function find() {
 
-		return parent::find()->where( [ 'type' => self::TYPE_PAGE ] );
+		$postTable = CmsTables::TABLE_PAGE;
+
+		return parent::find()->where( [ "$postTable.type" => Page::TYPE_PAGE ] );
 	}
 
 	// Page ------------------------------
-	
+
 	/**
 	 * @return Page - by slug.
 	 */

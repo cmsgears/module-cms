@@ -29,8 +29,6 @@ class CmsGlobal {
 
 	// Content Fields
 	const FIELD_KEYWORDS		= "keywordsField";
-	const FIELD_SUMMARY			= "summaryField";
-	const FIELD_CONTENT			= "contentField";
 }
 
 ?>

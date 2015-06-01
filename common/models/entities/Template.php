@@ -9,6 +9,14 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
+/**
+ * Template Entity
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property string $type
+ */
 class Template extends NamedCmgEntity {
 
 	const TYPE_PAGE		= 0;

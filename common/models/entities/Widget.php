@@ -10,6 +10,15 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
+/**
+ * Widget Entity
+ *
+ * @property int $id
+ * @property int $templateId
+ * @property string $name
+ * @property string $description
+ * @property string $meta
+ */
 class Widget extends NamedCmgEntity {
 	
 	public $metaMap;
@@ -66,7 +75,7 @@ class Widget extends NamedCmgEntity {
 
 	public function getTemplate() {
 
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] )->from( CmsTables::TABLE_TEMPLATE . ' template' );
 	}
 
 	public function getTemplateName() {

@@ -12,6 +12,13 @@ use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 use cmsgears\core\common\models\traits\MetaTrait;
 
+/**
+ * Sidebar Entity
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ */
 class Sidebar extends NamedCmgEntity {
 
 	use MetaTrait;

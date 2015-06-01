@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -16,6 +17,29 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 
+/**
+ * Content Entity
+ *
+ * @property int $id
+ * @property int $parentId
+ * @property int $authorId
+ * @property int $bannerId
+ * @property int $templateId
+ * @property string $name
+ * @property string $slug
+ * @property short $type
+ * @property short $status
+ * @property short $visibility
+ * @property string $summary
+ * @property string $content
+ * @property date $createdAt
+ * @property date $modifiedAt
+ * @property date $publishedAt
+ * @property string $seoName
+ * @property string $seoDescription
+ * @property string $seoKeywords
+ * @property string $seoRobot
+ */
 class Content extends NamedCmgEntity {
 
 	// Pre-Defined Types
@@ -61,18 +85,18 @@ class Content extends NamedCmgEntity {
 
 			case self::TYPE_PAGE: {
 
-				return $this->hasOne( Page::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' ppage' );
+				return $this->hasOne( Page::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' page' );
 			}
 			case self::TYPE_POST: {
 
-				return $this->hasOne( Post::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' ppage' );
+				return $this->hasOne( Post::className(), [ 'id' => 'parentId' ] )->from( CmsTables::TABLE_PAGE . ' page' );
 			}
 		}
 	}
 
 	public function getAuthor() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] )->from( CoreTables::TABLE_USER . ' author' );
+		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] )->from( CoreTables::TABLE_USER . ' pauthor' );
 	}
 
 	public function getBanner() {
@@ -88,13 +112,13 @@ class Content extends NamedCmgEntity {
 	public function getTemplateName() {
 
 		$template = $this->template;
-		
+
 		if( isset( $template ) ) {
-			
+
 			return $template->name;
 		}
 		else {
-			
+
 			return '';
 		}
 	}
@@ -120,7 +144,7 @@ class Content extends NamedCmgEntity {
 	}
 	
 	public function getVisibilityStr() {
-		
+
 		return self::$visibilityMap[ $this->visibility ];
 	}
 
@@ -134,6 +158,14 @@ class Content extends NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
+	/**
+	 * @return boolean - whether given user is owner
+	 */
+	public function checkOwner( $user ) {
+
+		return $this->authorId	= $user->id;		
+	}
+
 	// yii\base\Component ----------------
 
     /**
@@ -143,6 +175,12 @@ class Content extends NamedCmgEntity {
 
         return [
 
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -188,8 +226,8 @@ class Content extends NamedCmgEntity {
 			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'summary' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SUMMARY ),
-			'content' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_CONTENT )
+			'summary' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
+			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT )
 		];
 	}
 
@@ -205,7 +243,8 @@ class Content extends NamedCmgEntity {
 		return CmsTables::TABLE_PAGE;
 	}
 
-	// yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord ------------
+
     public static function instantiate( $row ) {
 		
 		switch( $row['type'] ) {

@@ -9,6 +9,13 @@ use cmsgears\core\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CmgEntity;
 
+/**
+ * SidebarWidget Entity
+ *
+ * @property int $sidebarId
+ * @property int $widgetId
+ * @property int $order
+ */
 class SidebarWidget extends CmgEntity {
 
 	// Instance Methods --------------------------------------------

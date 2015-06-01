@@ -10,7 +10,13 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CmgEntity;
 
-
+/**
+ * MenuPage Entity
+ *
+ * @property int $menuId
+ * @property int $pageId
+ * @property int $order
+ */
 class MenuPage extends CmgEntity {
 
 	// Instance Methods --------------------------------------------

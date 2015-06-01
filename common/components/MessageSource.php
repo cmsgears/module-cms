@@ -14,15 +14,13 @@ class MessageSource extends Component {
 
 	private $messageDb = [
 		// Generic Fields
-		CoreGlobal::FIELD_TEMPLATE => "Template",
-		CoreGlobal::FIELD_MENU => "Menu",
-		CoreGlobal::FIELD_PAGE => "Page",
-		CoreGlobal::FIELD_WIDGET => "Widget",
-		CoreGlobal::FIELD_SIDEBAR => "Sidebar",
+		CmsGlobal::FIELD_TEMPLATE => "Template",
+		CmsGlobal::FIELD_MENU => "Menu",
+		CmsGlobal::FIELD_PAGE => "Page",
+		CmsGlobal::FIELD_WIDGET => "Widget",
+		CmsGlobal::FIELD_SIDEBAR => "Sidebar",
 		// Content Fields
-		CoreGlobal::FIELD_KEYWORDS => "Keywords",
-		CoreGlobal::FIELD_SUMMARY => "Summary",
-		CoreGlobal::FIELD_CONTENT => "Content"
+		CmsGlobal::FIELD_KEYWORDS => "Keywords"
 	];
 
 	/**

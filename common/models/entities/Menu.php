@@ -12,6 +12,14 @@ use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 use cmsgears\core\common\models\traits\MetaTrait;
 
+/**
+ * Menu Entity
+ *
+ * @property int $id
+ * @property int $parentId
+ * @property string $name
+ * @property string $description
+ */
 class Menu extends NamedCmgEntity {
 
 	use MetaTrait;
