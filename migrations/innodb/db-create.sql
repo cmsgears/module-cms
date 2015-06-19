@@ -41,9 +41,10 @@ DROP TABLE IF EXISTS `cmg_cms_page`;
 CREATE TABLE `cmg_cms_page` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) DEFAULT NULL,
-  `authorId` bigint(20) NOT NULL,
   `bannerId` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
+  `createdBy` bigint(20) NOT NULL,
+  `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
@@ -61,9 +62,10 @@ CREATE TABLE `cmg_cms_page` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_page_slug` (`slug`),
   KEY `fk_page_1` (`parentId`),
-  KEY `fk_page_2` (`authorId`),
-  KEY `fk_page_3` (`bannerId`),
-  KEY `fk_page_4` (`templateId`)
+  KEY `fk_page_2` (`bannerId`),
+  KEY `fk_page_3` (`templateId`),
+  KEY `fk_page_4` (`createdBy`),
+  KEY `fk_page_5` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -147,9 +149,10 @@ ALTER TABLE `cmg_cms_menu`
 --
 ALTER TABLE `cmg_cms_page` 
 	ADD CONSTRAINT `fk_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
-	ADD CONSTRAINT `fk_page_2` FOREIGN KEY (`authorId`) REFERENCES `cmg_core_user` (`id`),
-	ADD CONSTRAINT `fk_page_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_page_4` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`);
+	ADD CONSTRAINT `fk_page_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_page_3` FOREIGN KEY (`templateId`) REFERENCES `cmg_cms_template` (`id`),
+	ADD CONSTRAINT `fk_page_4` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+	ADD CONSTRAINT `fk_page_5` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_cms_menu_page`

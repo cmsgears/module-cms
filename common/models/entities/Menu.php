@@ -34,14 +34,14 @@ class Menu extends NamedCmgEntity {
 					->viaTable( CmsTables::TABLE_PAGE, [ 'menuId' => 'id' ] );
 	}
 
-	public function getPagesMap() {
+	public function getPageMappingList() {
 
     	return $this->hasMany( MenuPage::className(), [ 'menuId' => 'id' ] );
 	}
 
 	public function getPagesIdList() {
 
-    	$pages 		= $this->pagesMap;
+    	$pages 		= $this->pageMappingList;
 		$pagesList	= array();
 
 		foreach ( $pages as $page ) {

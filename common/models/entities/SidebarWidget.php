@@ -25,7 +25,7 @@ class SidebarWidget extends CmgEntity {
 	 */
 	public function getSidebar() {
 
-		return $this->hasOne( Sidebar::className(), [ 'id' => 'sidebarId' ] )->from( CmsTables::TABLE_SIDEBAR . ' sidebar' );
+		return $this->hasOne( Sidebar::className(), [ 'id' => 'sidebarId' ] );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class SidebarWidget extends CmgEntity {
 	 */
 	public function getWidget() {
 
-		return $this->hasOne( Widget::className(), [ 'id' => 'widgetId' ] )->from( CmsTables::TABLE_WIDGET . ' widget' );
+		return $this->hasOne( Widget::className(), [ 'id' => 'widgetId' ] );
 	}
 
 	// yii\base\Model --------------------

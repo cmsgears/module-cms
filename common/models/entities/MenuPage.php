@@ -26,7 +26,7 @@ class MenuPage extends CmgEntity {
 	 */
 	public function getMenu() {
 
-		return $this->hasOne( Menu::className(), [ 'id' => 'menuId' ] )->from( CmsTables::TABLE_MENU . ' menu' );
+		return $this->hasOne( Menu::className(), [ 'id' => 'menuId' ] );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class MenuPage extends CmgEntity {
 	 */
 	public function getPage() {
 
-		return $this->hasOne( Page::className(), [ 'id' => 'pageId' ] )->from( CmsTables::TABLE_PAGE . ' page' );
+		return $this->hasOne( Page::className(), [ 'id' => 'pageId' ] );
 	}
 
 	// yii\base\Model --------------------

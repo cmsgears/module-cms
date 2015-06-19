@@ -33,14 +33,14 @@ class Sidebar extends NamedCmgEntity {
 					->viaTable( CMSTables::TABLE_SIDEBAR_WIDGET, [ 'sidebarId' => 'id' ] );
 	}
 
-	public function getWidgetsMap() {
+	public function getWidgetMappingList() {
 
     	return $this->hasMany( SidebarWidget::className(), [ 'sidebarId' => 'id' ] );
 	}
 
 	public function getWidgetsIdList() {
 
-    	$widgets 		= $this->widgetsMap;
+    	$widgets 		= $this->widgetMappingList;
 		$widgetsList	= array();
 
 		foreach ( $widgets as $widget ) {

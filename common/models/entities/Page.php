@@ -11,14 +11,14 @@ class Page extends Content {
 					->viaTable( CmsTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
 	}
 
-	public function getMenusMap() {
-	
+	public function getMenuMappingList() {
+
     	return $this->hasMany( MenuPage::className(), [ 'pageId' => 'id' ] );
 	}
 
 	public function getMenusIdList() {
 
-    	$menus 		= $this->menusMap;
+    	$menus 		= $this->menuMappingList;
 		$menusList	= array();
 
 		foreach ( $menus as $menu ) {

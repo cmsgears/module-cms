@@ -47,7 +47,8 @@ class Template extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )
 		];
 	}
 
@@ -64,7 +65,7 @@ class Template extends NamedCmgEntity {
 	}
 
 	// Template --------------------------
-	
+
 	/**
 	 * @return array - Template by type
 	 */

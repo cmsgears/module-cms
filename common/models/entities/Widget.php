@@ -20,7 +20,7 @@ use cmsgears\core\common\models\entities\NamedCmgEntity;
  * @property string $meta
  */
 class Widget extends NamedCmgEntity {
-	
+
 	public $metaMap;
 
 	// Instance Methods --------------------------------------------
@@ -55,41 +55,39 @@ class Widget extends NamedCmgEntity {
 					->viaTable( CMSTables::TABLE_SIDEBAR_WIDGET, [ 'widgetId' => 'id' ] );
 	}
 
-	public function getSidebarsMap() {
+	public function getSidebarMappingList() {
 
     	return $this->hasMany( SidebarWidget::className(), [ 'widgetId' => 'id' ] );
 	}
 
 	public function getSidebarsIdList() {
 
-    	$widgets 		= $this->sidebarsMap;
-		$widgetsList	= array();
+    	$sidebars 		= $this->sidebarMappingList;
+		$sidebarsList	= array();
 
 		foreach ( $widgets as $widget ) {
 
-			array_push( $widgetsList, $widget->sidebarId );
+			array_push( $sidebarsList, $widget->sidebarId );
 		}
 
-		return $widgetsList;
+		return $sidebarsList;
 	}
 
 	public function getTemplate() {
 
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] )->from( CmsTables::TABLE_TEMPLATE . ' template' );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
 	public function getTemplateName() {
 
 		$template = $this->template;
-		
+
 		if( isset( $template ) ) {
-			
+
 			return $template->name;
 		}
-		else {
-			
-			return '';
-		}
+
+		return '';
 	}
 
 	// yii\db\ActiveRecord ---------------

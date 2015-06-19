@@ -27,7 +27,7 @@ class Post extends Content {
      * @inheritdoc
      */
 	public static function find() {
-		
+
 		$postTable = CmsTables::TABLE_PAGE;
 
 		return parent::find()->where( [ "$postTable.type" => Page::TYPE_POST ] );
@@ -42,7 +42,7 @@ class Post extends Content {
 
 		$postTable = CmsTables::TABLE_PAGE;
 
-		return self::find()->joinWith( 'banner' )->joinWith( 'author' )->joinWith( 'author.avatar' );
+		return self::find()->joinWith( 'banner' )->joinWith( 'creator' )->joinWith( 'creator.avatar' );
 	}
 
 	/**
