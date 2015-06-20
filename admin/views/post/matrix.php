@@ -8,6 +8,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Posts Matrix";
 
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
 
@@ -30,7 +34,7 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -49,7 +53,7 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					foreach( $page as $post ) {
+					foreach( $models as $post ) {
 
 						$id 		= $post->id;
 						$categories	= $post->getCategoryIdList();
@@ -59,18 +63,18 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $post->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="pageId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allCategories as $category ) { 
+									<?php foreach ( $categoriesList as $category ) { 
 
 										if( in_array( $category['id'], $categories ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$category['id']?>" /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$category['id']?>" /><?=$category['name']?></li>
 									<?php
 										}
 									}
@@ -85,8 +89,8 @@ if( !isset( $sortOrder ) ) {
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
 <script type="text/javascript">

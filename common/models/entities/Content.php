@@ -84,6 +84,30 @@ class Content extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->parentId <= 0 ) {
+
+				$this->parentId = null;
+			}
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// Content
+
 	public function getParent() {
 
 		switch( $row['type'] ) {
@@ -209,11 +233,11 @@ class Content extends NamedCmgEntity {
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'slug', 'type', 'status', 'visibility', 'summary', 'content' ], 'safe' ],
             [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
-            [ [ 'parentId', 'bannerId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }

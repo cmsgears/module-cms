@@ -10,10 +10,9 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
-
-use cmsgears\cms\admin\models\forms\MenuBinderForm;
 
 use cmsgears\cms\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
@@ -22,7 +21,7 @@ use cmsgears\cms\admin\services\MenuService;
 use cmsgears\core\admin\controllers\BaseController;
 
 class PageController extends BaseController {
-	
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -66,31 +65,26 @@ class PageController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( "all" );
+		$this->redirect( [ "all" ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = PageService::getPagination();
+		$dataProvider = PageService::getPagination();
 
-	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	    return $this->render( 'all', [
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionMatrix() {
 
-		$pagination = PageService::getPagination();
-		
-		$allMenus	= MenuService::getIdNameList();
+		$dataProvider 	= PageService::getPagination();
+		$menusList		= MenuService::getIdNameList();
 
-	    return $this->render('matrix', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
-	         'allMenus' => $allMenus
+	    return $this->render( 'matrix', [
+	         'dataProvider' => $dataProvider,
+	         'menusList' => $menusList
 	    ]);
 	}
 
@@ -101,27 +95,27 @@ class PageController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Page" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
 
-			$banner->load( Yii::$app->request->post( "File" ), "" );
+			$banner->load( Yii::$app->request->post(), 'File' );
 
 			if( PageService::create( $model, $banner ) ) {
 
-				$binder = new MenuBinderForm();
+				$binder = new Binder();
 
-				$binder->pageId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
+				$binder->binderId	= $model->id;
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				PageService::bindMenus( $binder );
 
-				return $this->redirect( "all" );
+				$this->redirect( [ "all" ] );
 			}
 		}
 
 		$menus			= MenuService::getIdNameList();
 		$templatesMap	= TemplateService::getIdNameMapForPages();
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'banner' => $banner,
     		'menus' => $menus,
@@ -140,20 +134,20 @@ class PageController extends BaseController {
 
 			$model->setScenario( "update" );
 
-			if( $model->load( Yii::$app->request->post( "Page" ), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
 
-				$banner->load( Yii::$app->request->post( "File" ), "" );
+				$banner->load( Yii::$app->request->post(), 'File' );
 
 				if( PageService::update( $model, $banner ) ) {
-	
-					$binder = new MenuBinderForm();
-	
-					$binder->pageId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
+
+					$binder = new Binder();
+
+					$binder->binderId	= $model->id;
+					$binder->load( Yii::$app->request->post(), 'Binder' );
 	
 					PageService::bindMenus( $binder );
 	
-					$this->refresh();
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -174,7 +168,7 @@ class PageController extends BaseController {
 		}
 		
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -185,11 +179,11 @@ class PageController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Page" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
 				if( PageService::delete( $model ) ) {
 
-					return $this->redirect( "all" );
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -210,7 +204,7 @@ class PageController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

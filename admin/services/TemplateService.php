@@ -13,7 +13,7 @@ class TemplateService extends \cmsgears\cms\common\services\TemplateService {
 
 	// Pagination -------
 
-	public static function getPagination() {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -26,41 +26,17 @@ class TemplateService extends \cmsgears\cms\common\services\TemplateService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Template(), [ 'sort' => $sort, 'search-col' => 'name' ] );
-	}
+		if( !isset( $config[ 'sort' ] ) ) {
 
-	// Create -----------
+			$config[ 'sort' ] = $sort;
+		}
 
-	public static function create( $template ) {
+		if( !isset( $config[ 'search-col' ] ) ) {
 
-		$template->save();
+			$config[ 'search-col' ] = 'name';
+		}
 
-		return $template;
-	}
-
-	// Update -----------
-
-	public static function update( $template ) {
-
-		$templateToUpdate	= self::findById( $template->id );
-
-		$templateToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
-
-		$templateToUpdate->update();
-
-		return $templateToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $template ) {
-
-		$existingTemplate	= self::findById( $template->id );
-
-		// Delete Template
-		$existingTemplate->delete();
-
-		return true;
+		return self::getPaginationDetails( new Template(), $config );
 	}
 }
 

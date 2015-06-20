@@ -65,9 +65,9 @@ class Widget extends NamedCmgEntity {
     	$sidebars 		= $this->sidebarMappingList;
 		$sidebarsList	= array();
 
-		foreach ( $widgets as $widget ) {
+		foreach ( $sidebars as $sidebar ) {
 
-			array_push( $sidebarsList, $widget->sidebarId );
+			array_push( $sidebarsList, $sidebar->sidebarId );
 		}
 
 		return $sidebarsList;

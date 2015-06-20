@@ -17,7 +17,7 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $config = [] ) {
 		
 		$postTable = CmsTables::TABLE_PAGE;
 
@@ -77,12 +77,31 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 	        ]
 	    ]);
 
-		$query	= Post::findWithAuthor();
+		if( !isset( $config[ 'conditions' ] ) ) {
 
-		$conditions[ "$postTable.status" ] 		= Content::STATUS_PUBLISHED;
-		$conditions[ "$postTable.visibility" ] 	= Content::VISIBILITY_PUBLIC;
+			$config[ 'conditions' ] = [];
+		}
 
-		return self::getPaginationDetails( new Post(), [ 'route' => 'blog', 'query' => $query, 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'query' ] = Post::findWithAuthor();
+		}
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		$config['route'] 									= 'blog';
+		$config[ 'conditions' ][ "$postTable.status" ] 		= Post::STATUS_PUBLISHED;
+		$config[ 'conditions' ][ "$postTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
+
+		return self::getDataProvider( new Post(), $config );
 	}
 }
 

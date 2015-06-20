@@ -8,6 +8,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Widgets Matrix";
 
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
 
@@ -30,7 +34,7 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -51,7 +55,7 @@ if( !isset( $sortOrder ) ) {
 
 					$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/widget/bind-sidebars" );
 
-					foreach( $page as $widget ) {
+					foreach( $models as $widget ) {
 
 						$id 		= $widget->id;
 						$sidebars	= $widget->getSidebarsIdList();
@@ -60,18 +64,18 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $widget->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="widgetId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allSidebars as $sidebar ) { 
+									<?php foreach ( $sidebarsList as $sidebar ) { 
 
 										if( in_array( $sidebar['id'], $sidebars ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
 									<?php
 										}
 									}
@@ -86,8 +90,8 @@ if( !isset( $sortOrder ) ) {
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
 <script type="text/javascript">

@@ -4,6 +4,7 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
 
@@ -40,9 +41,12 @@ class Post extends Content {
 	 */
 	public static function findWithAuthor() {
 
-		$postTable = CmsTables::TABLE_PAGE;
+		$postTable 	= CmsTables::TABLE_PAGE;
 
-		return self::find()->joinWith( 'banner' )->joinWith( 'creator' )->joinWith( 'creator.avatar' );
+		return self::find()->joinWith( 'banner' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
+			$fileTable	= CoreTables::TABLE_FILE;
+			$query->from( "$fileTable avatar" ); } 
+		]);
 	}
 
 	/**

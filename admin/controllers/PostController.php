@@ -10,12 +10,11 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\Category;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
-
-use cmsgears\cms\admin\models\forms\PostCategoryBinderForm;
 
 use cmsgears\cms\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
@@ -24,8 +23,6 @@ use cmsgears\cms\admin\services\PostService;
 use cmsgears\core\admin\controllers\BaseController;
 
 class PostController extends BaseController {
-
-	const URL_ALL 		= 'all';
 
 	// Constructor and Initialisation ------------------------------
 
@@ -68,30 +65,26 @@ class PostController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( "all" );
+		$this->redirect( [  'all' ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = PostService::getPagination();
+		$dataProvider = PostService::getPagination();
 
 	    return $this->render( 'all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionMatrix() {
 
-		$pagination 	= PostService::getPagination();
-		$allCategories	= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$dataProvider 	= PostService::getPagination();
+		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
 
-	    return $this->render('matrix', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
-	         'allCategories' => $allCategories
+	    return $this->render( 'matrix', [
+	         'dataProvider' => $dataProvider,
+	         'categoriesList' => $categoriesList
 	    ]);
 	}
 
@@ -100,29 +93,29 @@ class PostController extends BaseController {
 		$model	= new Post();
 		$banner = new CmgFile();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post( "Post" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Post' )  && $model->validate() ) {
 
-			$banner->load( Yii::$app->request->post( "File" ), "" );
+			$banner->load( Yii::$app->request->post(), 'File' );
 
 			if( PostService::create( $model, $banner ) ) {
 
-				$binder = new PostCategoryBinderForm();
+				$binder = new Binder();
 
-				$binder->pageId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
+				$binder->binderId	= $model->id;
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				PostService::bindCategories( $binder );
 
-				return $this->redirect( "all" );
+				$this->redirect( [  'all' ] );
 			}
 		}
 
-		$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
 		$templatesMap	= TemplateService::getIdNameMapForPages();
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'banner' => $banner,
     		'categories' => $categories,
@@ -139,26 +132,26 @@ class PostController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post( "Post" ), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Post' )  && $model->validate() ) {
 
-				$banner->load( Yii::$app->request->post( "File" ), "" );
+				$banner->load( Yii::$app->request->post(), 'File' );
 
 				if( PostService::update( $model, $banner ) ) {
 
-					$binder = new PostCategoryBinderForm();
+					$binder = new Binder();
 
-					$binder->pageId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
+					$binder->binderId	= $model->id;
+					$binder->load( Yii::$app->request->post(), 'Binder' );
 
 					PostService::bindCategories( $binder );
 
-					$this->refresh();
+					$this->redirect( [  'all' ] );
 				}
 			}
 
-			$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
@@ -187,15 +180,15 @@ class PostController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Post" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
 
 				if( PostService::delete( $model ) ) {
 
-					return $this->redirect( "all" );
+					$this->redirect( [  'all' ] );
 				}
 			}
 
-			$categories		= CategoryService::getIdNameMapByType( CmsGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
@@ -219,12 +212,10 @@ class PostController extends BaseController {
 
 	public function actionCategories() {
 
-		$pagination = CategoryService::getPaginationByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$dataProvider = CategoryService::getPaginationByType( CmsGlobal::CATEGORY_TYPE_POST );
 
-	    return $this->render('categories', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
+	    return $this->render( 'categories', [
+	         'dataProvider' => $dataProvider,
 	         'type' => CmsGlobal::CATEGORY_TYPE_POST
 	    ]);
 	}

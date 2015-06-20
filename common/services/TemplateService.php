@@ -32,6 +32,51 @@ class TemplateService extends Service {
 
 		return self::findMap( "id", "name", CmsTables::TABLE_TEMPLATE, [ 'type' => Template::TYPE_WIDGET ] );
 	}
+
+	// Data Provider ----
+
+	/**
+	 * @param array $config to generate query
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $config = [] ) {
+
+		return self::getDataProvider( new Template(), $config );
+	}
+
+	// Create -----------
+
+	public static function create( $template ) {
+
+		$template->save();
+
+		return $template;
+	}
+
+	// Update -----------
+
+	public static function update( $template ) {
+
+		$templateToUpdate	= self::findById( $template->id );
+
+		$templateToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
+
+		$templateToUpdate->update();
+
+		return $templateToUpdate;
+	}
+
+	// Delete -----------
+
+	public static function delete( $template ) {
+
+		$existingTemplate	= self::findById( $template->id );
+
+		// Delete Template
+		$existingTemplate->delete();
+
+		return true;
+	}
 }
 
 ?>

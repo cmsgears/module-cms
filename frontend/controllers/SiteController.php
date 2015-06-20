@@ -28,7 +28,7 @@ class SiteController extends BaseController {
 	// Instance Methods --------------------------------------------
 
 	// SiteController
-	/* 1. It finds the associated page. 
+	/* 1. It finds the associated page for the given slug.
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
@@ -41,13 +41,17 @@ class SiteController extends BaseController {
 			// Set Layout
 			$templateName	= $page->getTemplateName();
 
+			// Page using Template
 			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
 
-				$this->layout	= "/$templateName";
+				$this->layout	= "$templateName";
+				$webProperties	= $this->getWebProperties();
+				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
-		        return $this->render( "template-" . $templateName, [ 'page' => $page ] );
+		        return $this->render( "@themes/$themeName/views/templates/" . $templateName, [ 'page' => $page ] );
 			}
+			// Page without Template
 			else {
 
 				return $this->redirect( "site/" . $page->getSlug() );
@@ -55,7 +59,7 @@ class SiteController extends BaseController {
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	// SiteController
@@ -85,7 +89,7 @@ class SiteController extends BaseController {
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

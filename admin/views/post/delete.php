@@ -2,6 +2,7 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use cmsgears\core\widgets\Editor;
+use cmsgears\files\widgets\FileUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Post';
@@ -14,22 +15,25 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php $form = ActiveForm::begin( ['id' => 'frm-post-delete', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'keywords' )->textarea( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'visibility' )->dropDownList( $visibilities, [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'summary' )->textarea( [ 'readonly'=>'true' ] ) ?>
- 
+    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
+
+    	<h4>Post Summary</h4>
+    	<?= $form->field( $model, 'summary' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] ) ?>
+
     	<h4>Post Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'disabled'=>'true', 'class' => 'content-editor' ] ) ?>
-    	
+    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] ) ?>
+
     	<h4>Post Banner</h4>
-		<div id="file-banner" class="file-container" legend="Page Banner" selector="banner" utype="image" btn-class="btn file-input-wrap" btn-text="Change Banner">
+		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-page', 'class' => 'file-uploader' ], 'model' => $model->banner,  'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+
+		<h4>Post SEO</h4>
+    	<?= $form->field( $model, 'seoDescription' )->textarea( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'seoRobot' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
 		<h4>Assign Categories</h4>
 		<?php 
-			$postCategories	= $model->getCategoriesIdList();
+			$postCategories	= $model->getCategoryIdList();
 
 			foreach ( $categories as $category ) { 
 
@@ -47,7 +51,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		?>			
 		<div class="box-filler"></div>
 
-		<?=Html::a( "Cancel", [ '/cmgcms/page/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", [ '/cmgcms/post/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>
@@ -56,11 +60,4 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
 <script type="text/javascript">
 	initSidebar( "sidebar-page-blog", -1 );
-	initFileUploader();
-
-	<?php if( isset( $banner ) ) { ?>
-		jQuery("#file-banner .file-image").html( "<img src='<?php echo $banner->getFileUrl(); ?>' />'" );
-	<?php } ?>
-
-	jQuery( ".file-input").attr( "disabled", "true" );
 </script>

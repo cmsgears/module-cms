@@ -22,18 +22,21 @@ class ContentUtil {
 		}
 		// Other Pages
 		else {
-			
+
 			$page	= ContentUtil::getPage( $actionName );
 		}
 
 		if( isset( $page ) ) {
-			
+
 			$coreProperties			= $view->context->getCoreProperties();
+
 			$view->params[ 'page']	= $page;
-			$view->params[ 'desc']	= $page->description;
-			$view->params[ 'meta']	= $page->keywords;
+			$view->params[ 'desc']	= $page->seoDescription;
+			$view->params[ 'meta']	= $page->seoKeywords;
+			$view->params[ 'robot']	= $page->seoRobot;
+
 			$siteTitle				= $coreProperties->getSiteTitle();
-			$view->title			= $siteTitle . " | " . $page->name;
+			$view->title			= $siteTitle . " | " . $page->seoName;
 		}
 	}
 
@@ -45,7 +48,7 @@ class ContentUtil {
 	}
 
 	public static function getPageSummary( $config = [] ) {
-		
+
 		if( isset( $config[ 'slug' ] ) ) {
 
 			$slug	= $config[ 'slug' ];
@@ -58,7 +61,7 @@ class ContentUtil {
 		}
 
 		if( isset( $page ) ) {
-			
+
 			$coreProperties	= Yii::$app->controller->getCoreProperties();
 			$slugUrl		= $coreProperties->getSiteUrl() . $page->getSlug();
 			$summary		= $page->getSummary();
@@ -71,7 +74,7 @@ class ContentUtil {
 	}
 
 	public static function getPageContent( $config = [] ) {
-		
+
 		if( isset( $config[ 'slug' ] ) ) {
 
 			$slug	= $config[ 'slug' ];
@@ -82,14 +85,14 @@ class ContentUtil {
 
 			$page	= $config[ 'page' ];
 		}
-		
+
 		if( isset( $page ) ) {
 
 			$content	= $page->getContent();
-			
+
 			return $content;
 		}
-		
+
 		return '';
 	}
 }

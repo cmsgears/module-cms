@@ -7,7 +7,6 @@ use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\cms\common\models\entities\Widget;
-use cmsgears\cms\common\models\entities\SidebarWidget;
 
 class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
@@ -15,7 +14,7 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
 	// Pagination -------
 
-	public static function getPagination() {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -28,78 +27,17 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Widget(), [ 'sort' => $sort, 'search-col' => 'name' ] );
-	}
+		if( !isset( $config[ 'sort' ] ) ) {
 
-	// Create -----------
-
-	public static function create( $widget ) {
-
-		$widget->save();
-
-		return $widget;
-	}
-
-	// Update -----------
-
-	public static function update( $widget ) {
-
-		$widgetToUpdate	= self::findById( $widget->id );
-		
-		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId', 'meta' ] );
-
-		$widgetToUpdate->update();
-
-		return $widgetToUpdate;
-	}
-
-	public static function updateMeta( $widget ) {
-
-		$widgetToUpdate			= self::findById( $widget->id );
-		$widgetToUpdate->meta 	= $widget->generateJsonFromMap();
-
-		$widgetToUpdate->update();
-
-		return $widgetToUpdate;
-	}
-
-	public static function bindSidebars( $binder ) {
-
-		$widgetId	= $binder->widgetId;
-		$sidebars	= $binder->bindedData;
-
-		// Clear all existing mappings
-		SidebarWidget::deleteByWidgetId( $widgetId );
-
-		if( isset( $sidebars ) && count( $sidebars ) > 0 ) {
-
-			foreach ( $sidebars as $key => $value ) {
-
-				if( isset( $value ) ) {
-
-					$toSave	= new SidebarWidget();
-
-					$toSave->widgetId	= $widgetId;
-					$toSave->sidebarId	= $value;
-
-					$toSave->save();
-				}
-			}
+			$config[ 'sort' ] = $sort;
 		}
 
-		return true;
-	}
+		if( !isset( $config[ 'search-col' ] ) ) {
 
-	// Delete -----------
+			$config[ 'search-col' ] = 'name';
+		}
 
-	public static function delete( $widget ) {
-
-		$existingWidget	= self::findById( $widget->id );
-
-		// Delete Widget
-		$existingWidget->delete();
-
-		return true;
+		return self::getDataProvider( new Widget(), $config );
 	}
 }
 

@@ -11,6 +11,10 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Posts';
 $siteUrl		= $coreProperties->getSiteUrl();
 
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
 
@@ -33,13 +37,12 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
 			<thead>
 				<tr>
-					<th><input type='checkbox' /></th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -51,8 +54,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>	
-					<th>Description</th>
+					</th>
 					<th>Visibility
 						<span class='box-icon-sort'>
 							<span sort-order='visibility' class="icon-sort <?php if( strcmp( $sortOrder, 'visibility') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -71,24 +73,26 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-template' class="icon-sort <?php if( strcmp( $sortOrder, '-template') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Keywords</th>
 					<th>Tags</th>
+					<th>SEO Description</th>
+					<th>SEO Keywords</th>
+					<th>SEO Robot</th>
 					<th>Created on
 						<span class='box-icon-sort'>
 							<span sort-order='cdate' class="icon-sort <?php if( strcmp( $sortOrder, 'cdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-cdate' class="icon-sort <?php if( strcmp( $sortOrder, '-cdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Published on
-						<span class='box-icon-sort'>
-							<span sort-order='pdate' class="icon-sort <?php if( strcmp( $sortOrder, 'pdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-pdate' class="icon-sort <?php if( strcmp( $sortOrder, '-pdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
 					<th>Updated on
 						<span class='box-icon-sort'>
 							<span sort-order='udate' class="icon-sort <?php if( strcmp( $sortOrder, 'udate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-udate' class="icon-sort <?php if( strcmp( $sortOrder, '-udate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
+						</span>
+					</th>
+					<th>Published on
+						<span class='box-icon-sort'>
+							<span sort-order='pdate' class="icon-sort <?php if( strcmp( $sortOrder, 'pdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
+							<span sort-order='-pdate' class="icon-sort <?php if( strcmp( $sortOrder, '-pdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
 					<th>Actions</th>
@@ -100,7 +104,7 @@ if( !isset( $sortOrder ) ) {
 					$slugBase	= $siteUrl;
 					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
 
-					foreach( $page as $post ) {
+					foreach( $models as $post ) {
 
 						$id 		= $post->id;
 						$editUrl	= Html::a( $post->name, [ "/cmgcms/post/update?id=$id" ] );
@@ -109,18 +113,18 @@ if( !isset( $sortOrder ) ) {
 						$tags		= $post->getTagMap();
 				?>
 					<tr>
-						<td> <input type='checkbox' /> </td>
 						<td><?= $editUrl ?></td>
-						<td><?= $slugUrl ?></td>						
-						<td><?= $post->description ?></td>
+						<td><?= $slugUrl ?></td>
 						<td><?= $post->getVisibilityStr() ?></td>
 						<td><?= $post->getStatusStr() ?></td>
 						<td><?= $post->getTemplateName() ?></td>
-						<td><?= $post->keywords ?></td>
 						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
+						<td><?= $post->seoDescription ?></td>
+						<td><?= $post->seoKeywords ?></td>
+						<td><?= $post->seoRobot ?></td>
 						<td><?= $post->createdAt ?></td>
+						<td><?= $post->modifiedAt ?></td>
 						<td><?= $post->publishedAt ?></td>
-						<td><?= $post->updatedAt ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
@@ -131,8 +135,8 @@ if( !isset( $sortOrder ) ) {
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
 <script type="text/javascript">

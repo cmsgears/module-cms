@@ -12,7 +12,6 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Sidebar';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
-		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
 		<?php 

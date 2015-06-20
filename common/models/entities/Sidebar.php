@@ -45,7 +45,7 @@ class Sidebar extends NamedCmgEntity {
 
 		foreach ( $widgets as $widget ) {
 
-			array_push( $widgetsList, $widget->id );
+			array_push( $widgetsList, $widget->widgetId );
 		}
 
 		return $widgetsList;
