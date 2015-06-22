@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
@@ -16,6 +17,8 @@ use cmsgears\core\common\models\entities\NamedCmgEntity;
  * @property string $name
  * @property string $description
  * @property string $type
+ * @property string $layout
+ * @property string $view
  */
 class Template extends NamedCmgEntity {
 
@@ -33,7 +36,7 @@ class Template extends NamedCmgEntity {
 
         return [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'description' ], 'safe' ],
+            [ [ 'id', 'description', 'layout', 'view' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
@@ -48,7 +51,9 @@ class Template extends NamedCmgEntity {
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'layout' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_LAYOUT ),
+			'view' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_VIEW )
 		];
 	}
 

@@ -18,6 +18,12 @@ class CmsGlobal {
 
 	const PERM_CMS				= "cms";
 
+	// Errors ----------------------------------------------------------
+
+	// Errors - Generic
+	const ERROR_NO_TEMPLATE		= "noTemplateError";
+	const ERROR_NO_VIEW			= "noViewError";
+
 	// Model Fields ----------------------------------------------------
 
 	// Generic Fields
@@ -29,6 +35,10 @@ class CmsGlobal {
 
 	// Content Fields
 	const FIELD_KEYWORDS		= "keywordsField";
+	
+	// Views
+	const FIELD_LAYOUT			= "layoutField";
+	const FIELD_VIEW			= "viewField";
 }
 
 ?>

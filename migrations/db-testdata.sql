@@ -3,9 +3,9 @@
 --
 
 INSERT INTO `cmg_cms_template` VALUES 
-	(1,'simple','Simple layout for pages and posts.',0),
-	(2,'blog','Blog layout to view all blog posts or filters(category, author).',0),
-	(3,'text','Text layout for simple text widget.',5);
+	(1,'simple','Simple layout for pages and posts.',0,'simple','simple'),
+	(2,'blog','Blog layout to view all blog posts or filters(category, author).',0,'blog','blog'),
+	(3,'text','Text layout for simple text widget.',5,NULL,'text');
 
 --
 -- Dumping data for table `cmg_core_role`

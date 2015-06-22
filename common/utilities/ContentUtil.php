@@ -18,12 +18,12 @@ class ContentUtil {
 		// Landing Page
 		if( strcmp( $moduleName, 'cmgcore' ) == 0 && strcmp( $controllerName, 'site' ) == 0 && strcmp( $actionName, 'index' ) == 0 ) {
 
-			$page	= ContentUtil::getPage( "home" );
+			$page	= self::getPage( 'home' );
 		}
 		// Other Pages
 		else {
 
-			$page	= ContentUtil::getPage( $actionName );
+			$page	= self::getPage( $actionName );
 		}
 
 		if( isset( $page ) ) {

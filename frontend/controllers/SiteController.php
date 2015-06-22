@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
@@ -39,22 +40,32 @@ class SiteController extends BaseController {
 		if( isset( $page ) ) {
 
 			// Set Layout
-			$templateName	= $page->getTemplateName();
+			$template	= $page->template;
 
 			// Page using Template
-			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
+			if( isset( $template ) ) {
 
-				$this->layout	= "$templateName";
+				$layout			= $template->layout;
+				$view			= $template->view;
+				$this->layout	= $layout;
+
 				$webProperties	= $this->getWebProperties();
 				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
-		        return $this->render( "@themes/$themeName/views/templates/" . $templateName, [ 'page' => $page ] );
+				if( isset( $layout ) && isset( $view ) ) {
+
+			        return $this->render( "@themes/$themeName/views/templates/" . $view, [ 'page' => $page ] );
+				}
+				else {
+
+					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+				}
 			}
 			// Page without Template
 			else {
 
-				return $this->redirect( "site/" . $page->getSlug() );
+				return $this->redirect( 'site/' . $page->getSlug() );
 			}
 		}
 
@@ -73,18 +84,30 @@ class SiteController extends BaseController {
 		if( isset( $post ) ) {
 
 			// Set Layout
-			$templateName	= $post->getTemplateName();
+			$template	= $post->template;
 
-			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
+			if( isset( $template ) ) {
 
-				$this->layout	= "/$templateName";
+				$layout			= $template->layout;
+				$view			= $template->view;
+				$this->layout	= $layout;
+
+				$webProperties	= $this->getWebProperties();
+				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
-		        return $this->render( "template-" . $templateName, [ 'page' => $post ] );
+				if( isset( $layout ) && isset( $view ) ) {
+
+			        return $this->render( "@themes/$themeName/views/templates/" . $view, [ 'page' => $post ] );
+				}
+				else {
+
+					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+				}
 			}
 			else {
 
-				echo "No template found having the name $template.";
+				return $this->render( 'post', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
 			}
 		}
 
