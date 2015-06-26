@@ -14,7 +14,7 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\cms\admin\services\TemplateService;
+use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
 
@@ -65,7 +65,7 @@ class PageController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( [ "all" ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -93,7 +93,7 @@ class PageController extends BaseController {
 		$model	= new Page();
 		$banner = new CmgFile();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
 
@@ -108,12 +108,12 @@ class PageController extends BaseController {
 
 				PageService::bindMenus( $binder );
 
-				$this->redirect( [ "all" ] );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
 		$menus			= MenuService::getIdNameList();
-		$templatesMap	= TemplateService::getIdNameMapForPages();
+		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -132,7 +132,7 @@ class PageController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
 
@@ -147,7 +147,7 @@ class PageController extends BaseController {
 	
 					PageService::bindMenus( $binder );
 	
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
@@ -155,7 +155,7 @@ class PageController extends BaseController {
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
-			$templatesMap	= TemplateService::getIdNameMapForPages();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -183,7 +183,7 @@ class PageController extends BaseController {
 
 				if( PageService::delete( $model ) ) {
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
@@ -191,7 +191,7 @@ class PageController extends BaseController {
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
-			$templatesMap	= TemplateService::getIdNameMapForPages();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 			
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

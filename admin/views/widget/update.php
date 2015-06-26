@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-child'] 	= 'widget';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -40,7 +44,3 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 2 );
-</script>

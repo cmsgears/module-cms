@@ -7,6 +7,10 @@ use cmsgears\files\widgets\FileUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Post';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'post';
+
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
@@ -57,7 +61,3 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", -1 );
-</script>

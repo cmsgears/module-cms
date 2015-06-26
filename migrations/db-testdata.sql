@@ -1,25 +1,25 @@
 --
--- Dumping data for table `cmg_cms_template`
+-- Dumping data for table `cmg_core_template`
 --
 
-INSERT INTO `cmg_cms_template` VALUES 
-	(1,'simple','Simple layout for pages and posts.',0,'simple','simple'),
-	(2,'blog','Blog layout to view all blog posts or filters(category, author).',0,'blog','blog'),
-	(3,'text','Text layout for simple text widget.',5,NULL,'text');
+INSERT INTO `cmg_core_template` (`name`,`description`,`type`,`layout`,`view`,`content`) VALUES  
+	('simple','Simple layout for pages and posts.','page','simple','simple',null),
+	('blog','Blog layout to view all blog posts or filters(category, author).','page','blog','blog',null),
+	('text','Text layout for simple text widget.','widget',NULL,'text',null);
 
 --
 -- Dumping data for table `cmg_core_role`
 --
 
 INSERT INTO `cmg_core_role` VALUES 
-	(1001,1,1,'CMS Manager','The role CMS Manager is limited to manage cms from admin.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',null);
+	(1001,1,1,'CMS Manager','The role CMS Manager is limited to manage cms from admin.','/dashboard','system',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_core_permission`
 --
 
 INSERT INTO `cmg_core_permission` VALUES 
-	(1001,1,1,'cms','The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54',null);
+	(1001,1,1,'cms','The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','system',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_core_role_permission`

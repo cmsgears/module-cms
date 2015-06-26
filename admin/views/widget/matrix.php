@@ -8,6 +8,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Widgets Matrix";
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-child'] 	= 'widget-matrix';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -95,6 +99,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 0 );
 	initMappingsMatrix();
 </script>

@@ -13,7 +13,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\forms\Binder;
 use cmsgears\cms\common\models\entities\Widget;
 
-use cmsgears\cms\admin\services\TemplateService;
+use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
 
@@ -109,7 +109,7 @@ class WidgetController extends BaseController {
 		}
 
 		$sidebars		= SidebarService::getIdNameList();
-		$templatesMap	= TemplateService::getIdNameMapForWidgets();
+		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -144,7 +144,7 @@ class WidgetController extends BaseController {
 			}
 
 			$sidebars		= SidebarService::getIdNameList();
-			$templatesMap	= TemplateService::getIdNameMapForWidgets();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -174,7 +174,7 @@ class WidgetController extends BaseController {
 			}
 
 			$sidebars		= SidebarService::getIdNameList();
-			$templatesMap	= TemplateService::getIdNameMapForWidgets();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

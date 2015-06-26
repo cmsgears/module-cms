@@ -8,6 +8,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Sidebars';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-child'] 	= 'sdebar';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -74,6 +78,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 1 );
-</script>

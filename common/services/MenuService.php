@@ -87,7 +87,7 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function bindPages( $binder ) {
 
-		$menuId	= $binder->menuId;
+		$menuId	= $binder->binderId;
 		$pages	= $binder->bindedData;
 
 		// Clear all existing mappings

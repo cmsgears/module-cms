@@ -122,7 +122,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 		$categories		= $binder->bindedData;
 
 		// Clear all existing mappings
-		ModelCategory::deleteByParentIdType( $postId, CmsGlobal::CATEGORY_TYPE_POST );
+		ModelCategory::deleteByParentIdType( $postId, CmsGlobal::TYPE_POST );
 
 		if( isset( $categories ) && count( $categories ) > 0 ) {
 
@@ -133,7 +133,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 					$toSave		= new ModelCategory();
 
 					$toSave->parentId	= $postId;
-					$toSave->parentType	= CmsGlobal::CATEGORY_TYPE_POST;
+					$toSave->parentType	= CmsGlobal::TYPE_POST;
 					$toSave->categoryId	= $value;
 
 					$toSave->save();

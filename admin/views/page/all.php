@@ -12,6 +12,10 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Pages';
 $siteUrl		= $coreProperties->getSiteUrl();
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'page';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -137,6 +141,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 2 );
-</script>

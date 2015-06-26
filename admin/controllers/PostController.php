@@ -16,7 +16,7 @@ use cmsgears\core\common\models\entities\Category;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
 
-use cmsgears\cms\admin\services\TemplateService;
+use cmsgears\core\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
 
@@ -80,7 +80,7 @@ class PostController extends BaseController {
 	public function actionMatrix() {
 
 		$dataProvider 	= PostService::getPagination();
-		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 
 	    return $this->render( 'matrix', [
 	         'dataProvider' => $dataProvider,
@@ -112,8 +112,8 @@ class PostController extends BaseController {
 			}
 		}
 
-		$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
-		$templatesMap	= TemplateService::getIdNameMapForPages();
+		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
+		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -151,11 +151,11 @@ class PostController extends BaseController {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
-			$templatesMap	= TemplateService::getIdNameMapForPages();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -188,11 +188,11 @@ class PostController extends BaseController {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::CATEGORY_TYPE_POST );
+			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilities	= Page::$visibilityMap;
 			$status			= Page::$statusMap;
 			$banner			= $model->banner;
-			$templatesMap	= TemplateService::getIdNameMapForPages();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
@@ -212,11 +212,11 @@ class PostController extends BaseController {
 
 	public function actionCategories() {
 
-		$dataProvider = CategoryService::getPaginationByType( CmsGlobal::CATEGORY_TYPE_POST );
+		$dataProvider = CategoryService::getPaginationByType( CmsGlobal::TYPE_POST );
 
 	    return $this->render( 'categories', [
 	         'dataProvider' => $dataProvider,
-	         'type' => CmsGlobal::CATEGORY_TYPE_POST
+	         'type' => CmsGlobal::TYPE_POST
 	    ]);
 	}
 }

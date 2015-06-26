@@ -10,6 +10,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Post Categories';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'post-category';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -81,7 +85,3 @@ if( !isset( $sortOrder ) ) {
 </div>
 
 <?= CategoryCrud::widget( [ 'type' => $type ] ); ?>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 4 );
-</script>

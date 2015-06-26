@@ -77,7 +77,7 @@ class MenuController extends BaseController {
 
 		$model	= new Menu();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
 
@@ -90,13 +90,13 @@ class MenuController extends BaseController {
 
 				MenuService::bindPages( $binder );
 
-				$this->redirect( [ "all" ] );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
 		$pages	= PageService::getIdNameList();
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'pages' => $pages
     	]);
@@ -110,7 +110,7 @@ class MenuController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
 
@@ -123,13 +123,13 @@ class MenuController extends BaseController {
 
 					MenuService::bindPages( $binder );
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
 			$pages	= PageService::getIdNameList();
 	
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'pages' => $pages
 	    	]);			
@@ -151,13 +151,13 @@ class MenuController extends BaseController {
 
 				if( MenuService::delete( $model ) ) {
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
 			$pages	= PageService::getIdNameList();
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'pages' => $pages
 	    	]);
