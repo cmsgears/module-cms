@@ -15,6 +15,7 @@ use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;

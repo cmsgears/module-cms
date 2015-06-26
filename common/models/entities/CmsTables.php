@@ -7,7 +7,6 @@ class CmsTables {
 
 	// Static Variables --------------------
 
-	const TABLE_TEMPLATE			= "cmg_cms_template";
 	const TABLE_MENU				= "cmg_cms_menu";
 	const TABLE_PAGE				= "cmg_cms_page";
 	const TABLE_MENU_PAGE			= "cmg_cms_menu_page";

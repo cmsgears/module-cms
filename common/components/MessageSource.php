@@ -14,7 +14,6 @@ class MessageSource extends Component {
 
 	private $messageDb = [
 		// Generic Fields
-		CmsGlobal::FIELD_TEMPLATE => "Template",
 		CmsGlobal::FIELD_MENU => "Menu",
 		CmsGlobal::FIELD_PAGE => "Page",
 		CmsGlobal::FIELD_WIDGET => "Widget",
@@ -23,10 +22,7 @@ class MessageSource extends Component {
 		CmsGlobal::ERROR_NO_TEMPLATE => "No teplate defined.",
 		CmsGlobal::ERROR_NO_VIEW => "Layout or view is missing.",
 		// Content Fields
-		CmsGlobal::FIELD_KEYWORDS => "Keywords",
-		// Views
-		CmsGlobal::FIELD_LAYOUT => "layoutField",
-		CmsGlobal::FIELD_VIEW => "viewField"
+		CmsGlobal::FIELD_KEYWORDS => "Keywords"
 	];
 
 	/**

@@ -9,6 +9,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\NamedCmgEntity;
+use cmsgears\core\common\models\entities\Template;
 
 /**
  * Widget Entity

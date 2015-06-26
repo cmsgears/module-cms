@@ -35,10 +35,6 @@ class CmsGlobal {
 
 	// Content Fields
 	const FIELD_KEYWORDS		= "keywordsField";
-	
-	// Views
-	const FIELD_LAYOUT			= "layoutField";
-	const FIELD_VIEW			= "viewField";
 }
 
 ?>
