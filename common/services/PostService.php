@@ -9,8 +9,8 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\ModelCategory;
-use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
+use cmsgears\cms\common\models\entities\ModelContent;
 
 use cmsgears\core\admin\services\FileService;
 
@@ -59,22 +59,29 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Post
 	 */
-	public static function create( $post, $banner = null ) {
+	public static function create( $post, $content, $banner = null ) {
 
-		$user				= Yii::$app->user->getIdentity();
-		$post->type 		= Page::TYPE_POST;
-		$post->status 		= Page::STATUS_NEW;
-		$post->visibility 	= Page::VISIBILITY_PRIVATE;
-		$post->createdBy	= $user->id;
+		$user					= Yii::$app->user->getIdentity();
+
+		$post->type 			= CmsGlobal::TYPE_POST;
+		$post->status 			= Post::STATUS_NEW;
+		$post->visibility 		= Post::VISIBILITY_PRIVATE;
+		$post->createdBy		= $user->id;
+
+		// Create Post
+		$post->save();
+
+		$content->parentId		= $post->id;
+		$content->parentType	= CmsGlobal::TYPE_POST;
 
 		// Save Banner
 		if( isset( $banner ) ) {
 
-			FileService::saveImage( $banner, [ 'model' => $post, 'attribute' => 'bannerId' ] );
+			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
 		}
 
-		// Create Post
-		$post->save();
+		// Create Content
+		$content->save();
 
 		return $post;
 	}
@@ -86,28 +93,33 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Post
 	 */
-	public static function update( $post, $banner ) {
+	public static function update( $post, $content, $banner = null ) {
 
-		$date 			= DateUtil::getDateTime();
-		$user			= Yii::$app->user->getIdentity();
-		$postToUpdate	= self::findById( $post->id );
+		$date 				= DateUtil::getDateTime();
+		$user				= Yii::$app->user->getIdentity();
+		$postToUpdate		= self::findById( $post->id );
+		$contentToUpdate	= ModelContent::findById( $content->id );
 
-		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'bannerId', 'templateId', 'name', 'status', 'visibility', 'summary', 'content', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ] );
-
-    	if( $postToUpdate->isPublished() && !isset( $postToUpdate->publishedAt ) ) {
-
-    		$postToUpdate->publishedAt	= $date;
-    	}
+		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility' ] );
 
 		$postToUpdate->modifiedBy	= $user->id;
+
+		$contentToUpdate->copyForUpdateFrom( $content, [ 'bannerId', 'templateId', 'summary', 'content', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ] );
+
+    	if( $postToUpdate->isPublished() && !isset( $contentToUpdate->publishedAt ) ) {
+
+    		$contentToUpdate->publishedAt	= $date;
+    	}
 
 		// Save Banner
 		if( isset( $banner ) ) {
 
-			FileService::saveImage( $banner, [ 'model' => $postToUpdate, 'attribute' => 'bannerId' ] );
+			FileService::saveImage( $banner, [ 'model' => $contentToUpdate, 'attribute' => 'bannerId' ] );
 		}
 
 		$postToUpdate->update();
+		
+		$contentToUpdate->update();
 
 		return $postToUpdate;
 	}
@@ -150,12 +162,16 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 * @param Post $post
 	 * @return boolean
 	 */
-	public static function delete( $post ) {
+	public static function delete( $post, $content ) {
 
-		$existingPost	= self::findById( $post->id );
+		$existingPost		= self::findById( $post->id );
+		$existingContent	= ModelContent::findById( $content->id );
 
 		// Delete Page
 		$existingPost->delete();
+
+		// Delete Content
+		$existingContent->delete();
 
 		return true;
 	}

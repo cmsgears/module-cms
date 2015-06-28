@@ -6,6 +6,8 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\entities\Post;
 
 class PostService extends \cmsgears\cms\common\services\PostService {
@@ -84,7 +86,7 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] = Post::TYPE_POST;
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_POST;
 
 		return self::getDataProvider( new Post(), $config );
 	}

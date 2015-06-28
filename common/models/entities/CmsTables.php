@@ -13,6 +13,9 @@ class CmsTables {
 	const TABLE_SIDEBAR				= "cmg_cms_sidebar";
 	const TABLE_WIDGET				= "cmg_cms_widget";
 	const TABLE_SIDEBAR_WIDGET		= "cmg_cms_sidebar_widget";
+	
+	const TABLE_MODEL_CONTENT		= "cmg_cms_model_content";
+	const TABLE_MODEL_BLOCK			= "cmg_cms_model_block";
 }
 
 ?>

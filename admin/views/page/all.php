@@ -78,6 +78,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-template' class="icon-sort <?php if( strcmp( $sortOrder, '-template') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>SEO Title</th>
 					<th>SEO Description</th>
 					<th>SEO Keywords</th>
 					<th>SEO Robot</th>
@@ -114,19 +115,21 @@ if( !isset( $sortOrder ) ) {
 						$editUrl	= Html::a( $pag->name, [ "/cmgcms/page/update?id=$id" ] );
 						$slug		= $pag->slug;
 						$slugUrl	= "<a href='" . $slugBase . "$slug'>$slug</a>";
+						$content	= $pag->content;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $slugUrl ?></td>
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
-						<td><?= $pag->getTemplateName() ?></td>
-						<td><?= $pag->seoDescription ?></td>
-						<td><?= $pag->seoKeywords ?></td>
-						<td><?= $pag->seoRobot ?></td>
-						<td><?= $pag->createdAt ?></td>
-						<td><?= $pag->modifiedAt ?></td>
-						<td><?= $pag->publishedAt ?></td>
+						<td><?= $content->getTemplateName() ?></td>
+						<td><?= $content->seoName ?></td>
+						<td><?= $content->seoDescription ?></td>
+						<td><?= $content->seoKeywords ?></td>
+						<td><?= $content->seoRobot ?></td>
+						<td><?= $content->createdAt ?></td>
+						<td><?= $content->modifiedAt ?></td>
+						<td><?= $content->publishedAt ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Page"><?= Html::a( "", ["/cmgcms/page/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Page"><?= Html::a( "", ["/cmgcms/page/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

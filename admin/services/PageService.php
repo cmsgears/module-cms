@@ -6,6 +6,8 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\entities\Page;
 
 class PageService extends \cmsgears\cms\common\services\PageService {
@@ -84,7 +86,7 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] = Page::TYPE_PAGE;
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_PAGE;
 
 		return self::getDataProvider( new Page(), $config );
 	}

@@ -13,6 +13,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\ModelContent;
 
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
@@ -90,16 +91,18 @@ class PageController extends BaseController {
 
 	public function actionCreate() {
 
-		$model	= new Page();
-		$banner = new CmgFile();
+		$model		= new Page();
+		$content	= new ModelContent();
+		$banner	 	= new CmgFile();
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() &&
+		    $content->load( Yii::$app->request->post(), 'ModelContent' )  && $content->validate() ) {
 
 			$banner->load( Yii::$app->request->post(), 'File' );
 
-			if( PageService::create( $model, $banner ) ) {
+			if( PageService::create( $model, $content, $banner ) ) {
 
 				$binder = new Binder();
 
@@ -117,6 +120,7 @@ class PageController extends BaseController {
 
     	return $this->render( 'create', [
     		'model' => $model,
+    		'content' => $content,
     		'banner' => $banner,
     		'menus' => $menus,
     		'templatesMap' => $templatesMap
@@ -126,19 +130,22 @@ class PageController extends BaseController {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= PageService::findById( $id );
-		$banner = new CmgFile();
+		$model		= PageService::findById( $id );
+		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$content	= $model->content;
+
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Page' )  && $model->validate() &&
+		    	$content->load( Yii::$app->request->post(), 'ModelContent' )  && $content->validate() ) {
 
 				$banner->load( Yii::$app->request->post(), 'File' );
 
-				if( PageService::update( $model, $banner ) ) {
+				if( PageService::update( $model, $content, $banner ) ) {
 
 					$binder = new Binder();
 
@@ -152,17 +159,18 @@ class PageController extends BaseController {
 			}
 
 			$menus			= MenuService::getIdNameList();
-			$visibilities	= Page::$visibilityMap;
-			$status			= Page::$statusMap;
-			$banner			= $model->banner;
+			$visibilityMap	= Page::$visibilityMap;
+			$statusMap		= Page::$statusMap;
+			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
+	    		'content' => $content,
 	    		'banner' => $banner,
 	    		'menus' => $menus,
-	    		'visibilities' => $visibilities,
-	    		'status' => $status,
+	    		'visibilityMap' => $visibilityMap,
+	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
@@ -178,27 +186,30 @@ class PageController extends BaseController {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+			
+			$content	= $model->content;
 
 			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
-				if( PageService::delete( $model ) ) {
+				if( PageService::delete( $model, $content ) ) {
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
 			$menus			= MenuService::getIdNameList();
-			$visibilities	= Page::$visibilityMap;
-			$status			= Page::$statusMap;
-			$banner			= $model->banner;
+			$visibilityMap	= Page::$visibilityMap;
+			$statusMap		= Page::$statusMap;
+			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 			
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
+	    		'content' => $content,
 	    		'banner' => $banner,
 	    		'menus' => $menus,
-	    		'visibilities' => $visibilities,
-	    		'status' => $status,
+	    		'visibilityMap' => $visibilityMap,
+	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}

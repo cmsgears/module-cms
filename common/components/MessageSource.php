@@ -22,7 +22,18 @@ class MessageSource extends Component {
 		CmsGlobal::ERROR_NO_TEMPLATE => "No teplate defined.",
 		CmsGlobal::ERROR_NO_VIEW => "Layout or view is missing.",
 		// Content Fields
-		CmsGlobal::FIELD_KEYWORDS => "Keywords"
+		CmsGlobal::FIELD_KEYWORDS => "Keywords",
+		// SEO
+		CmsGlobal::FIELD_SEO_NAME => "SEO Name",
+		CmsGlobal::FIELD_SEO_DESCRIPTION => "SEO Description",
+		CmsGlobal::FIELD_SEO_KEYWORDS => "SEO Keywords",
+		CmsGlobal::FIELD_SEO_ROBOT => "SEO Robot",
+		// Block Fields
+		CmsGlobal::FIELD_BACKGROUND => "Background",
+		CmsGlobal::FIELD_TEXTURE => "Texture",
+		CmsGlobal::FIELD_HTML_OPTIONS => "HTML Options",
+		CmsGlobal::FIELD_BACKGROUND_CLASS => "Background Class",
+		CmsGlobal::FIELD_TEXTURE_CLASS => "Texture Class"
 	];
 
 	/**

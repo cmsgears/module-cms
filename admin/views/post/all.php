@@ -78,6 +78,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Tags</th>
+					<th>SEO Title</th>
 					<th>SEO Description</th>
 					<th>SEO Keywords</th>
 					<th>SEO Robot</th>
@@ -115,20 +116,22 @@ if( !isset( $sortOrder ) ) {
 						$slug		= $post->slug;
 						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
 						$tags		= $post->getTagMap();
+						$content	= $post->content;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $slugUrl ?></td>
 						<td><?= $post->getVisibilityStr() ?></td>
 						<td><?= $post->getStatusStr() ?></td>
-						<td><?= $post->getTemplateName() ?></td>
+						<td><?= $content->getTemplateName() ?></td>
 						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
-						<td><?= $post->seoDescription ?></td>
-						<td><?= $post->seoKeywords ?></td>
-						<td><?= $post->seoRobot ?></td>
-						<td><?= $post->createdAt ?></td>
-						<td><?= $post->modifiedAt ?></td>
-						<td><?= $post->publishedAt ?></td>
+						<td><?= $content->seoName ?></td>
+						<td><?= $content->seoDescription ?></td>
+						<td><?= $content->seoKeywords ?></td>
+						<td><?= $content->seoRobot ?></td>
+						<td><?= $content->createdAt ?></td>
+						<td><?= $content->modifiedAt ?></td>
+						<td><?= $content->publishedAt ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcms/post/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

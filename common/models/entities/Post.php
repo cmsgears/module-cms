@@ -7,6 +7,10 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
+use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\cms\common\models\traits\ContentTrait;
+use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Post extends Content {
 
@@ -17,6 +21,22 @@ class Post extends Content {
 	use TagTrait;
 
 	public $tagType			= CmsGlobal::TYPE_POST;
+
+	use MetaTrait;
+
+	public $metaType		= CmsGlobal::TYPE_POST;
+
+	use FileTrait;
+
+	public $fileType		= CmsGlobal::TYPE_POST;
+
+	use ContentTrait;
+
+	public $contentType		= CmsGlobal::TYPE_POST;
+
+	use BlockTrait;
+
+	public $blockType		= CmsGlobal::TYPE_POST;
 
 	// Instance Methods --------------------------------------------
 
@@ -31,7 +51,7 @@ class Post extends Content {
 
 		$postTable = CmsTables::TABLE_PAGE;
 
-		return parent::find()->where( [ "$postTable.type" => Page::TYPE_POST ] );
+		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
 	}
 
 	// Post ------------------------------

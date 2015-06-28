@@ -126,7 +126,7 @@ class WidgetController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Widget' )  && $model->validate() ) {
 
@@ -197,7 +197,7 @@ class WidgetController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "meta" );
+			$model->setScenario( 'meta' );
 
 			if( $model->load( Yii::$app->request->post(), 'Widget' )  && $model->validate() ) {
 
