@@ -46,7 +46,8 @@ class PostController extends BaseController {
 	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'categories' => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -56,7 +57,8 @@ class PostController extends BaseController {
 	                'all'   => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'delete' => ['get', 'post'],
+	                'categories' => ['get']
                 ]
             ]
         ];
