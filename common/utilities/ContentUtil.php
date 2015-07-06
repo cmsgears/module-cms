@@ -21,22 +21,32 @@ class ContentUtil {
 			$page	= self::getPage( 'home' );
 		}
 		// Other Pages
-		else {
+		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
-			$page	= self::getPage( $actionName );
+			$actionName	= Yii::$app->request->queryParams[ 'slug' ];
+			$page		= self::getPage( $actionName );
 		}
 
 		if( isset( $page ) ) {
 
 			$coreProperties			= $view->context->getCoreProperties();
 
+			$content				= $page->content;
 			$view->params[ 'page']	= $page;
-			$view->params[ 'desc']	= $page->seoDescription;
-			$view->params[ 'meta']	= $page->seoKeywords;
-			$view->params[ 'robot']	= $page->seoRobot;
+			$view->params[ 'desc']	= $content->seoDescription;
+			$view->params[ 'meta']	= $content->seoKeywords;
+			$view->params[ 'robot']	= $content->seoRobot;
 
 			$siteTitle				= $coreProperties->getSiteTitle();
-			$view->title			= $siteTitle . " | " . $page->seoName;
+			
+			if( isset( $content->seoName ) ) {
+
+				$view->title		= $siteTitle . " | " . $content->seoName;
+			}
+			else {
+
+				$view->title		= $siteTitle . " | " . $page->name;
+			}
 		}
 	}
 

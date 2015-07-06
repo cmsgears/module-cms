@@ -63,7 +63,7 @@ class Post extends Content {
 
 		$postTable 	= CmsTables::TABLE_PAGE;
 
-		return self::find()->joinWith( 'banner' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
+		return self::find()->joinWith( 'content' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::TABLE_FILE;
 			$query->from( "$fileTable avatar" ); } 
 		]);

@@ -48,7 +48,7 @@ class SiteController extends BaseController {
 
 				$layout			= $template->layout;
 				$view			= $template->view;
-				$this->layout	= $layout;
+				$this->layout	= "//$layout";
 
 				$webProperties	= $this->getWebProperties();
 				$themeName		= $webProperties->getTheme();
@@ -56,7 +56,7 @@ class SiteController extends BaseController {
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/$view", [ 
+			        return $this->render( "@themes/$themeName/views/templates/$view", [
 			        	'page' => $page,
 			        	'author' => $page->createdBy,
 			        	'content' => $content,
