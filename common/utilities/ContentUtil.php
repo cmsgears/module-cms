@@ -63,8 +63,8 @@ class ContentUtil {
 		if( isset( $page ) ) {
 
 			$coreProperties	= Yii::$app->controller->getCoreProperties();
-			$slugUrl		= $coreProperties->getSiteUrl() . $page->getSlug();
-			$summary		= $page->getSummary();
+			$slugUrl		= $coreProperties->getSiteUrl() . $page->slug;
+			$summary		= $page->content->summary;
 			$summary   	   .= "<div class='read-more'><a class='btn' href='$slugUrl'>Read More</a></div>";
 
 			return $summary;
@@ -88,7 +88,7 @@ class ContentUtil {
 
 		if( isset( $page ) ) {
 
-			$content	= $page->getContent();
+			$content	= $page->content;
 
 			return $content;
 		}

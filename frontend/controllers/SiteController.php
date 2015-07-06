@@ -40,7 +40,8 @@ class SiteController extends BaseController {
 		if( isset( $page ) ) {
 
 			// Set Layout
-			$template	= $page->template;
+			$content	= $page->content;
+			$template	= $content->template;
 
 			// Page using Template
 			if( isset( $template ) ) {
@@ -55,7 +56,12 @@ class SiteController extends BaseController {
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/" . $view, [ 'page' => $page ] );
+			        return $this->render( "@themes/$themeName/views/templates/$view", [ 
+			        	'page' => $page,
+			        	'author' => $page->createdBy,
+			        	'content' => $content,
+			        	'banner' => $content->banner
+			        ]);
 				}
 				else {
 

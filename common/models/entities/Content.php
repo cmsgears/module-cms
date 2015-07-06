@@ -17,6 +17,7 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Content Entity
  *
