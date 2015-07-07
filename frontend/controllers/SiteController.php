@@ -39,7 +39,7 @@ class SiteController extends BaseController {
 
 		if( isset( $page ) ) {
 
-			// Set Layout
+			// Find Template
 			$content	= $page->content;
 			$template	= $content->template;
 
@@ -89,14 +89,16 @@ class SiteController extends BaseController {
 
 		if( isset( $post ) ) {
 
-			// Set Layout
-			$template	= $post->template;
+			// Find Template
+			$content	= $post->content;
+			$template	= $content->template;
 
+			// Page using Template
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
 				$view			= $template->view;
-				$this->layout	= $layout;
+				$this->layout	= "//$layout";
 
 				$webProperties	= $this->getWebProperties();
 				$themeName		= $webProperties->getTheme();
@@ -104,7 +106,12 @@ class SiteController extends BaseController {
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/" . $view, [ 'page' => $post ] );
+			        return $this->render( "@themes/$themeName/views/templates/" . $view, [
+			        	'page' => $post,
+			        	'author' => $post->createdBy,
+			        	'content' => $content,
+			        	'banner' => $content->banner
+			        ]);
 				}
 				else {
 
