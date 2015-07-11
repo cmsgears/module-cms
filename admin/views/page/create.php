@@ -3,7 +3,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 
-use cmsgears\core\widgets\Editor;
+use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\FileUploader;
 
 $coreProperties = $this->context->getCoreProperties();
