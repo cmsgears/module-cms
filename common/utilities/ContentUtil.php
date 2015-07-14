@@ -9,23 +9,13 @@ use cmsgears\cms\common\services\PageService;
 
 class ContentUtil {
 
-	public static function initPage( $view ) {
+	/**
+	 * The method can be utilised by the Layouts for SEO purpose.
+	 * @return array having SEO related details.
+	 */
+	public static function initPage( $view, $module = 'cmgcore', $controller = 'site' ) {
 
-		$moduleName		= $view->context->module->id;
-		$controllerName	= Yii::$app->controller->id;
-		$actionName		= Yii::$app->controller->action->id;
-
-		// Landing Page
-		if( strcmp( $moduleName, 'cmgcore' ) == 0 && strcmp( $controllerName, 'site' ) == 0 && strcmp( $actionName, 'index' ) == 0 ) {
-
-			$page	= self::getPage( 'home' );
-		}
-		// Other Pages
-		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
-
-			$actionName	= Yii::$app->request->queryParams[ 'slug' ];
-			$page		= self::getPage( $actionName );
-		}
+		$page = self::findViewPage( $view, $module, $controller );
 
 		if( isset( $page ) ) {
 
@@ -38,8 +28,8 @@ class ContentUtil {
 			$view->params[ 'robot']	= $content->seoRobot;
 
 			$siteTitle				= $coreProperties->getSiteTitle();
-			
-			if( isset( $content->seoName ) ) {
+
+			if( isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
 
 				$view->title		= $siteTitle . " | " . $content->seoName;
 			}
@@ -50,13 +40,30 @@ class ContentUtil {
 		}
 	}
 
-	public static function getPage( $slug ) {
+	/**
+	 * @return array - page details including content, author and banner.
+	 */
+	public static function getPageInfo( $view, $module = 'cmgcore', $controller = 'site' ) {
 
-		$page 		= PageService::findBySlug( $slug );
+		$page = self::findViewPage( $view, $module, $controller );
 
-		return $page;
+		if( isset( $page ) ) {
+
+			$info				= [];
+			$info[ 'page']		= $page;
+			$info[ 'content']	= $page->content;
+			$info[ 'banner']	= $info[ 'content']->banner;
+			$info[ 'author']	= $page->createdBy;
+
+			return $info;
+		}
+
+		return null;
 	}
 
+	/**
+	 * @return string - page summary
+	 */
 	public static function getPageSummary( $config = [] ) {
 
 		if( isset( $config[ 'slug' ] ) ) {
@@ -83,6 +90,9 @@ class ContentUtil {
 		return '';
 	}
 
+	/**
+	 * @return string - page content
+	 */
 	public static function getPageContent( $config = [] ) {
 
 		if( isset( $config[ 'slug' ] ) ) {
@@ -104,6 +114,47 @@ class ContentUtil {
 		}
 
 		return '';
+	}
+
+	// helpers --------------------
+
+	public static function findViewPage( $view, $module, $controller ) {
+
+		$moduleName		= $view->context->module->id;
+		$controllerName	= Yii::$app->controller->id;
+		$actionName		= Yii::$app->controller->action->id;
+		$page 			= null;
+
+		// Module's Controller Pages
+		if( strcmp( $moduleName, $module ) == 0 && strcmp( $controllerName, $controller ) == 0 ) {
+
+			if( strcmp( $actionName, 'index' ) == 0 ) {
+
+				$page	= self::getPage( 'home' );
+			}
+			else {
+
+				$page	= self::getPage( $actionName );
+			}
+		}
+		// CMS Pages
+		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
+
+			$actionName	= Yii::$app->request->queryParams[ 'slug' ];
+			$page		= self::getPage( $actionName );
+		}
+		
+		return $page;
+	}
+
+	/**
+	 * @return Page based on given slug
+	 */
+	public static function getPage( $slug ) {
+
+		$page 		= PageService::findBySlug( $slug );
+
+		return $page;
 	}
 }
 
