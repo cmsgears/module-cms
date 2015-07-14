@@ -204,7 +204,7 @@ ALTER TABLE `cmg_cms_sidebar_widget`
 --
 ALTER TABLE `cmg_cms_model_content` 
 	ADD CONSTRAINT `fk_model_content_1` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_model_content_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_file` (`id`);
+	ADD CONSTRAINT `fk_model_content_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_cms_model_block`

@@ -71,7 +71,7 @@ class SiteController extends BaseController {
 			// Page without Template
 			else {
 
-				return $this->redirect( 'site/' . $page->getSlug() );
+				return $this->redirect( 'site/' . $page->slug );
 			}
 		}
 
