@@ -16,14 +16,14 @@ INSERT INTO `cmg_core_template` (`name`,`description`,`type`,`layout`,`view`,`co
 --
 
 INSERT INTO `cmg_core_role` VALUES 
-	(1001,1,1,'CMS Manager','cms-manager','The role CMS Manager is limited to manage cms from admin.','/dashboard','system',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(1001,1,1,'CMS Manager','cms-manager','The role CMS Manager is limited to manage cms from admin.','dashboard','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_core_permission`
 --
 
 INSERT INTO `cmg_core_permission` VALUES 
-	(1001,1,1,'cms','cms','The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','system',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(1001,1,1,'CMS','cms','The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','system',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_core_role_permission`
