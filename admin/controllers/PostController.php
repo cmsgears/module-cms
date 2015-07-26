@@ -17,6 +17,7 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\entities\ModelContent;
 
+use cmsgears\cms\common\services\ContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
@@ -104,8 +105,14 @@ class PostController extends BaseController {
 
 			$banner->load( Yii::$app->request->post(), 'File' );
 
-			if( PostService::create( $model, $content, $banner ) ) {
+			$post = PostService::create( $model );
 
+			if( isset( $post ) ) {
+
+				// Create Content
+				ContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
+
+				// Bind Menus
 				$binder = new Binder();
 
 				$binder->binderId	= $model->id;
@@ -147,8 +154,14 @@ class PostController extends BaseController {
 
 				$banner->load( Yii::$app->request->post(), 'File' );
 
-				if( PostService::update( $model, $content, $banner ) ) {
+				$post = PostService::update( $model );
+	
+				if( isset( $post ) ) {
 
+					// Update Content
+					ContentService::update( $content, $post->isPublished(), $banner );
+
+					// Bind Menus
 					$binder = new Binder();
 
 					$binder->binderId	= $model->id;
@@ -178,7 +191,7 @@ class PostController extends BaseController {
 		}
 		
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -194,7 +207,9 @@ class PostController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
 
-				if( PostService::delete( $model, $content ) ) {
+				if( PostService::delete( $model ) ) {
+
+					ContentService::delete( $content );
 
 					$this->redirect( [  'all' ] );
 				}
@@ -218,7 +233,7 @@ class PostController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 	
 	// Categories -------------------

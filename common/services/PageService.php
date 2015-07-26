@@ -10,7 +10,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\MenuPage;
-use cmsgears\cms\common\models\entities\ModelContent;
 
 use cmsgears\core\common\services\FileService;
 
@@ -74,7 +73,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function create( $page, $content, $banner = null ) {
+	public static function create( $page ) {
 
 		$user					= Yii::$app->user->getIdentity();
 
@@ -86,18 +85,6 @@ class PageService extends \cmsgears\core\common\services\Service {
 		// Create Page
 		$page->save();
 
-		$content->parentId		= $page->id;
-		$content->parentType	= CmsGlobal::TYPE_PAGE;
-
-		// Save Banner
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
-		}
-		
-		// Create Content
-		$content->save();
-
 		return $page;
 	}
 
@@ -108,33 +95,16 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function update( $page, $content, $banner = null ) {
+	public static function update( $page ) {
 
-		$date 				= DateUtil::getDateTime();
 		$user				= Yii::$app->user->getIdentity();
 		$pageToUpdate		= self::findById( $page->id );
-		$contentToUpdate	= ModelContent::findById( $content->id );
 
 		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility' ] );
 
 		$pageToUpdate->modifiedBy	= $user->id;
 
-		$contentToUpdate->copyForUpdateFrom( $content, [ 'bannerId', 'templateId', 'summary', 'content', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ] );
-
-    	if( $pageToUpdate->isPublished() && !isset( $contentToUpdate->publishedAt ) ) {
-
-    		$contentToUpdate->publishedAt	= $date;
-    	}
-
-		// Save Banner
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $contentToUpdate, 'attribute' => 'bannerId' ] );
-		}
-
 		$pageToUpdate->update();
-
-		$contentToUpdate->update();
 
 		return $pageToUpdate;
 	}
@@ -176,16 +146,12 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 * @param Page $page
 	 * @return boolean
 	 */
-	public static function delete( $page, $content ) {
+	public static function delete( $page ) {
 
 		$existingPage		= self::findById( $page->id );
-		$existingContent	= ModelContent::findById( $content->id );
 
 		// Delete Page
 		$existingPage->delete();
-
-		// Delete Content
-		$existingContent->delete();
 
 		return true;
 	}

@@ -15,6 +15,7 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\ModelContent;
 
+use cmsgears\cms\common\services\ContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
@@ -102,8 +103,14 @@ class PageController extends BaseController {
 
 			$banner->load( Yii::$app->request->post(), 'File' );
 
-			if( PageService::create( $model, $content, $banner ) ) {
+			$page = PageService::create( $model );
 
+			if( isset( $page ) ) {
+
+				// Create Content
+				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
+
+				// Bind Menus
 				$binder = new Binder();
 
 				$binder->binderId	= $model->id;
@@ -145,15 +152,21 @@ class PageController extends BaseController {
 
 				$banner->load( Yii::$app->request->post(), 'File' );
 
-				if( PageService::update( $model, $content, $banner ) ) {
+				$page = PageService::update( $model );
+	
+				if( isset( $page ) ) {
 
+					// Update Content
+					ContentService::update( $content, $page->isPublished(), $banner );
+
+					// Bind Menus
 					$binder = new Binder();
 
 					$binder->binderId	= $model->id;
 					$binder->load( Yii::$app->request->post(), 'Binder' );
-	
+
 					PageService::bindMenus( $binder );
-	
+
 					$this->redirect( [ 'all' ] );
 				}
 			}
@@ -191,7 +204,9 @@ class PageController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
-				if( PageService::delete( $model, $content ) ) {
+				if( PageService::delete( $model ) ) {
+					
+					ContentService::delete( $content );
 
 					$this->redirect( [ 'all' ] );
 				}
