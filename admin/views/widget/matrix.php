@@ -64,7 +64,7 @@ if( !isset( $sortOrder ) ) {
 						$id 		= $widget->id;
 						$sidebars	= $widget->getSidebarsIdList();
 				?>
-					<tr>
+					<tr id="widget-matrix-<?=$id?>" class="request-ajax" cmt-controller="widget" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
 						<td><?= $widget->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
@@ -74,12 +74,12 @@ if( !isset( $sortOrder ) ) {
 
 										if( in_array( $sidebar['id'], $sidebars ) ) {
 									?>		
-											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
 									<?php
 										}
 									}
@@ -87,7 +87,11 @@ if( !isset( $sortOrder ) ) {
 								</ul>
 							</form>
 						</td>
-						<td><span class="wrap-icon-action" title="Link Sidebars"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="widget-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
@@ -98,6 +102,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initMappingsMatrix();
-</script>

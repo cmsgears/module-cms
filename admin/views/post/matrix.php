@@ -63,22 +63,21 @@ if( !isset( $sortOrder ) ) {
 						$categories	= $post->getCategoryIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/post/bind-categories" );
 				?>
-					<tr>
+					<tr id="post-matrix-<?=$id?>" class="request-ajax" cmt-controller="post" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
 						<td><?= $post->name ?></td>
 						<td>
-							<form action="<?=$apixUrl?>" method="POST">
 								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
 									<?php foreach ( $categoriesList as $category ) { 
 
 										if( in_array( $category['id'], $categories ) ) {
 									?>		
-											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$category['id']?>" /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" /><?=$category['name']?></li>
 									<?php
 										}
 									}
@@ -86,7 +85,11 @@ if( !isset( $sortOrder ) ) {
 								</ul>
 							</form>
 						</td>
-						<td><span class="wrap-icon-action"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="post-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
@@ -97,6 +100,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initMappingsMatrix();
-</script>
