@@ -6,7 +6,6 @@ use \Yii;
 use yii\data\Sort;
 
 use cmsgears\cms\common\models\entities\Menu;
-use cmsgears\cms\common\models\entities\MenuPage;
 
 class MenuService extends \cmsgears\cms\common\services\MenuService {
 
@@ -14,7 +13,7 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 
 	// Pagination -------
 
-	public static function getPagination() {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -27,68 +26,17 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Menu(), [ 'sort' => $sort, 'search-col' => 'name' ] );
-	}
+		if( !isset( $config[ 'sort' ] ) ) {
 
-	// Create -----------
-
-	public static function create( $menu ) {
-
-		$menu->save();
-
-		return $menu;
-	}
-
-	// Update -----------
-
-	public static function update( $menu ) {
-		
-		$menuToUpdate	= self::findById( $menu->id );
-		
-		$menuToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
-
-		$menuToUpdate->update();
-
-		return $menuToUpdate;
-	}
-
-	public static function bindPages( $binder ) {
-
-		$menuId	= $binder->menuId;
-		$pages	= $binder->bindedData;
-
-		// Clear all existing mappings
-		MenuPage::deleteByMenuId( $menuId );
-
-		if( isset( $pages ) && count( $pages ) > 0 ) {
-
-			foreach ( $pages as $key => $value ) {
-
-				if( isset( $value ) ) {
-
-					$toSave	= new MenuPage();
-
-					$toSave->menuId	= $menuId;
-					$toSave->pageId = $value;
-	
-					$toSave->save();
-				}
-			}
+			$config[ 'sort' ] = $sort;
 		}
 
-		return true;
-	}
+		if( !isset( $config[ 'search-col' ] ) ) {
 
-	// Delete -----------
+			$config[ 'search-col' ] = 'name';
+		}
 
-	public static function delete( $menu ) {
-
-		$existingMenu	= self::findById( $menu->id );
-
-		// Delete Menu
-		$existingMenu->delete();
-
-		return true;
+		return self::getDataProvider( new Menu(), $config );
 	}
 }
 

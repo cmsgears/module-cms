@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\models\forms\PostCategoryBinderForm;
+use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\cms\admin\services\PostService;
 
@@ -52,19 +52,19 @@ class PostController extends Controller {
 
 	public function actionBindCategories() {
 
-		$binder = new PostCategoryBinderForm();
+		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "" ) ) {
+		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
 
 			if( PostService::bindCategories( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

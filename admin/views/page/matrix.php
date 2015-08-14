@@ -8,6 +8,14 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Pages Matrix";
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'page-matrix';
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
 
@@ -30,7 +38,7 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -51,27 +59,27 @@ if( !isset( $sortOrder ) ) {
 
 					$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/page/bind-menus" );
 
-					foreach( $page as $pag ) {
+					foreach( $models as $pag ) {
 
 						$id 		= $pag->id;
 						$menus		= $pag->getMenusIdList();
 				?>
-					<tr>
+					<tr id="page-matrix-<?=$id?>" class="request-ajax" cmt-controller="page" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
 						<td><?= $pag->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="pageId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allMenus as $menu ) { 
+									<?php foreach ( $menusList as $menu ) {
 
 										if( in_array( $menu['id'], $menus ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$menu['id']?>" checked /><?=$menu['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" checked /><?=$menu['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$menu['id']?>" /><?=$menu['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" /><?=$menu['name']?></li>
 									<?php
 										}
 									}
@@ -79,18 +87,18 @@ if( !isset( $sortOrder ) ) {
 								</ul>
 							</form>
 						</td>
-						<td><span class="wrap-icon-action" title="Link Menus"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="page-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 0 );
-	initMappingsMatrix();
-</script>

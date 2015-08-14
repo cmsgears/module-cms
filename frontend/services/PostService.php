@@ -6,6 +6,7 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\Post;
 
 class PostService extends \cmsgears\cms\common\services\PostService {
@@ -16,7 +17,9 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $config = [] ) {
+		
+		$postTable = CmsTables::TABLE_PAGE;
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -73,10 +76,32 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 	        	'pdate' => 'desc'
 	        ]
 	    ]);
-		
-		$query	= Post::blogQuery();
 
-		return self::getPaginationDetails( new Post(), [ 'route' => 'blog', 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'query' ] = Post::findWithAuthor();
+		}
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		$config['route'] 									= 'blog';
+		$config[ 'conditions' ][ "$postTable.status" ] 		= Post::STATUS_PUBLISHED;
+		$config[ 'conditions' ][ "$postTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
+
+		return self::getDataProvider( new Post(), $config );
 	}
 }
 

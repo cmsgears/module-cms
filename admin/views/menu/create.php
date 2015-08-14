@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Menu';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'menu';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -25,7 +29,3 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Menu';
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 2 );
-</script>

@@ -1,25 +1,37 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\traits\MetaTrait;
-use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\entities\Template;
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
+/**
+ * Content Entity
+ *
+ * @property int $id
+ * @property int $parentId
+ * @property int $createdBy
+ * @property int $modifiedBy 
+ * @property string $name
+ * @property string $slug
+ * @property short $type
+ * @property short $status
+ * @property short $visibility
+ */
 class Content extends NamedCmgEntity {
-
-	// Pre-Defined Types
-	const TYPE_PAGE		= 0;
-	const TYPE_POST		= 5;
-
-	public static $typeMap = [
-		self::TYPE_PAGE => "page",
-		self::TYPE_POST => "post"
-	];
 
 	// Pre-Defined Status
 	const STATUS_NEW		= 0;
@@ -38,16 +50,29 @@ class Content extends NamedCmgEntity {
 		self::VISIBILITY_PRIVATE => "private",
 		self::VISIBILITY_PUBLIC => "public"
 	];
-
-	use MetaTrait;
-
-	public $metaType	= CmsGlobal::META_TYPE_PAGE;
-
-	use FileTrait;
-
-	public $fileType	= CmsGlobal::FILE_TYPE_PAGE;
+	
+	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
+
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->parentId <= 0 ) {
+
+				$this->parentId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// Content
 
 	public function getParent() {
 
@@ -64,43 +89,14 @@ class Content extends NamedCmgEntity {
 		}
 	}
 
-	public function getAuthor() {
+	public function isPage() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] );
+		return $this->type == CmsGlobal::TYPE_PAGE;
 	}
 
-	public function getBanner() {
+	public function isPost() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
-
-	public function getBannerWithAlias() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] )->from( 'cmg_file banner' );
-	}
-
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
-
-	public function getTemplateName() {
-
-		$template = $this->template;
-		
-		if( isset( $template ) ) {
-			
-			return $template->name;
-		}
-		else {
-			
-			return '';
-		}
-	}
-
-	public function getTypeStr() {
-
-		return self::$typeMap[ $this->type ];	
+		return $this->type == CmsGlobal::TYPE_POST;
 	}
 
 	public function getStatusStr() {
@@ -117,9 +113,9 @@ class Content extends NamedCmgEntity {
 
 		return $this->status == self::STATUS_PUBLISHED;
 	}
-	
+
 	public function getVisibilityStr() {
-		
+
 		return self::$visibilityMap[ $this->visibility ];
 	}
 
@@ -133,35 +129,63 @@ class Content extends NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
+	/**
+	 * @return boolean - whether given user is author
+	 */
+	public function checkOwner( $user ) {
+
+		return $this->createdBy	= $user->id;
+	}
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'slug', 'type', 'status', 'visibility' ], 'safe' ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId', 'authorId', 'bannerId', 'templateId', 'description', 'type', 'visibility', 'status' ], 'safe' ], 
-            [ [ 'id', 'summary', 'content', 'createdAt', 'publishedAt', 'updatedAt' ], 'safe' ]
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent Page',
-			'authorId' => 'Author',
-			'bannerId' => 'Banner',
-			'templateId' => 'Template',
-			'name' => 'Name',
-			'description' => 'Description',
-			'type' => 'Type',
-			'visibility' => 'Visibility', 
-			'status' => 'Status',
-			'slug' => 'Slug',
-			'summary' => 'Summary',
-			'content' => 'Content'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
+			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG )
 		];
 	}
 
@@ -169,23 +193,27 @@ class Content extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_PAGE;
 	}
 
-	// yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord ------------
+
     public static function instantiate( $row ) {
-		
+
 		switch( $row['type'] ) {
-			
-			case self::TYPE_PAGE:
+
+			case CmsGlobal::TYPE_PAGE:
 			{
 				$class = 'cmsgears\cms\common\models\entities\Page';
 
 				break;
 			}
-			case self::TYPE_POST:
+			case CmsGlobal::TYPE_POST:
 			{
 				$class = 'cmsgears\cms\common\models\entities\Post';
 

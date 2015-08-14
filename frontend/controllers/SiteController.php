@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
@@ -28,7 +29,7 @@ class SiteController extends BaseController {
 	// Instance Methods --------------------------------------------
 
 	// SiteController
-	/* 1. It finds the associated page. 
+	/* 1. It finds the associated page for the given slug.
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
@@ -38,24 +39,44 @@ class SiteController extends BaseController {
 
 		if( isset( $page ) ) {
 
-			// Set Layout
-			$templateName	= $page->getTemplateName();
+			// Find Template
+			$content	= $page->content;
+			$template	= $content->template;
 
-			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
+			// Page using Template
+			if( isset( $template ) ) {
 
-				$this->layout	= "/$templateName";
+				$layout			= $template->layout;
+				$view			= $template->view;
+				$this->layout	= "//$layout";
+
+				$webProperties	= $this->getWebProperties();
+				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
-		        return $this->render( "template-" . $templateName, [ 'page' => $page ] );
+				if( isset( $layout ) && isset( $view ) ) {
+
+			        return $this->render( "@themes/$themeName/views/templates/$view", [
+			        	'page' => $page,
+			        	'author' => $page->createdBy,
+			        	'content' => $content,
+			        	'banner' => $content->banner
+			        ]);
+				}
+				else {
+
+					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+				}
 			}
+			// Page without Template
 			else {
 
-				return $this->redirect( "site/" . $page->getSlug() );
+				return $this->redirect( 'site/' . $page->slug );
 			}
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	// SiteController
@@ -68,24 +89,43 @@ class SiteController extends BaseController {
 
 		if( isset( $post ) ) {
 
-			// Set Layout
-			$templateName	= $post->getTemplateName();
+			// Find Template
+			$content	= $post->content;
+			$template	= $content->template;
 
-			if( isset( $templateName ) && strlen( $templateName ) > 0 ) {
+			// Page using Template
+			if( isset( $template ) ) {
 
-				$this->layout	= "/$templateName";
+				$layout			= $template->layout;
+				$view			= $template->view;
+				$this->layout	= "//$layout";
+
+				$webProperties	= $this->getWebProperties();
+				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
-		        return $this->render( "template-" . $templateName, [ 'page' => $post ] );
+				if( isset( $layout ) && isset( $view ) ) {
+
+			        return $this->render( "@themes/$themeName/views/templates/" . $view, [
+			        	'page' => $post,
+			        	'author' => $post->createdBy,
+			        	'content' => $content,
+			        	'banner' => $content->banner
+			        ]);
+				}
+				else {
+
+					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+				}
 			}
 			else {
 
-				echo "No template found having the name $template.";
+				return $this->render( 'post', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
 			}
 		}
 
 		// Page not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

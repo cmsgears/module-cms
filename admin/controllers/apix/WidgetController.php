@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\cms\admin\controllers\apix;
+namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
@@ -8,15 +8,14 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\modules\cms\admin\models\forms\SidebarBinderForm;
-use cmsgears\modules\cms\common\models\entities\CMSPermission;
+use cmsgears\core\common\models\forms\Binder;
 
-use cmsgears\modules\cms\admin\services\WidgetService;
+use cmsgears\cms\admin\services\WidgetService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class WidgetController extends Controller {
 
@@ -36,8 +35,8 @@ class WidgetController extends Controller {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'bindSidebars'  => CMSPermission::PERM_CMS_SIDEBAR
+                'actions' => [
+	                'bindSidebars'  => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -53,19 +52,19 @@ class WidgetController extends Controller {
 
 	public function actionBindSidebars() {
 
-		$binder = new SidebarBinderForm();
+		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "" ) ) {
+		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
 
 			if( WidgetService::bindSidebars( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
+        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

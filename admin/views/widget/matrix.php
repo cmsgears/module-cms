@@ -3,10 +3,18 @@ use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Widgets Matrix";
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-child'] 	= 'widget-matrix';
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
 
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
@@ -30,7 +38,7 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -51,27 +59,27 @@ if( !isset( $sortOrder ) ) {
 
 					$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/widget/bind-sidebars" );
 
-					foreach( $page as $widget ) {
+					foreach( $models as $widget ) {
 
-						$id 		= $widget->getId();
+						$id 		= $widget->id;
 						$sidebars	= $widget->getSidebarsIdList();
 				?>
-					<tr>
-						<td><?= $widget->getName() ?></td>
+					<tr id="widget-matrix-<?=$id?>" class="request-ajax" cmt-controller="widget" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
+						<td><?= $widget->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="widgetId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allSidebars as $sidebar ) { 
+									<?php foreach ( $sidebarsList as $sidebar ) { 
 
 										if( in_array( $sidebar['id'], $sidebars ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></li>
 									<?php
 										}
 									}
@@ -79,18 +87,18 @@ if( !isset( $sortOrder ) ) {
 								</ul>
 							</form>
 						</td>
-						<td><span class="wrap-icon-action" title="Link Sidebars"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="widget-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 0 );
-	initMappingsMatrix();
-</script>

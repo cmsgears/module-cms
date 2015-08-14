@@ -10,9 +10,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\cms\common\models\entities\Menu;
-
-use cmsgears\cms\admin\models\forms\PageBinderForm;
 
 use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
@@ -62,17 +61,15 @@ class MenuController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( "all" );
+		$this->redirect( [ "all" ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = MenuService::getPagination();
+		$dataProvider = MenuService::getPagination();
 
-	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	    return $this->render( 'all', [
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
@@ -80,94 +77,94 @@ class MenuController extends BaseController {
 
 		$model	= new Menu();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post( "Menu" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
 
 			if( MenuService::create( $model ) ) {
 
-				$binder = new PageBinderForm();
+				$binder = new Binder();
 
-				$binder->menuId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
+				$binder->binderId	= $model->id;
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				MenuService::bindPages( $binder );
 
-				return $this->redirect( "all" );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
 		$pages	= PageService::getIdNameList();
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'pages' => $pages
     	]);
 	}
 
 	public function actionUpdate( $id ) {
-		
+
 		// Find Model		
 		$model	= MenuService::findById( $id );
-		
+
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
-	
-			if( $model->load( Yii::$app->request->post( "Menu" ), "" )  && $model->validate() ) {
-	
+			$model->setScenario( 'update' );
+
+			if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
+
 				if( MenuService::update( $model ) ) {
-	
-					$binder = new PageBinderForm();
-	
-					$binder->menuId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
-	
+
+					$binder = new Binder();
+
+					$binder->binderId	= $model->id;
+					$binder->load( Yii::$app->request->post(), 'Binder' );
+
 					MenuService::bindPages( $binder );
-	
-					$this->refresh();
+
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
 			$pages	= PageService::getIdNameList();
 	
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'pages' => $pages
 	    	]);			
 		}
 		
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= MenuService::findById( $id );
-		
+
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Menu" ), "" ) ) {
-	
+			if( $model->load( Yii::$app->request->post(), 'Menu' ) ) {
+
 				if( MenuService::delete( $model ) ) {
-		
-					return $this->redirect( "all" );
+
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
 			$pages	= PageService::getIdNameList();
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'pages' => $pages
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 }
 

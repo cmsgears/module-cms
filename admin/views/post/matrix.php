@@ -8,6 +8,14 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Posts Matrix";
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-child'] 	= 'post-matrix';
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
 
@@ -30,7 +38,7 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -49,28 +57,27 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					foreach( $page as $post ) {
+					foreach( $models as $post ) {
 
 						$id 		= $post->id;
-						$categories	= $post->getCategoriesIdList();
+						$categories	= $post->getCategoryIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcms/post/bind-categories" );
 				?>
-					<tr>
+					<tr id="post-matrix-<?=$id?>" class="request-ajax" cmt-controller="post" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
 						<td><?= $post->name ?></td>
 						<td>
-							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="pageId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allCategories as $category ) { 
+									<?php foreach ( $categoriesList as $category ) { 
 
 										if( in_array( $category['id'], $categories ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" checked /><?=$category['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$category['id']?>" /><?=$category['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" /><?=$category['name']?></li>
 									<?php
 										}
 									}
@@ -78,18 +85,18 @@ if( !isset( $sortOrder ) ) {
 								</ul>
 							</form>
 						</td>
-						<td><span class="wrap-icon-action"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="post-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-page-blog", 3 );
-	initMappingsMatrix();
-</script>

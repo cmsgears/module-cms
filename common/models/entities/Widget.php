@@ -1,11 +1,27 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
-// CMG Imports
-use cmsgears\core\common\models\entities\NamedCmgEntity;
+// Yii Imports
+use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\NamedCmgEntity;
+use cmsgears\core\common\models\entities\Template;
+
+/**
+ * Widget Entity
+ *
+ * @property int $id
+ * @property int $templateId
+ * @property string $name
+ * @property string $description
+ * @property string $meta
+ */
 class Widget extends NamedCmgEntity {
-	
+
 	public $metaMap;
 
 	// Instance Methods --------------------------------------------
@@ -40,22 +56,22 @@ class Widget extends NamedCmgEntity {
 					->viaTable( CMSTables::TABLE_SIDEBAR_WIDGET, [ 'widgetId' => 'id' ] );
 	}
 
-	public function getSidebarsMap() {
+	public function getSidebarMappingList() {
 
     	return $this->hasMany( SidebarWidget::className(), [ 'widgetId' => 'id' ] );
 	}
 
 	public function getSidebarsIdList() {
 
-    	$widgets 		= $this->sidebarsMap;
-		$widgetsList	= array();
+    	$sidebars 		= $this->sidebarMappingList;
+		$sidebarsList	= array();
 
-		foreach ( $widgets as $widget ) {
+		foreach ( $sidebars as $sidebar ) {
 
-			array_push( $widgetsList, $widget->sidebarId );
+			array_push( $sidebarsList, $sidebar->sidebarId );
 		}
 
-		return $widgetsList;
+		return $sidebarsList;
 	}
 
 	public function getTemplate() {
@@ -66,37 +82,41 @@ class Widget extends NamedCmgEntity {
 	public function getTemplateName() {
 
 		$template = $this->template;
-		
+
 		if( isset( $template ) ) {
-			
+
 			return $template->name;
 		}
-		else {
-			
-			return '';
-		}
+
+		return '';
 	}
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ 'name', 'required', 'on' => [ 'create', 'update' ] ],
+            [ [ 'id', 'templateId', 'description', 'meta' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'metaMap', 'required', 'on' => [ 'meta' ] ],
-            [ [ 'id', 'templateId', 'description', 'meta' ], 'safe' ]
+            [ 'metaMap', 'required', 'on' => [ 'meta' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'templateId' => 'Template',
-			'name' => 'Name',
-			'description' => 'Description'
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -104,6 +124,9 @@ class Widget extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CmsTables::TABLE_WIDGET;

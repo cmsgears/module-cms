@@ -6,14 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\entities\Page;
-use cmsgears\cms\common\models\entities\MenuPage;
-
-use cmsgears\core\admin\services\FileService;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\DateUtil;
 
 class PageService extends \cmsgears\cms\common\services\PageService {
 
@@ -21,7 +16,7 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 
 	// Pagination -------
 
-	public static function getPagination() {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -76,97 +71,24 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Page(), [ 'conditions' => [ 'type' => Page::TYPE_PAGE ], 'sort' => $sort, 'search-col' => 'name' ] );
-	}
+		if( !isset( $config[ 'conditions' ] ) ) {
 
-	// Create -----------
-
-	public static function create( $page, $banner ) {
-		
-		// Create Page		
-		$date 		= DateUtil::getMysqlDate();
-		$user		= Yii::$app->user->getIdentity();
-
-		$page->createdAt	= $date;
-		$page->type 		= Page::TYPE_PAGE;
-		$page->status 		= Page::STATUS_NEW;
-		$page->visibility 	= Page::VISIBILITY_PRIVATE;
-		$page->authorId		= $user->id;
-		$page->slug			= CodeGenUtil::generateSlug( $page->name );
-
-		// Save Banner
-		FileService::saveImage( $banner, $user, [ 'model' => $page, 'attribute' => 'bannerId' ] );
-
-		// commit page
-		$page->save();
-
-		return $page;
-	}
-
-	// Update -----------
-
-	public static function update( $page, $banner ) {
-
-		$date 			= DateUtil::getMysqlDate();
-		$user			= Yii::$app->user->getIdentity();
-		$pageToUpdate	= self::findById( $page->id );
-
-		$pageToUpdate->copyForUpdateFrom( $page, [ 'name', 'description', 'templateId', 'summary', 'content', 'bannerId', 'visibility', 'status' ] );
-
-		$pageToUpdate->updatedAt	= $date;
-		$pageToUpdate->slug			= CodeGenUtil::generateSlug( $page->name );
-		$publishDate				= $pageToUpdate->publishedAt;
-
-    	if( $pageToUpdate->isPublished() && !isset( $publishDate ) ) {
-
-    		$pageToUpdate->publishedAt	= $date;
-    	}
-
-		// Save Banner
-		FileService::saveImage( $banner, $user, [ 'model' => $pageToUpdate, 'attribute' => 'bannerId' ] );
-
-		$pageToUpdate->update();
-
-		return $pageToUpdate;
-	}
-
-	public static function bindMenus( $binder ) {
-
-		$pageId	= $binder->pageId;
-		$menus	= $binder->bindedData;
-
-		// Clear all existing mappings
-		MenuPage::deleteByPageId( $pageId );
-
-		if( isset( $menus ) && count( $menus ) > 0 ) {
-
-			foreach ( $menus as $key => $value ) {
-
-				if( isset( $value ) ) {
-
-					$toSave			= new MenuPage();
-
-					$toSave->pageId	= $pageId;
-					$toSave->menuId	= $value;
-
-					$toSave->save();
-				}
-			}
+			$config[ 'conditions' ] = [];
 		}
 
-		return true;
-	}
+		if( !isset( $config[ 'sort' ] ) ) {
 
-	// Delete -----------
+			$config[ 'sort' ] = $sort;
+		}
 
-	public static function delete( $page ) {
+		if( !isset( $config[ 'search-col' ] ) ) {
 
-		$existingPage	= self::findById( $page->id );
+			$config[ 'search-col' ] = 'name';
+		}
 
-		// Delete Page
-		$existingPage->delete();
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_PAGE;
 
-		return true;
+		return self::getDataProvider( new Page(), $config );
 	}
 }
 

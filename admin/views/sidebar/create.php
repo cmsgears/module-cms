@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Sidebar';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-child'] 	= 'sdebar';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -12,7 +16,6 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Sidebar';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
-		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
 		<?php foreach ( $widgets as $widget ) { ?>
@@ -26,7 +29,3 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Sidebar';
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-sidebar", 1 );
-</script>

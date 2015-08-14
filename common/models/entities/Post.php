@@ -4,18 +4,39 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
+use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\cms\common\models\traits\ContentTrait;
+use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Post extends Content {
 
 	use CategoryTrait;
 
-	public $categoryType	= CmsGlobal::CATEGORY_TYPE_POST;
+	public $categoryType	= CmsGlobal::TYPE_POST;
 
 	use TagTrait;
 
-	public $tagType			= CmsGlobal::TAG_TYPE_POST;
+	public $tagType			= CmsGlobal::TYPE_POST;
+
+	use MetaTrait;
+
+	public $metaType		= CmsGlobal::TYPE_POST;
+
+	use FileTrait;
+
+	public $fileType		= CmsGlobal::TYPE_POST;
+
+	use ContentTrait;
+
+	public $contentType		= CmsGlobal::TYPE_POST;
+
+	use BlockTrait;
+
+	public $blockType		= CmsGlobal::TYPE_POST;
 
 	// Instance Methods --------------------------------------------
 
@@ -23,34 +44,37 @@ class Post extends Content {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function find() {
 
-		return parent::find()->where( [ 'page_type' => Page::TYPE_POST ] );
+		$postTable = CmsTables::TABLE_PAGE;
+
+		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
 	}
 
 	// Post ------------------------------
 
-	public static function blogQuery() {
-		
-		$postTable = CmsTables::TABLE_PAGE;
-		
-		return self::find()->joinWith( 'author' )->joinWith( 'author.avatar' )->joinWith( 'bannerWithAlias' )->joinWith( 'categories' )
-							 ->where( [ "$postTable.type" => Page::TYPE_POST, "$postTable.status" => Content::STATUS_PUBLISHED, "$postTable.visibility" => Content::VISIBILITY_PUBLIC ] );
+	/**
+	 * @return array - Post - All posts having author details.
+	 */
+	public static function findWithAuthor() {
+
+		$postTable 	= CmsTables::TABLE_PAGE;
+
+		return self::find()->joinWith( 'content' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
+			$fileTable	= CoreTables::TABLE_FILE;
+			$query->from( "$fileTable avatar" ); } 
+		]);
 	}
 
+	/**
+	 * @return Post - by slug.
+	 */
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
-
-	public static function findByAuthorId( $id ) {
-
-		return self::find()->where( 'authorId=:id', [ ':id' => $id ] )->all();
-	}
-
-	public static function findByCategoryName( $name ) {
-
-		return self::find()->joinWith( 'categories' )->where( 'name=:name', [ ':name' => $name ] )->all();
 	}
 }
 

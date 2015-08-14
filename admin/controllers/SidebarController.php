@@ -10,9 +10,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\cms\common\models\entities\Sidebar;
-
-use cmsgears\cms\admin\models\forms\WidgetBinderForm;
 
 use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
@@ -20,9 +19,7 @@ use cmsgears\cms\admin\services\WidgetService;
 use cmsgears\core\admin\controllers\BaseController;
 
 class SidebarController extends BaseController {
-	
-	const URL_ALL 		= 'all';
-		
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -64,17 +61,15 @@ class SidebarController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( "all" );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = SidebarService::getPagination();
+		$dataProvider = SidebarService::getPagination();
 
 	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
@@ -82,20 +77,20 @@ class SidebarController extends BaseController {
 
 		$model	= new Sidebar();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post( "Sidebar" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Sidebar' )  && $model->validate() ) {
 
 			if( SidebarService::create( $model ) ) {
 
-				$binder = new WidgetBinderForm();
+				$binder 			= new Binder();
+				$binder->binderId	= $model->id;
 
-				$binder->sidebarId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				SidebarService::bindWidgets( $binder );
 
-				return $this->redirect( "all" );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
@@ -115,20 +110,20 @@ class SidebarController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post( "Sidebar" ), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Sidebar' )  && $model->validate() ) {
 
 				if( SidebarService::update( $model ) ) {
 		
-					$binder = new WidgetBinderForm();
+					$binder 			= new Binder();
+					$binder->binderId	= $model->id;
 	
-					$binder->sidebarId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
-	
+					$binder->load( Yii::$app->request->post(), 'Binder' );
+
 					SidebarService::bindWidgets( $binder );
-	
-					$this->refresh();
+
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
@@ -141,7 +136,7 @@ class SidebarController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -152,11 +147,11 @@ class SidebarController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Sidebar" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Sidebar' ) ) {
 
 				if( SidebarService::delete( $model ) ) {
 
-					return $this->redirect( "all" );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
@@ -169,7 +164,7 @@ class SidebarController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 }
 
