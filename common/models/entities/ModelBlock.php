@@ -10,7 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
+use cmsgears\core\common\models\entities\CmgModel;
 use cmsgears\core\common\models\entities\CmgFile;
 
 /**
@@ -29,7 +29,7 @@ use cmsgears\core\common\models\entities\CmgFile;
  * @property date $createdAt
  * @property date $modifiedAt
  */
-class ModelBlock extends NamedCmgEntity {
+class ModelBlock extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 

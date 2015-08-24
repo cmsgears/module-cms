@@ -10,7 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
+use cmsgears\core\common\models\entities\CmgModel;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
@@ -33,7 +33,7 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $seoKeywords
  * @property string $seoRobot
  */
-class ModelContent extends CmgEntity {
+class ModelContent extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -145,35 +145,7 @@ class ModelContent extends CmgEntity {
 
 	// ModelContent ----------------------
 
-	// Read ----
-
-	/**
-	 * @return ModelContent - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @param int $parentId
-	 * @param string $parentType
-	 * @return ModelContent by parent id and type
-	 */
-	public static function findByParentIdType( $parentId, $parentType ) {
-
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->one();
-	}
-
-	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
+	// Read ------
 }
 
 ?>
