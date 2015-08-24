@@ -79,7 +79,7 @@ class SidebarController extends BaseController {
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Sidebar' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Sidebar' ) && $model->validate() ) {
 
 			if( SidebarService::create( $model ) ) {
 
@@ -112,7 +112,7 @@ class SidebarController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Sidebar' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Sidebar' ) && $model->validate() ) {
 
 				if( SidebarService::update( $model ) ) {
 		

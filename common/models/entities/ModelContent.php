@@ -3,6 +3,8 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
@@ -103,13 +105,27 @@ class ModelContent extends CmgModel {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'id', 'parentId', 'parentType', 'summary', 'content' ], 'safe' ],
             [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**
