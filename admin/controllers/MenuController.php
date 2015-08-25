@@ -79,7 +79,7 @@ class MenuController extends BaseController {
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
 
 			if( MenuService::create( $model ) ) {
 
@@ -112,7 +112,7 @@ class MenuController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Menu' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
 
 				if( MenuService::update( $model ) ) {
 

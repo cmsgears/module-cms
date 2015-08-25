@@ -100,8 +100,8 @@ class PostController extends BaseController {
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Post' )  && $model->validate() &&
-		    $content->load( Yii::$app->request->post(), 'ModelContent' )  && $content->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
+		    $model->validate() && $content->validate() ) {
 
 			$banner->load( Yii::$app->request->post(), 'File' );
 
@@ -149,8 +149,8 @@ class PostController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Post' )  && $model->validate() &&
-		    	$content->load( Yii::$app->request->post(), 'ModelContent' )  && $content->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
+		    	$model->validate() && $content->validate() ) {
 
 				$banner->load( Yii::$app->request->post(), 'File' );
 

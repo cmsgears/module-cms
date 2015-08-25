@@ -95,7 +95,7 @@ class WidgetController extends BaseController {
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Widget' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
 
 			if( WidgetService::create( $model ) ) {
 
@@ -128,7 +128,7 @@ class WidgetController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Widget' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
 
 				if( WidgetService::update( $model ) ) {
 		
@@ -199,7 +199,7 @@ class WidgetController extends BaseController {
 
 			$model->setScenario( 'meta' );
 
-			if( $model->load( Yii::$app->request->post(), 'Widget' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
 
 				if( WidgetService::updateMeta( $model ) ) {
 	

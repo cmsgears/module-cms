@@ -3,6 +3,8 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -98,7 +100,14 @@ class Widget extends NamedCmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ 'name', 'required', 'on' => [ 'create', 'update' ] ],
             [ [ 'id', 'templateId', 'description', 'meta' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
@@ -106,6 +115,13 @@ class Widget extends NamedCmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ 'metaMap', 'required', 'on' => [ 'meta' ] ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

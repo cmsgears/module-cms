@@ -3,6 +3,8 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
@@ -10,7 +12,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
+use cmsgears\core\common\models\entities\CmgModel;
 use cmsgears\core\common\models\entities\CmgFile;
 
 /**
@@ -29,7 +31,7 @@ use cmsgears\core\common\models\entities\CmgFile;
  * @property date $createdAt
  * @property date $modifiedAt
  */
-class ModelBlock extends NamedCmgEntity {
+class ModelBlock extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -70,13 +72,27 @@ class ModelBlock extends NamedCmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'backgroundClass', 'textureClass' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'parentId', 'parentType' ], 'required' ],
             [ [ 'id', 'order', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
             [ [ 'parentId', 'backgroundId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

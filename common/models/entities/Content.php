@@ -3,6 +3,8 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -162,7 +164,14 @@ class Content extends NamedCmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'slug', 'type', 'status', 'visibility' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -171,6 +180,13 @@ class Content extends NamedCmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

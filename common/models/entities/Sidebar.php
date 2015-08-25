@@ -3,6 +3,8 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -58,13 +60,27 @@ class Sidebar extends NamedCmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**
