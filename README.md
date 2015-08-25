@@ -13,5 +13,7 @@ Highlighted Features
 2. Admin can manage site posts and their categories.
 3. Admin can manage sidebars and widgets and map sidebars to widgets.
 5. Model traits to associate additional features. The model traits provided by cms module include content and block. A model can have one more entry based on trait nature.
+6. Users can browse the published pages.
+6. Users can browse the published posts.
 
 Notes: The detailed description for each feature can be found at http://www.cmsgears.org.
