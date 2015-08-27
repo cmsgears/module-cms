@@ -156,6 +156,37 @@ class ContentUtil {
 
 		return $page;
 	}
+	
+	// Additional method to init page for a model having content
+
+	public static function initModelPage( $view, $serviceClass ) {
+
+		$slug	= Yii::$app->request->queryParams[ 'slug' ];
+		$object = Yii::createObject( $serviceClass );
+		$model	= $object::findBySlug( $slug );
+
+		if( isset( $model ) ) {
+
+			$coreProperties			= $view->context->getCoreProperties();
+
+			$content				= $model->content;
+			$view->params[ 'page']	= $model;
+			$view->params[ 'desc']	= $content->seoDescription;
+			$view->params[ 'meta']	= $content->seoKeywords;
+			$view->params[ 'robot']	= $content->seoRobot;
+
+			$siteTitle				= $coreProperties->getSiteTitle();
+
+			if( isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
+
+				$view->title		= $siteTitle . " | " . $content->seoName;
+			}
+			else {
+
+				$view->title		= $siteTitle . " | " . $page->name;
+			}
+		}
+	}
 }
 
 ?>
