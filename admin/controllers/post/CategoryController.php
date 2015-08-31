@@ -39,7 +39,7 @@ class CategoryController extends BaseCategoryController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
@@ -57,30 +57,29 @@ class CategoryController extends BaseCategoryController {
         ];
     }
 
-	// DropdownController --------------------
+	// CategoryController --------------------
 
 	public function actionAll( $type = null ) {
 		
-		Url::remember( [ "post/category/all" ], 'categories' );
-		
-		$createUrl	= ["post/category/create"];
+		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( CmsGlobal::TYPE_POST, false, $createUrl );
+		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( "categories" ), CmsGlobal::TYPE_POST );
+		return parent::actionCreate( Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( "categories" ), CmsGlobal::TYPE_POST );
+		return parent::actionUpdate( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( "categories" ),CmsGlobal::TYPE_POST );
-	}  
+		return parent::actionDelete( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+	}
 }
+
 ?>

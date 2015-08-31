@@ -86,7 +86,7 @@ if( !isset( $sortOrder ) ) {
 							</form>
 						</td>
 						<td>
-							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="post-matrix-<?=$id?>">
+							<span class="wrap-icon-action cmt-submit" title="Assign Categories" cmt-request="post-matrix-<?=$id?>">
 								<span class="icon-action icon-action-save"</span>
 							</span>
 						</td>
