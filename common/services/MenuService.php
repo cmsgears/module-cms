@@ -25,6 +25,15 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	}
 
 	/**
+	 * @param string $name
+	 * @return Menu
+	 */
+	public static function findByName( $name ) {
+
+		return Menu::findByName( $name );
+	}
+
+	/**
 	 * @return array - of all menu ids
 	 */
 	public static function getIdList() {

@@ -53,7 +53,7 @@ INSERT INTO `cmg_core_site_member` VALUES
 --
 
 INSERT INTO `cmg_cms_menu` VALUES 
-	(1,NULL,'main-menu','Main Menu. It can be used for site header and footer.');
+	(1,NULL,'main','Main Menu. It can be used for site header and footer.');
 
 --
 -- Dumping data for table `cmg_cms_page`
