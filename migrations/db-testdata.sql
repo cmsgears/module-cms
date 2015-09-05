@@ -53,7 +53,7 @@ INSERT INTO `cmg_core_site_member` VALUES
 --
 
 INSERT INTO `cmg_cms_menu` VALUES 
-	(1,NULL,'main-menu','Main Menu. It can be used for site header and footer.');
+	(1,NULL,'main','Main Menu. It can be used for site header and footer.');
 
 --
 -- Dumping data for table `cmg_cms_page`
@@ -67,7 +67,7 @@ INSERT INTO `cmg_cms_page` VALUES
 	(5,NULL,1,1,'Activate Account','activate-account','page',5,5),
 	(6,NULL,1,1,'Forgot Password','forgot-password','page',5,5),
 	(7,NULL,1,1,'Reset Password','reset-password','page',5,5),
-	(8,NULL,1,1,'Contact','contact','page',5,5),
+	(8,NULL,1,1,'Contact Us','contact-us','page',5,5),
 	(9,NULL,1,1,'Feedback','feedback','page',5,5),
 	(10,NULL,1,1,'About Us','about-us','page',5,5),
 	(11,NULL,1,1,'Terms','terms','page',5,5),
@@ -80,13 +80,9 @@ INSERT INTO `cmg_cms_page` VALUES
 
 INSERT INTO `cmg_cms_menu_page` VALUES
 	(1,1,0),
-	(1,2,0),
-	(1,3,0),
-	(1,8,0),
+	(1,13,0),
 	(1,10,0),
-	(1,11,0),
-	(1,12,0),
-	(1,13,0);
+	(1,8,0);
 
 --
 -- Dumping data for table `cmg_cms_model_content`

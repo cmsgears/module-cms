@@ -47,8 +47,7 @@ class PostController extends BaseController {
 	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'categories' => [ 'permission' => CmsGlobal::PERM_CMS ]
+	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
@@ -58,8 +57,7 @@ class PostController extends BaseController {
 	                'all'   => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post'],
-	                'categories' => ['get']
+	                'delete' => ['get', 'post']
                 ]
             ]
         ];
@@ -234,19 +232,7 @@ class PostController extends BaseController {
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-	
-	// Categories -------------------
-
-	public function actionCategories() {
-
-		$dataProvider = CategoryService::getPaginationByType( CmsGlobal::TYPE_POST );
-
-	    return $this->render( 'categories', [
-	         'dataProvider' => $dataProvider,
-	         'type' => CmsGlobal::TYPE_POST
-	    ]);
-	}
+	} 
 }
 
 ?>

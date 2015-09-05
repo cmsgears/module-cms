@@ -20,7 +20,7 @@ $user	= Yii::$app->user->getIdentity();
 				<li class='menu <?php if( strcmp( $child, 'menu' ) == 0 ) echo 'active';?>'><?= Html::a( "Menus", ['/cmgcms/menu/all'] ) ?></li>
 				<li class='page <?php if( strcmp( $child, 'page' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages", ['/cmgcms/page/all'] ) ?></li>
 				<li class='post-matrix <?php if( strcmp( $child, 'post-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts Matrix", ['/cmgcms/post/matrix'] ) ?></li>
-				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/categories'] ) ?></li>
+				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/category/all'] ) ?></li>
 				<li class='post <?php if( strcmp( $child, 'post' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts", ['/cmgcms/post/all'] ) ?></li>
 			</ul>
 		</div>

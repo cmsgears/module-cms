@@ -33,7 +33,7 @@ class Menu extends NamedCmgEntity {
 	public function getPages() {
 
     	return $this->hasMany( Page::className(), [ 'id' => 'pageId' ] )
-					->viaTable( CmsTables::TABLE_PAGE, [ 'menuId' => 'id' ] );
+					->viaTable( CmsTables::TABLE_MENU_PAGE, [ 'menuId' => 'id' ] );
 	}
 
 	public function getPageMappingList() {
