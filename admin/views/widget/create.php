@@ -18,11 +18,7 @@ $this->params['sidebar-child'] 	= 'widget';
     	<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 
-		<h4>Link Sidebars</h4>
-		<?php foreach ( $sidebars as $sidebar ) { ?>
-			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></span>
-		<?php } ?>
-		<div class="box-filler"></div>
+		<?= $form->field( $meta, 'classPath' ) ?>
 
 		<?=Html::a( "Cancel", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />

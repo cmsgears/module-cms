@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\controllers\post;
+namespace cmsgears\cms\admin\controllers\widget;
 
 // Yii Imports
 use \Yii;
@@ -12,7 +12,7 @@ use yii\db\IntegrityException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryController {
+class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -53,24 +53,24 @@ class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryCo
 
 	public function actionAll( $type = null ) {
 		
-		Url::remember( [ 'post/category/all' ], 'categories' );
+		Url::remember( [ 'widget/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionAll( [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionCreate( Url::previous( 'templates' ), [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionUpdate( $id, Url::previous( 'templates' ), [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionDelete( $id, Url::previous( 'templates' ), [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 }
 

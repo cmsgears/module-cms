@@ -19,9 +19,9 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
 		<h4>Linked Widgets</h4>
 		<?php 
-			$sidebarWidgets	= $model->getWidgetsIdList();
+			$sidebarWidgets	= $model->generateObjectFromJson()->widgets;
 
-			foreach ( $widgets as $widget ) { 
+			foreach ( $widgets as $widget ) {
 
 				if( in_array( $widget['id'], $sidebarWidgets ) ) {
 		?>		

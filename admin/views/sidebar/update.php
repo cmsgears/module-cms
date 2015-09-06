@@ -19,7 +19,7 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
 		<h4>Link Widgets</h4>
 		<?php 
-			$sidebarWidgets	= $model->getWidgetsIdList();
+			$sidebarWidgets	= $model->generateObjectFromJson()->widgets;
 
 			foreach ( $widgets as $widget ) { 
 

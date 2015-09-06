@@ -22,6 +22,7 @@ $user	= Yii::$app->user->getIdentity();
 				<li class='post-matrix <?php if( strcmp( $child, 'post-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts Matrix", ['/cmgcms/post/matrix'] ) ?></li>
 				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/category/all'] ) ?></li>
 				<li class='post <?php if( strcmp( $child, 'post' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts", ['/cmgcms/post/all'] ) ?></li>
+				<li class='template <?php if( strcmp( $child, 'template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", ['/cmgcms/page/template/all'] ) ?></li>
 			</ul>
 		</div>
 	</div>
@@ -33,9 +34,9 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-sdebar' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<li class='widget-matrix <?php if( strcmp( $child, 'widget-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Widgets Matrix", ['/cmgcms/widget/matrix'] ) ?></li>
 				<li class='sdebar <?php if( strcmp( $child, 'sdebar' ) == 0 ) echo 'active';?>'><?= Html::a( "Sidebars", ['/cmgcms/sidebar/all'] ) ?></li>
 				<li class='widget <?php if( strcmp( $child, 'widget' ) == 0 ) echo 'active';?>'><?= Html::a( "Widgets", ['/cmgcms/widget/all'] ) ?></li>
+				<li class='widget-template <?php if( strcmp( $child, 'widget-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", ['/cmgcms/widget/template/all'] ) ?></li>
 			</ul>
 		</div>
 	</div>

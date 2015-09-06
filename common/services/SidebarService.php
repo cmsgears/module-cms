@@ -5,9 +5,10 @@ namespace cmsgears\cms\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\Sidebar;
-use cmsgears\cms\common\models\entities\SidebarWidget;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\ObjectData;
 
 class SidebarService extends \cmsgears\core\common\services\Service {
 
@@ -21,7 +22,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function findById( $id ) {
 
-		return Sidebar::findOne( $id );
+		return ObjectData::findOne( $id );
 	}
 
 	/**
@@ -29,7 +30,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( "id", CmsTables::TABLE_SIDEBAR );
+		return self::findList( "id", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
 	}
 
 	/**
@@ -37,7 +38,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_SIDEBAR );
+		return self::findIdNameList( "id", "name", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
 	}
 
 	// Data Provider ----
@@ -48,7 +49,14 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getPagination( $config = [] ) {
 
-		return self::getDataProvider( new Sidebar(), $config );
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ]	= [];
+		}
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
+
+		return self::getDataProvider( new ObjectData(), $config );
 	}
 
 	// Create -----------
@@ -74,7 +82,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 
 		$sidebarToUpdate	= self::findById( $sidebar->id );
 
-		$sidebarToUpdate->copyForUpdateFrom( $sidebar, [ 'name', 'description' ] );
+		$sidebarToUpdate->copyForUpdateFrom( $sidebar, [ 'name', 'description', 'data' ] );
 
 		$sidebarToUpdate->update();
 
@@ -89,9 +97,11 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 
 		$sidebarId	= $binder->binderId;
 		$widgets	= $binder->bindedData;
+		$sidebar	= self::findById( $sidebarId );
+		$objectData	= $sidebar->generateObjectFromJson();
 
 		// Clear all existing mappings
-		SidebarWidget::deleteBySidebarId( $sidebarId );
+		$objectData->widgets	= [];
 
 		if( isset( $widgets ) && count( $widgets ) > 0 ) {
 
@@ -99,15 +109,14 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 
 				if( isset( $value ) ) {
 
-					$toSave	= new SidebarWidget();
-
-					$toSave->sidebarId	= $sidebarId;
-					$toSave->widgetId	= $value;
-	
-					$toSave->save();
+					$objectData->widgets[] = $value;
 				}
 			}
 		}
+
+		$sidebar->generateJsonFromObject( $objectData );
+
+		$sidebar->update();
 
 		return true;
 	}

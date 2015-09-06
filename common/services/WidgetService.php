@@ -5,9 +5,10 @@ namespace cmsgears\cms\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\Widget;
-use cmsgears\cms\common\models\entities\SidebarWidget;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\ObjectData;
 
 class WidgetService extends \cmsgears\core\common\services\Service {
 
@@ -17,22 +18,17 @@ class WidgetService extends \cmsgears\core\common\services\Service {
 
 	public static function findById( $id ) {
 
-		return Widget::findById( $id );
-	}
-
-	public static function findByName( $name ) {
-
-		return Widget::findByName( $name );
+		return ObjectData::findById( $id );
 	}
 
 	public static function getIdList() {
 
-		return self::findList( "id", CmsTables::TABLE_WIDGET );
+		return self::findList( "id", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ] ] );
 	}
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_WIDGET );
+		return self::findIdNameList( "id", "name", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ] ] );
 	}
 
 	// Data Provider ----
@@ -43,12 +39,26 @@ class WidgetService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getPagination( $config = [] ) {
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ]	= [];
+		}
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
+
 		return self::getDataProvider( new Widget(), $config );
 	}
 
 	// Create -----------
 
-	public static function create( $widget ) {
+	public static function create( $widget, $meta ) {
+
+		if( $widget->templateId <= 0 ) {
+
+			unset( $widget->templateId );
+		}
+
+		$widget->generateJsonFromObject( $meta );
 
 		$widget->save();
 
@@ -57,52 +67,22 @@ class WidgetService extends \cmsgears\core\common\services\Service {
 
 	// Update -----------
 
-	public static function update( $widget ) {
+	public static function update( $widget, $meta ) {
 
-		$widgetToUpdate	= self::findById( $widget->id );
-		
-		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId', 'meta' ] );
+		if( $widget->templateId <= 0 ) {
 
-		$widgetToUpdate->update();
-
-		return $widgetToUpdate;
-	}
-
-	public static function updateMeta( $widget ) {
-
-		$widgetToUpdate			= self::findById( $widget->id );
-		$widgetToUpdate->meta 	= $widget->generateJsonFromMap();
-
-		$widgetToUpdate->update();
-
-		return $widgetToUpdate;
-	}
-
-	public static function bindSidebars( $binder ) {
-
-		$widgetId	= $binder->binderId;
-		$sidebars	= $binder->bindedData;
-
-		// Clear all existing mappings
-		SidebarWidget::deleteByWidgetId( $widgetId );
-
-		if( isset( $sidebars ) && count( $sidebars ) > 0 ) {
-
-			foreach ( $sidebars as $key => $value ) {
-
-				if( isset( $value ) ) {
-
-					$toSave	= new SidebarWidget();
-
-					$toSave->widgetId	= $widgetId;
-					$toSave->sidebarId	= $value;
-
-					$toSave->save();
-				}
-			}
+			unset( $widget->templateId );
 		}
 
-		return true;
+		$widgetToUpdate	= self::findById( $widget->id );
+
+		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId' ] );
+		
+		$widgetToUpdate->generateJsonFromObject( $meta );
+		
+		$widgetToUpdate->update();
+
+		return $widgetToUpdate;
 	}
 
 	// Delete -----------

@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\cms\common\models\entities\Sidebar;
+use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
@@ -42,16 +42,16 @@ class SidebarController extends BaseController {
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-              	]  
+              	]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'    => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'    => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -75,11 +75,13 @@ class SidebarController extends BaseController {
 
 	public function actionCreate() {
 
-		$model	= new Sidebar();
+		$model			= new ObjectData();
+		$model->type	= CmsGlobal::TYPE_SIDEBAR;
+		$model->data	= "{ \"widgets\": [] }";
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Sidebar' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
 
 			if( SidebarService::create( $model ) ) {
 
@@ -96,7 +98,7 @@ class SidebarController extends BaseController {
 
 		$widgets	= WidgetService::getIdNameList();
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'widgets' => $widgets
     	]);
@@ -112,10 +114,10 @@ class SidebarController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Sidebar' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
 
 				if( SidebarService::update( $model ) ) {
-		
+
 					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
 	
@@ -143,11 +145,11 @@ class SidebarController extends BaseController {
 
 		// Find Model
 		$model	= SidebarService::findById( $id );
-		
+
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Sidebar' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
 				if( SidebarService::delete( $model ) ) {
 
@@ -157,7 +159,7 @@ class SidebarController extends BaseController {
 
 			$widgets	= WidgetService::getIdNameList();
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'widgets' => $widgets
 	    	]);

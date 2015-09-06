@@ -17,10 +17,10 @@ $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( "search" );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( "sort" );
 
 if( !isset( $sortOrder ) ) {
 
@@ -67,7 +67,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $widget->description ?></td>
 						<td><?= $widget->getTemplateName() ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Update Widget Meta" ><?= Html::a( "", ["/cmgcms/widget/meta?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="Settings" ><?= Html::a( "", ["/cmgcms/widget/settings?id=$id"], ['class'=>'icon-sidebar icon-settings'] )  ?></span>
 							<span class="wrap-icon-action" title="Update Widget" ><?= Html::a( "", ["/cmgcms/widget/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Widget" ><?= Html::a( "", ["/cmgcms/widget/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>

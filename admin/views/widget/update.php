@@ -18,25 +18,7 @@ $this->params['sidebar-child'] 	= 'widget';
     	<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 
-		<h4>Link Sidebars</h4>
-		<?php 
-			$widgetSidebars	= $model->getSidebarsIdList();
-
-			foreach ( $sidebars as $sidebar ) { 
-
-				if( in_array( $sidebar['id'], $widgetSidebars ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" checked /><?=$sidebar['name']?></span>
-		<?php
-				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></span>
-		<?php
-				}
-			}
-		?>
-		<div class="box-filler"></div>
+		<?= $form->field( $meta, 'classPath' ) ?>
 
 		<?=Html::a( "Back", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
