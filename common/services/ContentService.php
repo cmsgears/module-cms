@@ -47,15 +47,19 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function create( $parent, $parentType, $content, $banner = null ) {
+	public static function create( $parent, $parentType, $content, $banner = null, $video = null ) {
 
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
 
-		// Save Banner
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
+		}
+
+		if( isset( $video ) ) {
+
+			FileService::saveImage( $video, [ 'model' => $content, 'attribute' => 'videoId' ] );
 		}
 
 		// Create Content
@@ -71,7 +75,7 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function update( $content, $publish = false, $banner = null ) {
+	public static function update( $content, $publish = false, $banner = null, $video = null ) {
 
 		$date 				= DateUtil::getDateTime();
 		$contentToUpdate	= self::findById( $content->id );
@@ -83,10 +87,14 @@ class ContentService extends \cmsgears\core\common\services\Service {
     		$contentToUpdate->publishedAt	= $date;
     	}
 
-		// Save Banner
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $contentToUpdate, 'attribute' => 'bannerId' ] );
+		}
+
+		if( isset( $video ) ) {
+
+			FileService::saveImage( $video, [ 'model' => $contentToUpdate, 'attribute' => 'videoId' ] );
 		}
 
 		$contentToUpdate->update();

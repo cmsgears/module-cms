@@ -11,42 +11,67 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 
 /**
- * ModelContent Entity
+ * Block Entity
  *
  * @property int $id
  * @property int $bannerId
+ * @property int $textureId
  * @property int $videoId
  * @property int $templateId
- * @property int $parentId
- * @property string $parentType
- * @property string $summary
+ * @property int $createdBy
+ * @property int $modifiedBy
+ * @property string $name
+ * @property string $description
+ * @property string $htmlOptions
+ * @property string $backgroundClass
+ * @property string $textureClass
  * @property string $content
  * @property date $createdAt
  * @property date $modifiedAt
- * @property date $publishedAt
- * @property string $seoName
- * @property string $seoDescription
- * @property string $seoKeywords
- * @property string $seoRobot
  */
-class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
+class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// ModelContent
+
 	public function getBanner() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
+
+	public function getTexture() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'textureId' ] );
 	}
 
 	public function getVideo() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
 	}
 
 	public function getTemplate() {
@@ -66,23 +91,6 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 		return '';
 	}
 
-	// yii\db\BaseActiveRecord -----------
-
-	public function beforeSave( $insert ) {
-
-	    if( parent::beforeSave( $insert ) ) {
-
-			if( $this->templateId <= 0 ) {
-
-				$this->templateId = null;
-			}
-
-	        return true;
-	    }
-
-		return false;
-	}
-
 	// yii\base\Component ----------------
 
     /**
@@ -92,6 +100,9 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -112,15 +123,15 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'htmlOptions', 'backgroundClass', 'textureClass' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-            [ [ 'id', 'parentId', 'parentType', 'summary', 'content' ], 'safe' ],
-            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
+        	[ 'name', 'required' ],
+            [ [ 'id', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentId', 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+            [ [ 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -139,15 +150,14 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 		return [
 			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'summary' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'seoName' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
-			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
-			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
-			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT )
+			'htmlOptions' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_HTML_OPTIONS ),
+			'backgroundClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_BACKGROUND_CLASS ),
+			'textureClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE_CLASS )
 		];
 	}
 
@@ -160,10 +170,10 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
      */
 	public static function tableName() {
 
-		return CmsTables::TABLE_MODEL_CONTENT;
+		return CmsTables::TABLE_BLOCK;
 	}
 
-	// ModelContent ----------------------
+	// Block -----------------------------
 
 	// Read ------
 }

@@ -16,24 +16,25 @@ $this->params['sidebar-child'] 	= 'menu';
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+
 		<h4>Linked Pages</h4>
-		<?php
-			$menuPages	= $model->getPagesIdList();
+		<?php 
+			$menuPages	= $model->generateObjectFromJson()->pages;
 
 			foreach ( $pages as $page ) { 
 
-				if( in_array( $page['id'], $menuPages ) ) {
+				if( in_array( $page[ 'id' ], $menuPages ) ) {
 		?>		
-					<span class="box-half"><input type="checkbox" name="pages" value="<?=$page['id']?>" checked disabled /><?=$page['name']?></span>
+					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$page['id']?>" checked disabled /><?=$page['name']?></span>
 		<?php 
 				}
 				else {
 		?>
-					<span class="box-half"><input type="checkbox" name="pages" value="<?=$page['id']?>" disabled /><?=$page['name']?></span>
+					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$page['id']?>" disabled /><?=$page['name']?></span>
 		<?php
 				}
 			}
-		?>
+		?>	
 		<div class="box-filler"></div>
 		<?=Html::a( "Cancel", [ '/cmgcms/menu/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />

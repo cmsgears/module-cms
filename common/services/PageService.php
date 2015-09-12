@@ -13,8 +13,6 @@ use cmsgears\cms\common\models\entities\MenuPage;
 
 use cmsgears\core\common\services\FileService;
 
-use cmsgears\core\common\utilities\DateUtil;
-
 class PageService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
@@ -75,12 +73,9 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $page ) {
 
-		$user					= Yii::$app->user->getIdentity();
-
-		$page->type 			= CmsGlobal::TYPE_PAGE;
-		$page->status 			= Page::STATUS_NEW;
-		$page->visibility 		= Page::VISIBILITY_PRIVATE;
-		$page->createdBy		= $user->id;
+		$page->type 		= CmsGlobal::TYPE_PAGE;
+		$page->status 		= Page::STATUS_NEW;
+		$page->visibility 	= Page::VISIBILITY_PRIVATE;
 
 		// Create Page
 		$page->save();
@@ -97,12 +92,9 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function update( $page ) {
 
-		$user				= Yii::$app->user->getIdentity();
-		$pageToUpdate		= self::findById( $page->id );
+		$pageToUpdate	= self::findById( $page->id );
 
 		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility' ] );
-
-		$pageToUpdate->modifiedBy	= $user->id;
 
 		$pageToUpdate->update();
 

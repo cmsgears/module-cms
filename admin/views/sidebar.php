@@ -16,13 +16,13 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-page-blog' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<li class='page-matrix <?php if( strcmp( $child, 'page-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages Matrix", ['/cmgcms/page/matrix'] ) ?></li>
-				<li class='menu <?php if( strcmp( $child, 'menu' ) == 0 ) echo 'active';?>'><?= Html::a( "Menus", ['/cmgcms/menu/all'] ) ?></li>
+				<li class='block <?php if( strcmp( $child, 'block' ) == 0 ) echo 'active';?>'><?= Html::a( "Blocks", ['/cmgcms/block/all'] ) ?></li>
 				<li class='page <?php if( strcmp( $child, 'page' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages", ['/cmgcms/page/all'] ) ?></li>
-				<li class='post-matrix <?php if( strcmp( $child, 'post-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts Matrix", ['/cmgcms/post/matrix'] ) ?></li>
+				<li class='post-matrix <?php if( strcmp( $child, 'post-matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Category Matrix", ['/cmgcms/post/matrix'] ) ?></li>
 				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/category/all'] ) ?></li>
 				<li class='post <?php if( strcmp( $child, 'post' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts", ['/cmgcms/post/all'] ) ?></li>
 				<li class='template <?php if( strcmp( $child, 'template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", ['/cmgcms/page/template/all'] ) ?></li>
+				<li class='menu <?php if( strcmp( $child, 'menu' ) == 0 ) echo 'active';?>'><?= Html::a( "Menus", ['/cmgcms/menu/all'] ) ?></li>
 			</ul>
 		</div>
 	</div>

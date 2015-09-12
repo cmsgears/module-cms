@@ -7,14 +7,13 @@ use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\NamedCmgEntity;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
@@ -33,7 +32,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $status
  * @property short $visibility
  */
-class Content extends NamedCmgEntity {
+class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Pre-Defined Status
 	const STATUS_NEW		= 0;
@@ -148,6 +147,9 @@ class Content extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+            ],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',

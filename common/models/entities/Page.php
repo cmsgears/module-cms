@@ -1,6 +1,7 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\traits\MetaTrait;

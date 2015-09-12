@@ -20,9 +20,7 @@ use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-class PageController extends BaseController {
+class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -43,7 +41,6 @@ class PageController extends BaseController {
                 'actions' => [
 	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'matrix' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
@@ -54,7 +51,6 @@ class PageController extends BaseController {
                 'actions' => [
 	                'index'  => ['get'],
 	                'all'   => ['get'],
-	                'matrix' => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
 	                'delete' => ['get', 'post']
@@ -63,7 +59,7 @@ class PageController extends BaseController {
         ];
     }
 
-	// UserController --------------------
+	// PageController --------------------
 
 	public function actionIndex() {
 
@@ -76,17 +72,6 @@ class PageController extends BaseController {
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
-	    ]);
-	}
-
-	public function actionMatrix() {
-
-		$dataProvider 	= PageService::getPagination();
-		$menusList		= MenuService::getIdNameList();
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'menusList' => $menusList
 	    ]);
 	}
 

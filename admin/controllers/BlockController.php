@@ -10,19 +10,12 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\cms\common\models\entities\Page;
-use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\cms\common\models\entities\Block;
 
-use cmsgears\cms\common\services\ContentService;
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\core\admin\services\CategoryService;
-use cmsgears\cms\admin\services\PostService;
+use cmsgears\cms\admin\services\BlockService;
 
-class PostController extends \cmsgears\core\admin\controllers\BaseController {
+class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -61,52 +54,41 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
         ];
     }
 
-	// PostController --------------------
+	// BlockController -------------------
 
 	public function actionIndex() {
 
-		$this->redirect( [  'all' ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
 
-		$dataProvider = PostService::getPagination();
+		$dataProvider = BlockService::getPagination();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionMatrix() {
-
-		$dataProvider 	= PostService::getPagination();
-		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'categoriesList' => $categoriesList
-	    ]);
-	}
-
 	public function actionCreate() {
 
-		$model		= new Post();
-		$content	= new ModelContent();
-		$banner 	= new CmgFile();
+		$model		= new Block();
+		$banner	 	= new CmgFile();
+		$video	 	= new CmgFile();
+		$texture	= new CmgFile();
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    $model->validate() && $content->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
 
-			$banner->load( Yii::$app->request->post(), 'File' );
+			$banner->load( Yii::$app->request->post(), 'Banner' );
+			$video->load( Yii::$app->request->post(), 'Video' );
+			$texture->load( Yii::$app->request->post(), 'Texture' );
 
-			$post = PostService::create( $model );
-
-			if( isset( $post ) ) {
+			if( BlockService::create( $model, $banner, $video, $texture ) ) {
 
 				// Create Content
-				ContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
+				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
 
 				// Bind Menus
 				$binder = new Binder();
@@ -114,20 +96,20 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 				$binder->binderId	= $model->id;
 				$binder->load( Yii::$app->request->post(), 'Binder' );
 
-				PostService::bindCategories( $binder );
+				BlockService::bindMenus( $binder );
 
-				$this->redirect( [  'all' ] );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
+		$menus			= MenuService::getIdNameList();
 		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
-    		'categories' => $categories,
+    		'menus' => $menus,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -135,27 +117,27 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= PostService::findById( $id );
+		$model		= BlockService::findById( $id );
 		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$content	= $model->content;
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
+			if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    	$model->validate() && $content->validate() ) {
 
 				$banner->load( Yii::$app->request->post(), 'File' );
 
-				$post = PostService::update( $model );
+				$page = BlockService::update( $model );
 	
-				if( isset( $post ) ) {
+				if( isset( $page ) ) {
 
 					// Update Content
-					ContentService::update( $content, $post->isPublished(), $banner );
+					ContentService::update( $content, $page->isPublished(), $banner );
 
 					// Bind Menus
 					$binder = new Binder();
@@ -163,13 +145,13 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 					$binder->binderId	= $model->id;
 					$binder->load( Yii::$app->request->post(), 'Binder' );
 
-					PostService::bindCategories( $binder );
+					BlockService::bindMenus( $binder );
 
-					$this->redirect( [  'all' ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
+			$menus			= MenuService::getIdNameList();
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
@@ -179,7 +161,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'categories' => $categories,
+	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -193,35 +175,34 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= PostService::findById( $id );
-		$banner = new CmgFile();
+		$model	= BlockService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-
+			
 			$content	= $model->content;
 
-			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
-				if( PostService::delete( $model ) ) {
-
+				if( BlockService::delete( $model ) ) {
+					
 					ContentService::delete( $content );
 
-					$this->redirect( [  'all' ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
+			$menus			= MenuService::getIdNameList();
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
-
+			
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'categories' => $categories,
+	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -230,7 +211,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
+	}
 }
 
 ?>

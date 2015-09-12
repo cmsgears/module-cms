@@ -18,11 +18,20 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 
 	/**
 	 * @param integer $id
-	 * @return Sidebar
+	 * @return ObjectData
 	 */
 	public static function findById( $id ) {
 
-		return ObjectData::findOne( $id );
+		return ObjectData::findById( $id );
+	}
+
+	/**
+	 * @param integer $id
+	 * @return ObjectData
+	 */
+	public static function findByName( $name ) {
+
+		return ObjectData::findByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
 	}
 
 	/**
@@ -30,7 +39,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( "id", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
+		return self::findList( 'id', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
 	}
 
 	/**
@@ -38,7 +47,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
 	}
 
 	// Data Provider ----
@@ -62,8 +71,8 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	// Create -----------
 
 	/**
-	 * @param Sidebar $sidebar
-	 * @return Sidebar
+	 * @param ObjectData $sidebar
+	 * @return ObjectData
 	 */
 	public static function create( $sidebar ) {
 
@@ -75,8 +84,8 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	// Update -----------
 
 	/**
-	 * @param Sidebar $sidebar
-	 * @return Sidebar
+	 * @param ObjectData $sidebar
+	 * @return ObjectData
 	 */
 	public static function update( $sidebar ) {
 
@@ -124,7 +133,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	// Delete -----------
 
 	/**
-	 * @param Sidebar $sidebar
+	 * @param ObjectData $sidebar
 	 * @return boolean
 	 */
 	public static function delete( $sidebar ) {

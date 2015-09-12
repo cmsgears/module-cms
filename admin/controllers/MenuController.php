@@ -11,15 +11,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\cms\common\models\entities\Menu;
+use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
+use cmsgears\cms\admin\services\PageService;
 
-use cmsgears\core\admin\controllers\BaseController;
+class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 
-class MenuController extends BaseController {
-		
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -38,54 +36,56 @@ class MenuController extends BaseController {
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
 	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'   => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
+              	]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'    => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// UserController --------------------
-
+	// MenuController --------------------
+	
 	public function actionIndex() {
 
-		$this->redirect( [ "all" ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
 
 		$dataProvider = MenuService::getPagination();
 
-	    return $this->render( 'all', [
+	    return $this->render('all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model	= new Menu();
+		$model			= new ObjectData();
+		$model->type	= CmsGlobal::TYPE_MENU;
+		$model->data	= "{ \"pages\": [] }";
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
 
 			if( MenuService::create( $model ) ) {
 
-				$binder = new Binder();
-
+				$binder 			= new Binder();
 				$binder->binderId	= $model->id;
+
 				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				MenuService::bindPages( $binder );
@@ -104,7 +104,7 @@ class MenuController extends BaseController {
 
 	public function actionUpdate( $id ) {
 
-		// Find Model		
+		// Find Model
 		$model	= MenuService::findById( $id );
 
 		// Update/Render if exist
@@ -112,13 +112,13 @@ class MenuController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
 
 				if( MenuService::update( $model ) ) {
 
-					$binder = new Binder();
-
+					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
+	
 					$binder->load( Yii::$app->request->post(), 'Binder' );
 
 					MenuService::bindPages( $binder );
@@ -132,9 +132,9 @@ class MenuController extends BaseController {
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'pages' => $pages
-	    	]);			
+	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
@@ -147,7 +147,7 @@ class MenuController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Menu' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
 				if( MenuService::delete( $model ) ) {
 
