@@ -129,6 +129,9 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
         $rules = [
         	[ 'name', 'required' ],
             [ [ 'id', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

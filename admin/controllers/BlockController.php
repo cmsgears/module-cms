@@ -13,6 +13,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Block;
 
+use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\BlockService;
 
 class BlockController extends \cmsgears\core\admin\controllers\BaseController {
@@ -87,29 +88,17 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 
 			if( BlockService::create( $model, $banner, $video, $texture ) ) {
 
-				// Create Content
-				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
-
-				// Bind Menus
-				$binder = new Binder();
-
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
-
-				BlockService::bindMenus( $binder );
-
 				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$menus			= MenuService::getIdNameList();
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
 
     	return $this->render( 'create', [
     		'model' => $model,
-    		'content' => $content,
     		'banner' => $banner,
-    		'menus' => $menus,
+    		'video' => $video,
+    		'texture' => $texture,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -123,47 +112,27 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content	= $model->content;
+			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
+			$video 		= CmgFile::loadFile( $model->video, 'Video' );
+			$texture	= CmgFile::loadFile( $model->texture, 'Texture' );
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    	$model->validate() && $content->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
 
-				$banner->load( Yii::$app->request->post(), 'File' );
-
-				$page = BlockService::update( $model );
+				if( BlockService::update( $model, $banner, $video, $texture ) ) {
 	
-				if( isset( $page ) ) {
-
-					// Update Content
-					ContentService::update( $content, $page->isPublished(), $banner );
-
-					// Bind Menus
-					$binder = new Binder();
-
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
-					BlockService::bindMenus( $binder );
-
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
-	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
+	    		'video' => $video,
+	    		'texture' => $texture,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
@@ -179,32 +148,25 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-			
-			$content	= $model->content;
 
-			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Block' ) ) {
 
 				if( BlockService::delete( $model ) ) {
-					
-					ContentService::delete( $content );
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
-			
+			$banner			= $model->banner;
+			$video			= $model->video;
+			$texture		= $model->texture;
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
+
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
-	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
+	    		'video' => $video,
+	    		'texture' => $texture,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
