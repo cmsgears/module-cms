@@ -47,16 +47,13 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->view;
+				$view			= $template->viewPath . "/$template->name";
 				$this->layout	= "//$layout";
-
-				$webProperties	= $this->getWebProperties();
-				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/$view", [
+			        return $this->render( $view, [
 			        	'page' => $page,
 			        	'author' => $page->createdBy,
 			        	'content' => $content,
@@ -97,16 +94,13 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->view;
+				$view			= $template->viewPath . "/$template->name";
 				$this->layout	= "//$layout";
-
-				$webProperties	= $this->getWebProperties();
-				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/" . $view, [
+			        return $this->render( $view, [
 			        	'page' => $post,
 			        	'author' => $post->createdBy,
 			        	'content' => $content,

@@ -121,7 +121,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 		}
 
 		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -173,7 +173,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -215,7 +215,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

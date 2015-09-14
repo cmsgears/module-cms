@@ -41,12 +41,12 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
 	public function getBanner() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
 	}
 
 	public function getVideo() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
 	}
 
 	public function getTemplate() {
