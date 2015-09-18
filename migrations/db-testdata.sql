@@ -26,20 +26,6 @@ INSERT INTO `cmg_core_role_permission` VALUES
 	(1001,1001);
 
 --
--- Dumping data for table `cmg_core_user`
---
-
-INSERT INTO `cmg_core_user` VALUES 
-	(1001,NULL,NULL,NULL,500,'democmsmanager@cmsgears.com','democmsmanager','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','cms','manager',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC',NULL,NULL,NULL);
-
---
--- Dumping data for table `cmg_core_site_member`
---
-
-INSERT INTO `cmg_core_site_member` VALUES
-	(1,1001,1001,'2014-10-11 14:22:54','2014-10-11 14:22:54');
-
---
 -- Dumping data for table `cmg_cms_page`
 --
 
