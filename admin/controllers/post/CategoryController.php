@@ -19,6 +19,8 @@ class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryCo
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->sidebar 	= [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ];
 	}
 
 	// Instance Methods ------------------
@@ -40,10 +42,10 @@ class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryCo
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -55,22 +57,22 @@ class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryCo
 		
 		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionAll( CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionCreate( CmsGlobal::TYPE_POST, false );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, false );
 	}
 }
 
