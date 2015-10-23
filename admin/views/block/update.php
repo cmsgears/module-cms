@@ -27,6 +27,9 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?= $form->field( $model, 'backgroundClass' ) ?>
 		<?= $form->field( $model, 'textureClass' ) ?>
 
+    	<h4>Block Content</h4>
+    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] ) ?>
+
     	<h4>Block Banner</h4>
 		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner,  'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 

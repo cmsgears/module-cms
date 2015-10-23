@@ -7,6 +7,7 @@ use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -28,6 +29,7 @@ use cmsgears\core\common\models\entities\Template;
  * @property int $createdBy
  * @property int $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $htmlOptions
  * @property string $backgroundClass
@@ -108,6 +110,12 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 				'createdAtAttribute' => 'createdAt',
  				'updatedAtAttribute' => 'modifiedAt',
  				'value' => new Expression('NOW()')
+            ],
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
             ]
         ];
     }
@@ -128,7 +136,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
         $rules = [
         	[ 'name', 'required' ],
-            [ [ 'id', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -156,6 +164,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'htmlOptions' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_HTML_OPTIONS ),
@@ -179,6 +188,14 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	// Block -----------------------------
 
 	// Read ------
+
+	/**
+	 * @return Page - by slug.
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

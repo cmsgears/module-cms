@@ -37,6 +37,15 @@ class BlockService extends \cmsgears\core\common\services\Service {
     }
 
 	/**
+	 * @param string $slug
+	 * @return Block
+	 */
+    public static function findBySlug( $slug ) {
+
+		return Block::findBySlug( $slug );
+    }
+
+	/**
 	 * @return array - of all block ids
 	 */
 	public static function getIdList() {

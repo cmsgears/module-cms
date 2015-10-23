@@ -40,6 +40,7 @@ CREATE TABLE `cmg_cms_block` (
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `htmlOptions` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `backgroundClass` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
