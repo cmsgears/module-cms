@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\utilities;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\cms\common\services\PageService;
@@ -80,7 +81,7 @@ class ContentUtil {
 		if( isset( $page ) ) {
 
 			$coreProperties	= Yii::$app->controller->getCoreProperties();
-			$slugUrl		= $coreProperties->getSiteUrl() . $page->slug;
+			$slugUrl		= Url::toRoute( "/$page->slug" );
 			$summary		= $page->content->summary;
 			$summary   	   .= "<div class='read-more'><a class='btn' href='$slugUrl'>Read More</a></div>";
 
