@@ -26,7 +26,7 @@ $template	= isset( $templatesMap[ $model->templateId ] ) ? $templatesMap[ $model
 
 				$template	=  $model->template;
 
-				echo $this->render( $template->viewPath . $template->adminView, [ 'model' => $meta ] );
+				echo $this->render( $template->viewPath . "/" . $template->adminView, [ 'model' => $meta ] );
 			}
 		?>
 	</div>

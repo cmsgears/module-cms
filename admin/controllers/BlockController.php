@@ -74,17 +74,13 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 	public function actionCreate() {
 
 		$model		= new Block();
-		$banner	 	= new CmgFile();
-		$video	 	= new CmgFile();
-		$texture	= new CmgFile();
+		$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
+		$video 		= CmgFile::loadFile( $model->video, 'Video' );
+		$texture	= CmgFile::loadFile( $model->texture, 'Texture' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
-
-			$banner->load( Yii::$app->request->post(), 'Banner' );
-			$video->load( Yii::$app->request->post(), 'Video' );
-			$texture->load( Yii::$app->request->post(), 'Texture' );
 
 			if( BlockService::create( $model, $banner, $video, $texture ) ) {
 
@@ -107,7 +103,6 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 
 		// Find Model
 		$model		= BlockService::findById( $id );
-		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {

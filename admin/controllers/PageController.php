@@ -18,7 +18,6 @@ use cmsgears\cms\common\models\entities\ModelContent;
 use cmsgears\cms\common\services\ContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
-use cmsgears\cms\admin\services\MenuService;
 
 class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
@@ -79,14 +78,12 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 		$model		= new Page();
 		$content	= new ModelContent();
-		$banner	 	= new CmgFile();
+		$banner	 	= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    $model->validate() && $content->validate() ) {
-
-			$banner->load( Yii::$app->request->post(), 'File' );
 
 			$page = PageService::create( $model );
 
@@ -95,26 +92,16 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 				// Create Content
 				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
 
-				// Bind Menus
-				$binder = new Binder();
-
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
-
-				PageService::bindMenus( $binder );
-
 				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$menus			= MenuService::getIdNameList();
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
-    		'menus' => $menus,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -123,19 +110,17 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 		// Find Model
 		$model		= PageService::findById( $id );
-		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$content	= $model->content;
+			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    	$model->validate() && $content->validate() ) {
-
-				$banner->load( Yii::$app->request->post(), 'File' );
 
 				$page = PageService::update( $model );
 	
@@ -144,19 +129,10 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 					// Update Content
 					ContentService::update( $content, $page->isPublished(), $banner );
 
-					// Bind Menus
-					$binder = new Binder();
-
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
-					PageService::bindMenus( $binder );
-
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
@@ -166,7 +142,6 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -197,17 +172,15 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
-			
+
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap

@@ -31,15 +31,15 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] ) ?>
 
     	<h4>Block Banner</h4>
-		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner,  'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 
     	<h4>Block Texture</h4>
-		<?=FileUploader::widget( [ 'options' => [ 'id' => 'texture-block', 'class' => 'file-uploader' ], 'model' => $texture,  'directory' => 'texture', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+		<?=FileUploader::widget( [ 'options' => [ 'id' => 'texture-block', 'class' => 'file-uploader' ], 'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 
     	<h4>Block Video</h4>
 		<?=FileUploader::widget([
 			'options' => [ 'id' => 'video-block', 'class' => 'file-uploader' ], 
-			'model' => $video, 'directory' => 'video', 'type' => 'video', 
+			'model' => $video, 'modelClass' => 'Video', 'directory' => 'video', 'type' => 'video', 
 			'btnChooserIcon' => 'icon-action icon-action-edit' 
 		]);?>
 

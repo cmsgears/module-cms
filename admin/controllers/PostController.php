@@ -92,14 +92,12 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 		$model		= new Post();
 		$content	= new ModelContent();
-		$banner 	= new CmgFile();
+		$banner	 	= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    $model->validate() && $content->validate() ) {
-
-			$banner->load( Yii::$app->request->post(), 'File' );
 
 			$post = PostService::create( $model );
 
@@ -108,7 +106,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 				// Create Content
 				ContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
 
-				// Bind Menus
+				// Bind Categories
 				$binder = new Binder();
 
 				$binder->binderId	= $model->id;
@@ -136,19 +134,17 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 		// Find Model
 		$model		= PostService::findById( $id );
-		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 			
 			$content	= $model->content;
-
+			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
+		
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    	$model->validate() && $content->validate() ) {
-
-				$banner->load( Yii::$app->request->post(), 'File' );
 
 				$post = PostService::update( $model );
 	
@@ -157,7 +153,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 					// Update Content
 					ContentService::update( $content, $post->isPublished(), $banner );
 
-					// Bind Menus
+					// Bind Categories
 					$binder = new Binder();
 
 					$binder->binderId	= $model->id;
@@ -172,7 +168,6 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [

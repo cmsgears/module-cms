@@ -105,37 +105,6 @@ class PageService extends \cmsgears\core\common\services\Service {
 
 		return $pageToUpdate;
 	}
-	
-	/**
-	 * @param Binder $binder
-	 * @return boolean
-	 */
-	public static function bindMenus( $binder ) {
-
-		$pageId	= $binder->binderId;
-		$menus	= $binder->bindedData;
-
-		// Clear all existing mappings
-		MenuPage::deleteByPageId( $pageId );
-
-		if( isset( $menus ) && count( $menus ) > 0 ) {
-
-			foreach ( $menus as $key => $value ) {
-
-				if( isset( $value ) && $value > 0 ) {
-
-					$toSave			= new MenuPage();
-
-					$toSave->pageId	= $pageId;
-					$toSave->menuId	= $value;
-
-					$toSave->save();
-				}
-			}
-		}
-
-		return true;
-	}
 
 	// Delete -----------
 

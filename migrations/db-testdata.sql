@@ -37,7 +37,7 @@ INSERT INTO `cmg_cms_page` VALUES
 	(5,NULL,1,1,'Activate Account','activate-account','page',5,5),
 	(6,NULL,1,1,'Forgot Password','forgot-password','page',5,5),
 	(7,NULL,1,1,'Reset Password','reset-password','page',5,5),
-	(8,NULL,1,1,'About Us','about','page',5,5),
+	(8,NULL,1,1,'About Us','about-us','page',5,5),
 	(9,NULL,1,1,'Terms','terms','page',5,5),
 	(10,NULL,1,1,'Privacy','privacy','page',5,5),
 	(11,NULL,1,1,'Blog','blog','page',5,5);

@@ -39,27 +39,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
-		<h4>Link to Menus</h4>
-		<?php 
-			$pageMenus	= $model->getMenusIdList();
-
-			foreach ( $menus as $menu ) { 
-
-				if( in_array( $menu['id'], $pageMenus ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" checked disabled /><?=$menu['name']?></span>
-		<?php 
-				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" disabled /><?=$menu['name']?></span>
-		<?php
-				}
-			}
-		?>
-		<div class="box-filler"></div>
-
-		<?=Html::a( "Cancel", [ '/cmgcms/page/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', [ '/cmgcms/page/all' ], [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>
