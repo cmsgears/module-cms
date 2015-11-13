@@ -20,15 +20,17 @@ class ContentUtil {
 
 		if( isset( $page ) ) {
 
-			$coreProperties			= $view->context->getCoreProperties();
+			$coreProperties				= $view->context->getCoreProperties();
 
-			$content				= $page->content;
-			$view->params[ 'page']	= $page;
-			$view->params[ 'desc']	= $content->seoDescription;
-			$view->params[ 'meta']	= $content->seoKeywords;
-			$view->params[ 'robot']	= $content->seoRobot;
+			$content					= $page->content;
+			$view->params[ 'page']		= $page;
+			$view->params[ 'content']	= $content;
+			$view->params[ 'desc']		= $content->seoDescription;
+			$view->params[ 'meta']		= $content->seoKeywords;
+			$view->params[ 'robot']		= $content->seoRobot;
+			$view->params[ 'summary']	= $content->summary;
 
-			$siteTitle				= $coreProperties->getSiteTitle();
+			$siteTitle					= $coreProperties->getSiteTitle();
 
 			if( isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
 

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `cmg_cms_page`;
 CREATE TABLE `cmg_cms_page` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) DEFAULT NULL,
+  `siteId` bigint(20) NOT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -19,8 +20,9 @@ CREATE TABLE `cmg_cms_page` (
   `visibility` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cms_page_1` (`parentId`),
-  KEY `fk_cms_page_2` (`createdBy`),
-  KEY `fk_cms_page_3` (`modifiedBy`)
+  KEY `fk_cms_page_2` (`siteId`),
+  KEY `fk_cms_page_3` (`createdBy`),
+  KEY `fk_cms_page_4` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,8 +117,9 @@ SET FOREIGN_KEY_CHECKS=0;
 --
 ALTER TABLE `cmg_cms_page` 
 	ADD CONSTRAINT `fk_cms_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
-	ADD CONSTRAINT `fk_cms_page_2` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-	ADD CONSTRAINT `fk_cms_page_3` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+	ADD CONSTRAINT `fk_cms_page_2` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_cms_page_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+	ADD CONSTRAINT `fk_cms_page_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_cms_block`

@@ -70,7 +70,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionAll() {
 
-		$dataProvider = PostService::getPagination();
+		$dataProvider = PostService::getPaginationForSite();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -90,9 +90,10 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Post();
-		$content	= new ModelContent();
-		$banner	 	= CmgFile::loadFile( null, 'File' );
+		$model			= new Post();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$content		= new ModelContent();
+		$banner	 		= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 

@@ -97,11 +97,29 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config['route'] 									= 'blog';
+		if( !isset( $config[ 'route' ] ) ) {
+
+			$config[ 'route' ] = 'blog';
+		}
+
 		$config[ 'conditions' ][ "$postTable.status" ] 		= Post::STATUS_PUBLISHED;
 		$config[ 'conditions' ][ "$postTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
 
 		return self::getDataProvider( new Post(), $config );
+	}
+
+	public static function getPaginationForSite( $config = [] ) {
+
+		$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+		return self::getPagination( $config );
+	}
+
+	public static function getPaginationForChildSites( $config = [] ) {
+
+		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ 1 ] ];
+
+		return self::getPagination( $config );
 	}
 }
 

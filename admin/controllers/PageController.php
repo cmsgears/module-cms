@@ -67,7 +67,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionAll() {
 
-		$dataProvider = PageService::getPagination();
+		$dataProvider = PageService::getPaginationForSite();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -76,9 +76,10 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Page();
-		$content	= new ModelContent();
-		$banner	 	= CmgFile::loadFile( null, 'File' );
+		$model			= new Page();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$content		= new ModelContent();
+		$banner	 		= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 

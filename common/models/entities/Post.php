@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
@@ -74,7 +77,7 @@ class Post extends Content {
 	 */
 	public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
 }
 

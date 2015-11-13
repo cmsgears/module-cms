@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
@@ -29,30 +32,6 @@ class Page extends Content {
 
 	// Instance Methods --------------------------------------------
 
-	public function getMenus() {
-
-    	return $this->hasMany( Menu::className(), [ 'id' => 'menuId' ] )
-					->viaTable( CmsTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
-	}
-
-	public function getMenuMappingList() {
-
-    	return $this->hasMany( MenuPage::className(), [ 'pageId' => 'id' ] );
-	}
-
-	public function getMenusIdList() {
-
-    	$menus 		= $this->menuMappingList;
-		$menusList	= array();
-
-		foreach ( $menus as $menu ) {
-
-			array_push( $menusList, $menu->menuId );
-		}
-
-		return $menusList;
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
@@ -74,7 +53,7 @@ class Page extends Content {
 	 */
 	public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
 }
 

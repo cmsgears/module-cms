@@ -53,24 +53,24 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
 
 	public function actionAll( $type = null ) {
 		
-		Url::remember( [ 'widget/template/all' ], 'templates' );
+		Url::remember( [ 'page/template/all' ], 'templates' );
 
 		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'templates' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionCreate( [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'templates' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'templates' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionDelete( $id, [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
 	}
 }
 
