@@ -21,6 +21,11 @@ class WidgetService extends \cmsgears\core\common\services\Service {
 		return ObjectData::findById( $id );
 	}
 
+	public static function findByName( $name ) {
+
+		return ObjectData::findByNameType( $name, CmsGlobal::TYPE_WIDGET );
+	}
+
 	public static function getIdList() {
 
 		return self::findList( "id", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ] ] );

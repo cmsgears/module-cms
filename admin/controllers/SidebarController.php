@@ -74,6 +74,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\BaseController 
 	public function actionCreate() {
 
 		$model			= new ObjectData();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$model->type	= CmsGlobal::TYPE_SIDEBAR;
 		$model->data	= "{ \"widgets\": [] }";
 
