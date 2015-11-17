@@ -214,8 +214,8 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 		];
 	}
 
-	// ModelMessage ----------------------
-
+	// Content ---------------------------
+	
 	/**
 	 * Validates to ensure that only one message exist with one name for a particular locale.
 	 */
@@ -289,7 +289,7 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 	/**
 	 * @param string $name
 	 * @param int $siteId
-	 * @return ModelMessage - by name and site id
+	 * @return Content - by name and site id
 	 */
 	public static function findByNameSiteId( $name, $siteId ) {
 

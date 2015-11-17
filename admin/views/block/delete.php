@@ -26,9 +26,10 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'htmlOptions' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'backgroundClass' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'textureClass' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
     	<h4>Block Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] )->label( false ) ?>
 
     	<h4>Block Banner</h4>
 		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>

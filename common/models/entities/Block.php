@@ -22,6 +22,7 @@ use cmsgears\core\common\models\entities\Template;
  * Block Entity
  *
  * @property int $id
+ * @property int $siteId 
  * @property int $bannerId
  * @property int $textureId
  * @property int $videoId
@@ -38,28 +39,16 @@ use cmsgears\core\common\models\entities\Template;
  * @property date $createdAt
  * @property date $modifiedAt
  */
-class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
+class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\db\BaseActiveRecord
+	// Block
 
-	public function beforeSave( $insert ) {
+	public function getSite() {
 
-	    if( parent::beforeSave( $insert ) ) {
-
-			if( $this->templateId <= 0 ) {
-
-				$this->templateId = null;
-			}
-
-	        return true;
-	    }
-
-		return false;
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
 	}
-
-	// ModelContent
 
 	public function getBanner() {
 
@@ -91,6 +80,23 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		}
 
 		return '';
+	}
+
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// yii\base\Component ----------------
@@ -135,8 +141,8 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		}
 
         $rules = [
-        	[ 'name', 'required' ],
-            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
+        	[ [ 'name', 'siteId' ], 'required' ],
+            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'title', 'content' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -164,6 +170,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -172,6 +179,39 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'textureClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE_CLASS )
 		];
 	}
+
+	// Block -----------------------------	
+
+	/**
+	 * Validates to ensure that only one message exist with one name for a particular locale.
+	 */
+    public function validateNameCreate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+            if( self::isExistByNameSiteId( $this->name, $this->siteId ) ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
+        }
+    }
+
+	/**
+	 * Validates to ensure that only one message exist with one name.
+	 */
+    public function validateNameUpdate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$existingContent = self::findByNameSiteId( $this->name, $this->siteId );
+
+			if( isset( $existingContent ) && $existingContent->id != $this->id && 
+				$existingContent->siteId == $this->siteId && strcmp( $existingContent->name, $this->name ) == 0 ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+			}
+        }
+    }
 
 	// Static Methods ----------------------------------------------
 
@@ -190,11 +230,35 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	// Read ------
 
 	/**
-	 * @return Page - by slug.
+	 * @return Block - by slug.
 	 */
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	/**
+	 * @param string $name
+	 * @param int $siteId
+	 * @return Block - by name and site id
+	 */
+	public static function findByNameSiteId( $name, $siteId ) {
+
+		return static::find()->where( 'name=:name AND siteId=:siteId' )
+							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
+							->one();
+	}
+
+	/**
+	 * @param string $name
+	 * @param int $siteId
+	 * @return boolean - check whether content exist by name and site id
+	 */
+	public static function isExistByNameSiteId( $name, $siteId ) {
+		
+		$content = self::findByNameSiteId( $name, $siteId );
+
+		return isset( $content );
 	}
 }
 

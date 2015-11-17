@@ -73,10 +73,11 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Block();
-		$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
-		$video 		= CmgFile::loadFile( $model->video, 'Video' );
-		$texture	= CmgFile::loadFile( $model->texture, 'Texture' );
+		$model			= new Block();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
+		$video 			= CmgFile::loadFile( $model->video, 'Video' );
+		$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
 
 		$model->setScenario( 'create' );
 
