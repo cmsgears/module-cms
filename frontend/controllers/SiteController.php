@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\cms\frontend\config\WebGlobalCms;
 
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
@@ -24,6 +25,8 @@ class SiteController extends BaseController {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -47,7 +50,7 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->viewPath . "/$template->name";
+				$view			= $template->viewPath . "/$template->frontendView";
 				$this->layout	= "//$layout";
 
 				// Render using Template
@@ -62,10 +65,10 @@ class SiteController extends BaseController {
 				}
 				else {
 
-					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
 				}
 			}
-			// Page without Template
+			// Page without Template - Redirect to System Pages
 			else {
 
 				return $this->redirect( 'site/' . $page->slug );
@@ -94,7 +97,7 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->viewPath . "/$template->name";
+				$view			= $template->viewPath . "/$template->frontendView";
 				$this->layout	= "//$layout";
 
 				// Render using Template
@@ -109,12 +112,12 @@ class SiteController extends BaseController {
 				}
 				else {
 
-					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
 				}
 			}
 			else {
 
-				return $this->render( 'post', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
+				return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
 			}
 		}
 
