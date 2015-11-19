@@ -12,6 +12,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\forms\Link;
 
 use cmsgears\cms\admin\services\MenuService;
 use cmsgears\cms\admin\services\PageService;
@@ -76,20 +77,33 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 		$model			= new ObjectData();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$model->type	= CmsGlobal::TYPE_MENU;
-		$model->data	= "{ \"pages\": [] }";
+		$model->data	= "{ \"pages\": [], \"links\": [] }";
 
 		$model->setScenario( 'create' );
+		
+		// Menu Links
+		$links	= [];
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
+		for ( $i = 0; $i < 4; $i++ ) {
 
-			if( MenuService::create( $model ) ) {
+			$links[] = new Link();
+		}
+
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) &&  
+			$model->validate() && Link::validateMultiple( $links ) ) {
+
+			$menu = MenuService::create( $model );
+
+			if( $menu ) {
 
 				$binder 			= new Binder();
 				$binder->binderId	= $model->id;
 
-				$binder->load( Yii::$app->request->post(), 'Binder' );
+				$binder->load( Yii::$app->request->post(), 'BinderPage' );
 
 				MenuService::bindPages( $binder );
+
+				MenuService::updateLinks( $menu, $links );
 
 				$this->redirect( [ 'all' ] );
 			}
@@ -99,7 +113,8 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 
     	return $this->render( 'create', [
     		'model' => $model,
-    		'pages' => $pages
+    		'pages' => $pages,
+    		'links' => $links
     	]);
 	}
 
@@ -113,16 +128,21 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
+			$links	= MenuService::getLinks( $model );
+
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) &&  
+				$model->validate() && Link::validateMultiple( $links ) ) {
 
 				if( MenuService::update( $model ) ) {
 
 					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
 	
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
+					$binder->load( Yii::$app->request->post(), 'BinderPage' );
+	
 					MenuService::bindPages( $binder );
+
+					MenuService::updateLinks( $model, $links );
 
 					$this->redirect( [ 'all' ] );
 				}
@@ -132,7 +152,8 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 	
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'pages' => $pages
+	    		'pages' => $pages,
+	    		'links' => $links
 	    	]);
 		}
 
@@ -148,6 +169,8 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
+			$links	= MenuService::getLinks( $model );
+
 			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
 				if( MenuService::delete( $model ) ) {
@@ -160,7 +183,8 @@ class MenuController extends \cmsgears\core\admin\controllers\BaseController {
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'pages' => $pages
+	    		'pages' => $pages,
+	    		'links' => $links
 	    	]);
 		}
 

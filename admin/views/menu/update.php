@@ -25,16 +25,25 @@ $this->params['sidebar-child'] 	= 'menu';
 
 				if( in_array( $page[ 'id' ], $menuPages ) ) {
 		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$page['id']?>" checked /><?=$page['name']?></span>
+					<span class="box-half"><input type="checkbox" name="BinderPage[bindedData][]" value="<?=$page['id']?>" checked /><?=$page['name']?></span>
 		<?php 
 				}
 				else {
 		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$page['id']?>" /><?=$page['name']?></span>
+					<span class="box-half"><input type="checkbox" name="BinderPage[bindedData][]" value="<?=$page['id']?>" /><?=$page['name']?></span>
 		<?php
 				}
 			}
 		?>		
+		<div class="box-filler"></div>
+
+		<h4>Additional Links</h4>
+		<?php foreach ( $links as $key => $link ) { ?>
+		<div class="clear link" id='link-<?=$key?>'>
+			<span class="box-half"><?= $form->field( $link, "[$key]address" )->textInput( [ "placeholder" => "link address" ] ) ?></span>
+			<span class="box-half"><?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?></span>
+		</div>
+		<?php  } ?>
 		<div class="box-filler"></div>
 
 		<?=Html::a( "Back", [ '/cmgcms/menu/all' ], ['class' => 'btn' ] );?>

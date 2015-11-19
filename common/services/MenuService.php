@@ -9,6 +9,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\forms\Link;
 
 class MenuService extends \cmsgears\core\common\services\Service {
 
@@ -57,6 +58,20 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	public static function getIdNameList() {
 
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_MENU ] ] );
+	}
+
+	public static function getLinks( $menu ) {
+
+		$objectData		= $menu->generateObjectFromJson();
+		$links			= $objectData->links;
+		$linkObjects	= [];
+
+		foreach ( $links as $link ) {
+
+			$linkObjects[]	= new Link( $link );
+		}
+
+		return $linkObjects;
 	}
 
 	// Data Provider ----
@@ -125,9 +140,32 @@ class MenuService extends \cmsgears\core\common\services\Service {
 
 			foreach ( $pages as $key => $value ) {
 
-				if( isset( $value ) ) {
+				$objectData->pages[] = $value;
+			}
+		}
 
-					$objectData->pages[] = $value;
+		$menu->generateJsonFromObject( $objectData );
+
+		$menu->update();
+
+		return true;
+	}
+
+	public static function updateLinks( $menu, $links ) {
+
+		$menu		= self::findById( $menu->id );
+		$objectData	= $menu->generateObjectFromJson();
+
+		// Clear all existing mappings
+		$objectData->links	= [];
+
+		if( isset( $links ) && count( $links ) > 0 ) {
+
+			foreach ( $links as $link ) {
+
+				if( isset( $link ) ) {
+
+					$objectData->links[] = json_encode( $link );
 				}
 			}
 		}
