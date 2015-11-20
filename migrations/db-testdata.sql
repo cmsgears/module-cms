@@ -30,17 +30,17 @@ INSERT INTO `cmg_core_role_permission` VALUES
 --
 
 INSERT INTO `cmg_cms_page` VALUES
-	(1,NULL,1,1,1,'Home','home','page',5,5),
-	(2,NULL,1,1,1,'Login','login','page',5,5),
-	(3,NULL,1,1,1,'Register','register','page',5,5),
-	(4,NULL,1,1,1,'Confirm Account','confirm-account','page',5,5),
-	(5,NULL,1,1,1,'Activate Account','activate-account','page',5,5),
-	(6,NULL,1,1,1,'Forgot Password','forgot-password','page',5,5),
-	(7,NULL,1,1,1,'Reset Password','reset-password','page',5,5),
-	(8,NULL,1,1,1,'About Us','about-us','page',5,5),
-	(9,NULL,1,1,1,'Terms','terms','page',5,5),
-	(10,NULL,1,1,1,'Privacy','privacy','page',5,5),
-	(11,NULL,1,1,1,'Blog','blog','page',5,5);
+	(1,NULL,1,1,1,'Home','home','page',5,5,0,0),
+	(2,NULL,1,1,1,'Login','login','page',5,5,0,0),
+	(3,NULL,1,1,1,'Register','register','page',5,5,0,0),
+	(4,NULL,1,1,1,'Confirm Account','confirm-account','page',5,5,0,0),
+	(5,NULL,1,1,1,'Activate Account','activate-account','page',5,5,0,0),
+	(6,NULL,1,1,1,'Forgot Password','forgot-password','page',5,5,0,0),
+	(7,NULL,1,1,1,'Reset Password','reset-password','page',5,5,0,0),
+	(8,NULL,1,1,1,'About Us','about-us','page',5,5,0,0),
+	(9,NULL,1,1,1,'Terms','terms','page',5,5,0,0),
+	(10,NULL,1,1,1,'Privacy','privacy','page',5,5,0,0),
+	(11,NULL,1,1,1,'Blog','blog','page',5,5,0,0);
 
 --
 -- Dumping data for table `cmg_cms_model_content`

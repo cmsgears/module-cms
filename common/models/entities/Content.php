@@ -33,6 +33,8 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $type
  * @property short $status
  * @property short $visibility
+ * @property short $order
+ * @property short $featured
  */
 class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 
@@ -182,7 +184,7 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'type', 'status', 'visibility' ], 'safe' ],
+            [ [ 'id', 'slug', 'type', 'status', 'visibility', 'order', 'featured' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -210,7 +212,9 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG )
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
 	}
 
