@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Linked Widgets</h4>
 		<?php 

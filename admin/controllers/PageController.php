@@ -97,12 +97,16 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 			}
 		}
 
+		$visibilityMap	= Page::$visibilityMap;
+		$statusMap		= Page::$statusMap;
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
     	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
+    		'visibilityMap' => $visibilityMap,
+	    	'statusMap' => $statusMap,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -136,7 +140,6 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'update', [
@@ -173,9 +176,9 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 				}
 			}
 
+			$banner			= $content->banner;
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
 
 	    	return $this->render( 'delete', [

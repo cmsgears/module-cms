@@ -10,35 +10,30 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-class WidgetService extends \cmsgears\core\common\services\Service {
+class WidgetService extends \cmsgears\core\common\services\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
 
-	public static function findById( $id ) {
-
-		return ObjectData::findById( $id );
-	}
-
 	public static function findByName( $name ) {
 
-		return ObjectData::findByNameType( $name, CmsGlobal::TYPE_WIDGET );
+		return self::findByNameType( $name, CmsGlobal::TYPE_WIDGET );
 	}
 
 	public static function findBySlug( $slug ) {
 
-		return ObjectData::findBySlugType( $slug, CmsGlobal::TYPE_WIDGET );
+		return self::findBySlugType( $slug, CmsGlobal::TYPE_WIDGET );
 	}
 
 	public static function getIdList() {
 
-		return self::findList( "id", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ] ] );
+		return self::getIdListByType( CmsGlobal::TYPE_WIDGET );
 	}
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ] ] );
+		return self::getIdNameListByType( CmsGlobal::TYPE_WIDGET );
 	}
 
 	// Data Provider ----
@@ -57,54 +52,6 @@ class WidgetService extends \cmsgears\core\common\services\Service {
 		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
 
 		return self::getDataProvider( new Widget(), $config );
-	}
-
-	// Create -----------
-
-	public static function create( $widget, $meta ) {
-
-		if( $widget->templateId <= 0 ) {
-
-			unset( $widget->templateId );
-		}
-
-		$widget->generateJsonFromObject( $meta );
-
-		$widget->save();
-
-		return $widget;
-	}
-
-	// Update -----------
-
-	public static function update( $widget, $meta ) {
-
-		if( $widget->templateId <= 0 ) {
-
-			unset( $widget->templateId );
-		}
-
-		$widgetToUpdate	= self::findById( $widget->id );
-
-		$widgetToUpdate->copyForUpdateFrom( $widget, [ 'name', 'description', 'templateId' ] );
-		
-		$widgetToUpdate->generateJsonFromObject( $meta );
-		
-		$widgetToUpdate->update();
-
-		return $widgetToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $widget ) {
-
-		$existingWidget	= self::findById( $widget->id );
-
-		// Delete Widget
-		$existingWidget->delete();
-
-		return true;
 	}
 }
 

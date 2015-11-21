@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'menu';
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Linked Pages</h4>
 		<?php 
@@ -40,7 +41,10 @@ $this->params['sidebar-child'] 	= 'menu';
 		<h4>Additional Links</h4>
 		<?php foreach ( $links as $key => $link ) { ?>
 		<div class="clear link" id='link-<?=$key?>'>
-			<span class="box-half"><?= $form->field( $link, "[$key]address" )->textInput( [ "placeholder" => "link address", 'readonly'=>'true' ] ) ?></span>
+			<span class="box-half">
+				<?= $form->field( $link, "[$key]address" )->textInput( [ "placeholder" => "link address", 'readonly'=>'true' ] ) ?>
+				<?= $form->field( $link, "[$key]relative" )->checkbox( [ 'disabled' => true ] ) ?>
+			</span>
 			<span class="box-half"><?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label", 'readonly'=>'true' ] ) ?></span>
 		</div>
 		<?php  } ?>

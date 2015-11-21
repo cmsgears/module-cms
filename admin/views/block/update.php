@@ -27,6 +27,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?= $form->field( $model, 'backgroundClass' ) ?>
 		<?= $form->field( $model, 'textureClass' ) ?>
 		<?= $form->field( $model, 'title' ) ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
     	<h4>Block Content</h4>
     	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>

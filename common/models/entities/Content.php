@@ -184,12 +184,13 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'type', 'status', 'visibility', 'order', 'featured' ], 'safe' ],
+            [ [ 'id', 'slug', 'type', 'status', 'visibility', 'featured' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ 'order', 'number', 'integerOnly' => true ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -219,37 +220,6 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 	}
 
 	// Content ---------------------------
-	
-	/**
-	 * Validates to ensure that only one message exist with one name for a particular locale.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameSiteId( $this->name, $this->siteId ) ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates to ensure that only one message exist with one name.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingContent = self::findByNameSiteId( $this->name, $this->siteId );
-
-			if( isset( $existingContent ) && $existingContent->id != $this->id && 
-				$existingContent->siteId == $this->siteId && strcmp( $existingContent->name, $this->name ) == 0 ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
 
 	// Static Methods ----------------------------------------------
 
@@ -295,23 +265,13 @@ class Content extends \cmsgears\core\common\models\entities\CmgEntity {
 	 * @param int $siteId
 	 * @return Content - by name and site id
 	 */
-	public static function findByNameSiteId( $name, $siteId ) {
+	public static function findByName( $name ) {
+
+		$siteId	= Yii::$app->cmgCore->siteId;
 
 		return static::find()->where( 'name=:name AND siteId=:siteId' )
 							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
 							->one();
-	}
-
-	/**
-	 * @param string $name
-	 * @param int $siteId
-	 * @return boolean - check whether content exist by name and site id
-	 */
-	public static function isExistByNameSiteId( $name, $siteId ) {
-		
-		$content = self::findByNameSiteId( $name, $siteId );
-
-		return isset( $content );
 	}
 }
 

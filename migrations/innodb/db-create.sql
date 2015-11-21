@@ -52,6 +52,7 @@ CREATE TABLE `cmg_cms_block` (
   `textureClass` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` text COLLATE utf8_unicode_ci NOT NULL,
   `content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   `createdAt` datetime DEFAULT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),

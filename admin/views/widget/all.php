@@ -50,6 +50,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Active</th>
 					<th>Description</th>
 					<th>Template</th>
 					<th>Actions</th>
@@ -63,7 +64,8 @@ if( !isset( $sortOrder ) ) {
 						$id = $widget->id;
 				?>
 					<tr>
-						<td><?= $widget->name ?></td>					
+						<td><?= $widget->name ?></td>
+						<td><?= $widget->getActiveStr() ?></td>
 						<td><?= $widget->description ?></td>
 						<td><?= $widget->getTemplateName() ?></td>
 						<td>

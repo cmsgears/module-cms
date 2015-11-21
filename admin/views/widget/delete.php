@@ -17,6 +17,7 @@ $this->params['sidebar-child'] 	= 'widget';
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled'=>'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
 		<?=Html::a( "Cancel", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />

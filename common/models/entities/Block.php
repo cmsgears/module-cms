@@ -36,10 +36,11 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $backgroundClass
  * @property string $textureClass
  * @property string $content
+ * @property string $active
  * @property date $createdAt
  * @property date $modifiedAt
  */
-class Block extends \cmsgears\core\common\models\entities\CmgEntity {
+class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -80,6 +81,14 @@ class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 		}
 
 		return '';
+	}
+
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
 	// yii\db\BaseActiveRecord
@@ -142,12 +151,12 @@ class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'title', 'content' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'title', 'content', 'active' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -174,6 +183,7 @@ class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_HTML_OPTIONS ),
 			'backgroundClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_BACKGROUND_CLASS ),
 			'textureClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE_CLASS )
@@ -181,37 +191,6 @@ class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 	}
 
 	// Block -----------------------------	
-
-	/**
-	 * Validates to ensure that only one message exist with one name for a particular locale.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameSiteId( $this->name, $this->siteId ) ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates to ensure that only one message exist with one name.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingContent = self::findByNameSiteId( $this->name, $this->siteId );
-
-			if( isset( $existingContent ) && $existingContent->id != $this->id && 
-				$existingContent->siteId == $this->siteId && strcmp( $existingContent->name, $this->name ) == 0 ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
 
 	// Static Methods ----------------------------------------------
 
@@ -239,26 +218,15 @@ class Block extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	/**
 	 * @param string $name
-	 * @param int $siteId
-	 * @return Block - by name and site id
+	 * @return Block - by name for current site
 	 */
-	public static function findByNameSiteId( $name, $siteId ) {
+	public static function findByName( $name ) {
+
+		$siteId	= Yii::$app->cmgCore->siteId;
 
 		return static::find()->where( 'name=:name AND siteId=:siteId' )
 							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
 							->one();
-	}
-
-	/**
-	 * @param string $name
-	 * @param int $siteId
-	 * @return boolean - check whether content exist by name and site id
-	 */
-	public static function isExistByNameSiteId( $name, $siteId ) {
-		
-		$content = self::findByNameSiteId( $name, $siteId );
-
-		return isset( $content );
 	}
 }
 

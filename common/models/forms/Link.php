@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
@@ -15,6 +16,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $address;	
 	public $label;
+	public $relative;
 
 	// Constructor -------------------------------------------------
 
@@ -28,11 +30,11 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'address', 'label' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'address', 'label', 'relative' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'address', 'label' ], 'safe' ]
+			[ [ 'address', 'label', 'relative' ], 'safe' ]
 		];
 
 
@@ -48,7 +50,8 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 		return [
 			'address' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL )
+			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+			'relative' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE )
 		];
 	}
 }

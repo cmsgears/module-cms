@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
 		<?php foreach ( $widgets as $widget ) { ?>

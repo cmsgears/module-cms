@@ -31,6 +31,7 @@ class CmsGlobal {
 	const FIELD_BLOCK			= 'blockField';
 	const FIELD_WIDGET			= 'widgetField';
 	const FIELD_SIDEBAR			= 'sidebarField';
+	const FIELD_URL_RELATIVE	= 'relativeUrlField';
 
 	// Content Fields
 	const FIELD_KEYWORDS		= 'keywordsField';

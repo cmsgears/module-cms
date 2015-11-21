@@ -11,7 +11,7 @@ use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\Link;
 
-class MenuService extends \cmsgears\core\common\services\Service {
+class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
@@ -21,18 +21,9 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 * @param integer $id
 	 * @return ObjectData
 	 */
-	public static function findById( $id ) {
-
-		return ObjectData::findById( $id );
-	}
-
-	/**
-	 * @param integer $id
-	 * @return ObjectData
-	 */
 	public static function findByName( $name ) {
 
-		return ObjectData::findByNameType( $name, CmsGlobal::TYPE_MENU );
+		return self::findByNameType( $name, CmsGlobal::TYPE_MENU );
 	}
 
 	/**
@@ -41,7 +32,7 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function findBySlug( $name ) {
 
-		return ObjectData::findBySlugType( $name, CmsGlobal::TYPE_MENU );
+		return self::findBySlugType( $name, CmsGlobal::TYPE_MENU );
 	}
 
 	/**
@@ -49,7 +40,7 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( 'id', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_MENU ] ] );
+		return self::getIdListByType( CmsGlobal::TYPE_MENU );
 	}
 
 	/**
@@ -57,7 +48,7 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_MENU ] ] );
+		return self::getIdNameListByType( CmsGlobal::TYPE_MENU );
 	}
 
 	public static function getLinks( $menu ) {
@@ -92,35 +83,7 @@ class MenuService extends \cmsgears\core\common\services\Service {
 		return self::getDataProvider( new ObjectData(), $config );
 	}
 
-	// Create -----------
-
-	/**
-	 * @param ObjectData $menu
-	 * @return ObjectData
-	 */
-	public static function create( $menu ) {
-
-		$menu->save();
-
-		return $menu;
-	}
-
 	// Update -----------
-
-	/**
-	 * @param ObjectData $menu
-	 * @return ObjectData
-	 */
-	public static function update( $menu ) {
-
-		$menuToUpdate	= self::findById( $menu->id );
-
-		$menuToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description', 'data' ] );
-
-		$menuToUpdate->update();
-
-		return $menuToUpdate;
-	}
 
 	/**
 	 * @param Binder $binder
@@ -173,22 +136,6 @@ class MenuService extends \cmsgears\core\common\services\Service {
 		$menu->generateJsonFromObject( $objectData );
 
 		$menu->update();
-
-		return true;
-	}
-
-	// Delete -----------
-
-	/**
-	 * @param ObjectData $menu
-	 * @return boolean
-	 */
-	public static function delete( $menu ) {
-
-		$existingMenu	= self::findById( $menu->id );
-
-		// Delete Menu
-		$existingMenu->delete();
 
 		return true;
 	}

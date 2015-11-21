@@ -23,6 +23,8 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'order' ) ?>
+		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
     	<h4>Post Summary</h4>
     	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] ) ?>

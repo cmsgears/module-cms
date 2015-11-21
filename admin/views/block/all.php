@@ -62,6 +62,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Title</th>
+					<th>Active</th>
 					<th>Created on
 						<span class='box-icon-sort'>
 							<span sort-order='cdate' class="icon-sort <?php if( strcmp( $sortOrder, 'cdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -93,6 +94,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $block->description ?></td>
 						<td><?= $block->getTemplateName() ?></td>
 						<td><?= $block->title ?></td>
+						<td><?= $block->getActiveStr() ?></td>
 						<td><?= $block->createdAt ?></td>
 						<td><?= $block->modifiedAt ?></td>
 						<td>

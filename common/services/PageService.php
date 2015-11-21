@@ -99,7 +99,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 
 		$pageToUpdate	= self::findById( $page->id );
 
-		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility' ] );
+		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
 
 		$pageToUpdate->update();
 

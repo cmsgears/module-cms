@@ -27,6 +27,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?= $form->field( $model, 'backgroundClass' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'textureClass' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
     	<h4>Block Content</h4>
     	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] )->label( false ) ?>

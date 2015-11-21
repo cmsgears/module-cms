@@ -78,7 +78,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 
 		$postToUpdate	= self::findById( $post->id );
 
-		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility' ] );
+		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
 
 		$postToUpdate->update();
 

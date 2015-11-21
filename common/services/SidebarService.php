@@ -10,7 +10,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-class SidebarService extends \cmsgears\core\common\services\Service {
+class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
@@ -20,18 +20,9 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 * @param integer $id
 	 * @return ObjectData
 	 */
-	public static function findById( $id ) {
-
-		return ObjectData::findById( $id );
-	}
-
-	/**
-	 * @param integer $id
-	 * @return ObjectData
-	 */
 	public static function findByName( $name ) {
 
-		return ObjectData::findByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
+		return self::findByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
 	}
 
 	/**
@@ -39,7 +30,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( 'id', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
+		return self::getIdListByType( CmsGlobal::TYPE_SIDEBAR );
 	}
 
 	/**
@@ -47,7 +38,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_SIDEBAR ] ] );
+		return self::getIdNameListByType( CmsGlobal::TYPE_SIDEBAR );
 	}
 
 	// Data Provider ----
@@ -68,35 +59,7 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 		return self::getDataProvider( new ObjectData(), $config );
 	}
 
-	// Create -----------
-
-	/**
-	 * @param ObjectData $sidebar
-	 * @return ObjectData
-	 */
-	public static function create( $sidebar ) {
-
-		$sidebar->save();
-
-		return $sidebar;
-	}
-
 	// Update -----------
-
-	/**
-	 * @param ObjectData $sidebar
-	 * @return ObjectData
-	 */
-	public static function update( $sidebar ) {
-
-		$sidebarToUpdate	= self::findById( $sidebar->id );
-
-		$sidebarToUpdate->copyForUpdateFrom( $sidebar, [ 'name', 'description', 'data' ] );
-
-		$sidebarToUpdate->update();
-
-		return $sidebarToUpdate;
-	}
 
 	/**
 	 * @param Binder $binder
@@ -126,22 +89,6 @@ class SidebarService extends \cmsgears\core\common\services\Service {
 		$sidebar->generateJsonFromObject( $objectData );
 
 		$sidebar->update();
-
-		return true;
-	}
-
-	// Delete -----------
-
-	/**
-	 * @param ObjectData $sidebar
-	 * @return boolean
-	 */
-	public static function delete( $sidebar ) {
-
-		$existingSidebar	= self::findById( $sidebar->id );
-
-		// Delete Sidebar
-		$existingSidebar->delete();
 
 		return true;
 	}

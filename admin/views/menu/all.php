@@ -52,6 +52,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Active</th>
 					<th>Description</th>
 					<th>Actions</th>
 				</tr>
@@ -64,7 +65,8 @@ if( !isset( $sortOrder ) ) {
 						$id = $menu->id;
 				?>
 					<tr>
-						<td><?= $menu->name ?></td>					
+						<td><?= $menu->name ?></td>
+						<td><?= $menu->getActiveStr() ?></td>
 						<td><?= $menu->description ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Menu" ><?= Html::a( "", ["/cmgcms/menu/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
