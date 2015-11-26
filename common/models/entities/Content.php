@@ -36,7 +36,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $order
  * @property short $featured
  */
-class Content extends \cmsgears\core\common\models\entities\CmgEntity {
+class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Pre-Defined Status
 	const STATUS_NEW		= 0;

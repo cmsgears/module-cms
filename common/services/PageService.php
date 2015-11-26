@@ -78,9 +78,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $page ) {
 
-		$page->type 		= CmsGlobal::TYPE_PAGE;
-		$page->status 		= Page::STATUS_NEW;
-		$page->visibility 	= Page::VISIBILITY_PRIVATE;
+		$page->type 	= CmsGlobal::TYPE_PAGE;
 
 		// Create Page
 		$page->save();

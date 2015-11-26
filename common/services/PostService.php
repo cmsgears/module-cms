@@ -57,9 +57,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $post ) {
 
-		$post->type 		= CmsGlobal::TYPE_POST;
-		$post->status 		= Post::STATUS_NEW;
-		$post->visibility 	= Post::VISIBILITY_PRIVATE;
+		$post->type = CmsGlobal::TYPE_POST;
 
 		// Create Post
 		$post->save();
