@@ -10,7 +10,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Block';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'block';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );

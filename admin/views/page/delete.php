@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Page';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'page';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );

@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Widget';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'widget';
 ?>
 <section class="wrap-content container clearfix">

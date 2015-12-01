@@ -40,10 +40,10 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -52,25 +52,25 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
 	// CategoryController --------------------
 
 	public function actionAll( $type = null ) {
-		
+
 		Url::remember( [ 'page/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
 	}
-	
+
 	public function actionCreate() {
 
-		return parent::actionCreate( [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
 	}
-	 
+
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
 	}
-	
+
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, [ 'parent' => 'sidebar-page-blog', 'child' => 'template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
 	}
 }
 

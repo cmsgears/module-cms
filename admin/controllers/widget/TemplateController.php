@@ -55,22 +55,22 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
 		
 		Url::remember( [ 'widget/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
+		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
+		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
+		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, [ 'parent' => 'sidebar-sdebar', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
+		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ], CmsGlobal::TYPE_WIDGET );
 	}
 }
 

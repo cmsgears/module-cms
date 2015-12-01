@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Menu';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'menu';
 ?>
 <section class="wrap-content container clearfix">
@@ -43,9 +43,13 @@ $this->params['sidebar-child'] 	= 'menu';
 		<div class="clear link" id='link-<?=$key?>'>
 			<span class="box-half">
 				<?= $form->field( $link, "[$key]address" )->textInput( [ "placeholder" => "link address" ] ) ?>
+				<?= $form->field( $link, "[$key]private" )->checkbox() ?>
 				<?= $form->field( $link, "[$key]relative" )->checkbox() ?>
 			</span>
-			<span class="box-half"><?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?></span>
+			<span class="box-half">
+				<?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?>
+				<?= $form->field( $link, "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+			</span>
 		</div>
 		<?php  } ?>
 		<div class="box-filler"></div>

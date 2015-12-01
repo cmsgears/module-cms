@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Widget Settings';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'widget';
 
 $template	= isset( $templatesMap[ $model->templateId ] ) ? $templatesMap[ $model->templateId ] : null;

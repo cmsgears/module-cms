@@ -11,7 +11,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Post Categories';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'post-category';
 
 // Data

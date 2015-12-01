@@ -54,8 +54,13 @@ class PageService extends \cmsgears\core\common\services\Service {
 	}
 
     public static function getMenuPages( $pages ) {
+		
+		if( count( $pages ) > 0 ) {
 
-		return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+			return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+		}
+		
+		return [];
     }
 
 	// Data Provider ----

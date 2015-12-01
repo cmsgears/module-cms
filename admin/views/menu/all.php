@@ -11,7 +11,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Menus';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'menu';
 
 // Data
