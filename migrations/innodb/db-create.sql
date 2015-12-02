@@ -18,6 +18,7 @@ CREATE TABLE `cmg_cms_page` (
   `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` smallint(6) NOT NULL DEFAULT 0,
   `visibility` smallint(6) NOT NULL DEFAULT 0,
+  `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
   `featured` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),

@@ -49,6 +49,7 @@ $this->params['sidebar-child'] 	= 'menu';
 			<span class="box-half">
 				<?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?>
 				<?= $form->field( $link, "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+				<?= $form->field( $link, "[$key]icon" )->textInput( [ "placeholder" => "label" ] ) ?>
 			</span>
 		</div>
 		<?php  } ?>

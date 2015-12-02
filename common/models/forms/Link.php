@@ -19,11 +19,22 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public $options;
 	public $private;
 	public $relative;
+	public $icon;
 
 	// Constructor -------------------------------------------------
 
 	// Instance Methods --------------------------------------------
-	
+
+	public function isPublic() {
+
+		if( isset( $this->private ) && $this->private ) {
+
+			return false;
+		}
+
+		return true;
+	}
+
 	// yii\base\Model
 
 	public function rules() {
@@ -32,11 +43,11 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'address', 'label', 'options', 'private', 'relative' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'address', 'label', 'options', 'private', 'relative', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'address', 'label', 'options', 'private', 'relative' ], 'safe' ]
+			[ [ 'address', 'label', 'options', 'private', 'relative', 'icon' ], 'safe' ]
 		];
 
 
