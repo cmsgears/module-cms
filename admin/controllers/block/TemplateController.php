@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\controllers\page;
+namespace cmsgears\cms\admin\controllers\block;
 
 // Yii Imports
 use \Yii;
@@ -55,22 +55,22 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		Url::remember( [ 'page/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ], CmsGlobal::TYPE_PAGE );
+		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
 	}
 }
 

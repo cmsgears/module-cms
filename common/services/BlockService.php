@@ -117,7 +117,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 
 		$blockToUpdate		= self::findById( $block->id );
 
-		$blockToUpdate->copyForUpdateFrom( $block, [ 'name', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'title', 'content', 'active' ] );
+		$blockToUpdate->copyForUpdateFrom( $block, [ 'name', 'description', 'active', 'options', 'title', 'content', 'data' ] );
 
 		if( isset( $banner ) ) {
 

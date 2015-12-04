@@ -32,11 +32,11 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $name
  * @property string $slug
  * @property string $description
- * @property string $htmlOptions
- * @property string $backgroundClass
- * @property string $textureClass
- * @property string $content
  * @property string $active
+ * @property string $options
+ * @property string $title
+ * @property string $content
+ * @property string $data
  * @property date $createdAt
  * @property date $modifiedAt
  */
@@ -91,7 +91,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
-	// yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord -----------
 
 	public function beforeSave( $insert ) {
 
@@ -146,12 +146,12 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'htmlOptions', 'backgroundClass', 'textureClass' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'options', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'htmlOptions', 'backgroundClass', 'textureClass', 'title', 'content', 'active' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'active', 'options', 'title', 'content', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
