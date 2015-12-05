@@ -7,16 +7,11 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Page extends Content {
-
-	use MetaTrait;
-
-	public $metaType	= CmsGlobal::TYPE_PAGE;
 
 	use FileTrait;
 

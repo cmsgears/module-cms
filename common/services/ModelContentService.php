@@ -14,7 +14,7 @@ use cmsgears\core\common\services\FileService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class ContentService extends \cmsgears\core\common\services\Service {
+class ModelContentService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
 
@@ -49,6 +49,11 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $parent, $parentType, $content, $banner = null, $video = null ) {
 
+		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
+
+			unset( $content->templateId );
+		}
+
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
 
@@ -76,6 +81,11 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 * @return Page
 	 */
 	public static function update( $content, $publish = false, $banner = null, $video = null ) {
+
+		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
+
+			unset( $content->templateId );
+		}
 
 		$date 				= DateUtil::getDateTime();
 		$contentToUpdate	= self::findById( $content->id );

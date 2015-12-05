@@ -83,6 +83,11 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $block, $banner = null, $texture = null, $video = null ) {
 
+		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
+
+			unset( $block->templateId );
+		}
+
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $block, 'attribute' => 'bannerId' ] );
@@ -114,6 +119,11 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	 * @return Block
 	 */
 	public static function update( $block, $banner = null, $texture = null, $video = null ) {
+
+		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
+
+			unset( $block->templateId );
+		}
 
 		$blockToUpdate		= self::findById( $block->id );
 

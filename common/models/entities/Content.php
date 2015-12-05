@@ -33,6 +33,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $type
  * @property short $status
  * @property short $visibility
+ * @property string $icon
  * @property short $order
  * @property short $featured
  */
@@ -97,6 +98,11 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public function getSite() {
 
 		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
+
+	public function getAttributes() {
+
+		return $this->hasMany( ContentAttribute::className(), [ 'pageId' => 'id' ] );
 	}
 
 	public function isPage() {
@@ -175,25 +181,25 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'type', 'status', 'visibility', 'featured' ], 'safe' ],
+            [ [ 'id', 'slug', 'type' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'order', 'number', 'integerOnly' => true ],
+            [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 200 ],
+            [ 'featured', 'boolean' ],
             [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

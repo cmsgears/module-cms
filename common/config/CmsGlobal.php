@@ -45,9 +45,6 @@ class CmsGlobal {
 	// Block Fields
 	const FIELD_BACKGROUND			= 'backgroundField';
 	const FIELD_TEXTURE				= 'textureField';
-	const FIELD_HTML_OPTIONS		= 'htmlOtpionsField';
-	const FIELD_BACKGROUND_CLASS	= 'backgroundClassField';
-	const FIELD_TEXTURE_CLASS		= 'textureClassField';
 }
 
 ?>

@@ -26,7 +26,6 @@ use cmsgears\core\common\models\entities\Template;
  * @property int $parentId
  * @property string $parentType
  * @property string $summary
- * @property string $content
  * @property date $createdAt
  * @property date $modifiedAt
  * @property date $publishedAt
@@ -34,6 +33,8 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
+ * @property string $content
+ * @property string $data 
  */
 class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
@@ -116,10 +117,11 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 		}
 
         $rules = [
-            [ [ 'id', 'parentId', 'parentType', 'summary', 'content' ], 'safe' ],
+            [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
             [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentId', 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -147,7 +149,8 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 			'seoName' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
 			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
-			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT )
+			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

@@ -17,7 +17,7 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\entities\ModelContent;
 
-use cmsgears\cms\common\services\ContentService;
+use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
@@ -105,7 +105,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			if( isset( $post ) ) {
 
 				// Create Content
-				ContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
+				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
 
 				// Bind Categories
 				$binder = new Binder();
@@ -156,7 +156,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 				if( isset( $post ) ) {
 
 					// Update Content
-					ContentService::update( $content, $post->isPublished(), $banner );
+					ModelContentService::update( $content, $post->isPublished(), $banner );
 
 					// Bind Categories
 					$binder = new Binder();
@@ -205,7 +205,7 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 
 				if( PostService::delete( $model ) ) {
 
-					ContentService::delete( $content );
+					ModelContentService::delete( $content );
 
 					$this->redirect( [  'all' ] );
 				}

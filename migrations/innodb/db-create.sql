@@ -13,9 +13,9 @@ CREATE TABLE `cmg_cms_page` (
   `siteId` bigint(20) NOT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` smallint(6) NOT NULL DEFAULT 0,
   `visibility` smallint(6) NOT NULL DEFAULT 0,
   `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -26,6 +26,24 @@ CREATE TABLE `cmg_cms_page` (
   KEY `fk_cms_page_2` (`siteId`),
   KEY `fk_cms_page_3` (`createdBy`),
   KEY `fk_cms_page_4` (`modifiedBy`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_cms_page_attribute`
+--
+
+DROP TABLE IF EXISTS `cmg_cms_page_attribute`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_cms_page_attribute` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `pageId` bigint(20) NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT 'default',
+  `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_cms_page_attribute_1` (`pageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,16 +63,16 @@ CREATE TABLE `cmg_cms_block` (
   `templateId` bigint(20) DEFAULT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` text COLLATE utf8_unicode_ci NOT NULL,
-  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `data` longtext COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` datetime DEFAULT NULL,
   `modifiedAt` datetime DEFAULT NULL,
+  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `data` longtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cms_block_1` (`siteId`),
   KEY `fk_cms_block_2` (`bannerId`),
@@ -83,7 +101,6 @@ CREATE TABLE `cmg_cms_model_content` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `summary` text COLLATE utf8_unicode_ci NOT NULL,
-  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` datetime DEFAULT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   `publishedAt` datetime DEFAULT NULL,
@@ -91,6 +108,8 @@ CREATE TABLE `cmg_cms_model_content` (
   `seoDescription` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seoKeywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seoRobot` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `data` longtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cms_model_content_1` (`bannerId`),
   KEY `fk_cms_model_content_2` (`videoId`),
@@ -126,6 +145,12 @@ ALTER TABLE `cmg_cms_page`
 	ADD CONSTRAINT `fk_cms_page_2` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
 	ADD CONSTRAINT `fk_cms_page_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
 	ADD CONSTRAINT `fk_cms_page_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_cms_page_attribute`
+--
+ALTER TABLE `cmg_cms_page_attribute` 
+	ADD CONSTRAINT `fk_cms_page_attribute_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`);
 
 --
 -- Constraints for table `cmg_cms_block`

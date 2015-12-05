@@ -32,10 +32,7 @@ class MessageSource extends Component {
 		CmsGlobal::FIELD_SEO_ROBOT => 'SEO Robot',
 		// Block Fields
 		CmsGlobal::FIELD_BACKGROUND => 'Background',
-		CmsGlobal::FIELD_TEXTURE => 'Texture',
-		CmsGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
-		CmsGlobal::FIELD_BACKGROUND_CLASS => 'Background Class',
-		CmsGlobal::FIELD_TEXTURE_CLASS => 'Texture Class'
+		CmsGlobal::FIELD_TEXTURE => 'Texture'
 	];
 
 	/**

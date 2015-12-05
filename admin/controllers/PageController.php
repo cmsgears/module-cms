@@ -15,7 +15,7 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\ModelContent;
 
-use cmsgears\cms\common\services\ContentService;
+use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
 
@@ -91,7 +91,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 			if( isset( $page ) ) {
 
 				// Create Content
-				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
+				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
 
 				$this->redirect( [ 'all' ] );
 			}
@@ -132,7 +132,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 				if( isset( $page ) ) {
 
 					// Update Content
-					ContentService::update( $content, $page->isPublished(), $banner );
+					ModelContentService::update( $content, $page->isPublished(), $banner );
 
 					$this->redirect( [ 'all' ] );
 				}
@@ -170,7 +170,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 
 				if( PageService::delete( $model ) ) {
 					
-					ContentService::delete( $content );
+					ModelContentService::delete( $content );
 
 					$this->redirect( [ 'all' ] );
 				}
