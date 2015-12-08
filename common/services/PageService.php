@@ -42,7 +42,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( "id", CmsTables::TABLE_PAGE );
+		return self::findList( "id", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
 	}
 
 	/**
@@ -50,7 +50,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE );
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
 	}
 
     public static function getMenuPages( $pages ) {
@@ -85,6 +85,11 @@ class PageService extends \cmsgears\core\common\services\Service {
 
 		$page->type 	= CmsGlobal::TYPE_PAGE;
 
+		if( !isset( $page->order ) || strlen( $post->order ) <= 0 ) {
+
+			$page->order = 0;
+		}
+
 		// Create Page
 		$page->save();
 
@@ -103,6 +108,11 @@ class PageService extends \cmsgears\core\common\services\Service {
 		$pageToUpdate	= self::findById( $page->id );
 
 		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ] );
+
+		if( !isset( $pageToUpdate->order ) || strlen( $post->order ) <= 0 ) {
+
+			$pageToUpdate->order = 0;
+		}
 
 		$pageToUpdate->update();
 

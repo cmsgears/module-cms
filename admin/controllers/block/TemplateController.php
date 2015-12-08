@@ -19,6 +19,8 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 		= [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ];
 	}
 
 	// Instance Methods ------------------
@@ -51,26 +53,26 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// CategoryController --------------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll() {
 
-		Url::remember( [ 'page/template/all' ], 'templates' );
+		Url::remember( [ 'block/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
+		return parent::actionAll( CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
+		return parent::actionCreate( CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
+		return parent::actionUpdate( $id, CmsGlobal::TYPE_BLOCK );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ], CmsGlobal::TYPE_BLOCK );
+		return parent::actionDelete( $id, CmsGlobal::TYPE_BLOCK );
 	}
 }
 

@@ -3,7 +3,6 @@ namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -17,7 +16,7 @@ use cmsgears\cms\admin\services\PostService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PostController extends Controller {
+class PostController extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -42,7 +41,7 @@ class PostController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'bindCategories'  => ['post']
+	                'bindCategories'  => [ 'post' ]
                 ]
             ]
         ];
@@ -54,7 +53,7 @@ class PostController extends Controller {
 
 		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
+		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
 			if( PostService::bindCategories( $binder ) ) {
 

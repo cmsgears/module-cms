@@ -12,7 +12,7 @@ use yii\db\IntegrityException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\BaseCategoryController {
+class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
 	// Constructor and Initialisation ------------------------------
 

@@ -1,7 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\FileUploader;
@@ -22,10 +21,8 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
-    	<?= $form->field( $model, 'templateId' )->dropDownList( ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap ) ) ?>
-    	<?= $form->field( $model, 'htmlOptions' ) ?>
-		<?= $form->field( $model, 'backgroundClass' ) ?>
-		<?= $form->field( $model, 'textureClass' ) ?>
+    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+    	<?= $form->field( $model, 'options' )->textarea() ?>
 		<?= $form->field( $model, 'title' ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 

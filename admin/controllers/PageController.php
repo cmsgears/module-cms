@@ -5,6 +5,7 @@ namespace cmsgears\cms\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -19,7 +20,7 @@ use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
 
-class PageController extends \cmsgears\core\admin\controllers\BaseController {
+class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -100,6 +101,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 		$visibilityMap	= Page::$visibilityMap;
 		$statusMap		= Page::$statusMap;
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -141,6 +143,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -180,6 +183,7 @@ class PageController extends \cmsgears\core\admin\controllers\BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

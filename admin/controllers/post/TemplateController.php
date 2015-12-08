@@ -12,13 +12,15 @@ use yii\db\IntegrityException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateController {
+class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 		= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
 	}
 
 	// Instance Methods ------------------
@@ -40,10 +42,10 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -51,26 +53,26 @@ class TemplateController extends \cmsgears\core\admin\controllers\BaseTemplateCo
 
 	// CategoryController --------------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll() {
 		
-		Url::remember( [ 'page/template/all' ], 'templates' );
+		Url::remember( [ 'post/template/all' ], 'templates' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ], CmsGlobal::TYPE_POST );
+		return parent::actionAll( CmsGlobal::TYPE_POST );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ], CmsGlobal::TYPE_POST );
+		return parent::actionCreate( CmsGlobal::TYPE_POST );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ], CmsGlobal::TYPE_POST );
+		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ], CmsGlobal::TYPE_POST );
+		return parent::actionDelete( $id, CmsGlobal::TYPE_POST );
 	}
 }
 

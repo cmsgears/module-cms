@@ -16,7 +16,7 @@ use cmsgears\cms\common\models\entities\Block;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\BlockService;
 
-class BlockController extends \cmsgears\core\admin\controllers\BaseController {
+class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -45,11 +45,11 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -89,7 +89,7 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
+		$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -122,7 +122,7 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
+			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -156,7 +156,7 @@ class BlockController extends \cmsgears\core\admin\controllers\BaseController {
 			$banner			= $model->banner;
 			$video			= $model->video;
 			$texture		= $model->texture;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_BLOCK );
+			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

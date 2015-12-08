@@ -5,7 +5,7 @@ use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\ModelBlock;
 
 /**
- * BlockTrait can be used to form page blocks/modules.
+ * BlockTrait can be used to form page using blocks.
  */
 trait BlockTrait {
 

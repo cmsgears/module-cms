@@ -3,7 +3,6 @@ namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -17,7 +16,7 @@ use cmsgears\cms\admin\services\WidgetService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class WidgetController extends Controller {
+class WidgetController extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -42,19 +41,19 @@ class WidgetController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'bindSidebars'  => ['post']
+	                'bindSidebars'  => [ 'post' ]
                 ]
             ]
         ];
     }
 
-	// UserController
+	// WidgetController
 
 	public function actionBindSidebars() {
 
 		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
+		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
 			if( WidgetService::bindSidebars( $binder ) ) {
 

@@ -16,7 +16,7 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
 
-class SidebarController extends \cmsgears\core\admin\controllers\BaseController {
+class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

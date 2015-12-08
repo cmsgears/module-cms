@@ -17,7 +17,7 @@ use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\admin\services\MenuService;
 use cmsgears\cms\admin\services\PageService;
 
-class MenuController extends \cmsgears\core\admin\controllers\BaseController {
+class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

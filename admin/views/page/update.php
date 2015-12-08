@@ -21,7 +21,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php $form = ActiveForm::begin( ['id' => 'frm-page-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $content, 'templateId' )->dropDownList( ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap ) ) ?>
+    	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 		<?= $form->field( $model, 'icon' ) ?>

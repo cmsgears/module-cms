@@ -5,6 +5,7 @@ namespace cmsgears\cms\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,7 +23,7 @@ use cmsgears\core\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
 
-class PostController extends \cmsgears\core\admin\controllers\BaseController {
+class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -122,7 +123,8 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 		$visibilityMap	= Page::$visibilityMap;
 		$statusMap		= Page::$statusMap;
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -173,7 +175,8 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -215,7 +218,8 @@ class PostController extends \cmsgears\core\admin\controllers\BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

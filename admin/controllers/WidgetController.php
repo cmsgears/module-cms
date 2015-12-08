@@ -16,7 +16,7 @@ use cmsgears\cms\admin\models\forms\WidgetForm;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\WidgetService;
 
-class WidgetController extends \cmsgears\core\admin\controllers\BaseController {
+class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

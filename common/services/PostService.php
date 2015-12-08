@@ -59,6 +59,11 @@ class PostService extends \cmsgears\core\common\services\Service {
 
 		$post->type = CmsGlobal::TYPE_POST;
 
+		if( !isset( $post->order ) || strlen( $post->order ) <= 0 ) {
+
+			$post->order = 0;
+		}
+
 		// Create Post
 		$post->save();
 
@@ -77,6 +82,11 @@ class PostService extends \cmsgears\core\common\services\Service {
 		$postToUpdate	= self::findById( $post->id );
 
 		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
+
+		if( !isset( $postToUpdate->order ) || strlen( $post->order ) <= 0 ) {
+
+			$postToUpdate->order = 0;
+		}
 
 		$postToUpdate->update();
 
@@ -123,7 +133,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function delete( $post ) {
 
-		$existingPost		= self::findById( $post->id );
+		$existingPost	= self::findById( $post->id );
 
 		// Delete Post
 		$existingPost->delete();

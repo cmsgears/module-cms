@@ -14,11 +14,9 @@ use cmsgears\cms\frontend\config\WebGlobalCms;
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
 
-use cmsgears\core\frontend\controllers\BaseController;
-
 use cmsgears\core\common\utilities\MessageUtil;
 
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
