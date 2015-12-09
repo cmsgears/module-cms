@@ -13,11 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Site;
-use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -145,14 +141,6 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
-	/**
-	 * @return boolean - whether given user is author
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->createdBy	= $user->id;
-	}
-
 	// yii\base\Component ----------------
 
     /**
@@ -184,7 +172,7 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'type' ], 'safe' ],
+            [ [ 'id', 'slug', 'type', 'icon' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 150 ],
@@ -220,6 +208,7 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];

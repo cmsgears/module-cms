@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\models\entities;
+namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
@@ -40,7 +40,7 @@ class ContentAttribute extends CmgModel {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'pageId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'name', 'alphanumdotu' ],
+            [ 'name', 'alphanumu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
         ];
