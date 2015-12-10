@@ -83,7 +83,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 
 		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
 
-		if( !isset( $postToUpdate->order ) || strlen( $post->order ) <= 0 ) {
+		if( !isset( $postToUpdate->order ) || strlen( $postToUpdate->order ) <= 0 ) {
 
 			$postToUpdate->order = 0;
 		}

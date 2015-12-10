@@ -109,7 +109,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 
 		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ] );
 
-		if( !isset( $pageToUpdate->order ) || strlen( $post->order ) <= 0 ) {
+		if( !isset( $pageToUpdate->order ) || strlen( $pageToUpdate->order ) <= 0 ) {
 
 			$pageToUpdate->order = 0;
 		}
