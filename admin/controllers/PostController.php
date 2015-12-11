@@ -106,7 +106,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( isset( $post ) ) {
 
 				// Create Content
-				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
+				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner );
 
 				// Bind Categories
 				$binder = new Binder();

@@ -92,7 +92,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( isset( $page ) ) {
 
 				// Create Content
-				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
+				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $page->isPublished(), $banner );
 
 				$this->redirect( [ 'all' ] );
 			}
