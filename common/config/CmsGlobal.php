@@ -11,6 +11,7 @@ class CmsGlobal {
 	const TYPE_MENU				= 'menu';
 	const TYPE_SIDEBAR			= 'sidebar';
 	const TYPE_WIDGET			= 'widget';
+	const TYPE_LINK				= 'link';
 
 	// Permissions -----------------------------------------------------
 

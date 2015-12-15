@@ -8,52 +8,40 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class Link extends \cmsgears\core\common\models\forms\JsonModel {
+class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
 	// Public Variables --------------------
 
-	public $address;	
-	public $label;
+	public $link;
+	public $pageId;
 	public $options;
-	public $private;
-	public $relative;
 	public $icon;
 	public $order;
-	
-	public $type;
+
+	public $type;	// used by service for create
+	public $name;	// used for update
 
 	// Constructor -------------------------------------------------
 
 	// Instance Methods --------------------------------------------
 
-	public function isPublic() {
-
-		if( isset( $this->private ) && $this->private ) {
-
-			return false;
-		}
-
-		return true;
-	}
-
 	// yii\base\Model
 
 	public function rules() {
-		
+
 		$trim		= [];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'link', 'pageId', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'safe' ],
+			[ [ 'link', 'pageId', 'options', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
-
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
@@ -66,10 +54,8 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'address' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-			'private' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
-			'relative' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
+			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'pageId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_PAGE ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )

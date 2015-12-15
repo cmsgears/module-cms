@@ -9,6 +9,9 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\forms\SidebarWidget;
+
+use cmsgears\core\common\utilities\SortUtil;
 
 class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 
@@ -41,6 +44,58 @@ class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 		return self::getIdNameListByType( CmsGlobal::TYPE_SIDEBAR );
 	}
 
+	public static function getWidgets( $sidebar, $associative = false ) {
+
+		$objectData		= $sidebar->generateObjectFromJson();
+		$widgets		= $objectData->widgets;
+		$widgetObjects	= [];
+		$sidebarWidgets	= [];
+
+		foreach ( $widgets as $widget ) {
+
+			$sidebarWidget		= new SidebarWidget( $widget );
+			$widgetObjects[]	= $sidebarWidget;
+
+			if( $associative ) {
+
+				$sidebarWidgets[ $sidebarWidget->widgetId ]	= $sidebarWidget;
+			}
+		}
+
+		if( $associative ) {
+
+			return $sidebarWidgets;	
+		}
+		
+		return $widgetObjects;
+	}
+
+	public static function getWidgetsForUpdate( $sidebar, $widgets ) {
+
+		$sidebarWidgets	= self::getWidgets( $sidebar, true );
+		$keys			= array_keys( $sidebarWidgets );
+		$widgetObjects	= [];
+
+		foreach ( $widgets as $widget ) {
+
+			if( in_array( $widget[ 'id' ], $keys ) ) {
+				
+				$sidebarWidget			= $sidebarWidgets[ $widget[ 'id' ] ];
+				$sidebarWidget->name	= $widget[ 'name' ];
+				$widgetObjects[]		= $sidebarWidget;
+			}
+			else {
+
+				$sidebarWidget				= new SidebarWidget();
+				$sidebarWidget->widgetId	= $widget[ 'id' ];
+				$sidebarWidget->name		= $widget[ 'name' ];
+				$widgetObjects[]			= $sidebarWidget;
+			}
+		}
+
+		return $widgetObjects;
+	}
+
 	// Data Provider ----
 
 	/**
@@ -62,29 +117,35 @@ class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 	// Update -----------
 
 	/**
-	 * @param Binder $binder
+	 * @param array $widgets
 	 * @return boolean
 	 */
-	public static function bindWidgets( $binder ) {
+	public static function updateWidgets( $sidebar, $widgets ) {
 
-		$sidebarId	= $binder->binderId;
-		$widgets	= $binder->bindedData;
-		$sidebar	= self::findById( $sidebarId );
+		$sidebar	= self::findById( $sidebar->id );
 		$objectData	= $sidebar->generateObjectFromJson();
 
 		// Clear all existing mappings
 		$objectData->widgets	= [];
 
+		// Add Widgets
 		if( isset( $widgets ) && count( $widgets ) > 0 ) {
 
-			foreach ( $widgets as $key => $value ) {
+			foreach ( $widgets as $widget ) {
 
-				if( isset( $value ) ) {
+				if( isset( $widget->widget ) && $widget->widget ) {
 
-					$objectData->widgets[] = $value;
+					if( !isset( $widget->order ) || strlen( $widget->order ) == 0 ) {
+
+						$widget->order	= 0;
+					}
+
+					$objectData->widgets[] 	= $widget;
 				}
 			}
 		}
+
+		$objectData->widgets	= SortUtil::sortObjectArrayByNumber( $objectData->widgets, 'order', true );
 
 		$sidebar->generateJsonFromObject( $objectData );
 

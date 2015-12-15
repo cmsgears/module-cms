@@ -19,8 +19,16 @@ $this->params['sidebar-child'] 	= 'sdebar';
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
-		<?php foreach ( $widgets as $widget ) { ?>
-			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$widget['id']?>" /><?=$widget['name']?></span>
+		<?php foreach ( $widgets as $key => $widget ) { ?>
+			<span class="box-half">
+				<?= $form->field( $sidebarWidgets[ $key ], "[$key]widget" )->checkbox( [ 'label' => $widget[ 'name' ] ] ) ?>
+				<?= $form->field( $sidebarWidgets[ $key ], "[$key]widgetId" )->hiddenInput( [ 'value' => $widget['id'] ] )->label( false ) ?>
+				<div class="frm-split">
+					<?= $form->field( $sidebarWidgets[ $key ], "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $sidebarWidgets[ $key ], "[$key]icon" )->textInput( [ "placeholder" => "label" ] ) ?>
+					<?= $form->field( $sidebarWidgets[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+				</div>
+			</span>
 		<?php } ?>
 		<div class="box-filler"></div>
 

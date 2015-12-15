@@ -53,13 +53,28 @@ class PageService extends \cmsgears\core\common\services\Service {
 		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
 	}
 
-    public static function getMenuPages( $pages ) {
-		
+    public static function getMenuPages( $pages, $map = false ) {
+
 		if( count( $pages ) > 0 ) {
 
-			return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+			if( $map ) {
+				
+				$pages 		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				$pageMap	= [];
+				
+				foreach ( $pages as $page ) {
+					
+					$pageMap[ $page->id ] = $page;
+				}
+				
+				return $pageMap;
+			}
+			else {
+
+				return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+			}
 		}
-		
+
 		return [];
     }
 

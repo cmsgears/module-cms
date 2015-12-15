@@ -68,6 +68,7 @@ CREATE TABLE `cmg_cms_block` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
   `title` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,

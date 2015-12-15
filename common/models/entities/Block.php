@@ -35,10 +35,11 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $active
  * @property string $options
  * @property string $title
- * @property string $content
- * @property string $data
+ * @property string $icon
  * @property date $createdAt
  * @property date $modifiedAt
+ * @property string $content
+ * @property string $data 
  */
 class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
@@ -145,7 +146,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'active', 'options', 'title', 'content', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'active', 'options', 'title', 'icon', 'content', 'data' ], 'safe' ],
             [ [ 'name' ], 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -173,15 +174,18 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
+			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
