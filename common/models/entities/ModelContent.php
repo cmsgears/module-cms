@@ -12,7 +12,6 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgModel;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
@@ -22,11 +21,11 @@ use cmsgears\core\common\models\entities\Template;
  *
  * @property int $id
  * @property int $bannerId
+ * @property int $videoId
  * @property int $templateId
  * @property int $parentId
  * @property string $parentType
  * @property string $summary
- * @property string $content
  * @property date $createdAt
  * @property date $modifiedAt
  * @property date $publishedAt
@@ -34,33 +33,21 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
+ * @property string $content
+ * @property string $data 
  */
-class ModelContent extends CmgModel {
+class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
 	// Instance Methods --------------------------------------------
-
-	// yii\db\BaseActiveRecord
-
-	public function beforeSave( $insert ) {
-
-	    if( parent::beforeSave( $insert ) ) {
-
-			if( $this->templateId <= 0 ) {
-
-				$this->templateId = null;
-			}
-
-	        return true;
-	    }
-
-		return false;
-	}
-
-	// ModelContent
 
 	public function getBanner() {
 
 		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
+
+	public function getVideo() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
 	}
 
 	public function getTemplate() {
@@ -78,6 +65,23 @@ class ModelContent extends CmgModel {
 		}
 
 		return '';
+	}
+
+	// yii\db\BaseActiveRecord -----------
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// yii\base\Component ----------------
@@ -113,10 +117,11 @@ class ModelContent extends CmgModel {
 		}
 
         $rules = [
-            [ [ 'id', 'parentId', 'parentType', 'summary', 'content' ], 'safe' ],
+            [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
             [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -135,6 +140,7 @@ class ModelContent extends CmgModel {
 
 		return [
 			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
@@ -143,7 +149,8 @@ class ModelContent extends CmgModel {
 			'seoName' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
 			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
-			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT )
+			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

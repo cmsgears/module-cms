@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Widget';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'widget';
 ?>
 <section class="wrap-content container clearfix">
@@ -17,12 +17,9 @@ $this->params['sidebar-child'] 	= 'widget';
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
-		<h4>Link Sidebars</h4>
-		<?php foreach ( $sidebars as $sidebar ) { ?>
-			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$sidebar['id']?>" /><?=$sidebar['name']?></span>
-		<?php } ?>
-		<div class="box-filler"></div>
+		<?= $form->field( $meta, 'classPath' ) ?>
 
 		<?=Html::a( "Cancel", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />

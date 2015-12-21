@@ -3,67 +3,28 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
-use yii\db\Expression;
-use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgModel;
-use cmsgears\core\common\models\entities\CmgFile;
-
 /**
  * ModelBlock Entity
  *
  * @property integer $id
- * @property integer $backgroundId
- * @property integer $textureId
+ * @property integer $blockId
  * @property integer $parentId
  * @property string $parentType
  * @property integer $order
- * @property string $htmlOptions
- * @property string $backgroundClass
- * @property string $textureClass
- * @property string $content
- * @property date $createdAt
- * @property date $modifiedAt
  */
-class ModelBlock extends CmgModel {
+class ModelBlock extends \cmsgears\core\common\models\entities\CmgModel {
 
 	// Instance Methods --------------------------------------------
 
-	// ModelBlock
+	public function getBlock() {
 
-	public function getBackground() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'backgroundId' ] );
+		return $this->hasOne( Block::className(), [ 'id' => 'blockId' ] );
 	}
-
-	public function getTexture() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'textureId' ] );
-	}
-
-	// yii\base\Component ----------------
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
-
-        return [
-
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
-            ]
-        ];
-    }
 
 	// yii\base\Model --------------------
 
@@ -72,25 +33,14 @@ class ModelBlock extends CmgModel {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'backgroundClass', 'textureClass' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
         $rules = [
-            [ [ 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'order', 'htmlOptions', 'backgroundClass', 'textureClass', 'content' ], 'safe' ],
-            [ [ 'parentId', 'backgroundId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+            [ [ 'blockId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'id' ], 'safe' ],
+            [ [ 'blockId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
         ];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
 
 		return $rules;
     }
@@ -103,13 +53,8 @@ class ModelBlock extends CmgModel {
 		return [
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'backgroundId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_BACKGROUND ),
-			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'htmlOptions' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_HTML_OPTIONS ),
-			'backgroundClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_BACKGROUND_CLASS ),
-			'textureClass' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE_CLASS )
+			'blockId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_BLOCK ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
 

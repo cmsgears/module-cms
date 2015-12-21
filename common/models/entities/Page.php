@@ -1,18 +1,17 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Page extends Content {
-
-	use MetaTrait;
-
-	public $metaType	= CmsGlobal::TYPE_PAGE;
 
 	use FileTrait;
 
@@ -27,30 +26,6 @@ class Page extends Content {
 	public $blockType	= CmsGlobal::TYPE_PAGE;
 
 	// Instance Methods --------------------------------------------
-
-	public function getMenus() {
-
-    	return $this->hasMany( Menu::className(), [ 'id' => 'menuId' ] )
-					->viaTable( CmsTables::TABLE_MENU_PAGE, [ 'pageId' => 'id' ] );
-	}
-
-	public function getMenuMappingList() {
-
-    	return $this->hasMany( MenuPage::className(), [ 'pageId' => 'id' ] );
-	}
-
-	public function getMenusIdList() {
-
-    	$menus 		= $this->menuMappingList;
-		$menusList	= array();
-
-		foreach ( $menus as $menu ) {
-
-			array_push( $menusList, $menu->menuId );
-		}
-
-		return $menusList;
-	}
 
 	// Static Methods ----------------------------------------------
 
@@ -73,7 +48,7 @@ class Page extends Content {
 	 */
 	public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
 }
 

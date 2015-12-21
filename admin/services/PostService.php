@@ -86,9 +86,14 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_POST;
+		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_POST;
 
 		return self::getDataProvider( new Post(), $config );
+	}
+
+	public static function getPaginationForSite() {
+		
+		return self::getPagination( [ 'conditions' => [ 'siteId' => Yii::$app->cmgCore->siteId ] ] );
 	}
 }
 

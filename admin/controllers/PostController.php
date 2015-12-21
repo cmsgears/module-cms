@@ -5,6 +5,7 @@ namespace cmsgears\cms\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,14 +18,12 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\entities\ModelContent;
 
-use cmsgears\cms\common\services\ContentService;
+use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\cms\admin\services\PostService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-class PostController extends BaseController {
+class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -72,7 +71,7 @@ class PostController extends BaseController {
 
 	public function actionAll() {
 
-		$dataProvider = PostService::getPagination();
+		$dataProvider = PostService::getPaginationForSite();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -92,25 +91,24 @@ class PostController extends BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Post();
-		$content	= new ModelContent();
-		$banner 	= new CmgFile();
+		$model			= new Post();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$content		= new ModelContent();
+		$banner	 		= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    $model->validate() && $content->validate() ) {
 
-			$banner->load( Yii::$app->request->post(), 'File' );
-
 			$post = PostService::create( $model );
 
 			if( isset( $post ) ) {
 
 				// Create Content
-				ContentService::create( $post, CmsGlobal::TYPE_POST, $content, $banner );
+				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner );
 
-				// Bind Menus
+				// Bind Categories
 				$binder = new Binder();
 
 				$binder->binderId	= $model->id;
@@ -123,13 +121,18 @@ class PostController extends BaseController {
 		}
 
 		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+		$visibilityMap	= Page::$visibilityMap;
+		$statusMap		= Page::$statusMap;
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
     	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
     		'categories' => $categories,
+    		'visibilityMap' => $visibilityMap,
+	    	'statusMap' => $statusMap,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -138,28 +141,26 @@ class PostController extends BaseController {
 
 		// Find Model
 		$model		= PostService::findById( $id );
-		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 			
 			$content	= $model->content;
-
+			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
+		
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    	$model->validate() && $content->validate() ) {
-
-				$banner->load( Yii::$app->request->post(), 'File' );
 
 				$post = PostService::update( $model );
 	
 				if( isset( $post ) ) {
 
 					// Update Content
-					ContentService::update( $content, $post->isPublished(), $banner );
+					ModelContentService::update( $content, $post->isPublished(), $banner );
 
-					// Bind Menus
+					// Bind Categories
 					$binder = new Binder();
 
 					$binder->binderId	= $model->id;
@@ -174,8 +175,8 @@ class PostController extends BaseController {
 			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -207,7 +208,7 @@ class PostController extends BaseController {
 
 				if( PostService::delete( $model ) ) {
 
-					ContentService::delete( $content );
+					ModelContentService::delete( $content );
 
 					$this->redirect( [  'all' ] );
 				}
@@ -217,7 +218,8 @@ class PostController extends BaseController {
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

@@ -10,16 +10,13 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-use cmsgears\cms\common\models\entities\Widget;
+use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\admin\models\forms\WidgetForm;
 
 use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\SidebarService;
 use cmsgears\cms\admin\services\WidgetService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-class WidgetController extends BaseController {
+class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -40,23 +37,21 @@ class WidgetController extends BaseController {
                 'actions' => [
 	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'matrix' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'meta'   => [ 'permission' => CmsGlobal::PERM_CMS ]
+	                'settings' => [ 'permission' => CmsGlobal::PERM_CMS ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'    => ['get'],
-	                'matrix' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post'],
-	                'meta'   => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'    => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ],
+	                'settings' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -78,42 +73,28 @@ class WidgetController extends BaseController {
 	    ]);
 	}
 
-	public function actionMatrix() {
-
-		$dataProvider 	= WidgetService::getPagination();
-		$sidebarsList	= SidebarService::getIdNameList();
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'sidebarsList' => $sidebarsList
-	    ]);
-	}
-
 	public function actionCreate() {
 
-		$model	= new Widget();
+		$model			= new ObjectData();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$model->type	= CmsGlobal::TYPE_WIDGET;
+		$meta			= new WidgetForm();
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
 
-			if( WidgetService::create( $model ) ) {
-
-				$binder 			= new Binder();
-				$binder->binderId	= $model->id;
-
-				$binder->load( Yii::$app->request->post(), 'Binder' );
+			if( WidgetService::create( $model, $meta ) ) {
 
 				return $this->redirect( [ 'all' ] );
 			}
 		}
 
-		$sidebars		= SidebarService::getIdNameList();
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
+		$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
-    		'sidebars' => $sidebars,
+    		'meta' => $meta,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -126,29 +107,23 @@ class WidgetController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$meta	= new WidgetForm( $model->data );
+
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
 
-				if( WidgetService::update( $model ) ) {
-		
-					$binder 			= new Binder();
-					$binder->binderId	= $model->id;
-
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
-					WidgetService::bindSidebars( $binder );
+				if( WidgetService::update( $model, $meta ) ) {
 	
 					return $this->redirect( [ 'all' ] );
 				}
 			}
 
-			$sidebars		= SidebarService::getIdNameList();
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
+			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'sidebars' => $sidebars,
+	    		'meta' => $meta,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
@@ -165,7 +140,7 @@ class WidgetController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Widget' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
 				if( WidgetService::delete( $model ) ) {
 
@@ -173,12 +148,10 @@ class WidgetController extends BaseController {
 				}
 			}
 
-			$sidebars		= SidebarService::getIdNameList();
 			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'sidebars' => $sidebars,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
@@ -186,34 +159,31 @@ class WidgetController extends BaseController {
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );		
 	}
-	
-	// Widgets -------------------------------------------------------------------
 
-	public function actionMeta( $id ) {
+	public function actionSettings( $id ) {
 
 		// Find Model
-		$model			= WidgetService::findById( $id );
+		$model	= WidgetService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( 'meta' );
+			$meta	= new WidgetForm( $model->data );
 
-			if( $model->load( Yii::$app->request->post(), 'Widget' ) && $model->validate() ) {
+			if( $meta->load( Yii::$app->request->post(), 'WidgetForm' ) ) {
 
-				if( WidgetService::updateMeta( $model ) ) {
+				if( WidgetService::update( $model, $meta ) ) {
 	
 					return $this->redirect( [ 'all' ] );
 				}
 			}
 
-			$model->generateMapFromJson();
+			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
 
-			$templateName 	= $model->getTemplateName();
-			$view			= "@widgets/templates/admin/$templateName";
-
-	    	return $this->render( $view, [
-	    		'model' => $model
+	    	return $this->render( 'settings', [
+	    		'model' => $model,
+	    		'meta' => $meta,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 

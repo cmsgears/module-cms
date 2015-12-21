@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Post';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'post';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
@@ -23,6 +23,8 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'order' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 
     	<h4>Post Summary</h4>
     	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] ) ?>

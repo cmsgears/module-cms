@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Sidebar';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'sdebar';
 ?>
 <section class="wrap-content container clearfix">
@@ -16,25 +16,20 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<h4>Link Widgets</h4>
-		<?php 
-			$sidebarWidgets	= $model->getWidgetsIdList();
-
-			foreach ( $widgets as $widget ) { 
-
-				if( in_array( $widget['id'], $sidebarWidgets ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$widget['id']?>" checked /><?=$widget['name']?></span>
-		<?php 
-				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$widget['id']?>" /><?=$widget['name']?></span>
-		<?php
-				}
-			}
-		?>
+		<?php foreach ( $sidebarWidgets as $key => $sidebarWidget ) { ?>
+			<span class="box-half">
+				<?= $form->field( $sidebarWidget, "[$key]widget" )->checkbox( [ 'label' => $sidebarWidget->name ] ) ?>
+				<?= $form->field( $sidebarWidget, "[$key]widgetId" )->hiddenInput()->label( false ) ?>
+				<div class="frm-split">
+					<?= $form->field( $sidebarWidget, "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $sidebarWidget, "[$key]icon" )->textInput( [ "placeholder" => "label" ] ) ?>
+					<?= $form->field( $sidebarWidget, "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+				</div>
+			</span>
+		<?php } ?>
 		<div class="box-filler"></div>
 
 		<?=Html::a( "Back", [ '/cmgcms/sidebar/all' ], ['class' => 'btn' ] );?>

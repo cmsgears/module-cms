@@ -14,7 +14,7 @@ use cmsgears\core\common\services\FileService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class ContentService extends \cmsgears\core\common\services\Service {
+class ModelContentService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
 
@@ -47,15 +47,36 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function create( $parent, $parentType, $content, $banner = null ) {
+	public static function create( $parent, $parentType, $content, $publish = false, $banner = null, $video = null ) {
+		
+		// template
+		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
 
+			unset( $content->templateId );
+		}
+		
+		// publish
+    	if( $publish && !isset( $content->publishedAt ) ) {
+			
+			$date 	= DateUtil::getDateTime();
+
+    		$content->publishedAt	= $date;
+    	}
+		
+		// parent
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
+		
+		// banner, video
 
-		// Save Banner
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
+		}
+
+		if( isset( $video ) ) {
+
+			FileService::saveImage( $video, [ 'model' => $content, 'attribute' => 'videoId' ] );
 		}
 
 		// Create Content
@@ -71,24 +92,39 @@ class ContentService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $banner
 	 * @return Page
 	 */
-	public static function update( $content, $publish = false, $banner = null ) {
+	public static function update( $content, $publish = false, $banner = null, $video = null ) {
+		
+		// template
+		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
 
-		$date 				= DateUtil::getDateTime();
+			unset( $content->templateId );
+		}
+
 		$contentToUpdate	= self::findById( $content->id );
 
 		$contentToUpdate->copyForUpdateFrom( $content, [ 'bannerId', 'templateId', 'summary', 'content', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ] );
-
+		
+		// publish
     	if( $publish && !isset( $contentToUpdate->publishedAt ) ) {
+			
+			$date 	= DateUtil::getDateTime();
 
     		$contentToUpdate->publishedAt	= $date;
     	}
 
-		// Save Banner
+		// banner, video
+
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $contentToUpdate, 'attribute' => 'bannerId' ] );
 		}
 
+		if( isset( $video ) ) {
+
+			FileService::saveImage( $video, [ 'model' => $contentToUpdate, 'attribute' => 'videoId' ] );
+		}
+		
+		// Update Content
 		$contentToUpdate->update();
 
 		return $contentToUpdate;

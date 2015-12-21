@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Page';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'page';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
@@ -23,6 +23,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'icon' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
     	<h4>Page Summary</h4>
     	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] ) ?>
@@ -39,27 +40,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
-		<h4>Link to Menus</h4>
-		<?php 
-			$pageMenus	= $model->getMenusIdList();
-
-			foreach ( $menus as $menu ) { 
-
-				if( in_array( $menu['id'], $pageMenus ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" checked disabled /><?=$menu['name']?></span>
-		<?php 
-				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" disabled /><?=$menu['name']?></span>
-		<?php
-				}
-			}
-		?>
-		<div class="box-filler"></div>
-
-		<?=Html::a( "Cancel", [ '/cmgcms/page/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', [ '/cmgcms/page/all' ], [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

@@ -7,17 +7,13 @@ use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\NamedCmgEntity;
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Template;
+use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -25,6 +21,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  *
  * @property int $id
  * @property int $parentId
+ * @property int $siteId
  * @property int $createdBy
  * @property int $modifiedBy 
  * @property string $name
@@ -32,8 +29,11 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $type
  * @property short $status
  * @property short $visibility
+ * @property string $icon
+ * @property short $order
+ * @property short $featured
  */
-class Content extends NamedCmgEntity {
+class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Pre-Defined Status
 	const STATUS_NEW		= 0;
@@ -91,6 +91,16 @@ class Content extends NamedCmgEntity {
 		}
 	}
 
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
+
+	public function getAttributes() {
+
+		return $this->hasMany( ContentAttribute::className(), [ 'pageId' => 'id' ] );
+	}
+
 	public function isPage() {
 
 		return $this->type == CmsGlobal::TYPE_PAGE;
@@ -131,14 +141,6 @@ class Content extends NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
-	/**
-	 * @return boolean - whether given user is author
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->createdBy	= $user->id;
-	}
-
 	// yii\base\Component ----------------
 
     /**
@@ -148,6 +150,9 @@ class Content extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+            ],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -164,24 +169,25 @@ class Content extends NamedCmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'type', 'status', 'visibility' ], 'safe' ],
+            [ [ 'name', 'siteId' ], 'required' ],
+            [ [ 'id', 'slug', 'type', 'icon' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ 'slug', 'string', 'min' => 1, 'max' => 200 ],
+            [ 'featured', 'boolean' ],
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -201,9 +207,14 @@ class Content extends NamedCmgEntity {
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG )
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
 	}
+
+	// Content ---------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -241,6 +252,22 @@ class Content extends NamedCmgEntity {
 
         return $model;
     }
+
+	// Content
+
+	/**
+	 * @param string $name
+	 * @param int $siteId
+	 * @return Content - by name and site id
+	 */
+	public static function findByName( $name ) {
+
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return static::find()->where( 'name=:name AND siteId=:siteId' )
+							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
+							->one();
+	}
 }
 
 ?>

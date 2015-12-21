@@ -1,7 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\FileUploader;
@@ -10,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Page';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'page';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
@@ -21,7 +20,10 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php $form = ActiveForm::begin( ['id' => 'frm-page-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $content, 'templateId' )->dropDownList( ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap ) ) ?>
+    	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
+		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
+		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'icon' ) ?>
 
     	<h4>Page Summary</h4>
     	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] ) ?>
@@ -38,13 +40,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
 		<?= $form->field( $content, 'seoRobot' ) ?>
 
-		<h4>Link to Menus</h4>
-		<?php foreach ( $menus as $menu ) { ?>
-			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$menu['id']?>" /><?=$menu['name']?></span>
-		<?php } ?>
-		<div class="box-filler"></div>
-
-		<?=Html::a( "Cancel", [ '/cmgcms/page/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', [ '/cmgcms/page/all' ], [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

@@ -6,7 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\Sidebar;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\ObjectData;
 
 class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 
@@ -27,6 +29,13 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ]	= [];
+		}
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
@@ -37,7 +46,7 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new Sidebar(), $config );
+		return self::getDataProvider( new ObjectData(), $config );
 	}
 }
 

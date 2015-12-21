@@ -11,22 +11,16 @@ use yii\db\IntegrityException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-use cmsgears\core\admin\controllers\BaseCategoryController;
 
-use cmsgears\core\common\models\entities\Category;
-
-use cmsgears\core\admin\services\CategoryService; 
-
-use cmsgears\core\admin\controllers\BaseController;
- 
-
-class CategoryController extends BaseCategoryController {
+class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 	}
 
 	// Instance Methods ------------------
@@ -48,10 +42,10 @@ class CategoryController extends BaseCategoryController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -63,22 +57,22 @@ class CategoryController extends BaseCategoryController {
 		
 		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionAll( CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionCreate( CmsGlobal::TYPE_POST, false );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, false );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'categories' ), [ 'parent' => 'sidebar-page-blog', 'child' => 'post-category' ], CmsGlobal::TYPE_POST, false );
+		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, false );
 	}
 }
 

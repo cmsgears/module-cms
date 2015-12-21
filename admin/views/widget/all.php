@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Widgets';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'widget';
 
 // Data
@@ -17,10 +17,10 @@ $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( "search" );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( "sort" );
 
 if( !isset( $sortOrder ) ) {
 
@@ -50,6 +50,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Active</th>
 					<th>Description</th>
 					<th>Template</th>
 					<th>Actions</th>
@@ -63,11 +64,12 @@ if( !isset( $sortOrder ) ) {
 						$id = $widget->id;
 				?>
 					<tr>
-						<td><?= $widget->name ?></td>					
+						<td><?= $widget->name ?></td>
+						<td><?= $widget->getActiveStr() ?></td>
 						<td><?= $widget->description ?></td>
 						<td><?= $widget->getTemplateName() ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Update Widget Meta" ><?= Html::a( "", ["/cmgcms/widget/meta?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="Settings" ><?= Html::a( "", ["/cmgcms/widget/settings?id=$id"], ['class'=>'icon-sidebar icon-settings'] )  ?></span>
 							<span class="wrap-icon-action" title="Update Widget" ><?= Html::a( "", ["/cmgcms/widget/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Widget" ><?= Html::a( "", ["/cmgcms/widget/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>

@@ -5,11 +5,16 @@ namespace cmsgears\cms\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\Menu;
-use cmsgears\cms\common\models\entities\MenuPage;
+use cmsgears\cms\common\config\CmsGlobal;
 
-class MenuService extends \cmsgears\core\common\services\Service {
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\forms\Link;
+use cmsgears\cms\common\models\forms\PageLink;
+
+use cmsgears\core\common\utilities\SortUtil;
+
+class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
@@ -17,20 +22,20 @@ class MenuService extends \cmsgears\core\common\services\Service {
 
 	/**
 	 * @param integer $id
-	 * @return Menu
-	 */
-	public static function findById( $id ) {
-
-		return Menu::findById( $id );
-	}
-
-	/**
-	 * @param string $name
-	 * @return Menu
+	 * @return ObjectData
 	 */
 	public static function findByName( $name ) {
 
-		return Menu::findByName( $name );
+		return self::findByNameType( $name, CmsGlobal::TYPE_MENU );
+	}
+
+	/**
+	 * @param integer $id
+	 * @return ObjectData
+	 */
+	public static function findBySlug( $name ) {
+
+		return self::findBySlugType( $name, CmsGlobal::TYPE_MENU );
 	}
 
 	/**
@@ -38,15 +43,87 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( "id", CmsTables::TABLE_MENU );
+		return self::getIdListByType( CmsGlobal::TYPE_MENU );
 	}
 
 	/**
-	 * @return array - having menu id, name as sub array
+	 * @return array - having page id, name as sub array
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_MENU );
+		return self::getIdNameListByType( CmsGlobal::TYPE_MENU );
+	}
+
+	public static function getLinks( $menu ) {
+
+		$objectData		= $menu->generateObjectFromJson();
+		$links			= $objectData->links;
+		$linkObjects	= [];
+
+		foreach ( $links as $link ) {
+
+			if( strcmp( $link->type, CmsGlobal::TYPE_LINK ) == 0 ) {
+
+				$linkObjects[]	= new Link( $link );
+			}
+		}
+
+		return $linkObjects;
+	}
+
+	public static function getPageLinks( $menu, $associative = false ) {
+
+		$objectData		= $menu->generateObjectFromJson();
+		$links			= $objectData->links;
+		$linkObjects	= [];
+		$pageLinks		= [];
+
+		foreach ( $links as $link ) {
+
+			if( strcmp( $link->type, CmsGlobal::TYPE_PAGE ) == 0 ) {
+
+				$pageLink		= new PageLink( $link );
+				$linkObjects[]	= $pageLink;
+
+				if( $associative ) {
+
+					$pageLinks[ $link->pageId ]	= $pageLink;
+				}
+			}
+		}
+
+		if( $associative ) {
+
+			return $pageLinks;	
+		}
+		
+		return $linkObjects;
+	}
+
+	public static function getPageLinksForUpdate( $menu, $pages ) {
+
+		$pageLinks		= self::getPageLinks( $menu, true );
+		$keys			= array_keys( $pageLinks );
+		$linkObjects	= [];
+
+		foreach ( $pages as $page ) {
+
+			if( in_array( $page[ 'id' ], $keys ) ) {
+				
+				$pageLink		= $pageLinks[ $page[ 'id' ] ];
+				$pageLink->name	= $page[ 'name' ];
+				$linkObjects[]	= $pageLink;
+			}
+			else {
+
+				$pageLink			= new PageLink();
+				$pageLink->pageId	= $page[ 'id' ];
+				$pageLink->name		= $page[ 'name' ];
+				$linkObjects[]		= $pageLink;
+			}
+		}
+		
+		return $linkObjects;
 	}
 
 	// Data Provider ----
@@ -57,82 +134,69 @@ class MenuService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getPagination( $config = [] ) {
 
-		return self::getDataProvider( new Menu(), $config );
-	}
+		if( !isset( $config[ 'conditions' ] ) ) {
 
-	// Create -----------
-	
-	/**
-	 * @param Menu $menu
-	 * @return Menu
-	 */
-	public static function create( $menu ) {
+			$config[ 'conditions' ]	= [];
+		}
 
-		$menu->save();
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
 
-		return $menu;
+		return self::getDataProvider( new ObjectData(), $config );
 	}
 
 	// Update -----------
 
-	/**
-	 * @param Menu $menu
-	 * @return Menu
-	 */
-	public static function update( $menu ) {
-		
-		$menuToUpdate	= self::findById( $menu->id );
-		
-		$menuToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
+	public static function updateLinks( $menu, $links, $pageLinks ) {
 
-		$menuToUpdate->update();
-
-		return $menuToUpdate;
-	}
-
-	/**
-	 * @param Binder $binder
-	 * @return boolean
-	 */
-	public static function bindPages( $binder ) {
-
-		$menuId	= $binder->binderId;
-		$pages	= $binder->bindedData;
+		$menu		= self::findById( $menu->id );
+		$objectData	= $menu->generateObjectFromJson();
 
 		// Clear all existing mappings
-		MenuPage::deleteByMenuId( $menuId );
+		$objectData->links	= [];
 
-		if( isset( $pages ) && count( $pages ) > 0 ) {
+		// Add Links
+		if( isset( $links ) && count( $links ) > 0 ) {
 
-			foreach ( $pages as $key => $value ) {
+			foreach ( $links as $link ) {
 
-				if( isset( $value ) ) {
+				if( isset( $link ) ) {
+					
+					$link->type				= CmsGlobal::TYPE_LINK;
 
-					$toSave	= new MenuPage();
+					if( !isset( $link->order ) || strlen( $link->order ) == 0 ) {
 
-					$toSave->menuId	= $menuId;
-					$toSave->pageId = $value;
-	
-					$toSave->save();
+						$link->order	= 0;
+					}
+
+					$objectData->links[] 	= $link;
 				}
 			}
 		}
 
-		return true;
-	}
+		// Add Page Links
+		if( isset( $pageLinks ) && count( $pageLinks ) > 0 ) {
 
-	// Delete -----------
+			foreach ( $pageLinks as $link ) {
 
-	/**
-	 * @param Menu $menu
-	 * @return boolean
-	 */
-	public static function delete( $menu ) {
+				if( isset( $link->link ) && $link->link ) {
 
-		$existingMenu	= self::findById( $menu->id );
+					$link->type				= CmsGlobal::TYPE_PAGE;
 
-		// Delete Menu
-		$existingMenu->delete();
+					if( !isset( $link->order ) || strlen( $link->order ) == 0 ) {
+
+						$link->order	= 0;
+					}
+
+					$objectData->links[] 	= $link;
+				}
+			}
+		}
+
+		$objectData->links	= SortUtil::sortObjectArrayByNumber( $objectData->links, 'order', true );
+
+		$menu->generateJsonFromObject( $objectData );
+
+		$menu->update();
 
 		return true;
 	}

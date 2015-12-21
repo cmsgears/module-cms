@@ -5,6 +5,7 @@ namespace cmsgears\cms\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -15,14 +16,11 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\ModelContent;
 
-use cmsgears\cms\common\services\ContentService;
+use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\PageService;
-use cmsgears\cms\admin\services\MenuService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-class PageController extends BaseController {
+class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -43,7 +41,6 @@ class PageController extends BaseController {
                 'actions' => [
 	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'matrix' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
@@ -54,7 +51,6 @@ class PageController extends BaseController {
                 'actions' => [
 	                'index'  => ['get'],
 	                'all'   => ['get'],
-	                'matrix' => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
 	                'delete' => ['get', 'post']
@@ -63,7 +59,7 @@ class PageController extends BaseController {
         ];
     }
 
-	// UserController --------------------
+	// PageController --------------------
 
 	public function actionIndex() {
 
@@ -72,64 +68,47 @@ class PageController extends BaseController {
 
 	public function actionAll() {
 
-		$dataProvider = PageService::getPagination();
+		$dataProvider = PageService::getPaginationForSite();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionMatrix() {
-
-		$dataProvider 	= PageService::getPagination();
-		$menusList		= MenuService::getIdNameList();
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'menusList' => $menusList
-	    ]);
-	}
-
 	public function actionCreate() {
 
-		$model		= new Page();
-		$content	= new ModelContent();
-		$banner	 	= new CmgFile();
+		$model			= new Page();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$content		= new ModelContent();
+		$banner	 		= CmgFile::loadFile( null, 'File' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    $model->validate() && $content->validate() ) {
 
-			$banner->load( Yii::$app->request->post(), 'File' );
-
 			$page = PageService::create( $model );
 
 			if( isset( $page ) ) {
 
 				// Create Content
-				ContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $banner );
-
-				// Bind Menus
-				$binder = new Binder();
-
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
-
-				PageService::bindMenus( $binder );
+				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $page->isPublished(), $banner );
 
 				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$menus			= MenuService::getIdNameList();
-		$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+		$visibilityMap	= Page::$visibilityMap;
+		$statusMap		= Page::$statusMap;
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
     	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
-    		'menus' => $menus,
+    		'visibilityMap' => $visibilityMap,
+	    	'statusMap' => $statusMap,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -138,50 +117,38 @@ class PageController extends BaseController {
 
 		// Find Model
 		$model		= PageService::findById( $id );
-		$banner 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$content	= $model->content;
+			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
 		    	$model->validate() && $content->validate() ) {
 
-				$banner->load( Yii::$app->request->post(), 'File' );
-
 				$page = PageService::update( $model );
 	
 				if( isset( $page ) ) {
 
 					// Update Content
-					ContentService::update( $content, $page->isPublished(), $banner );
-
-					// Bind Menus
-					$binder = new Binder();
-
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
-					PageService::bindMenus( $binder );
+					ModelContentService::update( $content, $page->isPublished(), $banner );
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -206,23 +173,22 @@ class PageController extends BaseController {
 
 				if( PageService::delete( $model ) ) {
 					
-					ContentService::delete( $content );
+					ModelContentService::delete( $content );
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$menus			= MenuService::getIdNameList();
+			$banner			= $content->banner;
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_PAGE );
-			
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
-	    		'menus' => $menus,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap

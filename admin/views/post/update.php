@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Post';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'post';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
@@ -23,6 +23,8 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'order' ) ?>
+		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
     	<h4>Post Summary</h4>
     	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] ) ?>

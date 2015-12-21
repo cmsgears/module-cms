@@ -3,7 +3,6 @@ namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -17,7 +16,7 @@ use cmsgears\cms\admin\services\PageService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PageController extends Controller {
+class PageController extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -54,7 +53,7 @@ class PageController extends Controller {
 
 		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
+		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
 			if( PageService::bindMenus( $binder ) ) {
 

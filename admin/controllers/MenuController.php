@@ -10,16 +10,15 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-use cmsgears\cms\common\models\entities\Menu;
+use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\forms\Link;
+use cmsgears\cms\common\models\forms\PageLink;
 
-use cmsgears\cms\admin\services\PageService;
 use cmsgears\cms\admin\services\MenuService;
+use cmsgears\cms\admin\services\PageService;
 
-use cmsgears\core\admin\controllers\BaseController;
+class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
-class MenuController extends BaseController {
-		
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -38,73 +37,92 @@ class MenuController extends BaseController {
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
 	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'   => [ 'permission' => CmsGlobal::PERM_CMS ],
+	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
+              	]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'    => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// UserController --------------------
-
+	// MenuController --------------------
+	
 	public function actionIndex() {
 
-		$this->redirect( [ "all" ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
 
 		$dataProvider = MenuService::getPagination();
 
-	    return $this->render( 'all', [
+	    return $this->render('all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model	= new Menu();
+		$model			= new ObjectData();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$model->type	= CmsGlobal::TYPE_MENU;
+		$model->data	= "{ \"links\": {} }";
+		$pages			= PageService::getIdNameList();
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
+		// Menu Pages
+		$pageLinks	= [];
 
-			if( MenuService::create( $model ) ) {
+		for ( $i = 0, $j = count( $pages ); $i < $j; $i++ ) {
 
-				$binder = new Binder();
+			$pageLinks[] = new PageLink();
+		}
 
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
+		// Menu Links
+		$links	= [];
 
-				MenuService::bindPages( $binder );
+		for ( $i = 0; $i < 4; $i++ ) {
+
+			$links[] = new Link();
+		}
+
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
+			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
+			$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
+
+			$menu = MenuService::create( $model );
+
+			if( $menu ) {
+
+				MenuService::updateLinks( $menu, $links, $pageLinks );
 
 				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$pages	= PageService::getIdNameList();
-
     	return $this->render( 'create', [
     		'model' => $model,
-    		'pages' => $pages
+    		'pages' => $pages,
+    		'links' => $links,
+    		'pageLinks' => $pageLinks
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
-		// Find Model		
+		// Find Model
 		$model	= MenuService::findById( $id );
 
 		// Update/Render if exist
@@ -112,29 +130,29 @@ class MenuController extends BaseController {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Menu' ) && $model->validate() ) {
+			$pages		= PageService::getIdNameList();
+			$links		= MenuService::getLinks( $model );
+			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
+				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
+				$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
 
 				if( MenuService::update( $model ) ) {
 
-					$binder = new Binder();
-
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-
-					MenuService::bindPages( $binder );
+					MenuService::updateLinks( $model, $links, $pageLinks );
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$pages	= PageService::getIdNameList();
-	
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'pages' => $pages
-	    	]);			
+	    		'links' => $links,
+	    		'pageLinks' => $pageLinks
+	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
@@ -147,7 +165,11 @@ class MenuController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Menu' ) ) {
+			$pages		= PageService::getIdNameList();
+			$links		= MenuService::getLinks( $model );
+			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
 				if( MenuService::delete( $model ) ) {
 
@@ -159,7 +181,8 @@ class MenuController extends BaseController {
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'pages' => $pages
+	    		'links' => $links,
+	    		'pageLinks' => $pageLinks
 	    	]);
 		}
 

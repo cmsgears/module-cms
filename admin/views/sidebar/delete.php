@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Sidebar';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-sdebar';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'sdebar';
 ?>
 <section class="wrap-content container clearfix">
@@ -16,12 +16,13 @@ $this->params['sidebar-child'] 	= 'sdebar';
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Linked Widgets</h4>
 		<?php 
-			$sidebarWidgets	= $model->getWidgetsIdList();
+			$sidebarWidgets	= $model->generateObjectFromJson()->widgets;
 
-			foreach ( $widgets as $widget ) { 
+			foreach ( $widgets as $widget ) {
 
 				if( in_array( $widget['id'], $sidebarWidgets ) ) {
 		?>		

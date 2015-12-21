@@ -12,7 +12,7 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | All Posts';
 $siteUrl		= $coreProperties->getSiteUrl();
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-page-blog';
+$this->params['sidebar-parent'] = 'sidebar-cms';
 $this->params['sidebar-child'] 	= 'post';
 
 // Data

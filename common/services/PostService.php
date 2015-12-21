@@ -13,9 +13,6 @@ use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\admin\services\FileService;
 
-use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\DateUtil;
-
 class PostService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
@@ -60,12 +57,12 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $post ) {
 
-		$user					= Yii::$app->user->getIdentity();
+		$post->type = CmsGlobal::TYPE_POST;
 
-		$post->type 			= CmsGlobal::TYPE_POST;
-		$post->status 			= Post::STATUS_NEW;
-		$post->visibility 		= Post::VISIBILITY_PRIVATE;
-		$post->createdBy		= $user->id;
+		if( !isset( $post->order ) || strlen( $post->order ) <= 0 ) {
+
+			$post->order = 0;
+		}
 
 		// Create Post
 		$post->save();
@@ -82,12 +79,14 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function update( $post ) {
 
-		$user				= Yii::$app->user->getIdentity();
-		$postToUpdate		= self::findById( $post->id );
+		$postToUpdate	= self::findById( $post->id );
 
-		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility' ] );
+		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
 
-		$postToUpdate->modifiedBy	= $user->id;
+		if( !isset( $postToUpdate->order ) || strlen( $postToUpdate->order ) <= 0 ) {
+
+			$postToUpdate->order = 0;
+		}
 
 		$postToUpdate->update();
 
@@ -134,7 +133,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function delete( $post ) {
 
-		$existingPost		= self::findById( $post->id );
+		$existingPost	= self::findById( $post->id );
 
 		// Delete Post
 		$existingPost->delete();

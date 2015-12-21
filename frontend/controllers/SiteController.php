@@ -9,21 +9,22 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\cms\frontend\config\WebGlobalCms;
 
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
 
-use cmsgears\core\frontend\controllers\BaseController;
-
 use cmsgears\core\common\utilities\MessageUtil;
 
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -47,16 +48,13 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->view;
+				$view			= $template->viewPath . "/$template->frontendView";
 				$this->layout	= "//$layout";
-
-				$webProperties	= $this->getWebProperties();
-				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/$view", [
+			        return $this->render( $view, [
 			        	'page' => $page,
 			        	'author' => $page->createdBy,
 			        	'content' => $content,
@@ -65,10 +63,10 @@ class SiteController extends BaseController {
 				}
 				else {
 
-					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
 				}
 			}
-			// Page without Template
+			// Page without Template - Redirect to System Pages
 			else {
 
 				return $this->redirect( 'site/' . $page->slug );
@@ -97,16 +95,13 @@ class SiteController extends BaseController {
 			if( isset( $template ) ) {
 
 				$layout			= $template->layout;
-				$view			= $template->view;
+				$view			= $template->viewPath . "/$template->frontendView";
 				$this->layout	= "//$layout";
-
-				$webProperties	= $this->getWebProperties();
-				$themeName		= $webProperties->getTheme();
 
 				// Render using Template
 				if( isset( $layout ) && isset( $view ) ) {
 
-			        return $this->render( "@themes/$themeName/views/templates/" . $view, [
+			        return $this->render( $view, [
 			        	'page' => $post,
 			        	'author' => $post->createdBy,
 			        	'content' => $content,
@@ -115,12 +110,12 @@ class SiteController extends BaseController {
 				}
 				else {
 
-					return $this->render( 'index', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
+					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
 				}
 			}
 			else {
 
-				return $this->render( 'post', [ 'message' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
+				return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
 			}
 		}
 

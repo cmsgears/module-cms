@@ -1,13 +1,15 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
-use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
@@ -21,10 +23,6 @@ class Post extends Content {
 	use TagTrait;
 
 	public $tagType			= CmsGlobal::TYPE_POST;
-
-	use MetaTrait;
-
-	public $metaType		= CmsGlobal::TYPE_POST;
 
 	use FileTrait;
 
@@ -74,7 +72,7 @@ class Post extends Content {
 	 */
 	public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
 }
 

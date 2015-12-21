@@ -5,7 +5,10 @@ namespace cmsgears\cms\admin\services;
 use \Yii;
 use yii\data\Sort;
 
-use cmsgears\cms\common\models\entities\Menu;
+// CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\ObjectData;
 
 class MenuService extends \cmsgears\cms\common\services\MenuService {
 
@@ -26,6 +29,13 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ]	= [];
+		}
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
@@ -36,7 +46,7 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new Menu(), $config );
+		return self::getDataProvider( new ObjectData(), $config );
 	}
 }
 

@@ -6,7 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\Widget;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\entities\ObjectData;
 
 class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 
@@ -27,6 +29,13 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ]	= [];
+		}
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
@@ -37,7 +46,7 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new Widget(), $config );
+		return self::getDataProvider( new ObjectData(), $config );
 	}
 }
 

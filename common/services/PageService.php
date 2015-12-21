@@ -13,8 +13,6 @@ use cmsgears\cms\common\models\entities\MenuPage;
 
 use cmsgears\core\common\services\FileService;
 
-use cmsgears\core\common\utilities\DateUtil;
-
 class PageService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
@@ -44,7 +42,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdList() {
 
-		return self::findList( "id", CmsTables::TABLE_PAGE );
+		return self::findList( "id", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
 	}
 
 	/**
@@ -52,8 +50,33 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function getIdNameList() {
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE );
+		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
 	}
+
+    public static function getMenuPages( $pages, $map = false ) {
+
+		if( count( $pages ) > 0 ) {
+
+			if( $map ) {
+				
+				$pages 		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				$pageMap	= [];
+				
+				foreach ( $pages as $page ) {
+					
+					$pageMap[ $page->id ] = $page;
+				}
+				
+				return $pageMap;
+			}
+			else {
+
+				return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+			}
+		}
+
+		return [];
+    }
 
 	// Data Provider ----
 
@@ -75,12 +98,12 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function create( $page ) {
 
-		$user					= Yii::$app->user->getIdentity();
+		$page->type 	= CmsGlobal::TYPE_PAGE;
 
-		$page->type 			= CmsGlobal::TYPE_PAGE;
-		$page->status 			= Page::STATUS_NEW;
-		$page->visibility 		= Page::VISIBILITY_PRIVATE;
-		$page->createdBy		= $user->id;
+		if( !isset( $page->order ) || strlen( $post->order ) <= 0 ) {
+
+			$page->order = 0;
+		}
 
 		// Create Page
 		$page->save();
@@ -97,47 +120,18 @@ class PageService extends \cmsgears\core\common\services\Service {
 	 */
 	public static function update( $page ) {
 
-		$user				= Yii::$app->user->getIdentity();
-		$pageToUpdate		= self::findById( $page->id );
+		$pageToUpdate	= self::findById( $page->id );
 
-		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility' ] );
+		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ] );
 
-		$pageToUpdate->modifiedBy	= $user->id;
+		if( !isset( $pageToUpdate->order ) || strlen( $pageToUpdate->order ) <= 0 ) {
+
+			$pageToUpdate->order = 0;
+		}
 
 		$pageToUpdate->update();
 
 		return $pageToUpdate;
-	}
-	
-	/**
-	 * @param Binder $binder
-	 * @return boolean
-	 */
-	public static function bindMenus( $binder ) {
-
-		$pageId	= $binder->binderId;
-		$menus	= $binder->bindedData;
-
-		// Clear all existing mappings
-		MenuPage::deleteByPageId( $pageId );
-
-		if( isset( $menus ) && count( $menus ) > 0 ) {
-
-			foreach ( $menus as $key => $value ) {
-
-				if( isset( $value ) && $value > 0 ) {
-
-					$toSave			= new MenuPage();
-
-					$toSave->pageId	= $pageId;
-					$toSave->menuId	= $value;
-
-					$toSave->save();
-				}
-			}
-		}
-
-		return true;
 	}
 
 	// Delete -----------

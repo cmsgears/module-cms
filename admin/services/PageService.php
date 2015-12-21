@@ -86,9 +86,14 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_PAGE;
+		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_PAGE;
 
 		return self::getDataProvider( new Page(), $config );
+	}
+
+	public static function getPaginationForSite() {
+		
+		return self::getPagination( [ 'conditions' => [ 'siteId' => Yii::$app->cmgCore->siteId ] ] );
 	}
 }
 
