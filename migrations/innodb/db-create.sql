@@ -110,7 +110,7 @@ CREATE TABLE `cmg_cms_model_content` (
   `seoKeywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seoRobot` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `data` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cms_model_content_1` (`bannerId`),
   KEY `fk_cms_model_content_2` (`videoId`),

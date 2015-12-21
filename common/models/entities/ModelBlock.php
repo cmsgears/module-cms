@@ -39,7 +39,7 @@ class ModelBlock extends \cmsgears\core\common\models\entities\CmgModel {
             [ [ 'blockId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly', 'min' => 0 ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
         ];
 
 		return $rules;
