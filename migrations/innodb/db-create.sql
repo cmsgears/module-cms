@@ -71,7 +71,7 @@ CREATE TABLE `cmg_cms_block` (
   `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),

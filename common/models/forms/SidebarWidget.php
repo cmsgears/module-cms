@@ -16,7 +16,7 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 	
 	public $widget;
 	public $widgetId;
-	public $options;
+	public $htmlOptions;
 	public $icon;
 	public $order;
 	
@@ -34,11 +34,11 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'widget', 'widgetId', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'widget', 'widgetId', 'htmlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'widget', 'widgetId', 'options', 'icon', 'order' ], 'safe' ],
+			[ [ 'widget', 'widgetId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
@@ -54,7 +54,7 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 		return [
 			'widgetId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_WIDGET ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];

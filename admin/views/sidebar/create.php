@@ -24,7 +24,7 @@ $this->params['sidebar-child'] 	= 'sdebar';
 				<?= $form->field( $sidebarWidgets[ $key ], "[$key]widget" )->checkbox( [ 'label' => $widget[ 'name' ] ] ) ?>
 				<?= $form->field( $sidebarWidgets[ $key ], "[$key]widgetId" )->hiddenInput( [ 'value' => $widget['id'] ] )->label( false ) ?>
 				<div class="frm-split">
-					<?= $form->field( $sidebarWidgets[ $key ], "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $sidebarWidgets[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
 					<?= $form->field( $sidebarWidgets[ $key ], "[$key]icon" )->textInput( [ "placeholder" => "label" ] ) ?>
 					<?= $form->field( $sidebarWidgets[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 				</div>

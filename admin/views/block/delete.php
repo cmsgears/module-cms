@@ -22,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
-		<?= $form->field( $model, 'options' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 

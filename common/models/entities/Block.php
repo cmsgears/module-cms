@@ -33,7 +33,7 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $slug
  * @property string $description
  * @property string $active
- * @property string $options
+ * @property string $htmlOptions
  * @property string $title
  * @property string $icon
  * @property date $createdAt
@@ -146,7 +146,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'active', 'options', 'title', 'icon', 'content', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ], 'safe' ],
             [ [ 'name' ], 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -160,7 +160,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'options', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'htmlOptions', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -186,7 +186,7 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];

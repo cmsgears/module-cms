@@ -22,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
-    	<?= $form->field( $model, 'options' )->textarea() ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'title' ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 

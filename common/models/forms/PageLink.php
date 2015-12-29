@@ -16,7 +16,7 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $link;
 	public $pageId;
-	public $options;
+	public $htmlOptions;
 	public $icon;
 	public $order;
 
@@ -35,11 +35,11 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'link', 'pageId', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'link', 'pageId', 'htmlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'link', 'pageId', 'options', 'icon', 'order' ], 'safe' ],
+			[ [ 'link', 'pageId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
@@ -56,7 +56,7 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 		return [
 			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
 			'pageId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_PAGE ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];

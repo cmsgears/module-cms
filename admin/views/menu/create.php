@@ -26,7 +26,7 @@ $this->params['sidebar-child'] 	= 'menu';
 				<?= $form->field( $pageLinks[ $key ], "[$key]link" )->checkbox( [ 'label' => $page[ 'name' ] ] ) ?>
 				<?= $form->field( $pageLinks[ $key ], "[$key]pageId" )->hiddenInput( [ 'value' => $page['id'] ] )->label( false ) ?>
 				<div class="frm-split">
-					<?= $form->field( $pageLinks[ $key ], "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $pageLinks[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
 					<?= $form->field( $pageLinks[ $key ], "[$key]icon" )->textInput( [ "placeholder" => "icon" ] ) ?>
 					<?= $form->field( $pageLinks[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 				</div>
@@ -45,7 +45,7 @@ $this->params['sidebar-child'] 	= 'menu';
 				</span>
 				<span class="box-half">
 					<?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?>
-					<?= $form->field( $link, "[$key]options" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $link, "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
 					<?= $form->field( $link, "[$key]icon" )->textInput( [ "placeholder" => "icon" ] ) ?>
 					<?= $form->field( $link, "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 				</span>

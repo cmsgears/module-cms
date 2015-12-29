@@ -16,7 +16,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $address;	
 	public $label;
-	public $options;
+	public $htmlOptions;
 	public $private;
 	public $relative;
 	public $icon;
@@ -46,11 +46,11 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'safe' ],
+			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
@@ -70,7 +70,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'private' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
 			'relative' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];

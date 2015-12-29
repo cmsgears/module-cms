@@ -132,7 +132,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 				}
 			}
 	
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'sidebarWidgets' => $sidebarWidgets
 	    	]);
@@ -149,6 +149,9 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+			
+			$widgets		= WidgetService::getIdNameList();
+			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
 
 			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
@@ -158,11 +161,9 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 				}
 			}
 
-			$widgets	= WidgetService::getIdNameList();
-
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'widgets' => $widgets
+	    		'sidebarWidgets' => $sidebarWidgets
 	    	]);
 		}
 
