@@ -16,8 +16,8 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<li class='block <?php if( strcmp( $child, 'block' ) == 0 ) echo 'active';?>'><?= Html::a( "Blocks", ['/cmgcms/block/all'] ) ?></li>
-				<li class='block-template <?php if( strcmp( $child, 'block-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Block Templates", ['/cmgcms/block/template/all'] ) ?></li>
+				<li class='page-block <?php if( strcmp( $child, 'block' ) == 0 ) echo 'active';?>'><?= Html::a( "Blocks", ['/cmgcms/block/all'] ) ?></li>
+				<li class='page-block-template <?php if( strcmp( $child, 'block-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Block Templates", ['/cmgcms/block/template/all'] ) ?></li>
 				<li class='page <?php if( strcmp( $child, 'page' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages", ['/cmgcms/page/all'] ) ?></li>
 				<li class='page-template <?php if( strcmp( $child, 'page-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Page Templates", ['/cmgcms/page/template/all'] ) ?></li>
 				<li class='post <?php if( strcmp( $child, 'post' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts", ['/cmgcms/post/all'] ) ?></li>

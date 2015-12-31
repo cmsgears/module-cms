@@ -16,9 +16,10 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $pageId
  * @property string $name
  * @property string $type
+ * @property string $valueType
  * @property string $value
  */
-class ContentAttribute extends CmgModel {
+class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 
 	// Instance Methods --------------------------------------------
 
@@ -39,7 +40,7 @@ class ContentAttribute extends CmgModel {
             [ [ 'pageId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'pageId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -48,7 +49,7 @@ class ContentAttribute extends CmgModel {
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'type', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -65,6 +66,7 @@ class ContentAttribute extends CmgModel {
 			'pageId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
