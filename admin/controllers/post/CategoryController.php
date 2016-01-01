@@ -57,22 +57,22 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryC
 		
 		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( CmsGlobal::TYPE_POST, false );
+		return parent::actionAll( CmsGlobal::TYPE_POST, 'Categories' );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( CmsGlobal::TYPE_POST, false );
+		return parent::actionCreate( CmsGlobal::TYPE_POST, 'Categories' );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, false );
+		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, 'Categories' );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, false );
+		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, 'Categories' );
 	}
 }
 

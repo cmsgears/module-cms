@@ -7,11 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\ModelCategory;
 use cmsgears\cms\common\models\entities\Post;
-
-use cmsgears\core\admin\services\FileService;
 
 class PostService extends \cmsgears\core\common\services\Service {
 
@@ -103,7 +100,7 @@ class PostService extends \cmsgears\core\common\services\Service {
 		$categories		= $binder->bindedData;
 
 		// Clear all existing mappings
-		ModelCategory::deleteByParentIdType( $postId, CmsGlobal::TYPE_POST );
+		ModelCategory::deleteByParentIdParentType( $postId, CmsGlobal::TYPE_POST );
 
 		if( isset( $categories ) && count( $categories ) > 0 ) {
 
