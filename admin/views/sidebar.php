@@ -11,8 +11,8 @@ $user	= Yii::$app->user->getIdentity();
 <?php if( $core->hasModule( 'cmgcms' ) && $user->isPermitted( 'cms' ) ) { ?>
 	<div id="sidebar-cms" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
-			<div class="colf colf4"><span class="icon-sidebar icon-cms"></span></div>
-			<div class="colf colf4x3">CMS</div>
+			<div class="colf colf5 wrap-icon"><span class="cmti cmti-chart-column"></span></div>
+			<div class="colf colf5x4">CMS</div>
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
