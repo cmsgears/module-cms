@@ -67,16 +67,16 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
 		
-		// banner, video
-
+		// banner
 		if( isset( $banner ) ) {
 
 			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
 		}
 
+		// video
 		if( isset( $video ) ) {
 
-			FileService::saveImage( $video, [ 'model' => $content, 'attribute' => 'videoId' ] );
+			FileService::saveFile( $video, [ 'model' => $content, 'attribute' => 'videoId' ] );
 		}
 
 		// Create Content
