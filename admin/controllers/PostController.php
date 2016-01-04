@@ -30,6 +30,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -95,6 +97,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$content		= new ModelContent();
 		$banner	 		= CmgFile::loadFile( null, 'File' );
+		$video	 		= CmgFile::loadFile( null, 'Video' );
 
 		$model->setScenario( 'create' );
 
@@ -106,7 +109,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( isset( $post ) ) {
 
 				// Create Content
-				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner );
+				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner, $video );
 
 				// Bind Categories
 				$binder = new Binder();
@@ -130,6 +133,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
+    		'video' => $video,
     		'categories' => $categories,
     		'visibilityMap' => $visibilityMap,
 	    	'statusMap' => $statusMap,
@@ -147,7 +151,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			
 			$content	= $model->content;
 			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
-		
+			$video	 	= CmgFile::loadFile( $content->video, 'Video' );
+
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
@@ -158,7 +163,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				if( isset( $post ) ) {
 
 					// Update Content
-					ModelContentService::update( $content, $post->isPublished(), $banner );
+					ModelContentService::update( $content, $post->isPublished(), $banner, $video );
 
 					// Bind Categories
 					$binder = new Binder();
@@ -182,6 +187,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
+	    		'video' => $video,
 	    		'categories' => $categories,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
@@ -197,7 +203,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Find Model
 		$model	= PostService::findById( $id );
-		$banner = new CmgFile();
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -214,10 +219,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
+			$banner			= $content->banner;
+			$video			= $content->video;
 			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
 			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
@@ -225,6 +231,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
+	    		'video' => $video,
 	    		'categories' => $categories,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,

@@ -1,27 +1,30 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Widget';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-cms';
-$this->params['sidebar-child'] 	= 'widget';
+$this->title 	= 'Delete Widget | ' . $coreProperties->getSiteTitle();
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Widget</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-sidebar-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Widget</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-widget' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => 'true' ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => 'true' ] ) ?>
 
-		<?=Html::a( "Cancel", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="clear filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

@@ -1,18 +1,17 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Widget';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-cms';
-$this->params['sidebar-child'] 	= 'widget';
+$this->title 	= 'Update Widget | ' . $coreProperties->getSiteTitle();
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Widget</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-widget-update', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Widget</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-widget' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
@@ -21,9 +20,13 @@ $this->params['sidebar-child'] 	= 'widget';
 
 		<?= $form->field( $meta, 'classPath' ) ?>
 
-		<?=Html::a( "Back", [ '/cmgcms/widget/all' ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+		<div class="clear filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

@@ -27,6 +27,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -80,7 +82,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model			= new Page();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$content		= new ModelContent();
-		$banner	 		= CmgFile::loadFile( null, 'File' );
+		$banner	 		= CmgFile::loadFile( null, 'Banner' );
+		$video	 		= CmgFile::loadFile( null, 'Video' );
 
 		$model->setScenario( 'create' );
 
@@ -92,7 +95,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( isset( $page ) ) {
 
 				// Create Content
-				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $page->isPublished(), $banner );
+				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $page->isPublished(), $banner, $video );
 
 				$this->redirect( [ 'all' ] );
 			}
@@ -107,6 +110,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
+    		'video' => $video,
     		'visibilityMap' => $visibilityMap,
 	    	'statusMap' => $statusMap,
     		'templatesMap' => $templatesMap
@@ -123,6 +127,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			$content	= $model->content;
 			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
+			$video	 	= CmgFile::loadFile( $content->video, 'Video' );
 
 			$model->setScenario( 'update' );
 
@@ -134,7 +139,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 				if( isset( $page ) ) {
 
 					// Update Content
-					ModelContentService::update( $content, $page->isPublished(), $banner );
+					ModelContentService::update( $content, $page->isPublished(), $banner, $video );
 
 					$this->redirect( [ 'all' ] );
 				}
@@ -149,6 +154,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
+	    		'video' => $video,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -180,6 +186,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			}
 
 			$banner			= $content->banner;
+			$video			= $content->video;
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );
@@ -189,6 +196,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,
+	    		'video' => $video,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap

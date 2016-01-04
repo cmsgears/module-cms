@@ -1,69 +1,88 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\FileUploader;
+use cmsgears\files\widgets\VideoUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Post';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-cms';
-$this->params['sidebar-child'] 	= 'post';
+$this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Post</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-post-update', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Post</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-post' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
-		<?= $form->field( $model, 'order' ) ?>
+		<?= $form->field( $model, 'order' )->textInput() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4>Post Summary</h4>
-    	<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Post Summary</div>
+			<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
 
-    	<h4>Post Content</h4>
-    	<?= $form->field( $content, 'content' )->textarea( [ 'class' => 'content-editor' ] ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Post Content</div>
+			<?= $form->field( $content, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
 
-    	<h4>Post Banner</h4>
-		<?=FileUploader::widget( [ 'options' => [ 'id' => 'banner-page', 'class' => 'file-uploader' ], 'model' => $content->banner,  'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+		<div class="box-content clearfix">
+			<div class="header">Post Banner</div>
+			<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+		</div>
 
-		<h4>Post SEO</h4>
-		<?= $form->field( $content, 'seoName' ) ?>
-    	<?= $form->field( $content, 'seoDescription' )->textarea() ?>
-    	<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
-		<?= $form->field( $content, 'seoRobot' ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Post Video</div>
+			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'video-listing', 'class' => 'file-uploader' ], 'model' => $video, 'modelClass' => 'Video' ]); ?>
+		</div>
 
-		<h4>Assign Categories</h4>
-		<?php 
-			$postCategories	= $model->getCategoryIdList();
+		<div class="box-content clearfix">
+			<div class="header">Post SEO</div>
+	    	<?= $form->field( $content, 'seoName' ) ?>
+	    	<?= $form->field( $content, 'seoDescription' )->textarea() ?>
+	    	<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
+			<?= $form->field( $content, 'seoRobot' ) ?>
+		</div>
 
-			foreach ( $categories as $category ) { 
-
-				if( in_array( $category['id'], $postCategories ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" checked /><?=$category['name']?></span>
-		<?php 
+		<div class="box-content clearfix">
+			<div class="header">Assign Categories</div>
+			<?php 
+				$modelCategories	= $model->getCategoryIdList();
+	
+				foreach ( $categories as $category ) { 
+	
+					if( in_array( $category[ 'id' ], $modelCategories ) ) {
+			?>		
+						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $category[ 'id' ] ?>" checked /><?= $category[ 'name' ] ?></span>
+			<?php 
+					}
+					else {
+			?>
+						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $category[ 'id' ] ?>" /><?= $category[ 'name' ] ?></span>
+			<?php
+					}
 				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$category['id']?>" /><?=$category['name']?></span>
-		<?php
-				}
-			}
-		?>			
-		<div class="box-filler"></div>
+			?>
+		</div>
 
-		<?=Html::a( "Back", [ '/cmgcms/post/all' ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+		<div class="filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel',  [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

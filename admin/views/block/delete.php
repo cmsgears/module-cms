@@ -1,52 +1,55 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\FileUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Block';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-cms';
-$this->params['sidebar-child'] 	= 'block';
+$this->title 	= 'Delete Block | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Block</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-block-delete', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Block</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'icon' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 
-    	<h4>Block Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor', 'readonly' => 'true' ] )->label( false ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Block Content</div>
+			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
 
-    	<h4>Block Banner</h4>
-		<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner', 'btnChooserIcon' => 'icon-action icon-action-edit' ] ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Block Banner</div>
+			<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+		</div>
 
-    	<h4>Block Texture</h4>
-		<?= FileUploader::widget( [ 'options' => [ 'id' => 'texture-block', 'class' => 'file-uploader' ], 'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture', 'btnChooserIcon' => 'icon-action icon-action-edit' ] ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Block Texture</div>
+			<?= FileUploader::widget( [ 'options' => [ 'id' => 'texture-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Texture', 'directory' => 'texture' ] );?>
+		</div>
 
-    	<h4>Block Video</h4>
-		<?= FileUploader::widget([
-			'options' => [ 'id' => 'video-block', 'class' => 'file-uploader' ], 
-			'model' => $video, 'modelClass' => 'Video', 'directory' => 'video', 'type' => 'video', 
-			'btnChooserIcon' => 'icon-action icon-action-edit' 
-		]);?>
+		<div class="filler-height"></div>
 
-		<div class="box-filler"></div>
-
-		<?=Html::a( "Cancel", [ '/cmgcms/block/all' ], [ 'class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel',  [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>
