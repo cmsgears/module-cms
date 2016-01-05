@@ -121,7 +121,7 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 
 		if( isset( $video ) ) {
 
-			FileService::saveImage( $video, [ 'model' => $contentToUpdate, 'attribute' => 'videoId' ] );
+			FileService::saveFile( $video, [ 'model' => $contentToUpdate, 'attribute' => 'videoId' ] );
 		}
 		
 		// Update Content
