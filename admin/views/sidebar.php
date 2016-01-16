@@ -21,12 +21,12 @@ $user	= Yii::$app->user->getIdentity();
 				<li class='page <?php if( strcmp( $child, 'page' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages", ['/cmgcms/page/all'] ) ?></li>
 				<li class='page-template <?php if( strcmp( $child, 'page-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Page Templates", ['/cmgcms/page/template/all'] ) ?></li>
 				<li class='post <?php if( strcmp( $child, 'post' ) == 0 ) echo 'active';?>'><?= Html::a( "Posts", ['/cmgcms/post/all'] ) ?></li>
-				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/category/all'] ) ?></li>
 				<li class='post-template <?php if( strcmp( $child, 'post-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Templates", ['/cmgcms/post/template/all'] ) ?></li>
+				<li class='post-category <?php if( strcmp( $child, 'post-category' ) == 0 ) echo 'active';?>'><?= Html::a( "Post Categories", ['/cmgcms/post/category/all'] ) ?></li>
 				<li class='menu <?php if( strcmp( $child, 'menu' ) == 0 ) echo 'active';?>'><?= Html::a( "Menus", ['/cmgcms/menu/all'] ) ?></li>
-				<li class='sdebar <?php if( strcmp( $child, 'sdebar' ) == 0 ) echo 'active';?>'><?= Html::a( "Sidebars", ['/cmgcms/sidebar/all'] ) ?></li>
 				<li class='widget <?php if( strcmp( $child, 'widget' ) == 0 ) echo 'active';?>'><?= Html::a( "Widgets", ['/cmgcms/widget/all'] ) ?></li>
 				<li class='widget-template <?php if( strcmp( $child, 'widget-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Widget Templates", ['/cmgcms/widget/template/all'] ) ?></li>
+				<li class='sdebar <?php if( strcmp( $child, 'sdebar' ) == 0 ) echo 'active';?>'><?= Html::a( "Sidebars", ['/cmgcms/sidebar/all'] ) ?></li>
 			</ul>
 		</div>
 	</div>

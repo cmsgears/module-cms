@@ -5,13 +5,13 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
-use cmsgears\files\widgets\FileUploader;
+use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Post | ' . $coreProperties->getSiteTitle();
 
-Editor::widget( [ 'selector' => '.content-editor' ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -39,12 +39,15 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Post Banner</div>
-			<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+			<?= ImageUploader::widget([ 
+					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 
+					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' 
+			]); ?>
 		</div>
 
 		<div class="box-content clearfix">
 			<div class="header">Post Video</div>
-			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'video-listing', 'class' => 'file-uploader' ], 'model' => $video, 'modelClass' => 'Video' ]); ?>
+			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'model-video', 'class' => 'file-uploader' ], 'model' => $video ]); ?>
 		</div>
 
 		<div class="box-content clearfix">

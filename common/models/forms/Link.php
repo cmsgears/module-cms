@@ -17,6 +17,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public $address;	
 	public $label;
 	public $htmlOptions;
+	public $urlOptions;
 	public $private;
 	public $relative;
 	public $icon;
@@ -46,11 +47,11 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'icon', 'order' ], 'safe' ],
+			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 

@@ -134,7 +134,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

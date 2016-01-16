@@ -31,18 +31,18 @@ INSERT INTO `cmg_core_role_permission` VALUES
 -- Dumping data for table `cmg_cms_page`
 --
 
-INSERT INTO `cmg_cms_page` VALUES
-	(1,NULL,1,1,1,'Home','home','page',5,5,NULL,0,0),
-	(2,NULL,1,1,1,'Login','login','page',5,5,NULL,0,0),
-	(3,NULL,1,1,1,'Register','register','page',5,5,NULL,0,0),
-	(4,NULL,1,1,1,'Confirm Account','confirm-account','page',5,5,NULL,0,0),
-	(5,NULL,1,1,1,'Activate Account','activate-account','page',5,5,NULL,0,0),
-	(6,NULL,1,1,1,'Forgot Password','forgot-password','page',5,5,NULL,0,0),
-	(7,NULL,1,1,1,'Reset Password','reset-password','page',5,5,NULL,0,0),
-	(8,NULL,1,1,1,'About Us','about-us','page',5,5,NULL,0,0),
-	(9,NULL,1,1,1,'Terms','terms','page',5,5,NULL,0,0),
-	(10,NULL,1,1,1,'Privacy','privacy','page',5,5,NULL,0,0),
-	(11,NULL,1,1,1,'Blog','blog','page',5,5,NULL,0,0);
+INSERT INTO `cmg_cms_page` (`parentId`,`siteId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`status`,`visibility`,`icon`,`order`,`featured`) VALUES
+	(NULL,1,1,1,'Home','home','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Login','login','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Register','register','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Confirm Account','confirm-account','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Activate Account','activate-account','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Forgot Password','forgot-password','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Reset Password','reset-password','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'About Us','about-us','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Terms','terms','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Privacy','privacy','page',500,10,NULL,0,0),
+	(NULL,1,1,1,'Blog','blog','page',500,10,NULL,0,0);
 
 --
 -- Dumping data for table `cmg_cms_model_content`

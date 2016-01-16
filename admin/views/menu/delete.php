@@ -26,7 +26,8 @@ $this->title 	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
 					<?= $form->field( $pageLink, "[$key]link" )->checkbox( [ 'label' => $pageLink->name ] ) ?>
 					<?= $form->field( $pageLink, "[$key]pageId" )->hiddenInput()->label( false ) ?>
 					<div class="frm-split-40-60 clearfix">
-						<?= $form->field( $pageLink, "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
+						<?= $form->field( $pageLink, "[$key]htmlOptions" )->textInput( [ "placeholder" => "item options" ] ) ?>
+						<?= $form->field( $pageLink, "[$key]urlOptions" )->textInput( [ "placeholder" => "url options" ] ) ?>
 						<?= $form->field( $pageLink, "[$key]icon" )->textInput( [ "placeholder" => "icon" ] ) ?>
 						<?= $form->field( $pageLink, "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 					</div>
@@ -45,7 +46,8 @@ $this->title 	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
 				</span>
 				<span class="box-half">
 					<?= $form->field( $link, "[$key]label" )->textInput( [ "placeholder" => "label" ] ) ?>
-					<?= $form->field( $link, "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
+					<?= $form->field( $link, "[$key]htmlOptions" )->textInput( [ "placeholder" => "item options" ] ) ?>
+					<?= $form->field( $link, "[$key]urlOptions" )->textInput( [ "placeholder" => "url options" ] ) ?>
 					<?= $form->field( $link, "[$key]icon" )->textInput( [ "placeholder" => "icon" ] ) ?>
 					<?= $form->field( $link, "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 				</span>

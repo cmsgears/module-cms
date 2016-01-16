@@ -5,13 +5,14 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
-use cmsgears\files\widgets\FileUploader;
+use cmsgears\files\widgets\ImageUploader;
+use cmsgears\files\widgets\VideoUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
-Editor::widget( [ 'selector' => '.content-editor' ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -35,12 +36,23 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Block Banner</div>
-			<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+			<?= ImageUploader::widget([ 
+					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 
+					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' 
+			]); ?>
+		</div>
+
+		<div class="box-content clearfix">
+			<div class="header">Block Video</div>
+			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'model-video', 'class' => 'file-uploader' ], 'model' => $video ]); ?>
 		</div>
 
 		<div class="box-content clearfix">
 			<div class="header">Block Texture</div>
-			<?= FileUploader::widget( [ 'options' => [ 'id' => 'texture-block', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Texture', 'directory' => 'texture' ] );?>
+			<?= ImageUploader::widget([ 
+					'options' => [ 'id' => 'model-texture', 'class' => 'file-uploader' ], 
+					'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture' 
+			]); ?>
 		</div>
 
 		<div class="filler-height"></div>

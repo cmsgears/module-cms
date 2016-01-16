@@ -36,23 +36,23 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
 class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Pre-Defined Status
-	const STATUS_NEW		= 0;
-	const STATUS_PUBLISHED	= 5;
+	const STATUS_NEW		=  500;
+	const STATUS_PUBLISHED	=  750;
 
 	public static $statusMap = [
-		self::STATUS_NEW => "new",
-		self::STATUS_PUBLISHED => "published"
+		self::STATUS_NEW => 'New',
+		self::STATUS_PUBLISHED => 'Published'
 	];
 
 	// Pre-Defined Visibility
-	const VISIBILITY_PRIVATE	= 0;
-	const VISIBILITY_PUBLIC		= 5;
+	const VISIBILITY_PRIVATE	=  0;
+	const VISIBILITY_PUBLIC		= 10;
 
 	public static $visibilityMap = [
-		self::VISIBILITY_PRIVATE => "private",
-		self::VISIBILITY_PUBLIC => "public"
+		self::VISIBILITY_PRIVATE => 'Private',
+		self::VISIBILITY_PUBLIC => 'Public'
 	];
-	
+
 	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------

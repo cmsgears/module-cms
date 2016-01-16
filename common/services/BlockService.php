@@ -81,7 +81,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $video
 	 * @return Block
 	 */
-	public static function create( $block, $banner = null, $texture = null, $video = null ) {
+	public static function create( $block, $banner = null, $video = null, $texture = null ) {
 
 		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
 
@@ -93,14 +93,14 @@ class BlockService extends \cmsgears\core\common\services\Service {
 			FileService::saveImage( $banner, [ 'model' => $block, 'attribute' => 'bannerId' ] );
 		}
 
+		if( isset( $video ) ) {
+
+			FileService::saveFile( $video, [ 'model' => $block, 'attribute' => 'videoId' ] );
+		}
+
 		if( isset( $texture ) ) {
 
 			FileService::saveImage( $texture, [ 'model' => $block, 'attribute' => 'textureId' ] );
-		}
-
-		if( isset( $video ) ) {
-
-			FileService::saveImage( $video, [ 'model' => $block, 'attribute' => 'videoId' ] );
 		}
 
 		// Create Block
@@ -118,7 +118,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	 * @param CmgFile $video
 	 * @return Block
 	 */
-	public static function update( $block, $banner = null, $texture = null, $video = null ) {
+	public static function update( $block, $banner = null, $video = null, $texture = null ) {
 
 		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
 
@@ -134,14 +134,14 @@ class BlockService extends \cmsgears\core\common\services\Service {
 			FileService::saveImage( $banner, [ 'model' => $blockToUpdate, 'attribute' => 'bannerId' ] );
 		}
 
+		if( isset( $video ) ) {
+
+			FileService::saveFile( $video, [ 'model' => $blockToUpdate, 'attribute' => 'videoId' ] );
+		}
+
 		if( isset( $texture ) ) {
 
 			FileService::saveImage( $texture, [ 'model' => $blockToUpdate, 'attribute' => 'textureId' ] );
-		}
-
-		if( isset( $video ) ) {
-
-			FileService::saveImage( $video, [ 'model' => $blockToUpdate, 'attribute' => 'videoId' ] );
 		}
 
 		$blockToUpdate->update();

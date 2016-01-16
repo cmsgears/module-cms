@@ -126,7 +126,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		if( isset( $model ) ) {
 
 			$content	= $model->content;
-			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
+			$banner	 	= CmgFile::loadFile( $content->banner, 'Banner' );
 			$video	 	= CmgFile::loadFile( $content->video, 'Video' );
 
 			$model->setScenario( 'update' );
