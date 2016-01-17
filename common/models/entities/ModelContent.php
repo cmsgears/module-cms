@@ -83,6 +83,26 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 		return '';
 	}
 
+	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_LIMIT_TEXT ) {
+
+		if( strlen( $this->summary ) > $limit ) {
+
+			return substr( $this->summary, 0, $limit );
+		}
+
+		return $this->summary;
+	}
+
+	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_LIMIT_TEXT ) {
+
+		if( strlen( $this->content ) > $limit ) {
+
+			return substr( $this->content, 0, $limit );
+		}
+
+		return $this->content;
+	}
+
 	// yii\db\BaseActiveRecord -----------
 
 	public function beforeSave( $insert ) {
