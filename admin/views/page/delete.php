@@ -51,10 +51,10 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Page SEO</div>
-			<?= $form->field( $content, 'seoName' )->textInput( [ 'readonly'=>'true' ] ) ?>
+			<?= $form->field( $content, 'seoName' )->textInput( [ 'readonly' => 'true' ] ) ?>
 	    	<?= $form->field( $content, 'seoDescription' )->textarea( [ 'readonly' => 'true' ] ) ?>
 	    	<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
-			<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly'=>'true' ] ) ?>
+			<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		</div>
 
 		<div class="filler-height"></div>

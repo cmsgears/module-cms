@@ -87,21 +87,8 @@ class BlockService extends \cmsgears\core\common\services\Service {
 
 			unset( $block->templateId );
 		}
-
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $block, 'attribute' => 'bannerId' ] );
-		}
-
-		if( isset( $video ) ) {
-
-			FileService::saveFile( $video, [ 'model' => $block, 'attribute' => 'videoId' ] );
-		}
-
-		if( isset( $texture ) ) {
-
-			FileService::saveImage( $texture, [ 'model' => $block, 'attribute' => 'textureId' ] );
-		}
+		
+		FileService::saveFiles( $block, [ 'bannerId' => $banner, 'videoId' => $video, 'textureId' => $texture ] );
 
 		// Create Block
 		$block->save();
@@ -128,21 +115,8 @@ class BlockService extends \cmsgears\core\common\services\Service {
 		$blockToUpdate		= self::findById( $block->id );
 
 		$blockToUpdate->copyForUpdateFrom( $block, [ 'name', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ] );
-
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $blockToUpdate, 'attribute' => 'bannerId' ] );
-		}
-
-		if( isset( $video ) ) {
-
-			FileService::saveFile( $video, [ 'model' => $blockToUpdate, 'attribute' => 'videoId' ] );
-		}
-
-		if( isset( $texture ) ) {
-
-			FileService::saveImage( $texture, [ 'model' => $blockToUpdate, 'attribute' => 'textureId' ] );
-		}
+		
+		FileService::saveFiles( $blockToUpdate, [ 'bannerId' => $banner, 'videoId' => $video, 'textureId' => $texture ] );
 
 		$blockToUpdate->update();
 
@@ -155,12 +129,15 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	 * @param Block $block
 	 * @return boolean
 	 */
-	public static function delete( $block ) {
+	public static function delete( $block, $banner = null, $video = null, $texture = null ) {
 
 		$existingBlock	= self::findById( $block->id );
 
 		// Delete Block
 		$existingBlock->delete();
+
+		// Delete Files
+		FileService::deleteFiles( [ $banner, $video, $texture ] );
 
 		return true;
 	}

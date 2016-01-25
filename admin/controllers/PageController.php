@@ -174,19 +174,19 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		if( isset( $model ) ) {
 			
 			$content	= $model->content;
+			$banner		= $content->banner;
+			$video		= $content->video;
 
 			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
 				if( PageService::delete( $model ) ) {
 					
-					ModelContentService::delete( $content );
+					ModelContentService::delete( $content, $banner, $video );
 
 					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$banner			= $content->banner;
-			$video			= $content->video;
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE );

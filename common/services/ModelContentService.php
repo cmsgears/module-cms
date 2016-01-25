@@ -66,18 +66,8 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 		// parent
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
-		
-		// banner
-		if( isset( $banner ) ) {
 
-			FileService::saveImage( $banner, [ 'model' => $content, 'attribute' => 'bannerId' ] );
-		}
-
-		// video
-		if( isset( $video ) ) {
-
-			FileService::saveFile( $video, [ 'model' => $content, 'attribute' => 'videoId' ] );
-		}
+		FileService::saveFiles( $content, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
 		// Create Content
 		$content->save();
@@ -112,17 +102,7 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
     		$contentToUpdate->publishedAt	= $date;
     	}
 
-		// banner, video
-
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $contentToUpdate, 'attribute' => 'bannerId' ] );
-		}
-
-		if( isset( $video ) ) {
-
-			FileService::saveFile( $video, [ 'model' => $contentToUpdate, 'attribute' => 'videoId' ] );
-		}
+		FileService::saveFiles( $contentToUpdate, [ 'bannerId' => $banner, 'videoId' => $video ] );
 		
 		// Update Content
 		$contentToUpdate->update();
@@ -136,12 +116,15 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 	 * @param ModelContent $content
 	 * @return boolean
 	 */
-	public static function delete( $content ) {
+	public static function delete( $content, $banner = null, $video = null ) {
 
 		$existingContent	= self::findById( $content->id );
 
 		// Delete Content
 		$existingContent->delete();
+		
+		// Delete Files
+		FileService::deleteFiles( [ $banner, $video ] );
 
 		return true;
 	}

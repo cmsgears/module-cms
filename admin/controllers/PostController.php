@@ -208,19 +208,19 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		if( isset( $model ) ) {
 
 			$content	= $model->content;
+			$banner		= $content->banner;
+			$video		= $content->video;
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
 
 				if( PostService::delete( $model ) ) {
 
-					ModelContentService::delete( $content );
+					ModelContentService::delete( $content, $banner, $video );
 
 					$this->redirect( [  'all' ] );
 				}
 			}
 
-			$banner			= $content->banner;
-			$video			= $content->video;
 			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
