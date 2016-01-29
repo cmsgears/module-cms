@@ -124,7 +124,8 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			$widgets		= WidgetService::getIdNameList();
 			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) && 
+			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
 				if( SidebarService::update( $model ) ) {
 
