@@ -19,11 +19,11 @@ use cmsgears\core\common\models\entities\Template;
 /**
  * ModelContent Entity
  *
- * @property int $id
- * @property int $bannerId
- * @property int $videoId
- * @property int $templateId
- * @property int $parentId
+ * @property integer $id
+ * @property integer $bannerId
+ * @property integer $videoId
+ * @property integer $templateId
+ * @property integer $parentId
  * @property string $parentType
  * @property string $summary
  * @property date $createdAt
@@ -33,6 +33,7 @@ use cmsgears\core\common\models\entities\Template;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
+ * @property integer $viewCount
  * @property string $content
  * @property string $data 
  */
@@ -154,10 +155,11 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
         $rules = [
             [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
-            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'safe' ],
+            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'viewCount' ], 'safe' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -186,6 +188,7 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
 			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'viewCount' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

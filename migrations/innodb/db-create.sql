@@ -110,6 +110,7 @@ CREATE TABLE `cmg_cms_model_content` (
   `seoDescription` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seoKeywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seoRobot` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `viewCount` bigint(20) NOT NULL DEFAULT 0,
   `content` longtext COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),

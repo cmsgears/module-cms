@@ -6,15 +6,15 @@ SET FOREIGN_KEY_CHECKS=0;
 -- CMS module roles and permissions
 --
 
-INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES 
-	(1,1,'CMS Manager','cms-manager','dashboard','system','The role CMS Manager is limited to manage cms from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES 
+	(1,1,'CMS Manager','cms-manager','dashboard','system',NULL,'The role CMS Manager is limited to manage cms from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @rolesadmin := `id` FROM cmg_core_role WHERE slug = 'super-admin';
 SELECT @roleadmin := `id` FROM cmg_core_role WHERE slug = 'admin';
 SELECT @rolecms := `id` FROM cmg_core_role WHERE slug = 'cms-manager';
 
-INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES 
-	(1,1,'CMS','cms','system','The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES
+	(1,1,'CMS','cms','system',NULL,'The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @permcms := `id` FROM cmg_core_permission WHERE slug = 'cms';
 

@@ -22,11 +22,19 @@ $template	= isset( $templatesMap[ $model->templateId ] ) ? $templatesMap[ $model
 		<div class="filler-space"></div>
 
 		<?php
-			if( isset( $template ) ) {
+			if( isset( $theme ) ) {
 
-				$template	=  $model->template;
-
-				echo $this->render( $template->viewPath . "/" . $template->adminView, [ 'model' => $meta ] );
+				if( isset( $template ) ) {
+	
+					$template	=  $model->template;
+	
+					echo $this->render( $theme->basePath . '/' . $template->viewPath . '/' . $template->adminView, [ 'model' => $meta ] );
+				}
+			}
+			else {
+		?>
+				<p>No active theme found.</p>
+		<?php
 			}
 		?>
 	</div>

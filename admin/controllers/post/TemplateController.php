@@ -6,7 +6,6 @@ use \Yii;
 use yii\helpers\Url;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
