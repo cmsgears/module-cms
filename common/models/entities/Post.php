@@ -8,6 +8,7 @@ use \Yii;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
+
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
 use cmsgears\core\common\models\traits\FileTrait;

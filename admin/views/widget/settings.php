@@ -1,41 +1,42 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\files\widgets\ImageUploader;
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Widget Settings';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-cms';
-$this->params['sidebar-child'] 	= 'widget';
-
-$template	= isset( $templatesMap[ $model->templateId ] ) ? $templatesMap[ $model->templateId ] : null;
+$this->title 	= 'Widget Settings | ' . $coreProperties->getSiteTitle();
+$template		= $model->template;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box frm-split">
-		<h2>Widget Settings</h2>
-		<div><label>Name</label><label><?=$model->name?></label></div>
-		<div><label>Description</label><label><?=$model->description?></label></div>
-		<div><label>Template</label><label><?=$template?></label></div>
-		<div><label>Class Path</label><label><?=$meta->classPath?></label></div>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Widget Settings</div>
+	</div>
+	<div class="box-wrap-content clearfix">
+
+		<div class="box-content">
+			<div class="header">Widget Details</div>
+			<div class="info">
+				<table>
+					<tr><td>Name</td><td><?= $model->name ?></td></tr>
+					<tr><td>Description</td><td><?= $model->description ?></td></tr>
+					<tr><td>Template</td><td><?php if( isset( $template ) ) echo $template->name; ?></td></tr>
+					<tr><td>Class Path</td><td><?= $meta->classPath ?></td></tr>
+				</table>
+			</div>
+		</div>
 
 		<div class="filler-space"></div>
 
-		<?php
-			if( isset( $theme ) ) {
-
-				if( isset( $template ) ) {
-	
-					$template	=  $model->template;
-	
-					echo $this->render( $theme->basePath . '/' . $template->viewPath . '/' . $template->adminView, [ 'model' => $meta ] );
-				}
-			}
-			else {
-		?>
-				<p>No active theme found.</p>
-		<?php
-			}
-		?>
+		<div class="box-content frm-split-40-60 clearfix">
+			<div class="header"><?= $model->name ?> Settings</div>
+			<?php if( isset( $template ) ) { ?>
+				<?= Yii::$app->templateSource->renderViewAdmin( $template, [ 'model' => $meta ], $this ) ?>
+			<?php } else { ?>
+				<p>Template is not defined for this widget.</p>
+			<?php } ?>
+		</div>
 	</div>
-</section>
+</div>

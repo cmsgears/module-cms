@@ -12,11 +12,16 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
+
+use cmsgears\core\common\models\traits\TemplateTrait;
+use cmsgears\core\common\models\traits\VisualTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * Block Entity
@@ -43,6 +48,12 @@ use cmsgears\core\common\models\entities\Template;
  */
 class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
+	use TemplateTrait;
+
+	use VisualTrait;
+
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
 
 	// Block
@@ -50,38 +61,6 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public function getSite() {
 
 		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
-
-	public function getTexture() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'textureId' ] );
-	}
-
-	public function getVideo() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
-	}
-
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
-
-	public function getTemplateName() {
-
-		$template = $this->template;
-
-		if( isset( $template ) ) {
-
-			return $template->name;
-		}
-
-		return '';
 	}
 
 	/**

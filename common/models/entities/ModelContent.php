@@ -16,6 +16,10 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 
+use cmsgears\core\common\models\traits\TemplateTrait;
+use cmsgears\core\common\models\traits\VisualTrait;
+use cmsgears\core\common\models\traits\DataTrait;
+
 /**
  * ModelContent Entity
  *
@@ -39,50 +43,13 @@ use cmsgears\core\common\models\entities\Template;
  */
 class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
+	use TemplateTrait;
+
+	use VisualTrait;
+
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
-
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
-
-	public function getBannerUrl() {
-
-		$banner			= $this->banner;
-		$bannerUrl		= isset( $banner ) ? $banner->getFileUrl() : null;
-
-		return $bannerUrl;
-	}
-
-	public function getVideo() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
-	}
-
-	public function getVideoUrl() {
-
-		$video			= $this->video;
-		$videoUrl		= isset( $video ) ? $video->getFileUrl() : null;
-
-		return $videoUrl;
-	}
-
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
-
-	public function getTemplateName() {
-
-		$template = $this->template;
-
-		if( isset( $template ) ) {
-
-			return $template->name;
-		}
-
-		return '';
-	}
 
 	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_LIMIT_TEXT ) {
 

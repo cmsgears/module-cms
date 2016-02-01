@@ -8,13 +8,9 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
-use cmsgears\cms\common\config\CmsGlobal;
-use cmsgears\cms\frontend\config\WebGlobalCms;
 
 use cmsgears\cms\common\services\PageService;
 use cmsgears\cms\common\services\PostService;
-
-use cmsgears\core\common\utilities\MessageUtil;
 
 class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
@@ -47,30 +43,16 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Page using Template
 			if( isset( $template ) ) {
 
-				$layout			= $template->layout;
-				$view			= $template->viewPath . "/$template->frontendView";
-				$this->layout	= "//$layout";
-
-				// Render using Template
-				if( isset( $layout ) && isset( $view ) ) {
-
-			        return $this->render( $view, [
-			        	'page' => $page,
-			        	'author' => $page->createdBy,
-			        	'content' => $content,
-			        	'banner' => $content->banner
-			        ]);
-				}
-				else {
-
-					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
-				}
+				return Yii::$app->templateSource->renderViewPublic( $template, [
+		        	'page' => $page,
+		        	'author' => $page->createdBy,
+		        	'content' => $content,
+		        	'banner' => $content->banner
+		        ], $this );
 			}
+
 			// Page without Template - Redirect to System Pages
-			else {
-
-				return $this->redirect( 'site/' . $page->slug );
-			}
+			return $this->redirect( 'site/' . $page->slug );
 		}
 
 		// Page not found
@@ -91,32 +73,18 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			$content	= $post->content;
 			$template	= $content->template;
 
-			// Page using Template
+			// Post using Template
 			if( isset( $template ) ) {
 
-				$layout			= $template->layout;
-				$view			= $template->viewPath . "/$template->frontendView";
-				$this->layout	= "//$layout";
-
-				// Render using Template
-				if( isset( $layout ) && isset( $view ) ) {
-
-			        return $this->render( $view, [
-			        	'page' => $post,
-			        	'author' => $post->createdBy,
-			        	'content' => $content,
-			        	'banner' => $content->banner
-			        ]);
-				}
-				else {
-
-					return $this->render( 'index', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_VIEW ) ] );
-				}
+				return Yii::$app->templateSource->renderViewPublic( $template, [
+		        	'page' => $post,
+		        	'author' => $post->createdBy,
+		        	'content' => $content,
+		        	'banner' => $content->banner
+		        ], $this );
 			}
-			else {
 
-				return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::ERROR_NO_TEMPLATE ) ] );
-			}
+			return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) ] );
 		}
 
 		// Page not found

@@ -19,10 +19,6 @@ class CmsGlobal {
 
 	// Errors ----------------------------------------------------------
 
-	// Errors - Generic
-	const ERROR_NO_TEMPLATE		= 'noTemplateError';
-	const ERROR_NO_VIEW			= 'noViewError';
-
 	// Model Fields ----------------------------------------------------
 
 	// Generic Fields

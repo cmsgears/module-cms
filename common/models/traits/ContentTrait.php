@@ -18,6 +18,14 @@ trait ContentTrait {
     	return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$parentType'" );
 	}
+
+	public function getTemplateViewPath() {
+
+		$content	= $this->content;
+		$template	= $content->template;
+
+		return $template->viewPath;
+	}
 }
 
 ?>

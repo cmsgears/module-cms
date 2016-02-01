@@ -13,7 +13,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\admin\models\forms\WidgetForm;
 
-use cmsgears\core\common\services\SiteService;
 use cmsgears\core\admin\services\TemplateService;
 use cmsgears\cms\admin\services\WidgetService;
 
@@ -181,13 +180,9 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
-
 	    	return $this->render( 'settings', [
 	    		'model' => $model,
-	    		'meta' => $meta,
-	    		'templatesMap' => $templatesMap,
-	    		'theme' => SiteService::getTheme()
+	    		'meta' => $meta
 	    	]);
 		}
 
