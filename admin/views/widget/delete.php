@@ -20,9 +20,9 @@ $this->title 	= 'Delete Widget | ' . $coreProperties->getSiteTitle();
 
 		<div class="clear filler-height"></div>
 
-		<div class="align align-middle">
+		<div class="align align-center">
 			<?=Html::a( 'Cancel', [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
-			<input class="btn btn-medium" type="submit" value="Delete" />
+			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 
 		<?php ActiveForm::end(); ?>
