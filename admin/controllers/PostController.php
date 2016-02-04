@@ -80,17 +80,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    ]);
 	}
 
-	public function actionMatrix() {
-
-		$dataProvider 	= PostService::getPagination();
-		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'categoriesList' => $categoriesList
-	    ]);
-	}
-
 	public function actionCreate() {
 
 		$model			= new Post();
@@ -123,7 +112,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			}
 		}
 
-		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 		$visibilityMap	= Page::$visibilityMap;
 		$statusMap		= Page::$statusMap;
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
@@ -134,7 +122,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
     		'content' => $content,
     		'banner' => $banner,
     		'video' => $video,
-    		'categories' => $categories,
     		'visibilityMap' => $visibilityMap,
 	    	'statusMap' => $statusMap,
     		'templatesMap' => $templatesMap
@@ -177,7 +164,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
@@ -188,7 +174,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'content' => $content,
 	    		'banner' => $banner,
 	    		'video' => $video,
-	    		'categories' => $categories,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -221,7 +206,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
@@ -232,7 +216,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'content' => $content,
 	    		'banner' => $banner,
 	    		'video' => $video,
-	    		'categories' => $categories,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap

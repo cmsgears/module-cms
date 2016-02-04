@@ -16,6 +16,7 @@ $this->title 	= 'Delete Widget | ' . $coreProperties->getSiteTitle();
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => 'true' ] ) ?>
+		<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => 'true' ] ) ?>
 
 		<div class="clear filler-height"></div>

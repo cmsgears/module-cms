@@ -4,9 +4,12 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+use cmsgears\widgets\category\CategoryMapper;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
@@ -60,23 +63,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Assign Categories</div>
-			<?php 
-				$modelCategories	= $model->getCategoryIdList();
-	
-				foreach ( $categories as $category ) { 
-	
-					if( in_array( $category[ 'id' ], $modelCategories ) ) {
-			?>		
-						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $category[ 'id' ] ?>" checked /><?= $category[ 'name' ] ?></span>
-			<?php 
-					}
-					else {
-			?>
-						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $category[ 'id' ] ?>" /><?= $category[ 'name' ] ?></span>
-			<?php
-					}
-				}
-			?>
+			<?= CategoryMapper::widget([
+				'options' => [ 'id' => 'box-category-mapper', 'class' => 'box-category-mapper' ],
+				'type' => CmsGlobal::TYPE_POST,
+				'model' => $model
+			])?>
 		</div>
 
 		<div class="filler-height"></div>

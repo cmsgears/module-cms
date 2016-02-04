@@ -27,7 +27,10 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
-		<?= Html::a( 'Add Widget', [ 'create' ], [ 'class' => 'btn btn-medium' ] ) ?>				
+		<span class="frm-icon-element element-small">
+			<i class="cmti cmti-plus"></i>
+			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
+		</span>				
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -51,6 +54,7 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
+					<th>Icon</th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -71,6 +75,7 @@ if( !isset( $sortOrder ) ) {
 						$id = $widget->id;
 				?>
 					<tr>
+						<td><?= $widget->icon ?></td>
 						<td><?= $widget->name ?></td>
 						<td><?= $widget->getActiveStr() ?></td>
 						<td><?= $widget->description ?></td>

@@ -25,7 +25,6 @@ $this->title 	= 'Delete Sidebar | ' . $coreProperties->getSiteTitle();
 					<?= $form->field( $sidebarWidget, "[$key]widgetId" )->hiddenInput()->label( false ) ?>
 					<div class="frm-split-40-60 clearfix">
 						<?= $form->field( $sidebarWidget, "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
-						<?= $form->field( $sidebarWidget, "[$key]icon" )->textInput( [ "placeholder" => "label" ] ) ?>
 						<?= $form->field( $sidebarWidget, "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
 					</div>
 				</span>

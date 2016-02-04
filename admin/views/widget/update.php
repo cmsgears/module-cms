@@ -16,6 +16,7 @@ $this->title 	= 'Update Widget | ' . $coreProperties->getSiteTitle();
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+		<?= $form->field( $model, 'icon' ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<?= $form->field( $meta, 'classPath' ) ?>
