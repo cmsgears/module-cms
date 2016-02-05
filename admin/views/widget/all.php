@@ -54,13 +54,13 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th>Icon</th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Icon</th>
 					<th>Active</th>
 					<th>Description</th>
 					<th>Template</th>
@@ -75,12 +75,12 @@ if( !isset( $sortOrder ) ) {
 						$id = $widget->id;
 				?>
 					<tr>
-						<td><?= $widget->icon ?></td>
 						<td><?= $widget->name ?></td>
+						<td> <span class="<?= $widget->icon ?>" title="<?= $widget->name ?>"></span></td>
 						<td><?= $widget->getActiveStr() ?></td>
 						<td><?= $widget->description ?></td>
 						<td><?= $widget->getTemplateName() ?></td>
-						<td>
+						<td class="actions">
 							<span title="Settings"><?= Html::a( "", ["/cmgcms/widget/settings?id=$id"], [ 'class' => 'cmti cmti-setting' ] )  ?></span>
 							<span title="Update Widget"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Widget"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

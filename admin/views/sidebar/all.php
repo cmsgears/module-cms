@@ -76,7 +76,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $sidebar->name ?></td>
 						<td><?= $sidebar->getActiveStr() ?></td>
 						<td><?= $sidebar->description ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Sidebar"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Sidebar"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

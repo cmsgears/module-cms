@@ -142,7 +142,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $content->createdAt ?></td>
 						<td><?= $content->modifiedAt ?></td>
 						<td><?= $content->publishedAt ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Post"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Post"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

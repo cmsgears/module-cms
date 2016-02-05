@@ -62,6 +62,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Icon</th>
 					<th>Slug
 						<span class='box-icon-sort'>
 							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -124,6 +125,7 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
+						<td> <span class="<?= $pag->icon ?>" title="<?= $pag->name ?>"></span></td>
 						<td><?= $slugUrl ?></td>
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
@@ -139,7 +141,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $content->createdAt ?></td>
 						<td><?= $content->modifiedAt ?></td>
 						<td><?= $content->publishedAt ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Page"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Page"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

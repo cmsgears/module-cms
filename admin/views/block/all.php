@@ -62,6 +62,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Icon</th>
 					<th>Description</th>
 					<th>Template
 						<span class='box-icon-sort'>
@@ -99,13 +100,14 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
+						<td> <span class="<?= $block->icon ?>" title="<?= $block->name ?>"></span></td>
 						<td><?= $block->description ?></td>
 						<td><?= $block->getTemplateName() ?></td>
 						<td><?= $block->title ?></td>
 						<td><?= $block->getActiveStr() ?></td>
 						<td><?= $block->createdAt ?></td>
 						<td><?= $block->modifiedAt ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Block"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Block"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

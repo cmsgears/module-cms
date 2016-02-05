@@ -76,7 +76,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $menu->name ?></td>
 						<td><?= $menu->getActiveStr() ?></td>
 						<td><?= $menu->description ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Menu"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Menu"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

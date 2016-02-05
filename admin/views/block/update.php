@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Block | ' . $coreProperties->getSiteTitle();
@@ -22,11 +23,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'title' ) ?>
-		<?= $form->field( $model, 'icon' ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<div class="box-content clearfix">
