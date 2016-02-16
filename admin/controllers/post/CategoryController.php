@@ -4,15 +4,11 @@ namespace cmsgears\cms\admin\controllers\post;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
+class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -21,58 +17,18 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryC
         parent::__construct( $id, $module, $config );
 
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+		$this->type		= CmsGlobal::TYPE_POST;
 	}
 
-	// Instance Methods ------------------
-
-	// yii\base\Component ----------------
-
-    public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// Instance Methods --------------------------------------------
 
 	// CategoryController --------------------
 
-	public function actionAll( $type = null ) {
-		
+	public function actionAll() {
+
 		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( CmsGlobal::TYPE_POST, 'Categories' );
-	}
-	
-	public function actionCreate() {
-
-		return parent::actionCreate( CmsGlobal::TYPE_POST, 'Categories' );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, 'Categories' );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, 'Categories' );
+		return parent::actionAll();
 	}
 }
 

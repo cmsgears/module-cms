@@ -47,6 +47,19 @@ class BlockService extends \cmsgears\cms\common\services\BlockService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;

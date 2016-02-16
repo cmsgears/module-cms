@@ -63,7 +63,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	public function actionIndex() {
 
-		$this->redirect( [ 'all' ] );
+		return $this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -92,8 +92,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
-
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
+		
     	return $this->render( 'create', [
     		'model' => $model,
     		'meta' => $meta,
@@ -121,7 +121,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_WIDGET ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -150,7 +150,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( CmsGlobal::TYPE_WIDGET );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

@@ -48,21 +48,21 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 	 * @return Page
 	 */
 	public static function create( $parent, $parentType, $content, $publish = false, $banner = null, $video = null ) {
-		
-		// template
+
+		// Template
 		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
 
-			unset( $content->templateId );
+			$content->templateId = null;
 		}
-		
+
 		// publish
     	if( $publish && !isset( $content->publishedAt ) ) {
-			
+
 			$date 	= DateUtil::getDateTime();
 
     		$content->publishedAt	= $date;
     	}
-		
+
 		// parent
 		$content->parentId		= $parent->id;
 		$content->parentType	= $parentType;
@@ -83,27 +83,27 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 	 * @return Page
 	 */
 	public static function update( $content, $publish = false, $banner = null, $video = null ) {
-		
-		// template
+
+		// Template
 		if( isset( $content->templateId ) && $content->templateId <= 0 ) {
 
-			unset( $content->templateId );
+			$content->templateId = null;
 		}
 
 		$contentToUpdate	= self::findById( $content->id );
 
 		$contentToUpdate->copyForUpdateFrom( $content, [ 'bannerId', 'templateId', 'summary', 'content', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ] );
-		
+
 		// publish
     	if( $publish && !isset( $contentToUpdate->publishedAt ) ) {
-			
+
 			$date 	= DateUtil::getDateTime();
 
     		$contentToUpdate->publishedAt	= $date;
     	}
 
 		FileService::saveFiles( $contentToUpdate, [ 'bannerId' => $banner, 'videoId' => $video ] );
-		
+
 		// Update Content
 		$contentToUpdate->update();
 

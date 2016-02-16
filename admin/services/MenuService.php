@@ -34,6 +34,14 @@ class MenuService extends \cmsgears\cms\common\services\MenuService {
 			$config[ 'conditions' ]	= [];
 		}
 
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
 		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
 
 		if( !isset( $config[ 'sort' ] ) ) {

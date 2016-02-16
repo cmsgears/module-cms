@@ -85,7 +85,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 
 		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
 
-			unset( $block->templateId );
+			$block->templateId = null;
 		}
 		
 		FileService::saveFiles( $block, [ 'bannerId' => $banner, 'videoId' => $video, 'textureId' => $texture ] );
@@ -109,13 +109,13 @@ class BlockService extends \cmsgears\core\common\services\Service {
 
 		if( isset( $block->templateId ) && $block->templateId <= 0 ) {
 
-			unset( $block->templateId );
+			$block->templateId = null;
 		}
 
 		$blockToUpdate		= self::findById( $block->id );
 
-		$blockToUpdate->copyForUpdateFrom( $block, [ 'name', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ] );
-		
+		$blockToUpdate->copyForUpdateFrom( $block, [ 'templateId', 'name', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ] );
+
 		FileService::saveFiles( $blockToUpdate, [ 'bannerId' => $banner, 'videoId' => $video, 'textureId' => $texture ] );
 
 		$blockToUpdate->update();

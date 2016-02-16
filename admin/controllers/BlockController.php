@@ -61,7 +61,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionIndex() {
 
-		$this->redirect( [ 'all' ] );
+		return $this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -87,11 +87,11 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			if( BlockService::create( $model, $banner, $video, $texture ) ) {
 
-				$this->redirect( [ 'all' ] );
+				return $this->redirect( [ 'all' ] );
 			}
 		}
-
-		$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+		
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -119,12 +119,12 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
 
 				if( BlockService::update( $model, $banner, $video, $texture ) ) {
-	
-					$this->redirect( [ 'all' ] );
+
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -151,14 +151,14 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				if( BlockService::delete( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 
 			$banner			= $model->banner;
 			$video			= $model->video;
 			$texture		= $model->texture;
-			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

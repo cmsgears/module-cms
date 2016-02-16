@@ -62,7 +62,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 	
 	public function actionIndex() {
 
-		$this->redirect( [ 'all' ] );
+		return $this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -110,7 +110,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				MenuService::updateLinks( $menu, $links, $pageLinks );
 
-				$this->redirect( [ 'all' ] );
+				return $this->redirect( [ 'all' ] );
 			}
 		}
 
@@ -144,7 +144,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 					MenuService::updateLinks( $model, $links, $pageLinks );
 
-					$this->redirect( [ 'all' ] );
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 
@@ -175,7 +175,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				if( MenuService::delete( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 

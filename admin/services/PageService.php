@@ -76,6 +76,14 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 			$config[ 'conditions' ] = [];
 		}
 
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
@@ -89,11 +97,6 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_PAGE;
 
 		return self::getDataProvider( new Page(), $config );
-	}
-
-	public static function getPaginationForSite() {
-		
-		return self::getPagination( [ 'conditions' => [ 'siteId' => Yii::$app->cmgCore->siteId ] ] );
 	}
 }
 

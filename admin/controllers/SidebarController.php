@@ -61,7 +61,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 	public function actionIndex() {
 
-		$this->redirect( [ 'all' ] );
+		return $this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -96,12 +96,9 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 			$sidebar	= SidebarService::create( $model );
 
-			if( $sidebar ) {
+			SidebarService::updateWidgets( $sidebar, $sidebarWidgets );
 
-				SidebarService::updateWidgets( $sidebar, $sidebarWidgets );
-
-				$this->redirect( [ 'all' ] );
-			}
+			return $this->redirect( [ 'all' ] );
 		}
 
     	return $this->render( 'create', [
@@ -127,14 +124,13 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) && 
 			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
-				if( SidebarService::update( $model ) ) {
+				SidebarService::update( $model );
 
-					SidebarService::updateWidgets( $model, $sidebarWidgets );
+				SidebarService::updateWidgets( $model, $sidebarWidgets );
 
-					$this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( [ 'all' ] );
 			}
-	
+
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'sidebarWidgets' => $sidebarWidgets
@@ -160,7 +156,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 				if( SidebarService::delete( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 

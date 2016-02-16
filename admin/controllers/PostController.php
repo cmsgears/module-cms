@@ -68,12 +68,12 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionIndex() {
 
-		$this->redirect( [  'all' ] );
+		return $this->redirect( [  'all' ] );
 	}
 
 	public function actionAll() {
 
-		$dataProvider = PostService::getPaginationForSite();
+		$dataProvider = PostService::getPagination();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -95,27 +95,23 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			$post = PostService::create( $model );
 
-			if( isset( $post ) ) {
+			// Create Content
+			ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner, $video );
 
-				// Create Content
-				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner, $video );
+			// Bind Categories
+			$binder = new Binder();
 
-				// Bind Categories
-				$binder = new Binder();
+			$binder->binderId	= $model->id;
+			$binder->load( Yii::$app->request->post(), 'Binder' );
 
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
+			PostService::bindCategories( $binder );
 
-				PostService::bindCategories( $binder );
-
-				$this->redirect( [  'all' ] );
-			}
+			return $this->redirect( [  'all' ] );
 		}
 
 		$visibilityMap	= Page::$visibilityMap;
 		$statusMap		= Page::$statusMap;
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -146,28 +142,24 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		    	$model->validate() && $content->validate() ) {
 
 				$post = PostService::update( $model );
-	
-				if( isset( $post ) ) {
 
-					// Update Content
-					ModelContentService::update( $content, $post->isPublished(), $banner, $video );
+				// Update Content
+				ModelContentService::update( $content, $post->isPublished(), $banner, $video );
 
-					// Bind Categories
-					$binder = new Binder();
+				// Bind Categories
+				$binder = new Binder();
 
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
+				$binder->binderId	= $model->id;
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
-					PostService::bindCategories( $binder );
+				PostService::bindCategories( $binder );
 
-					$this->redirect( [  'all' ] );
-				}
+				return $this->redirect( [  'all' ] );
 			}
 
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -202,14 +194,13 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 					ModelContentService::delete( $content, $banner, $video );
 
-					$this->redirect( [  'all' ] );
+					return $this->redirect( [  'all' ] );
 				}
 			}
 
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

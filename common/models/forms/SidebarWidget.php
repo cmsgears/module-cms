@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,13 +14,13 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 	// Variables ---------------------------------------------------
 
 	// Public Variables --------------------
-	
+
 	public $widget;
 	public $widgetId;
 	public $htmlOptions;
 	public $icon;
 	public $order;
-	
+
 	public $name; // used for update
 
 	// Constructor -------------------------------------------------
@@ -30,19 +31,15 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'widget', 'widgetId', 'htmlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
         $rules = [
-			[ [ 'widget', 'widgetId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
+			[ [ 'widgetId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
+			[ 'widget', 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'htmlOptions', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

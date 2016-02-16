@@ -24,8 +24,8 @@ $this->title 	= 'Add Sidebar | ' . $coreProperties->getSiteTitle();
 					<?= $form->field( $sidebarWidgets[ $key ], "[$key]widget" )->checkbox( [ 'label' => $widget[ 'name' ] ] ) ?>
 					<?= $form->field( $sidebarWidgets[ $key ], "[$key]widgetId" )->hiddenInput( [ 'value' => $widget['id'] ] )->label( false ) ?>
 					<div class="frm-split-40-60 clearfix">
-						<?= $form->field( $sidebarWidgets[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "html options" ] ) ?>
-						<?= $form->field( $sidebarWidgets[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+						<?= $form->field( $sidebarWidgets[ $key ], "[$key]htmlOptions" )->textInput( [ 'placeholder' => 'html options' ] ) ?>
+						<?= $form->field( $sidebarWidgets[ $key ], "[$key]order" )->textInput( [ 'placeholder' => 'order' ] ) ?>
 					</div>
 				</span>
 			<?php } ?>

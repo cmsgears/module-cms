@@ -34,6 +34,14 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 			$config[ 'conditions' ]	= [];
 		}
 
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
 		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		if( !isset( $config[ 'sort' ] ) ) {

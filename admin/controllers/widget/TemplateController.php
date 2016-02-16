@@ -4,12 +4,8 @@ namespace cmsgears\cms\admin\controllers\widget;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
@@ -21,6 +17,8 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
         parent::__construct( $id, $module, $config );
 		
 		$this->sidebar 		= [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ];
+		
+		$this->type			= CmsGlobal::TYPE_WIDGET;
 	}
 
 	// Instance Methods ------------------
@@ -28,27 +26,17 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 	// yii\base\Component ----------------
 
     public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		
+		$behaviors	= parent::behaviors();
+		
+		$behaviors[ 'rbac' ][ 'actions' ] = [
+								                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+								                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+								                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
+								                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
+							                ];
+		
+		return $behaviors;
     }
 
 	// CategoryController --------------------
@@ -57,22 +45,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		
 		Url::remember( [ 'widget/template/all' ], 'templates' );
 
-		return parent::actionAll( CmsGlobal::TYPE_WIDGET );
-	}
-	
-	public function actionCreate() {
-
-		return parent::actionCreate( CmsGlobal::TYPE_WIDGET );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CmsGlobal::TYPE_WIDGET );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CmsGlobal::TYPE_WIDGET );
+		return parent::actionAll();
 	}
 }
 
