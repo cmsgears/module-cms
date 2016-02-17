@@ -189,13 +189,14 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			$video		= $content->video;
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
+				
+				// Delete Post
+				PostService::delete( $model );
+				
+				// Delete Content
+				ModelContentService::delete( $content, $banner, $video );
 
-				if( PostService::delete( $model ) ) {
-
-					ModelContentService::delete( $content, $banner, $video );
-
-					return $this->redirect( [  'all' ] );
-				}
+				return $this->redirect( [  'all' ] );
 			}
 
 			$visibilityMap	= Page::$visibilityMap;

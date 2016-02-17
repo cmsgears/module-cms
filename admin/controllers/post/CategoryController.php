@@ -17,7 +17,6 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
         parent::__construct( $id, $module, $config );
 
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
-		$this->type		= CmsGlobal::TYPE_POST;
 	}
 
 	// Instance Methods --------------------------------------------

@@ -48,7 +48,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		        	'author' => $page->createdBy,
 		        	'content' => $content,
 		        	'banner' => $content->banner
-		        ], $this );
+		        ], true );
 			}
 
 			// Page without Template - Redirect to System Pages
@@ -81,7 +81,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		        	'author' => $post->createdBy,
 		        	'content' => $content,
 		        	'banner' => $content->banner
-		        ], $this );
+		        ], true );
 			}
 
 			return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) ] );
