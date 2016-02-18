@@ -18,10 +18,10 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\entities\ModelContent;
 
-use cmsgears\cms\common\services\ModelContentService;
 use cmsgears\core\admin\services\TemplateService;
-use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\common\services\ModelCategoryService;
 use cmsgears\cms\admin\services\PostService;
+use cmsgears\cms\common\services\ModelContentService;
 
 class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -104,7 +104,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			$binder->binderId	= $model->id;
 			$binder->load( Yii::$app->request->post(), 'Binder' );
 
-			PostService::bindCategories( $binder );
+			ModelCategoryService::bindCategories( $binder, CmsGlobal::TYPE_POST );
 
 			return $this->redirect( [  'all' ] );
 		}
@@ -152,7 +152,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				$binder->binderId	= $model->id;
 				$binder->load( Yii::$app->request->post(), 'Binder' );
 
-				PostService::bindCategories( $binder );
+				ModelCategoryService::bindCategories( $binder, CmsGlobal::TYPE_POST );
 
 				return $this->redirect( [  'all' ] );
 			}

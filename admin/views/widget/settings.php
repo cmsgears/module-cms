@@ -33,7 +33,7 @@ $template		= $model->template;
 		<div class="box-content frm-split-40-60 clearfix">
 			<div class="header"><?= $model->name ?> Settings</div>
 			<?php if( isset( $template ) ) { ?>
-				<?= Yii::$app->templateSource->renderViewAdmin( $template, [ 'model' => $meta ], $this ) ?>
+				<?= Yii::$app->templateSource->renderViewAdmin( $template, [ 'model' => $meta ] ) ?>
 			<?php } else { ?>
 				<p>Template is not defined for this widget.</p>
 			<?php } ?>

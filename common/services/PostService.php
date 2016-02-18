@@ -90,38 +90,6 @@ class PostService extends \cmsgears\core\common\services\Service {
 		return $postToUpdate;
 	}
 
-	/**
-	 * @param Binder $binder
-	 * @return boolean
-	 */
-	public static function bindCategories( $binder ) {
-
-		$postId			= $binder->binderId;
-		$categories		= $binder->bindedData;
-
-		// Clear all existing mappings
-		ModelCategory::deleteByParentIdParentType( $postId, CmsGlobal::TYPE_POST );
-
-		if( isset( $categories ) && count( $categories ) > 0 ) {
-
-			foreach ( $categories as $key => $value ) {
-
-				if( isset( $value ) && $value > 0 ) {
-
-					$toSave		= new ModelCategory();
-
-					$toSave->parentId	= $postId;
-					$toSave->parentType	= CmsGlobal::TYPE_POST;
-					$toSave->categoryId	= $value;
-
-					$toSave->save();
-				}
-			}
-		}
-
-		return true;
-	}
-
 	// Delete -----------
 
 	/**

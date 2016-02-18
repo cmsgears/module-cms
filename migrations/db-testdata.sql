@@ -2,6 +2,8 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
+
 --
 -- CMS module roles and permissions
 --
@@ -16,33 +18,31 @@ SELECT @rolecms := `id` FROM cmg_core_role WHERE slug = 'cms-manager';
 INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES
 	(1,1,'CMS','cms','system',NULL,'The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
+SELECT @permadmin := `id` FROM cmg_core_permission WHERE slug = 'admin';
+SELECT @permuser := `id` FROM cmg_core_permission WHERE slug = 'user';
 SELECT @permcms := `id` FROM cmg_core_permission WHERE slug = 'cms';
-
---
--- Dumping data for table `cmg_core_role_permission`
---
 
 INSERT INTO `cmg_core_role_permission` VALUES 
 	(@rolesadmin,@permcms),
 	(@roleadmin,@permcms),
-	(@rolecms,@permcms);
+	(@rolecms,@permadmin),(@rolecms,@permuser),(@rolecms,@permcms);
 
 --
 -- Dumping data for table `cmg_cms_page`
 --
 
 INSERT INTO `cmg_cms_page` (`parentId`,`siteId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`status`,`visibility`,`icon`,`order`,`featured`) VALUES
-	(NULL,1,1,1,'Home','home','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Login','login','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Register','register','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Confirm Account','confirm-account','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Activate Account','activate-account','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Forgot Password','forgot-password','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Reset Password','reset-password','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'About Us','about-us','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Terms','terms','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Privacy','privacy','page',500,10,NULL,0,0),
-	(NULL,1,1,1,'Blog','blog','page',500,10,NULL,0,0);
+	(NULL,@site,1,1,'Home','home','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Login','login','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Register','register','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Confirm Account','confirm-account','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Activate Account','activate-account','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Forgot Password','forgot-password','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Reset Password','reset-password','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'About Us','about-us','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Terms','terms','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Privacy','privacy','page',500,10,NULL,0,0),
+	(NULL,@site,1,1,'Blog','blog','page',500,10,NULL,0,0);
 
 --
 -- Dumping data for table `cmg_cms_model_content`
