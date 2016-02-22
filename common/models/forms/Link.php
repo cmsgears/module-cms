@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,7 +23,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public $relative;
 	public $icon;
 	public $order;
-	
+
 	public $type;
 
 	// Constructor -------------------------------------------------
@@ -42,21 +43,15 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	// yii\base\Model
 
 	public function rules() {
-		
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
 
         $rules = [
 			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
-
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

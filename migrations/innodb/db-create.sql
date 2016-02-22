@@ -40,6 +40,7 @@ CREATE TABLE `cmg_cms_page_attribute` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `pageId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'default',
   `valueType` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'text',
   `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,

@@ -15,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $id
  * @property integer $pageId
  * @property string $name
+ * @property string $label
  * @property string $type
  * @property string $valueType
  * @property string $value
@@ -38,9 +39,10 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 		// model rules
         $rules = [
             [ [ 'pageId', 'name' ], 'required' ],
-            [ [ 'id', 'value' ], 'safe' ],
+            [ [ 'id', 'label', 'value' ], 'safe' ],
             [ [ 'pageId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ 'label', 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -65,6 +67,7 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 		return [
 			'pageId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )

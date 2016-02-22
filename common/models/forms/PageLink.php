@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -32,19 +33,14 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'link', 'pageId', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
         $rules = [
 			[ [ 'link', 'pageId', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'link', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

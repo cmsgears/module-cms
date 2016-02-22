@@ -110,6 +110,21 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 		return $contentToUpdate;
 	}
 
+	public function updateBanner( $content, $banner ) {
+
+		// Find existing content
+		$contentToUpdate	= self::findById( $content->id );
+
+		// Save Files
+		FileService::saveFiles( $contentToUpdate, [ 'bannerId' => $banner ] );
+
+		// Update User
+		$contentToUpdate->update();
+
+		// Return updated Content
+		return $contentToUpdate;
+	}
+
 	// Delete -----------
 
 	/**
