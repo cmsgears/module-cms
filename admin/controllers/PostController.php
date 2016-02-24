@@ -189,10 +189,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			$video		= $content->video;
 
 			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
-				
+
 				// Delete Post
 				PostService::delete( $model );
-				
+
 				// Delete Content
 				ModelContentService::delete( $content, $banner, $video );
 
@@ -216,7 +216,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
+	}
 }
 
 ?>
