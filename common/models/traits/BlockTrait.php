@@ -14,10 +14,8 @@ trait BlockTrait {
 	 */
 	public function getModelBlocks() {
 
-		$parentType	= $this->blockType;
-
     	return $this->hasMany( ModelBlock::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -30,7 +28,7 @@ trait BlockTrait {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_BLOCK;
 
-                      	$query->onCondition( [ "$modelCategory.parentType" => $this->blockType ] );
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
 					});
 	}
 }

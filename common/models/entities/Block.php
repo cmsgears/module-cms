@@ -49,9 +49,7 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	use TemplateTrait;
-
 	use VisualTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------

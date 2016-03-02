@@ -30,8 +30,6 @@ use cmsgears\cms\common\models\traits\ContentTrait;
 class Category extends \cmsgears\core\common\models\entities\Category {
 
 	use ContentTrait;
-
-	public $contentType	= CoreGlobal::TYPE_CATEGORY;
 }
 
 ?>

@@ -1,6 +1,7 @@
 <?php
 namespace cmsgears\cms\common\models\traits;
 
+use cmsgears\cms\common\models\entities\CmsTables;
 use cmsgears\cms\common\models\entities\ModelContent;
 
 /**
@@ -13,10 +14,10 @@ trait ContentTrait {
 	 */
 	public function getContent() {
 
-		$parentType	= $this->contentType;
+		$modelTagTable	= CmsTables::TABLE_MODEL_CONTENT;
 
     	return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "$modelTagTable.parentType='$this->parentType'" );
 	}
 
 	public function getTemplateViewPath() {

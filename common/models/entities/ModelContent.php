@@ -44,9 +44,7 @@ use cmsgears\core\common\models\traits\DataTrait;
 class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
 	use TemplateTrait;
-
 	use VisualTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------

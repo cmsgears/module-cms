@@ -99,9 +99,7 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 
 			$existingConfig = self::findByTypeName( $this->pageId, $this->type, $this->name );
 
-			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
-				$existingConfig->pageId == $this->pageId &&  
-				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
+			if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

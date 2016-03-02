@@ -13,17 +13,11 @@ use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Page extends Content {
 
+	public $parentType	= CmsGlobal::TYPE_PAGE;
+
 	use FileTrait;
-
-	public $fileType	= CmsGlobal::TYPE_PAGE;
-
 	use ContentTrait;
-
-	public $contentType	= CmsGlobal::TYPE_PAGE;
-
 	use BlockTrait;
-
-	public $blockType	= CmsGlobal::TYPE_PAGE;
 
 	// Instance Methods --------------------------------------------
 

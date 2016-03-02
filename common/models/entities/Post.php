@@ -17,25 +17,13 @@ use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Post extends Content {
 
+	public $parentType	= CmsGlobal::TYPE_POST;
+
 	use CategoryTrait;
-
-	public $categoryType	= CmsGlobal::TYPE_POST;
-
 	use TagTrait;
-
-	public $tagType			= CmsGlobal::TYPE_POST;
-
 	use FileTrait;
-
-	public $fileType		= CmsGlobal::TYPE_POST;
-
 	use ContentTrait;
-
-	public $contentType		= CmsGlobal::TYPE_POST;
-
 	use BlockTrait;
-
-	public $blockType		= CmsGlobal::TYPE_POST;
 
 	// Instance Methods --------------------------------------------
 
