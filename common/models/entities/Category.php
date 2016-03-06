@@ -28,7 +28,9 @@ use cmsgears\cms\common\models\traits\ContentTrait;
  * @property string $data
  */
 class Category extends \cmsgears\core\common\models\entities\Category {
-
+    
+    public $parentType = 'category';
+    
 	use ContentTrait;
 }
 
