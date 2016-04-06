@@ -1,8 +1,9 @@
 <?php
 namespace cmsgears\cms\common\models\traits;
 
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\ModelBlock;
+// CMG Imports
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\mappers\ModelBlock;
 
 /**
  * BlockTrait can be used to form page using blocks.

@@ -12,13 +12,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\resources\CmgFile;
 use cmsgears\cms\common\models\entities\Page;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\cms\common\models\mappers\ModelContent;
 
-use cmsgears\cms\common\services\ModelContentService;
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\PageService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\entities\PageService;
+use cmsgears\cms\common\services\mappers\ModelContentService;
 
 class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -27,7 +27,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 	}
 
@@ -134,7 +134,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		    	$model->validate() && $content->validate() ) {
 
 				$page = PageService::update( $model );
-	
+
 				if( isset( $page ) ) {
 
 					// Update Content
@@ -158,7 +158,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
@@ -170,7 +170,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$content	= $model->content;
 			$banner		= $content->banner;
 			$video		= $content->video;
@@ -178,7 +178,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
 
 				if( PageService::delete( $model ) ) {
-					
+
 					ModelContentService::delete( $content, $banner, $video );
 
 					return $this->redirect( [ 'all' ] );

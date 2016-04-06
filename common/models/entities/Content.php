@@ -3,18 +3,20 @@ namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-use cmsgears\core\common\behaviors\AuthorBehavior;
 
 use cmsgears\core\common\models\entities\Site;
+use cmsgears\cms\common\models\base\CmsTables;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
  * Content Entity
@@ -23,7 +25,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property int $parentId
  * @property int $siteId
  * @property int $createdBy
- * @property int $modifiedBy 
+ * @property int $modifiedBy
  * @property string $name
  * @property string $slug
  * @property short $type
@@ -33,7 +35,11 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property short $order
  * @property short $featured
  */
-class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
+class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
 
 	// Pre-Defined Status
 	const STATUS_NEW		=  500;
@@ -53,11 +59,91 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		self::VISIBILITY_PUBLIC => 'Public'
 	];
 
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
+
 	use CreateModifyTrait;
+
+	// Constructor and Initialisation ------------------------------
 
 	// Instance Methods --------------------------------------------
 
-	// yii\db\BaseActiveRecord
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+            ],
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ]
+        ];
+    }
+
+	// yii\base\Model --------------------
+
+    /**
+     * @inheritdoc
+     */
+	public function rules() {
+
+		// model rules
+        $rules = [
+            [ [ 'name', 'siteId' ], 'required' ],
+            [ [ 'id' ], 'safe' ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+			[ [ 'slug', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ 'featured', 'boolean' ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+        ];
+
+		// trim if required
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
+    }
+
+    /**
+     * @inheritdoc
+     */
+	public function attributeLabels() {
+
+		return [
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
+		];
+	}
+
+	// yii\db\BaseActiveRecord -----------
 
 	public function beforeSave( $insert ) {
 
@@ -74,7 +160,7 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		return false;
 	}
 
-	// Content
+	// Content ---------------------------
 
 	public function getParent() {
 
@@ -141,81 +227,6 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
-	// yii\base\Component ----------------
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
-
-        return [
-
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'ensureUnique' => true
-            ]
-        ];
-    }
-
-	// yii\base\Model --------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-		// model rules
-        $rules = [
-            [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'type', 'icon' ], 'safe' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 150 ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 200 ],
-            [ 'featured', 'boolean' ],
-            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
-        ];
-
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
-
-		return $rules;
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ), 
-			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
-		];
-	}
-
-	// Content ---------------------------
-
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
@@ -253,21 +264,15 @@ class Content extends \cmsgears\core\common\models\entities\NamedCmgEntity {
         return $model;
     }
 
-	// Content
+	// Content ---------------------------
 
-	/**
-	 * @param string $name
-	 * @param int $siteId
-	 * @return Content - by name and site id
-	 */
-	public static function findByName( $name ) {
+	// Create -------------
 
-		$siteId	= Yii::$app->cmgCore->siteId;
+	// Read ---------------
 
-		return static::find()->where( 'name=:name AND siteId=:siteId' )
-							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
-							->one();
-	}
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

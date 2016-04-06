@@ -6,7 +6,7 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\cms\common\services\PageService;
+use cmsgears\cms\common\services\entities\PageService;
 
 class ContentUtil {
 
@@ -51,7 +51,7 @@ class ContentUtil {
 				$view->title		= $page->name . " | " . $siteTitle;
 			}
 			else {
-				
+
 				$view->title		= $siteTitle;
 			}
 		}
@@ -99,7 +99,7 @@ class ContentUtil {
 				$view->title		= $page->name . " | " . $siteTitle;
 			}
 			else {
-				
+
 				$view->title		= $siteTitle;
 			}
 		}

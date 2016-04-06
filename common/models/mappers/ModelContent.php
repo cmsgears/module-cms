@@ -1,11 +1,10 @@
 <?php
-namespace cmsgears\cms\common\models\entities;
+namespace cmsgears\cms\common\models\mappers;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -15,6 +14,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
+use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\VisualTrait;
@@ -39,52 +39,27 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $seoRobot
  * @property integer $viewCount
  * @property string $content
- * @property string $data 
+ * @property string $data
  */
-class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
+class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
 
 	use TemplateTrait;
 	use VisualTrait;
 	use DataTrait;
 
+	// Constructor and Initialisation ------------------------------
+
 	// Instance Methods --------------------------------------------
-
-	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_LIMIT_TEXT ) {
-
-		if( strlen( $this->summary ) > $limit ) {
-
-			return substr( $this->summary, 0, $limit );
-		}
-
-		return $this->summary;
-	}
-
-	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_LIMIT_TEXT ) {
-
-		if( strlen( $this->content ) > $limit ) {
-
-			return substr( $this->content, 0, $limit );
-		}
-
-		return $this->content;
-	}
-
-	// yii\db\BaseActiveRecord -----------
-
-	public function beforeSave( $insert ) {
-
-	    if( parent::beforeSave( $insert ) ) {
-
-			if( $this->templateId <= 0 ) {
-
-				$this->templateId = null;
-			}
-
-	        return true;
-	    }
-
-		return false;
-	}
 
 	// yii\base\Component ----------------
 
@@ -120,11 +95,11 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
         $rules = [
             [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
-            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'viewCount' ], 'safe' ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -158,6 +133,45 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 		];
 	}
 
+	// yii\db\BaseActiveRecord -----------
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// ModelContent ----------------------
+
+	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_SMALL ) {
+
+		if( strlen( $this->summary ) > $limit ) {
+
+			return substr( $this->summary, 0, $limit );
+		}
+
+		return $this->summary;
+	}
+
+	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+
+		if( strlen( $this->content ) > $limit ) {
+
+			return substr( $this->content, 0, $limit );
+		}
+
+		return $this->content;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
@@ -172,7 +186,13 @@ class ModelContent extends \cmsgears\core\common\models\entities\CmgModel {
 
 	// ModelContent ----------------------
 
-	// Read ------
+	// Create -------------
+
+	// Read ---------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

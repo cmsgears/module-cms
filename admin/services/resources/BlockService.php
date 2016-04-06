@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\services;
+namespace cmsgears\cms\admin\services\resources;
 
 // Yii Imports
 use \Yii;
@@ -8,9 +8,9 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\Block;
+use cmsgears\cms\common\models\resources\Block;
 
-class BlockService extends \cmsgears\cms\common\services\BlockService {
+class BlockService extends \cmsgears\cms\common\services\resources\BlockService {
 
 	// Static Methods ----------------------------------------------
 

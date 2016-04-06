@@ -12,7 +12,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
 
-use cmsgears\cms\admin\services\PostService;
+use cmsgears\cms\admin\services\entities\PostService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

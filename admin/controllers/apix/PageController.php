@@ -12,7 +12,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
 
-use cmsgears\cms\admin\services\PageService;
+use cmsgears\cms\admin\services\entities\PageService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

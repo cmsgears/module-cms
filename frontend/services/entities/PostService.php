@@ -1,22 +1,25 @@
 <?php
-namespace cmsgears\cms\admin\services;
+namespace cmsgears\cms\frontend\services\entities;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
-
+use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Post;
 
-class PostService extends \cmsgears\cms\common\services\PostService {
+class PostService extends \cmsgears\cms\common\services\entities\PostService {
 
 	// Static Methods ----------------------------------------------
+
+	// Read ----------------
 
 	// Pagination -------
 
 	public static function getPagination( $config = [] ) {
+
+		$postTable = CmsTables::TABLE_PAGE;
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -68,6 +71,9 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ]
+	        ],
+	        'defaultOrder' => [
+	        	'pdate' => 'desc'
 	        ]
 	    ]);
 
@@ -76,12 +82,9 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 			$config[ 'conditions' ] = [];
 		}
 
-		// Restrict to site
-		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
-
-			unset( $config[ 'site' ] );
+			$config[ 'query' ] = Post::findWithAuthor();
 		}
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -94,9 +97,29 @@ class PostService extends \cmsgears\cms\common\services\PostService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_POST;
+		if( !isset( $config[ 'route' ] ) ) {
+
+			$config[ 'route' ] = 'blog';
+		}
+
+		$config[ 'conditions' ][ "$postTable.status" ] 		= Post::STATUS_PUBLISHED;
+		$config[ 'conditions' ][ "$postTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
 
 		return self::getDataProvider( new Post(), $config );
+	}
+
+	public static function getPaginationForSite( $config = [] ) {
+
+		$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+		return self::getPagination( $config );
+	}
+
+	public static function getPaginationForChildSites( $config = [] ) {
+
+		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ 1 ] ];
+
+		return self::getPagination( $config );
 	}
 }
 

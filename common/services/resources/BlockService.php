@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use \Yii;
@@ -7,17 +7,17 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\Block;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\resources\Block;
 
-use cmsgears\core\common\services\FileService;
+use cmsgears\core\common\services\resources\FileService;
 
-class BlockService extends \cmsgears\core\common\services\Service {
+class BlockService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-	
+
 	/**
 	 * @param integer $id
 	 * @return Block
@@ -73,7 +73,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 	}
 
 	// Create -----------
-	
+
 	/**
 	 * @param Block $block
 	 * @param CmgFile $banner
@@ -87,7 +87,7 @@ class BlockService extends \cmsgears\core\common\services\Service {
 
 			$block->templateId = null;
 		}
-		
+
 		FileService::saveFiles( $block, [ 'bannerId' => $banner, 'videoId' => $video, 'textureId' => $texture ] );
 
 		// Create Block

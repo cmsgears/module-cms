@@ -1,13 +1,14 @@
 <?php
-namespace cmsgears\cms\common\models\entities;
+namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\cms\common\models\base\CmsTables;
 
 /**
  * ContentAttribute Entity
@@ -20,14 +21,23 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $valueType
  * @property string $value
  */
-class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
+class ContentAttribute extends \cmsgears\core\common\models\base\Attribute {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
 
 	// Instance Methods --------------------------------------------
 
-	public function getParent() {
-
-		return $this->hasOne( Content::className(), [ 'id' => 'pageId' ] );
-	}
+	// yii\base\Component ----------------
 
 	// yii\base\Model --------------------
 
@@ -35,17 +45,17 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
      * @inheritdoc
      */
 	public function rules() {
-		
+
 		// model rules
         $rules = [
             [ [ 'pageId', 'name' ], 'required' ],
-            [ [ 'id', 'label', 'value' ], 'safe' ],
-            [ [ 'pageId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'label', 'string', 'min' => 1, 'max' => 150 ],
+            [ [ 'id', 'value' ], 'safe' ],
+            [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'pageId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
 		// trim if required
@@ -106,6 +116,11 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
         }
     }
 
+	public function getParent() {
+
+		return $this->hasOne( Content::className(), [ 'id' => 'pageId' ] );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
@@ -119,6 +134,10 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 	}
 
 	// ContentAttribute ------------------
+
+	// Create -------------
+
+	// Read ---------------
 
 	/**
 	 * @param integer $pageId
@@ -137,7 +156,7 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 	 */
 	public static function findByName( $pageId, $name ) {
 
-		return self::find()->where( 'parentId=:pid AND name=:name', [ ':pid' => $pageId, ':name' => $name ] )->one();
+		return self::find()->where( 'pageId=:pid AND name=:name', [ ':pid' => $pageId, ':name' => $name ] )->all();
 	}
 
 	/**
@@ -148,7 +167,7 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 	 */
 	public static function findByTypeName( $pageId, $type, $name ) {
 
-		return self::find()->where( 'parentId=:pid AND type=:type AND name=:name', [ ':pid' => $pageId, ':type' => $type, ':name' => $name ] )->one();
+		return self::find()->where( 'pageId=:pid AND type=:type AND name=:name', [ ':pid' => $pageId, ':type' => $type, ':name' => $name ] )->one();
 	}
 
 	/**
@@ -163,6 +182,10 @@ class ContentAttribute extends \cmsgears\core\common\models\entities\Attribute {
 
 		return isset( $config );
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\services;
+namespace cmsgears\cms\admin\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -10,7 +10,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\ObjectData;
 
-class WidgetService extends \cmsgears\cms\common\services\WidgetService {
+class MenuService extends \cmsgears\cms\common\services\entities\MenuService {
 
 	// Static Methods ----------------------------------------------
 
@@ -42,7 +42,7 @@ class WidgetService extends \cmsgears\cms\common\services\WidgetService {
 			unset( $config[ 'site' ] );
 		}
 
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
 
 		if( !isset( $config[ 'sort' ] ) ) {
 

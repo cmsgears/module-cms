@@ -12,16 +12,15 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\cms\common\models\entities\Page;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\Category;
 use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\cms\common\models\mappers\ModelContent;
 
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\core\common\services\ModelCategoryService;
-use cmsgears\cms\admin\services\PostService;
-use cmsgears\cms\common\services\ModelContentService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\core\common\services\mappers\ModelCategoryService;
+use cmsgears\cms\admin\services\entities\PostService;
+use cmsgears\cms\common\services\mappers\ModelContentService;
 
 class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -30,7 +29,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 	}
 
@@ -109,8 +108,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			return $this->redirect( [  'all' ] );
 		}
 
-		$visibilityMap	= Page::$visibilityMap;
-		$statusMap		= Page::$statusMap;
+		$visibilityMap	= Post::$visibilityMap;
+		$statusMap		= Post::$statusMap;
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
     	return $this->render( 'create', [
@@ -131,7 +130,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$content	= $model->content;
 			$banner	 	= CmgFile::loadFile( $content->banner, 'Banner' );
 			$video	 	= CmgFile::loadFile( $content->video, 'Video' );
@@ -157,8 +156,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( [  'all' ] );
 			}
 
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
+			$visibilityMap	= Post::$visibilityMap;
+			$statusMap		= Post::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
@@ -171,7 +170,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
@@ -199,8 +198,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( [  'all' ] );
 			}
 
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
+			$visibilityMap	= Post::$visibilityMap;
+			$statusMap		= Post::$statusMap;
 			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [

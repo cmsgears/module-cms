@@ -1,11 +1,10 @@
 <?php
-namespace cmsgears\cms\common\models\entities;
+namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\SluggableBehavior;
 
@@ -13,21 +12,22 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
-
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
+use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 /**
  * Block Entity
  *
  * @property int $id
- * @property int $siteId 
+ * @property int $siteId
  * @property int $bannerId
  * @property int $textureId
  * @property int $videoId
@@ -38,53 +38,33 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $slug
  * @property string $description
  * @property string $active
- * @property string $htmlOptions
  * @property string $title
  * @property string $icon
  * @property date $createdAt
  * @property date $modifiedAt
+ * @property string $htmlOptions
  * @property string $content
- * @property string $data 
+ * @property string $data
  */
-class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
+class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
 
 	use TemplateTrait;
 	use VisualTrait;
 	use DataTrait;
 
+	// Constructor and Initialisation ------------------------------
+
 	// Instance Methods --------------------------------------------
-
-	// Block
-
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
-	/**
-	 * @return string representation of flag
-	 */
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
-
-	// yii\db\BaseActiveRecord -----------
-
-	public function beforeSave( $insert ) {
-
-	    if( parent::beforeSave( $insert ) ) {
-
-			if( $this->templateId <= 0 ) {
-
-				$this->templateId = null;
-			}
-
-	        return true;
-	    }
-
-		return false;
-	}
 
 	// yii\base\Component ----------------
 
@@ -94,7 +74,6 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
     public function behaviors() {
 
         return [
-
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
             ],
@@ -123,12 +102,13 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => 150 ],
-            [ 'name', 'alphanumhyphenspace' ],
+            [ [ 'id', 'title', 'content', 'data' ], 'safe' ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 200 ],
+            [ 'active', 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -169,7 +149,37 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		];
 	}
 
-	// Block -----------------------------	
+	// yii\db\BaseActiveRecord -----------
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// Block -----------------------------
+
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
+
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -185,7 +195,9 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	// Block -----------------------------
 
-	// Read ------
+	// Create -------------
+
+	// Read ---------------
 
 	/**
 	 * @return Block - by slug.
@@ -207,6 +219,10 @@ class Block extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
 							->one();
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

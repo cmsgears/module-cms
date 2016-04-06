@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -7,10 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ModelCategory;
+use cmsgears\core\common\models\mappers\ModelCategory;
 use cmsgears\cms\common\models\entities\Post;
 
-class PostService extends \cmsgears\core\common\services\Service {
+class PostService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 

@@ -1,16 +1,16 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\Category;
+use cmsgears\cms\common\models\resources\Category;
 
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
  */
-class CategoryService extends \cmsgears\core\common\services\CategoryService {
+class CategoryService extends \cmsgears\core\common\services\resources\CategoryService {
 
 	// Static Methods ----------------------------------------------
 

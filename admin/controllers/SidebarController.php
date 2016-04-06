@@ -13,8 +13,8 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\SidebarWidget;
 
-use cmsgears\cms\admin\services\SidebarService;
-use cmsgears\cms\admin\services\WidgetService;
+use cmsgears\cms\admin\services\entities\SidebarService;
+use cmsgears\cms\admin\services\entities\WidgetService;
 
 class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -23,7 +23,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
 	}
 
@@ -91,7 +91,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			$sidebarWidgets[] = new SidebarWidget();
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) && 
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
 			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
 			$sidebar	= SidebarService::create( $model );
@@ -121,7 +121,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			$widgets		= WidgetService::getIdNameList();
 			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) && 
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
 			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
 				SidebarService::update( $model );
@@ -148,7 +148,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$widgets		= WidgetService::getIdNameList();
 			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
 
@@ -167,7 +167,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

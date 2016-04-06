@@ -10,11 +10,11 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\cms\common\models\entities\Block;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\cms\common\models\resources\Block;
 
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\BlockService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\resources\BlockService;
 
 class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -23,7 +23,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
 	}
 
@@ -90,7 +90,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( [ 'all' ] );
 			}
 		}
-		
+
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
     	return $this->render( 'create', [

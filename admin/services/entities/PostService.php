@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\services;
+namespace cmsgears\cms\admin\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -8,9 +8,9 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\Post;
 
-class PageService extends \cmsgears\cms\common\services\PageService {
+class PostService extends \cmsgears\cms\common\services\entities\PostService {
 
 	// Static Methods ----------------------------------------------
 
@@ -94,9 +94,9 @@ class PageService extends \cmsgears\cms\common\services\PageService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_PAGE;
+		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_POST;
 
-		return self::getDataProvider( new Page(), $config );
+		return self::getDataProvider( new Post(), $config );
 	}
 }
 

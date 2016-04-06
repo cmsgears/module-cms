@@ -7,19 +7,39 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\common\models\base\CmsTables;
+
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Page extends Content {
 
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
 	public $parentType	= CmsGlobal::TYPE_PAGE;
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
 
 	use FileTrait;
 	use ContentTrait;
 	use BlockTrait;
 
+	// Constructor and Initialisation ------------------------------
+
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+	// yii\base\Model --------------------
+
+	// Page ------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -30,20 +50,28 @@ class Page extends Content {
      */
 	public static function find() {
 
-		$postTable = CmsTables::TABLE_PAGE;
+		$pageTable = CmsTables::TABLE_PAGE;
 
-		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_PAGE ] );
+		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
 	}
 
 	// Page ------------------------------
 
+	// Create -------------
+
+	// Read ---------------
+
 	/**
-	 * @return Page - by slug.
+	 * @return Page - by slug
 	 */
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

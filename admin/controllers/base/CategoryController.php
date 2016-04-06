@@ -11,13 +11,13 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\cms\common\models\entities\Category;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\cms\common\models\resources\Category;
+use cmsgears\cms\common\models\mappers\ModelContent;
 
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\CategoryService;
-use cmsgears\cms\common\services\ModelContentService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\resources\CategoryService;
+use cmsgears\cms\common\services\mappers\ModelContentService;
 
 abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
@@ -38,9 +38,9 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 	// yii\base\Component ----------------
 
     public function behaviors() {
-		
+
 		$behaviors	= parent::behaviors();
-		
+
 		$behaviors[ 'rbac' ][ 'actions' ] = [
 								                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
 								                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
@@ -161,7 +161,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 				// Delete Category
 				CategoryService::delete( $model );
-				
+
 				// Delete Content
 				ModelContentService::delete( $content, $banner, $video );
 

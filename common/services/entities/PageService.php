@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -7,18 +7,17 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\CmsTables;
+use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Page;
-use cmsgears\cms\common\models\entities\MenuPage;
 
-use cmsgears\core\common\services\FileService;
+use cmsgears\core\common\services\resources\FileService;
 
-class PageService extends \cmsgears\core\common\services\Service {
+class PageService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-	
+
 	/**
 	 * @param integer $id
 	 * @return Page
@@ -58,15 +57,15 @@ class PageService extends \cmsgears\core\common\services\Service {
 		if( count( $pages ) > 0 ) {
 
 			if( $map ) {
-				
+
 				$pages 		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
 				$pageMap	= [];
-				
+
 				foreach ( $pages as $page ) {
-					
+
 					$pageMap[ $page->id ] = $page;
 				}
-				
+
 				return $pageMap;
 			}
 			else {
@@ -90,7 +89,7 @@ class PageService extends \cmsgears\core\common\services\Service {
 	}
 
 	// Create -----------
-	
+
 	/**
 	 * @param Page $page
 	 * @param CmgFile $banner

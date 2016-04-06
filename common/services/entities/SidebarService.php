@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -7,13 +7,13 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\SidebarWidget;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\SortUtil;
 
-class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
+class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
@@ -64,9 +64,9 @@ class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 
 		if( $associative ) {
 
-			return $sidebarWidgets;	
+			return $sidebarWidgets;
 		}
-		
+
 		return $widgetObjects;
 	}
 
@@ -79,7 +79,7 @@ class SidebarService extends \cmsgears\core\common\services\ObjectDataService {
 		foreach ( $widgets as $widget ) {
 
 			if( in_array( $widget[ 'id' ], $keys ) ) {
-				
+
 				$sidebarWidget			= $sidebarWidgets[ $widget[ 'id' ] ];
 				$sidebarWidget->name	= $widget[ 'name' ];
 				$widgetObjects[]		= $sidebarWidget;

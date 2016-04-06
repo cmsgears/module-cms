@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -7,14 +7,14 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\SortUtil;
 
-class MenuService extends \cmsgears\core\common\services\ObjectDataService {
+class MenuService extends \cmsgears\core\common\services\entities\ObjectDataService {
 
 	// Static Methods ----------------------------------------------
 
@@ -94,9 +94,9 @@ class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 
 		if( $associative ) {
 
-			return $pageLinks;	
+			return $pageLinks;
 		}
-		
+
 		return $linkObjects;
 	}
 
@@ -109,7 +109,7 @@ class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 		foreach ( $pages as $page ) {
 
 			if( in_array( $page[ 'id' ], $keys ) ) {
-				
+
 				$pageLink		= $pageLinks[ $page[ 'id' ] ];
 				$pageLink->name	= $page[ 'name' ];
 				$linkObjects[]	= $pageLink;
@@ -122,7 +122,7 @@ class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 				$linkObjects[]		= $pageLink;
 			}
 		}
-		
+
 		return $linkObjects;
 	}
 
@@ -160,7 +160,7 @@ class MenuService extends \cmsgears\core\common\services\ObjectDataService {
 			foreach ( $links as $link ) {
 
 				if( isset( $link ) ) {
-					
+
 					$link->type				= CmsGlobal::TYPE_LINK;
 
 					if( !isset( $link->order ) || strlen( $link->order ) == 0 ) {

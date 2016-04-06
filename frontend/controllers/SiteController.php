@@ -9,8 +9,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\cms\common\services\PageService;
-use cmsgears\cms\common\services\PostService;
+use cmsgears\cms\common\services\entities\PageService;
+use cmsgears\cms\common\services\entities\PostService;
 
 class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 

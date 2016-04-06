@@ -1,16 +1,14 @@
 <?php
-namespace cmsgears\cms\admin\services;
+namespace cmsgears\cms\admin\services\resources;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\cms\common\models\resources\Category;
 
-use cmsgears\core\common\models\entities\ObjectData;
-
-class SidebarService extends \cmsgears\cms\common\services\SidebarService {
+class CategoryService extends \cmsgears\cms\common\services\resources\CategoryService {
 
 	// Static Methods ----------------------------------------------
 
@@ -25,13 +23,19 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
+	            ],
+	            'parent' => [
+	                'asc' => [ 'parentId' => SORT_ASC ],
+	                'desc' => ['parentId' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'parent',
 	            ]
 	        ]
 	    ]);
 
 		if( !isset( $config[ 'conditions' ] ) ) {
 
-			$config[ 'conditions' ]	= [];
+			$config[ 'conditions' ] = [];
 		}
 
 		// Restrict to site
@@ -41,8 +45,6 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 
 			unset( $config[ 'site' ] );
 		}
-
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		if( !isset( $config[ 'sort' ] ) ) {
 
@@ -54,7 +56,12 @@ class SidebarService extends \cmsgears\cms\common\services\SidebarService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new ObjectData(), $config );
+		return self::getDataProvider( new Category(), $config );
+	}
+
+	public static function getPaginationByType( $type ) {
+
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
 	}
 }
 

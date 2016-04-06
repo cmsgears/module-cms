@@ -1,8 +1,9 @@
 <?php
 namespace cmsgears\cms\common\models\traits;
 
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\ModelContent;
+// CMG Imports
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\mappers\ModelContent;
 
 /**
  * ContentTrait can be used to add seo optimised content to relevant models to form public pages.

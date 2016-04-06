@@ -14,8 +14,8 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
 
-use cmsgears\cms\admin\services\MenuService;
-use cmsgears\cms\admin\services\PageService;
+use cmsgears\cms\admin\services\entities\MenuService;
+use cmsgears\cms\admin\services\entities\PageService;
 
 class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -24,7 +24,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
 	}
 
@@ -59,7 +59,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
     }
 
 	// MenuController --------------------
-	
+
 	public function actionIndex() {
 
 		return $this->redirect( [ 'all' ] );
@@ -100,8 +100,8 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 			$links[] = new Link();
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&
+			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
 			$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
 
 			$menu = MenuService::create( $model );
@@ -136,8 +136,8 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 			$links		= MenuService::getLinks( $model );
 			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
-				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&
+				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
 				$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
 
 				if( MenuService::update( $model ) ) {
@@ -189,7 +189,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

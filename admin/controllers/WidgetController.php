@@ -13,8 +13,8 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\admin\models\forms\WidgetForm;
 
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\WidgetService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\entities\WidgetService;
 
 class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -23,7 +23,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
 	}
 
@@ -93,7 +93,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
-		
+
     	return $this->render( 'create', [
     		'model' => $model,
     		'meta' => $meta,
@@ -116,7 +116,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
 
 				if( WidgetService::update( $model, $meta ) ) {
-	
+
 					return $this->redirect( [ 'all' ] );
 				}
 			}
@@ -131,7 +131,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -159,7 +159,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );		
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionSettings( $id ) {
@@ -175,7 +175,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 			if( $meta->load( Yii::$app->request->post(), 'WidgetForm' ) ) {
 
 				if( WidgetService::update( $model, $meta ) ) {
-	
+
 					return $this->redirect( [ 'all' ] );
 				}
 			}
@@ -187,7 +187,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

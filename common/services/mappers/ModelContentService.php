@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services;
+namespace cmsgears\cms\common\services\mappers;
 
 // Yii Imports
 use \Yii;
@@ -7,19 +7,19 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\CmsTables;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\mappers\ModelContent;
 
-use cmsgears\core\common\services\FileService;
+use cmsgears\core\common\services\resources\FileService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class ModelContentService extends \cmsgears\core\common\services\Service {
+class ModelContentService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-	
+
 	/**
 	 * @param integer $id
 	 * @return ModelContent
@@ -41,7 +41,7 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 	}
 
 	// Create -----------
-	
+
 	/**
 	 * @param ModelContent $content
 	 * @param CmgFile $banner
@@ -137,7 +137,7 @@ class ModelContentService extends \cmsgears\core\common\services\Service {
 
 		// Delete Content
 		$existingContent->delete();
-		
+
 		// Delete Files
 		FileService::deleteFiles( [ $banner, $video ] );
 

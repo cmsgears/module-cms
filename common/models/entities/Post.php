@@ -8,6 +8,7 @@ use \Yii;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
@@ -17,7 +18,17 @@ use cmsgears\cms\common\models\traits\BlockTrait;
 
 class Post extends Content {
 
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
 	public $parentType	= CmsGlobal::TYPE_POST;
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
 
 	use CategoryTrait;
 	use TagTrait;
@@ -25,7 +36,15 @@ class Post extends Content {
 	use ContentTrait;
 	use BlockTrait;
 
+	// Constructor and Initialisation ------------------------------
+
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+	// yii\base\Model --------------------
+
+	// Post ------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -43,6 +62,10 @@ class Post extends Content {
 
 	// Post ------------------------------
 
+	// Create -------------
+
+	// Read ---------------
+
 	/**
 	 * @return array - Post - All posts having author details.
 	 */
@@ -52,7 +75,7 @@ class Post extends Content {
 
 		return self::find()->joinWith( 'content' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::TABLE_FILE;
-			$query->from( "$fileTable avatar" ); } 
+			$query->from( "$fileTable avatar" ); }
 		]);
 	}
 
@@ -63,6 +86,10 @@ class Post extends Content {
 
 		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>
