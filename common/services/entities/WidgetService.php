@@ -21,11 +21,6 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 		return self::findByNameType( $name, CmsGlobal::TYPE_WIDGET );
 	}
 
-	public static function findBySlug( $slug ) {
-
-		return self::findBySlugType( $slug, CmsGlobal::TYPE_WIDGET );
-	}
-
 	public static function getIdList() {
 
 		return self::getIdListByType( CmsGlobal::TYPE_WIDGET );

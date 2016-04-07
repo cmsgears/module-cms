@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\CategoryTrait;

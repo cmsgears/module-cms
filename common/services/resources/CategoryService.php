@@ -38,15 +38,15 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 		return Category::findByName( $name );
 	}
 
-	public static function findBySlug( $slug ) {
-
-		return Category::findBySlug( $slug );
-	}
-
 	public static function findByType( $type ) {
 
 		return Category::findByType( $type );
     }
+
+	public static function findBySlugType( $slug, $type ) {
+
+		return Category::findBySlugType( $slug, $type );
+	}
 
 	// Data Provider ----
 
