@@ -11,13 +11,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\forms\Link;
-use cmsgears\cms\common\models\forms\PageLink;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\cms\admin\models\forms\ElementForm;
 
-use cmsgears\cms\admin\services\entities\MenuService;
-use cmsgears\cms\admin\services\entities\PageService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\entities\ElementService;
 
-class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
+class ElementController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -25,7 +25,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
         parent::__construct( $id, $module, $config );
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -43,7 +43,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
 	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-              	]
+                ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -58,7 +58,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
         ];
     }
 
-	// MenuController --------------------
+	// UserController --------------------
 
 	public function actionIndex() {
 
@@ -67,9 +67,9 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionAll() {
 
-		$dataProvider = MenuService::getPagination();
+		$dataProvider = ElementService::getPagination();
 
-	    return $this->render('all', [
+	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
@@ -78,89 +78,58 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$model			= new ObjectData();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$model->type	= CmsGlobal::TYPE_MENU;
-		$model->data	= "{ \"links\": {} }";
-		$pages			= PageService::getIdNameList();
+		$model->type	= CmsGlobal::TYPE_ELEMENT;
+		$banner	 		= CmgFile::loadFile( null, 'Banner' );
+		$meta			= new ElementForm();
 
 		$model->setScenario( 'create' );
 
-		// Menu Pages
-		$pageLinks	= [];
+		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
 
-		for ( $i = 0, $j = count( $pages ); $i < $j; $i++ ) {
-
-			$pageLinks[] = new PageLink();
-		}
-
-		// Menu Links
-		$links	= [];
-
-		for ( $i = 0; $i < 6; $i++ ) {
-
-			$links[] = new Link();
-		}
-
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
-			$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
-
-			$menu = MenuService::create( $model );
-
-			if( $menu ) {
-
-				MenuService::updateLinks( $menu, $links, $pageLinks );
+			if( ElementService::create( $model, $meta, null, $banner ) ) {
 
 				return $this->redirect( [ 'all' ] );
 			}
 		}
 
+		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
+
     	return $this->render( 'create', [
     		'model' => $model,
-    		'pages' => $pages,
-    		'links' => $links,
-    		'pageLinks' => $pageLinks
+    		'banner' => $banner,
+    		'meta' => $meta,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= MenuService::findById( $id );
+		$model			= ElementService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$banner	 = CmgFile::loadFile( $model->banner, 'Banner' );
+			$meta	= new ElementForm( $model->data );
+
 			$model->setScenario( 'update' );
 
-			$pages		= PageService::getIdNameList();
-			$links		= MenuService::getLinks( $model );
-			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
 
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' );
-
-			if( count( $links ) < 5 ) {
-
-				$links[]	= new Link();
-				$links[]	= new Link();
-				$links[]	= new Link();
-				$links[]	= new Link();
-			}
-
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
-			    $model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
-
-				if( MenuService::update( $model ) ) {
-
-					MenuService::updateLinks( $model, $links, $pageLinks );
+				if( ElementService::update( $model, $meta, null, $banner ) ) {
 
 					return $this->redirect( [ 'all' ] );
 				}
 			}
 
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
+
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
+	    		'banner' => $banner,
+	    		'meta' => $meta,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -171,29 +140,29 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= MenuService::findById( $id );
+		$model			= ElementService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$pages		= PageService::getIdNameList();
-			$links		= MenuService::getLinks( $model );
-			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+			$banner	 	= CmgFile::loadFile( $model->banner, 'Banner' );
+			$meta		= new ElementForm( $model->data );
 
 			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
 
-				if( MenuService::delete( $model ) ) {
+				if( ElementService::delete( $model, null, $banner ) ) {
 
 					return $this->redirect( [ 'all' ] );
 				}
 			}
 
-			$pages	= PageService::getIdNameList();
+			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
+	    		'banner' => $banner,
+	    		'meta' => $meta,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 

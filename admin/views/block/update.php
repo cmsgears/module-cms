@@ -37,9 +37,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Block Banner</div>
-			<?= ImageUploader::widget([ 
-					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 
-					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' 
+			<?= ImageUploader::widget([
+					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ],
+					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner'
 			]); ?>
 		</div>
 
@@ -50,10 +50,24 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Block Texture</div>
-			<?= ImageUploader::widget([ 
-					'options' => [ 'id' => 'model-texture', 'class' => 'file-uploader' ], 
-					'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture' 
+			<?= ImageUploader::widget([
+					'options' => [ 'id' => 'model-texture', 'class' => 'file-uploader' ],
+					'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture'
 			]); ?>
+		</div>
+
+		<div class="box-content clearfix">
+			<div class="header">Link Elements</div>
+			<?php foreach ( $elements as $key => $element ) { ?>
+				<span class="box-half">
+					<?= $form->field( $blockElements[ $key ], "[$key]element" )->checkbox( [ 'label' => $element[ 'name' ] ] ) ?>
+					<?= $form->field( $blockElements[ $key ], "[$key]elementId" )->hiddenInput( [ 'value' => $element['id'] ] )->label( false ) ?>
+					<div class="frm-split-40-60 clearfix">
+						<?= $form->field( $blockElements[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "item options" ] ) ?>
+						<?= $form->field( $blockElements[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+					</div>
+				</span>
+			<?php } ?>
 		</div>
 
 		<div class="filler-height"></div>

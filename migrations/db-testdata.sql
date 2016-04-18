@@ -5,6 +5,27 @@ SET FOREIGN_KEY_CHECKS=0;
 SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
 
 --
+-- CMS Config Form
+--
+
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`createdAt`,`modifiedAt`,`htmlOptions`,`data`) VALUES
+	(@site,NULL,1,1,'Config CMS','config-cms','system','CMS configuration form.','All configurations saved successfully.',0,10,1,0,0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL,NULL);
+
+SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-cms';
+
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`order`,`icon`,`htmlOptions`,`data`) VALUES 
+	(@form,'page_comment','Page Comment',40,0,'required',0,NULL,'{\"title\":\"Enable/disable comments on pages.\"}',NULL),
+	(@form,'post_comment','Post Comment',40,0,'required',0,NULL,'{\"title\":\"Enable/disable comments on posts.\"}',NULL);
+
+--
+-- Dumping data for table `cmg_core_model_attribute`
+--
+
+INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`label`,`type`,`valueType`,`value`) VALUES
+	(@site,'site','page_comment','Page Comment','cms','flag','0'),
+	(@site,'site','post_comment','Post Comment','cms','flag','1');
+
+--
 -- CMS module roles and permissions
 --
 
@@ -31,18 +52,18 @@ INSERT INTO `cmg_core_role_permission` VALUES
 -- Dumping data for table `cmg_cms_page`
 --
 
-INSERT INTO `cmg_cms_page` (`parentId`,`siteId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`status`,`visibility`,`icon`,`order`,`featured`) VALUES
-	(NULL,@site,1,1,'Home','home','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Login','login','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Register','register','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Confirm Account','confirm-account','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Activate Account','activate-account','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Forgot Password','forgot-password','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Reset Password','reset-password','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'About Us','about-us','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Terms','terms','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Privacy','privacy','page',500,10,NULL,0,0),
-	(NULL,@site,1,1,'Blog','blog','page',500,10,NULL,0,0);
+INSERT INTO `cmg_cms_page` (`parentId`,`siteId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`status`,`visibility`,`icon`,`order`,`featured`,`comments`) VALUES
+	(NULL,@site,1,1,'Home','home','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Login','login','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Register','register','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Confirm Account','confirm-account','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Activate Account','activate-account','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Forgot Password','forgot-password','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Reset Password','reset-password','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'About Us','about-us','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Terms','terms','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Privacy','privacy','page',500,10,NULL,0,0,0),
+	(NULL,@site,1,1,'Blog','blog','page',500,10,NULL,0,0,0);
 
 --
 -- Dumping data for table `cmg_cms_model_content`

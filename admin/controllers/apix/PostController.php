@@ -18,11 +18,19 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class PostController extends \yii\web\Controller {
 
+	public $modelName;
+	public $modelType;
+	public $modelService;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->modelName	= 'Post';
+		$this->modelType	= CmsGlobal::TYPE_POST;
+		$this->modelService	= new PostService();
 	}
 
 	// Instance Methods --------------------------------------------
@@ -43,6 +51,20 @@ class PostController extends \yii\web\Controller {
                 'actions' => [
 	                'bindCategories'  => [ 'post' ]
                 ]
+            ]
+        ];
+    }
+
+	// yii\base\Controller ---------------
+
+    public function actions() {
+
+        return [
+            'create-tags' => [
+                'class' => 'cmsgears\core\frontend\actions\common\UpdateTags'
+            ],
+            'delete-tag' => [
+                'class' => 'cmsgears\core\frontend\actions\common\DeleteTag'
             ]
         ];
     }

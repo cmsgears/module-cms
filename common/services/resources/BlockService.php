@@ -7,10 +7,14 @@ use \Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\common\models\forms\BlockElement;
+use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\Block;
 
 use cmsgears\core\common\services\resources\FileService;
+
+use cmsgears\core\common\utilities\SortUtil;
 
 class BlockService extends \cmsgears\core\common\services\base\Service {
 
@@ -59,6 +63,63 @@ class BlockService extends \cmsgears\core\common\services\base\Service {
 	public static function getIdNameList() {
 
 		return self::findIdNameList( 'id', 'name', CmsTables::TABLE_BLOCK );
+	}
+
+	public static function getElements( $block, $associative = false ) {
+
+		$objectData		= $block->generateObjectFromJson();
+		$elements		= [];
+		$blockElements	= [];
+		$elementObjects	= [];
+
+		if( isset( $objectData->elements ) ) {
+
+			$elements	= $objectData->elements;
+		}
+
+		foreach ( $elements as $element ) {
+
+			$element			= new BlockElement( $element );
+			$elementObjects[]	= $element;
+
+			if( $associative ) {
+
+				$blockElements[ $element->elementId ]	= $element;
+			}
+		}
+
+		if( $associative ) {
+
+			return $blockElements;
+		}
+
+		return $elementObjects;
+	}
+
+	public static function getElementsForUpdate( $block, $elements ) {
+
+		$blockElements	= self::getElements( $block, true );
+		$keys			= array_keys( $blockElements );
+		$elementObjects	= [];
+
+		foreach ( $elements as $element ) {
+
+			if( in_array( $element[ 'id' ], $keys ) ) {
+
+				$blockElement		= $blockElements[ $element[ 'id' ] ];
+				$blockElement->name	= $element[ 'name' ];
+				$elementObjects[]		= $blockElement;
+			}
+			else {
+
+				$blockElement				= new BlockElement();
+				$blockElement->elementId	= $element[ 'id' ];
+				$blockElement->name			= $element[ 'name' ];
+				$elementObjects[]			= $blockElement;
+			}
+		}
+
+		return $elementObjects;
 	}
 
 	// Data Provider ----
@@ -121,6 +182,40 @@ class BlockService extends \cmsgears\core\common\services\base\Service {
 		$blockToUpdate->update();
 
 		return $blockToUpdate;
+	}
+
+	public static function updateElements( $block, $elements ) {
+
+		$block		= self::findById( $block->id );
+		$objectData	= $block->generateObjectFromJson();
+
+		// Clear all existing mappings
+		$objectData->elements	= [];
+
+		// Add Page Links
+		if( isset( $elements ) && count( $elements ) > 0 ) {
+
+			foreach ( $elements as $element ) {
+
+				if( $element->element ) {
+
+					if( !isset( $element->order ) || strlen( $element->order ) == 0 ) {
+
+						$element->order	= 0;
+					}
+
+					$objectData->elements[] 	= $element;
+				}
+			}
+		}
+
+		$objectData->elements	= SortUtil::sortObjectArrayByNumber( $objectData->elements, 'order', true );
+
+		$block->generateJsonFromObject( $objectData );
+
+		$block->update();
+
+		return true;
 	}
 
 	// Delete -----------

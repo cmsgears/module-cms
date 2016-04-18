@@ -9,7 +9,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\SortUtil;

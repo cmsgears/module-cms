@@ -10,6 +10,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\traits\CommentTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
 
@@ -28,6 +29,7 @@ class Page extends Content {
 	// Traits ------------------------------------------------------
 
 	use FileTrait;
+	use CommentTrait;
 	use ContentTrait;
 	use BlockTrait;
 

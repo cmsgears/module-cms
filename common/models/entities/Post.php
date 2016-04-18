@@ -13,6 +13,7 @@ use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\TagTrait;
 use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\traits\CommentTrait;
 use cmsgears\cms\common\models\traits\ContentTrait;
 use cmsgears\cms\common\models\traits\BlockTrait;
 
@@ -24,7 +25,8 @@ class Post extends Content {
 
 	// Public -------------
 
-	public $parentType	= CmsGlobal::TYPE_POST;
+	public $parentType		= CmsGlobal::TYPE_POST;
+	public $categoryType	= CmsGlobal::TYPE_POST;
 
 	// Private/Protected --
 
@@ -33,6 +35,7 @@ class Post extends Content {
 	use CategoryTrait;
 	use TagTrait;
 	use FileTrait;
+	use CommentTrait;
 	use ContentTrait;
 	use BlockTrait;
 

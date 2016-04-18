@@ -12,10 +12,12 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
+use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\core\common\models\resources\CmgFile;
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\forms\BlockElement;
 
 use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\VisualTrait;
@@ -179,6 +181,34 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
 	public function getActiveStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->active );
+	}
+
+	public function getElementIdList() {
+
+		$objectData		= $this->generateObjectFromJson();
+		$elements		= [];
+		$idList			= [];
+
+		if( isset( $objectData->elements ) ) {
+
+			$elements	= $objectData->elements;
+		}
+
+		foreach ( $elements as $element ) {
+
+			$element	= new BlockElement( $element );
+			$idList[]	= $element->elementId;
+		}
+
+		return $idList;
+	}
+
+	public function getElements() {
+
+		$idList	= $this->getElementIdList();
+		$idList	= join( ',', $idList );
+
+		return ObjectData::find()->where( "id in($idList)" )->all();
 	}
 
 	// Static Methods ----------------------------------------------

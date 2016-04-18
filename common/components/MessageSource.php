@@ -16,6 +16,7 @@ class MessageSource extends Component {
 		// Generic Fields
 		CmsGlobal::FIELD_MENU => 'Menu',
 		CmsGlobal::FIELD_PAGE => 'Page',
+		CmsGlobal::FIELD_ELEMENT => 'Element',
 		CmsGlobal::FIELD_BLOCK => 'Block',
 		CmsGlobal::FIELD_WIDGET => 'Widget',
 		CmsGlobal::FIELD_SIDEBAR => 'Sidebar',

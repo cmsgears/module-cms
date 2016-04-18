@@ -29,6 +29,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 		<?= $form->field( $model, 'order' )->textInput() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
+		<?= $form->field( $model, 'comments' )->checkbox() ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Post Summary</div>
@@ -42,9 +43,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Post Banner</div>
-			<?= ImageUploader::widget([ 
-					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 
-					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' 
+			<?= ImageUploader::widget([
+					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ],
+					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner'
 			]); ?>
 		</div>
 

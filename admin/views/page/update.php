@@ -26,6 +26,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
     	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'comments' )->checkbox() ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Page Summary</div>
@@ -39,9 +40,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Page Banner</div>
-			<?= ImageUploader::widget([ 
-					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 
-					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' 
+			<?= ImageUploader::widget([
+					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ],
+					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner'
 			]); ?>
 		</div>
 

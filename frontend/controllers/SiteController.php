@@ -8,11 +8,16 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\services\entities\TemplateService;
+use cmsgears\core\common\services\resources\CategoryService;
+use cmsgears\core\common\services\resources\TagService;
 
 use cmsgears\cms\common\services\entities\PageService;
-use cmsgears\cms\common\services\entities\PostService;
+use cmsgears\cms\frontend\services\entities\PostService;
 
-class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
+class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -88,6 +93,73 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		}
 
 		// Page not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	/*
+	public function actionSearch() {
+
+		$user			= Yii::$app->user->getIdentity();
+		$dataProvider	= ListingService::getPaginationForSearch();
+		$template		= TemplateService::findBySlug( CoreGlobal::TEMPLATE_DEFAULT );
+
+		if( isset( $template ) ) {
+
+			return Yii::$app->templateSource->renderViewSearch( $template, [
+				'dataProvider' => $dataProvider
+			]);
+		}
+
+		// Template not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+	}
+	*/
+
+	public function actionCategory( $slug ) {
+
+		$category	= CategoryService::findBySlugType( $slug, CmsGlobal::TYPE_POST );
+
+		if( isset( $category ) ) {
+
+			$user			= Yii::$app->user->getIdentity();
+			$template		= TemplateService::findBySlug( 'post' );
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateSource->renderViewCategory( $template, [
+					'category' => $category
+				]);
+			}
+
+			// Template not found
+			throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionTag( $slug ) {
+
+		$tag	= TagService::findBySlug( $slug );
+
+		if( isset( $tag ) ) {
+
+			$user			= Yii::$app->user->getIdentity();
+			$template		= TemplateService::findBySlug( 'post' );
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateSource->renderViewTag( $template, [
+					'tag' => $tag
+				]);
+			}
+
+			// Template not found
+			throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+		}
+
+		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

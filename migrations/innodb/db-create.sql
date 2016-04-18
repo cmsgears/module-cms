@@ -21,6 +21,7 @@ CREATE TABLE `cmg_cms_page` (
   `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
   `featured` tinyint(1) NOT NULL DEFAULT 0,
+  `comments` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_cms_page_1` (`parentId`),
   KEY `fk_cms_page_2` (`siteId`),

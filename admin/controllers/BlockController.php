@@ -12,8 +12,10 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\CmgFile;
 use cmsgears\cms\common\models\resources\Block;
+use cmsgears\cms\common\models\forms\BlockElement;
 
 use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\cms\admin\services\entities\ElementService;
 use cmsgears\cms\admin\services\resources\BlockService;
 
 class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
@@ -80,12 +82,26 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 		$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
 		$video 			= CmgFile::loadFile( $model->video, 'Video' );
 		$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
+		$elements		= ElementService::getIdNameList();
+
+		// Block Elements
+		$blockElements	= [];
+
+		for ( $i = 0, $j = count( $elements ); $i < $j; $i++ ) {
+
+			$blockElements[] = new BlockElement();
+		}
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Block' ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
+			$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
-			if( BlockService::create( $model, $banner, $video, $texture ) ) {
+			$block = BlockService::create( $model, $banner, $video, $texture );
+
+			if( $block ) {
+
+				BlockService::updateElements( $block, $blockElements );
 
 				return $this->redirect( [ 'all' ] );
 			}
@@ -98,7 +114,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
     		'banner' => $banner,
     		'video' => $video,
     		'texture' => $texture,
-    		'templatesMap' => $templatesMap
+    		'templatesMap' => $templatesMap,
+    		'elements' => $elements,
+    		'blockElements' => $blockElements
     	]);
 	}
 
@@ -110,15 +128,20 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
-			$video 		= CmgFile::loadFile( $model->video, 'Video' );
-			$texture	= CmgFile::loadFile( $model->texture, 'Texture' );
+			$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
+			$video 			= CmgFile::loadFile( $model->video, 'Video' );
+			$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
+			$elements		= ElementService::getIdNameList();
+			$blockElements	= BlockService::getElementsForUpdate( $model, $elements );
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Block' ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
+				$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
 				if( BlockService::update( $model, $banner, $video, $texture ) ) {
+
+					BlockService::updateElements( $model, $blockElements );
 
 					return $this->redirect( [ 'all' ] );
 				}
@@ -131,7 +154,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'banner' => $banner,
 	    		'video' => $video,
 	    		'texture' => $texture,
-	    		'templatesMap' => $templatesMap
+	    		'templatesMap' => $templatesMap,
+	    		'elements' => $elements,
+	    		'blockElements' => $blockElements
 	    	]);
 		}
 
@@ -146,6 +171,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$elements		= ElementService::getIdNameList();
+			$blockElements	= BlockService::getElementsForUpdate( $model, $elements );
 
 			if( $model->load( Yii::$app->request->post(), 'Block' ) ) {
 
@@ -165,7 +193,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'banner' => $banner,
 	    		'video' => $video,
 	    		'texture' => $texture,
-	    		'templatesMap' => $templatesMap
+	    		'templatesMap' => $templatesMap,
+	    		'elements' => $elements,
+	    		'blockElements' => $blockElements
 	    	]);
 		}
 

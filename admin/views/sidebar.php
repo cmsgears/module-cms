@@ -16,6 +16,8 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
+				<li class='page-element <?php if( strcmp( $child, 'element' ) == 0 ) echo 'active';?>'><?= Html::a( "Elements", ['/cmgcms/element/all'] ) ?></li>
+				<li class='page-element-template <?php if( strcmp( $child, 'element-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Element Templates", ['/cmgcms/element/template/all'] ) ?></li>
 				<li class='page-block <?php if( strcmp( $child, 'block' ) == 0 ) echo 'active';?>'><?= Html::a( "Blocks", ['/cmgcms/block/all'] ) ?></li>
 				<li class='page-block-template <?php if( strcmp( $child, 'block-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Block Templates", ['/cmgcms/block/template/all'] ) ?></li>
 				<li class='page <?php if( strcmp( $child, 'page' ) == 0 ) echo 'active';?>'><?= Html::a( "Pages", ['/cmgcms/page/all'] ) ?></li>

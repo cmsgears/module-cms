@@ -81,11 +81,12 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionCreate() {
 
-		$model			= new Post();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$content		= new ModelContent();
-		$banner	 		= CmgFile::loadFile( null, 'Banner' );
-		$video	 		= CmgFile::loadFile( null, 'Video' );
+		$model				= new Post();
+		$model->siteId		= Yii::$app->cmgCore->siteId;
+		$model->comments	= true;
+		$content			= new ModelContent();
+		$banner	 			= CmgFile::loadFile( null, 'Banner' );
+		$video	 			= CmgFile::loadFile( null, 'Video' );
 
 		$model->setScenario( 'create' );
 
