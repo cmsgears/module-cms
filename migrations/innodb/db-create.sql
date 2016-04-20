@@ -23,10 +23,10 @@ CREATE TABLE `cmg_cms_page` (
   `featured` tinyint(1) NOT NULL DEFAULT 0,
   `comments` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `fk_cms_page_1` (`parentId`),
-  KEY `fk_cms_page_2` (`siteId`),
-  KEY `fk_cms_page_3` (`createdBy`),
-  KEY `fk_cms_page_4` (`modifiedBy`)
+  KEY `fk_cmg_page_1` (`parentId`),
+  KEY `fk_cmg_page_2` (`siteId`),
+  KEY `fk_cmg_page_3` (`createdBy`),
+  KEY `fk_cmg_page_4` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -46,7 +46,7 @@ CREATE TABLE `cmg_cms_page_attribute` (
   `valueType` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'text',
   `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cms_page_attribute_1` (`pageId`)
+  KEY `fk_cmg_page_attribute_1` (`pageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -78,13 +78,13 @@ CREATE TABLE `cmg_cms_block` (
   `content` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cms_block_1` (`siteId`),
-  KEY `fk_cms_block_2` (`bannerId`),
-  KEY `fk_cms_block_3` (`textureId`),
-  KEY `fk_cms_block_4` (`videoId`),
-  KEY `fk_cms_block_5` (`templateId`),
-  KEY `fk_cms_block_6` (`createdBy`),
-  KEY `fk_cms_block_7` (`modifiedBy`)
+  KEY `fk_cmg_block_1` (`siteId`),
+  KEY `fk_cmg_block_2` (`bannerId`),
+  KEY `fk_cmg_block_3` (`textureId`),
+  KEY `fk_cmg_block_4` (`videoId`),
+  KEY `fk_cmg_block_5` (`templateId`),
+  KEY `fk_cmg_block_6` (`createdBy`),
+  KEY `fk_cmg_block_7` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -116,9 +116,9 @@ CREATE TABLE `cmg_cms_model_content` (
   `content` longtext COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cms_model_content_1` (`bannerId`),
-  KEY `fk_cms_model_content_2` (`videoId`),
-  KEY `fk_cms_model_content_3` (`templateId`)
+  KEY `fk_cmg_model_content_1` (`bannerId`),
+  KEY `fk_cmg_model_content_2` (`videoId`),
+  KEY `fk_cmg_model_content_3` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,7 +137,7 @@ CREATE TABLE `cmg_cms_model_block` (
   `order` smallint(6) DEFAULT 0,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  KEY `fk_cms_model_block_1` (`blockId`)
+  KEY `fk_cmg_model_block_1` (`blockId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -147,41 +147,41 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Constraints for table `cmg_cms_page`
 --
 ALTER TABLE `cmg_cms_page` 
-	ADD CONSTRAINT `fk_cms_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
-	ADD CONSTRAINT `fk_cms_page_2` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
-	ADD CONSTRAINT `fk_cms_page_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-	ADD CONSTRAINT `fk_cms_page_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+	ADD CONSTRAINT `fk_cmg_page_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_cms_page` (`id`),
+	ADD CONSTRAINT `fk_cmg_page_2` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_cmg_page_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+	ADD CONSTRAINT `fk_cmg_page_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_cms_page_attribute`
 --
 ALTER TABLE `cmg_cms_page_attribute` 
-	ADD CONSTRAINT `fk_cms_page_attribute_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`);
+	ADD CONSTRAINT `fk_cmg_page_attribute_1` FOREIGN KEY (`pageId`) REFERENCES `cmg_cms_page` (`id`);
 
 --
 -- Constraints for table `cmg_cms_block`
 --
 ALTER TABLE `cmg_cms_block` 
-	ADD CONSTRAINT `fk_cms_block_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
-	ADD CONSTRAINT `fk_cms_block_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_cms_block_3` FOREIGN KEY (`textureId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_cms_block_4` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_cms_block_5` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
-	ADD CONSTRAINT `fk_cms_block_6` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-	ADD CONSTRAINT `fk_cms_block_7` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+	ADD CONSTRAINT `fk_cmg_block_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_3` FOREIGN KEY (`textureId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_4` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_5` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_6` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+	ADD CONSTRAINT `fk_cmg_block_7` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_cms_model_content`
 --
 ALTER TABLE `cmg_cms_model_content` 
-	ADD CONSTRAINT `fk_cms_model_content_1` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_cms_model_content_2` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_cms_model_content_3` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
+	ADD CONSTRAINT `fk_cmg_model_content_1` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_cmg_model_content_2` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_cmg_model_content_3` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_cms_model_block`
 --
 ALTER TABLE `cmg_cms_model_block` 
-	ADD CONSTRAINT `fk_cms_model_block_1` FOREIGN KEY (`blockId`) REFERENCES `cmg_cms_block` (`id`);
+	ADD CONSTRAINT `fk_cmg_model_block_1` FOREIGN KEY (`blockId`) REFERENCES `cmg_cms_block` (`id`);
 
 SET FOREIGN_KEY_CHECKS=1;
