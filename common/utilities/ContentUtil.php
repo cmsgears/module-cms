@@ -6,8 +6,12 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
+use cmsgears\core\common\services\resources\FormService;
 use cmsgears\cms\common\services\entities\PageService;
 
+/**
+ * This utility can be used to find page name and other details for both Core and CMS modules.
+ */
 class ContentUtil {
 
 	/**
@@ -17,7 +21,7 @@ class ContentUtil {
 	 * @param $controller - The site controller provided by given module to be considered for system pages.
 	 * @return array having SEO related details.
 	 */
-	public static function initPage( $view, $module = 'cmgcore', $controller = 'site' ) {
+	public static function initPage( $view, $module = 'core', $controller = 'site' ) {
 
 		$page = self::findViewPage( $view, $module, $controller );
 
@@ -97,6 +101,45 @@ class ContentUtil {
 			else if( isset( $page->name ) && strlen( $page->name ) > 0 ) {
 
 				$view->title		= $page->name . " | " . $siteTitle;
+			}
+			else {
+
+				$view->title		= $siteTitle;
+			}
+		}
+	}
+
+	public static function initFormPage( $view, $controller = 'site' ) {
+
+		$controllerName	= Yii::$app->controller->id;
+		$actionName		= Yii::$app->controller->action->id;
+		$form 			= null;
+
+		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
+
+			$slug	= Yii::$app->request->queryParams[ 'slug' ];
+			$form	= FormService::findBySlug( $slug );
+		}
+
+		if( isset( $form ) ) {
+
+			$coreProperties				= $view->context->getCoreProperties();
+
+			// Page and Content
+			$view->params[ 'form' ]		= $form;
+
+			// SEO H1 - Page Summary
+			$view->params[ 'summary' ]	= $form->description;
+
+			// SEO Meta Tags - Description, Keywords, Robot Text
+			$view->params[ 'desc' ]		= $form->description;
+
+			// SEO - Page Title
+			$siteTitle					= $coreProperties->getSiteTitle();
+
+			if( isset( $form->name ) && strlen( $form->name ) > 0 ) {
+
+				$view->title		= $form->name . " | " . $siteTitle;
 			}
 			else {
 
