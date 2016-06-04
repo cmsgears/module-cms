@@ -152,7 +152,7 @@ class ContentUtil {
 	 * It returns page info to be used for system pages. We can decorate system pages using either this method or standard blocks using block widget.
 	 * @return array - page details including content, author and banner.
 	 */
-	public static function getPageInfo( $view, $module = 'cmgcore', $controller = 'site' ) {
+	public static function getPageInfo( $view, $module = 'core', $controller = 'site' ) {
 
 		$page = self::findViewPage( $view, $module, $controller );
 
