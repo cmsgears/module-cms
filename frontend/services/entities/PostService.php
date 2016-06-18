@@ -139,8 +139,6 @@ class PostService extends \cmsgears\cms\common\services\entities\PostService {
 		$categoryTable		= CoreTables::TABLE_CATEGORY;
 		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
 		$tagTable			= CoreTables::TABLE_TAG;
-		$maddressTable		= CoreTables::TABLE_MODEL_ADDRESS;
-		$addressTable		= CoreTables::TABLE_ADDRESS;
 
 		// Search Query
 		$query			 	= Post::find()->joinWith( 'content' );
