@@ -1,24 +1,21 @@
 <?php
-namespace cmsgears\cms\common\models\mappers;
+namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
 use \Yii;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\cms\common\models\base\CmsTables;
 
-use cmsgears\core\common\models\traits\TemplateTrait;
-use cmsgears\core\common\models\traits\VisualTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 /**
  * ModelContent Entity
@@ -30,8 +27,6 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property integer $parentId
  * @property string $parentType
  * @property string $summary
- * @property date $createdAt
- * @property date $modifiedAt
  * @property date $publishedAt
  * @property string $seoName
  * @property string $seoDescription
@@ -63,22 +58,6 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 
 	// yii\base\Component ----------------
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
-
-        return [
-
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
-            ]
-        ];
-    }
-
 	// yii\base\Model --------------------
 
     /**
@@ -100,7 +79,7 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
             [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+            [ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {

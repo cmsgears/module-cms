@@ -15,13 +15,13 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\core\common\models\resources\CmgFile;
+
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\forms\BlockElement;
 
-use cmsgears\core\common\models\traits\TemplateTrait;
-use cmsgears\core\common\models\traits\VisualTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 

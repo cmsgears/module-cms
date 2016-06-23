@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\cms\common\models\traits\ContentTrait;
+use cmsgears\cms\common\models\traits\resources\ContentTrait;
 
 /**
  * Category Entity

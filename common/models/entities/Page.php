@@ -9,10 +9,10 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
 
-use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\CommentTrait;
-use cmsgears\cms\common\models\traits\ContentTrait;
-use cmsgears\cms\common\models\traits\BlockTrait;
+use cmsgears\core\common\models\traits\resources\CommentTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\cms\common\models\traits\resources\ContentTrait;
+use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 
 class Page extends Content {
 

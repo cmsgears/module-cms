@@ -5,16 +5,22 @@ namespace cmsgears\cms\common\models\entities;
 use \Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\interfaces\IApproval;
+use cmsgears\core\common\models\interfaces\IVisibility;
+
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
+use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -34,30 +40,15 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property short $order
  * @property short $featured
+ * @property short $comments
+ * @property date $createdAt
+ * @property date $modifiedAt
  */
-class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Content extends \cmsgears\core\common\models\base\NamedEntity implements IApproval, IVisibility {
 
 	// Variables ---------------------------------------------------
 
 	// Constants/Statics --
-
-	// Pre-Defined Status
-	const STATUS_NEW		=  500;
-	const STATUS_PUBLISHED	=  750;
-
-	public static $statusMap = [
-		self::STATUS_NEW => 'New',
-		self::STATUS_PUBLISHED => 'Published'
-	];
-
-	// Pre-Defined Visibility
-	const VISIBILITY_PRIVATE	=  0;
-	const VISIBILITY_PUBLIC		= 10;
-
-	public static $visibilityMap = [
-		self::VISIBILITY_PRIVATE => 'Private',
-		self::VISIBILITY_PUBLIC => 'Public'
-	];
 
 	// Public -------------
 
@@ -65,7 +56,9 @@ class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use CreateModifyTrait;
+	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -81,6 +74,12 @@ class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
         return [
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
+            ],
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
             ],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
@@ -108,9 +107,10 @@ class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ 'featured', 'boolean' ],
+            [ [ 'featured', 'comments' ], 'boolean' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		// trim if required
@@ -195,36 +195,6 @@ class Content extends \cmsgears\core\common\models\base\NamedCmgEntity {
 	public function isPost() {
 
 		return $this->type == CmsGlobal::TYPE_POST;
-	}
-
-	public function getStatusStr() {
-
-		return self::$statusMap[ $this->status ];
-	}
-
-	public function isNew() {
-
-		return $this->status == self::STATUS_NEW;
-	}
-
-	public function isPublished() {
-
-		return $this->status == self::STATUS_PUBLISHED;
-	}
-
-	public function getVisibilityStr() {
-
-		return self::$visibilityMap[ $this->visibility ];
-	}
-
-	public function isPrivate() {
-
-		return $this->visibility == self::VISIBILITY_PRIVATE;
-	}
-
-	public function isPublic() {
-
-		return $this->visibility == self::VISIBILITY_PUBLIC;
 	}
 
 	// Static Methods ----------------------------------------------
