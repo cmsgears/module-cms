@@ -13,6 +13,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\cms\common\models\base\CmsTables;
 
+use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
@@ -36,29 +37,44 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property string $content
  * @property string $data
  */
-class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
+class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use ResourceTrait;
 	use TemplateTrait;
 	use VisualTrait;
-	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -67,22 +83,22 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 
 		$trim		= [];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
             [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
-            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -96,23 +112,23 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 	public function attributeLabels() {
 
 		return [
-			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
-			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'summary' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'seoName' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
 			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
 			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
-			'viewCount' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'viewCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
@@ -129,7 +145,13 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 		return false;
 	}
 
-	// ModelContent ----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ModelContent --------------------------
 
 	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_SMALL ) {
 
@@ -153,7 +175,9 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -163,15 +187,19 @@ class ModelContent extends \cmsgears\core\common\models\base\CmgModel {
 		return CmsTables::TABLE_MODEL_CONTENT;
 	}
 
-	// ModelContent ----------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// ModelContent --------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	// Update -------------
+	// Read - Find ------------
 
-	// Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

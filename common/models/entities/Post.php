@@ -5,6 +5,7 @@ namespace cmsgears\cms\common\models\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
@@ -21,14 +22,24 @@ class Post extends Content {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	public $parentType		= CmsGlobal::TYPE_POST;
+	// Public -----------------
+
+	public $mParentType		= CmsGlobal::TYPE_POST;
 	public $categoryType	= CmsGlobal::TYPE_POST;
 
-	// Private/Protected --
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
@@ -41,17 +52,29 @@ class Post extends Content {
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
 
-	// Post ------------------------------
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Post ----------------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -63,16 +86,13 @@ class Post extends Content {
 		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
 	}
 
-	// Post ------------------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// Post ----------------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	/**
-	 * @return array - Post - All posts having author details.
-	 */
-	public static function findWithAuthor() {
+	public static function queryWithAuthor() {
 
 		$postTable 	= CmsTables::TABLE_PAGE;
 
@@ -82,17 +102,13 @@ class Post extends Content {
 		]);
 	}
 
-	/**
-	 * @return Post - by slug.
-	 */
-	public static function findBySlug( $slug ) {
+	// Read - Find ------------
 
-		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
-	}
+	// Create -----------------
 
-	// Update -------------
+	// Update -----------------
 
-	// Delete -------------
+	// Delete -----------------
 }
 
 ?>

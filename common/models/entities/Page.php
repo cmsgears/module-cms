@@ -5,6 +5,7 @@ namespace cmsgears\cms\common\models\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -18,13 +19,23 @@ class Page extends Content {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	public $parentType	= CmsGlobal::TYPE_PAGE;
+	// Public -----------------
 
-	// Private/Protected --
+	public $mParentType	= CmsGlobal::TYPE_PAGE;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
@@ -35,17 +46,29 @@ class Page extends Content {
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
 
-	// Page ------------------------------
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Page ----------------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -57,23 +80,19 @@ class Page extends Content {
 		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
 	}
 
-	// Page ------------------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// Page ----------------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	/**
-	 * @return Page - by slug
-	 */
-	public static function findBySlug( $slug ) {
+	// Read - Find ------------
 
-		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
-	}
+	// Create -----------------
 
-	// Update -------------
+	// Update -----------------
 
-	// Delete -------------
+	// Delete -----------------
 }
 
 ?>

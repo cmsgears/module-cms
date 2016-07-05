@@ -10,44 +10,109 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataService {
+use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
 
-	// Static Methods ----------------------------------------------
+class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataService implements IWidgetService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	public static function findByName( $name ) {
+	// Globals -------------------------------
 
-		return self::findByNameType( $name, CmsGlobal::TYPE_WIDGET );
-	}
+	// Constants --------------
 
-	public static function getIdList() {
+	// Public -----------------
 
-		return self::getIdListByType( CmsGlobal::TYPE_WIDGET );
-	}
+	public static $parentType	= CmsGlobal::TYPE_WIDGET;
 
-	public static function getIdNameList() {
+	// Protected --------------
 
-		return self::getIdNameListByType( CmsGlobal::TYPE_WIDGET );
-	}
+	// Variables -----------------------------
 
-	// Data Provider ----
+	// Public -----------------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Protected --------------
 
-		if( !isset( $config[ 'conditions' ] ) ) {
+	// Private ----------------
 
-			$config[ 'conditions' ]	= [];
-		}
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ElementService ------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
 
 		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
 
-		return self::getDataProvider( new Widget(), $config );
+		return parent::getPage( $config );
 	}
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getByName( $name, $first = false ) {
+
+		return $this->getByNameType( $name, CmsGlobal::TYPE_WIDGET );
+	}
+
+    // Read - Lists ----
+
+	public function getIdList( $config = [] ) {
+
+		return $this->getIdListByType( CmsGlobal::TYPE_WIDGET, $config );
+	}
+
+	public function getIdNameList( $config = [] ) {
+
+		return $this->getIdNameListByType( CmsGlobal::TYPE_WIDGET, $config );
+	}
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ElementService ------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

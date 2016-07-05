@@ -10,49 +10,130 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\cms\common\services\interfaces\entities\IPageService;
 
-class PageService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
-	// Static Methods ----------------------------------------------
+class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Page
-	 */
-	public static function findById( $id ) {
+	// Globals -------------------------------
 
-		return Page::findById( $id );
-	}
+	// Constants --------------
 
-	/**
-	 * @param string $slug
-	 * @return Page
-	 */
-    public static function findBySlug( $slug ) {
+	// Public -----------------
 
-		return Page::findBySlug( $slug );
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $fileService;
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameSlugTypeTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService	= $fileService;
+
+        parent::__construct( $config );
     }
 
-	/**
-	 * @return array - of all page ids
-	 */
-	public static function getIdList() {
+	// Instance methods --------------------------------------------
 
-		return self::findList( "id", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// PageService ---------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'visibility' => [
+	                'asc' => [ 'visibility' => SORT_ASC ],
+	                'desc' => ['visibility' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'visibility',
+	            ],
+	            'status' => [
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'status',
+	            ],
+	            'template' => [
+	                'asc' => [ 'template' => SORT_ASC ],
+	                'desc' => ['template' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'template',
+	            ],
+	            'cdate' => [
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'cdate',
+	            ],
+	            'pdate' => [
+	                'asc' => [ 'publishedAt' => SORT_ASC ],
+	                'desc' => ['publishedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'pdate',
+	            ],
+	            'udate' => [
+	                'asc' => [ 'updatedAt' => SORT_ASC ],
+	                'desc' => ['updatedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'udate',
+	            ]
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_PAGE;
+
+		return parent::findPage( $config );
 	}
 
-	/**
-	 * @return array - having page id, name as sub array
-	 */
-	public static function getIdNameList() {
+	// Read ---------------
 
-		return self::findIdNameList( "id", "name", CmsTables::TABLE_PAGE, [ 'conditions' => [ 'type' => CmsGlobal::TYPE_PAGE ] ] );
-	}
+    // Read - Models ---
 
-    public static function getMenuPages( $pages, $map = false ) {
+    public function getMenuPages( $pages, $map = false ) {
 
 		if( count( $pages ) > 0 ) {
 
@@ -77,77 +158,55 @@ class PageService extends \cmsgears\core\common\services\base\Service {
 		return [];
     }
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Maps -----
 
-		return self::getDataProvider( new Page(), $config );
+	// Read - Others ---
+
+	// Create -------------
+
+	public function create( $model, $config = [] ) {
+
+		$post->type = CmsGlobal::TYPE_PAGE;
+
+		return parent::create( $model, $config );
 	}
 
-	// Create -----------
+	// Update -------------
 
-	/**
-	 * @param Page $page
-	 * @param CmgFile $banner
-	 * @return Page
-	 */
-	public static function create( $page ) {
+	public function update( $model, $config = [] ) {
 
-		$page->type 	= CmsGlobal::TYPE_PAGE;
+		return parent::update( $model, [
+			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ]
+		]);
+ 	}
 
-		if( !isset( $page->order ) || strlen( $post->order ) <= 0 ) {
+	// Delete -------------
 
-			$page->order = 0;
-		}
+	// Static Methods ----------------------------------------------
 
-		// Create Page
-		$page->save();
+	// CMG parent classes --------------------
 
-		return $page;
-	}
+	// PageService ---------------------------
 
-	// Update -----------
+	// Data Provider ------
 
-	/**
-	 * @param Page $page
-	 * @param CmgFile $banner
-	 * @return Page
-	 */
-	public static function update( $page ) {
+	// Read ---------------
 
-		$pageToUpdate	= self::findById( $page->id );
+    // Read - Models ---
 
-		$pageToUpdate->copyForUpdateFrom( $page, [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ] );
+    // Read - Lists ----
 
-		if( !isset( $pageToUpdate->order ) || strlen( $pageToUpdate->order ) <= 0 ) {
+    // Read - Maps -----
 
-			$pageToUpdate->order = 0;
-		}
+	// Read - Others ---
 
-		$pageToUpdate->update();
+	// Create -------------
 
-		return $pageToUpdate;
-	}
+	// Update -------------
 
-	// Delete -----------
-
-	/**
-	 * @param Page $page
-	 * @return boolean
-	 */
-	public static function delete( $page ) {
-
-		$existingPage		= self::findById( $page->id );
-
-		// Delete Page
-		$existingPage->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

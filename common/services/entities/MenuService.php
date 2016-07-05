@@ -13,38 +13,65 @@ use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\SortUtil;
 
-class MenuService extends \cmsgears\core\common\services\entities\ObjectDataService {
+use cmsgears\cms\common\services\interfaces\entities\IMenuService;
 
-	// Static Methods ----------------------------------------------
+class MenuService extends \cmsgears\core\common\services\entities\ObjectDataService implements IMenuService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return ObjectData
-	 */
-	public static function findByName( $name ) {
+	// Globals -------------------------------
 
-		return self::findByNameType( $name, CmsGlobal::TYPE_MENU );
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $parentType	= CmsGlobal::TYPE_MENU;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ElementService ------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
+
+		return parent::getPage( $config );
 	}
 
-	/**
-	 * @return array - of all menu ids
-	 */
-	public static function getIdList() {
+	// Read ---------------
 
-		return self::getIdListByType( CmsGlobal::TYPE_MENU );
+    // Read - Models ---
+
+	public function getByName( $name, $first = false ) {
+
+		return $this->getByNameType( $name, CmsGlobal::TYPE_MENU );
 	}
 
-	/**
-	 * @return array - having page id, name as sub array
-	 */
-	public static function getIdNameList() {
-
-		return self::getIdNameListByType( CmsGlobal::TYPE_MENU );
-	}
-
-	public static function getLinks( $menu ) {
+	public function getLinks( $menu ) {
 
 		$objectData		= $menu->generateObjectFromJson();
 		$links			= $objectData->links;
@@ -61,7 +88,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 		return $linkObjects;
 	}
 
-	public static function getPageLinks( $menu, $associative = false ) {
+	public function getPageLinks( $menu, $associative = false ) {
 
 		$objectData		= $menu->generateObjectFromJson();
 		$links			= $objectData->links;
@@ -90,7 +117,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 		return $linkObjects;
 	}
 
-	public static function getPageLinksForUpdate( $menu, $pages ) {
+	public function getPageLinksForUpdate( $menu, $pages ) {
 
 		$pageLinks		= self::getPageLinks( $menu, true );
 		$keys			= array_keys( $pageLinks );
@@ -116,27 +143,27 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 		return $linkObjects;
 	}
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	public function getIdList( $config = [] ) {
 
-		if( !isset( $config[ 'conditions' ] ) ) {
-
-			$config[ 'conditions' ]	= [];
-		}
-
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
-
-		return self::getDataProvider( new ObjectData(), $config );
+		return $this->getIdListByType( CmsGlobal::TYPE_MENU, $config );
 	}
 
-	// Update -----------
+	public function getIdNameList( $config = [] ) {
 
-	public static function updateLinks( $menu, $links, $pageLinks ) {
+		return $this->getIdNameListByType( CmsGlobal::TYPE_MENU, $config );
+	}
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function updateLinks( $menu, $links, $pageLinks ) {
 
 		$menu		= self::findById( $menu->id );
 		$objectData	= $menu->generateObjectFromJson();
@@ -190,6 +217,32 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ElementService ------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

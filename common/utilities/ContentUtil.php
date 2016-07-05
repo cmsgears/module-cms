@@ -6,8 +6,8 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\services\resources\FormService;
-use cmsgears\cms\common\services\entities\PageService;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 /**
  * This utility can be used to find page name and other details for both Core and CMS modules.
@@ -109,7 +109,7 @@ class ContentUtil {
 		}
 	}
 
-	public static function initFormPage( $view, $controller = 'site' ) {
+	public static function initFormPage( $view, $controller = 'site', $type = CoreGlobal::TYPE_SYSTEM ) {
 
 		$controllerName	= Yii::$app->controller->id;
 		$actionName		= Yii::$app->controller->action->id;
@@ -118,7 +118,7 @@ class ContentUtil {
 		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
 			$slug	= Yii::$app->request->queryParams[ 'slug' ];
-			$form	= FormService::findBySlug( $slug );
+			$form	= Yii::$app->factory->get( 'formService' )->getBySlugType( $slug, $type );
 		}
 
 		if( isset( $form ) ) {
@@ -171,11 +171,9 @@ class ContentUtil {
 	/**
 	 * @return Page based on given slug
 	 */
-	public static function getPage( $slug ) {
+	public static function getPage( $slug, $type = CmsGlobal::TYPE_PAGE ) {
 
-		$page 		= PageService::findBySlug( $slug );
-
-		return $page;
+		return Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 	}
 
 	/**
@@ -187,7 +185,8 @@ class ContentUtil {
 		if( isset( $config[ 'slug' ] ) ) {
 
 			$slug	= $config[ 'slug' ];
-			$page 	= PageService::findBySlug( $slug );
+			$type	= $config[ 'type' ];
+			$page 	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 		}
 
 		if( isset( $config[ 'page' ] ) ) {
@@ -219,7 +218,8 @@ class ContentUtil {
 		if( isset( $config[ 'slug' ] ) ) {
 
 			$slug	= $config[ 'slug' ];
-			$page 	= PageService::findBySlug( $slug );
+			$type	= $config[ 'type' ];
+			$page 	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 		}
 
 		if( isset( $config[ 'page' ] ) ) {
@@ -262,7 +262,7 @@ class ContentUtil {
 		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
 			$actionName	= Yii::$app->request->queryParams[ 'slug' ];
-			$page		= self::getPage( $actionName );
+			$page		= self::getPage( $actionName, CmsGlobal::TYPE_POST );
 		}
 
 		return $page;

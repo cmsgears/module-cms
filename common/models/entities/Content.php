@@ -19,6 +19,8 @@ use cmsgears\core\common\models\entities\Site;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 
@@ -44,27 +46,45 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property date $createdAt
  * @property date $modifiedAt
  */
-class Content extends \cmsgears\core\common\models\base\NamedEntity implements IApproval, IVisibility {
+class Content extends \cmsgears\core\common\models\base\Entity implements IApproval, IVisibility {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	public $multiSite = true;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
 	use CreateModifyTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -85,12 +105,13 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -101,20 +122,19 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-			[ [ 'slug', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'slug', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->extraLargeText ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'featured', 'comments' ], 'boolean' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -130,20 +150,20 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
+			'parentId' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'createdBy' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'type' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'visibility' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'status' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'slug' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'featured' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
 	}
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
@@ -154,13 +174,24 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
 				$this->parentId = null;
 			}
 
+			if( !isset( $post->order ) || strlen( $post->order ) <= 0 ) {
+
+				$post->order = 0;
+			}
+
 	        return true;
 	    }
 
 		return false;
 	}
 
-	// Content ---------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Content -------------------------------
 
 	public function getParent() {
 
@@ -199,7 +230,9 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -209,7 +242,7 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
 		return CmsTables::TABLE_PAGE;
 	}
 
-	// yii\db\BaseActiveRecord ------------
+	// yii\db\BaseActiveRecord
 
     public static function instantiate( $row ) {
 
@@ -234,15 +267,19 @@ class Content extends \cmsgears\core\common\models\base\NamedEntity implements I
         return $model;
     }
 
-	// Content ---------------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// Content -------------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	// Update -------------
+	// Read - Find ------------
 
-	// Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

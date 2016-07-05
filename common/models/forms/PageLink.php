@@ -13,7 +13,17 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $link;
 	public $pageId;
@@ -25,11 +35,23 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 	public $type;	// used by service for create
 	public $name;	// used for update
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	// yii\base\Model
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -51,13 +73,21 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'pageId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_PAGE ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'pageId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_PAGE ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// PageLink ------------------------------
 }
 
 ?>

@@ -13,38 +13,65 @@ use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\SortUtil;
 
-class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataService {
+use cmsgears\cms\common\services\interfaces\entities\ISidebarService;
 
-	// Static Methods ----------------------------------------------
+class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataService implements ISidebarService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return ObjectData
-	 */
-	public static function findByName( $name ) {
+	// Globals -------------------------------
 
-		return self::findByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $parentType	= CmsGlobal::TYPE_SIDEBAR;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SidebarService ------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
+
+		return parent::getPage( $config );
 	}
 
-	/**
-	 * @return array - of all sidebar ids
-	 */
-	public static function getIdList() {
+	// Read ---------------
 
-		return self::getIdListByType( CmsGlobal::TYPE_SIDEBAR );
+    // Read - Models ---
+
+	public function getByName( $name, $first = false ) {
+
+		return $this->getByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
 	}
 
-	/**
-	 * @return array - having page id, name as sub array
-	 */
-	public static function getIdNameList() {
-
-		return self::getIdNameListByType( CmsGlobal::TYPE_SIDEBAR );
-	}
-
-	public static function getWidgets( $sidebar, $associative = false ) {
+	public function getWidgets( $sidebar, $associative = false ) {
 
 		$objectData		= $sidebar->generateObjectFromJson();
 		$widgets		= $objectData->widgets;
@@ -70,7 +97,7 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 		return $widgetObjects;
 	}
 
-	public static function getWidgetsForUpdate( $sidebar, $widgets ) {
+	public function getWidgetsForUpdate( $sidebar, $widgets ) {
 
 		$sidebarWidgets	= self::getWidgets( $sidebar, true );
 		$keys			= array_keys( $sidebarWidgets );
@@ -96,31 +123,31 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 		return $widgetObjects;
 	}
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	public function getIdList( $config = [] ) {
 
-		if( !isset( $config[ 'conditions' ] ) ) {
-
-			$config[ 'conditions' ]	= [];
-		}
-
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
-
-		return self::getDataProvider( new ObjectData(), $config );
+		return $this->getIdListByType( CmsGlobal::TYPE_SIDEBAR, $config );
 	}
 
-	// Update -----------
+	public function getIdNameList( $config = [] ) {
+
+		return $this->getIdNameListByType( CmsGlobal::TYPE_SIDEBAR, $config );
+	}
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
 
 	/**
 	 * @param array $widgets
 	 * @return boolean
 	 */
-	public static function updateWidgets( $sidebar, $widgets ) {
+	public function updateWidgets( $sidebar, $widgets ) {
 
 		$sidebar	= self::findById( $sidebar->id );
 		$objectData	= $sidebar->generateObjectFromJson();
@@ -153,6 +180,32 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// SidebarService ------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

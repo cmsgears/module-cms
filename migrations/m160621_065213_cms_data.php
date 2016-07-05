@@ -28,6 +28,8 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( 'demomaster' );
+
+		Yii::$app->core->setSite( $this->site );
 	}
 
     public function up() {
@@ -57,9 +59,9 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlug( 'super-admin' );
-		$adminRole			= Role::findBySlug( 'admin' );
-		$cmsManagerRole		= Role::findBySlug( 'cms-manager' );
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$cmsManagerRole		= Role::findBySlugType( 'cms-manager', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
@@ -71,9 +73,9 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlug( 'admin' );
-		$userPerm			= Permission::findBySlug( 'user' );
-		$cmsPerm			= Permission::findBySlug( 'cms' );
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$cmsPerm			= Permission::findBySlugType( 'cms', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -104,7 +106,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
             'modifiedAt' => DateUtil::getDateTime()
         ]);
 
-		$config	= Form::findBySlug( 'config-cms' );
+		$config	= Form::findBySlug( 'config-cms', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -118,32 +120,32 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 	private function insertDefaultConfig() {
 
-		$columns = [ 'parentId', 'parentType', 'name', 'label', 'type', 'valueType', 'value' ];
+		$columns = [ 'modelId', 'name', 'label', 'type', 'valueType', 'value' ];
 
 		$attributes	= [
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'page_comment', 'Page Comment', 'cms', 'flag', '0' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'post_comment', 'Post Comment', 'cms', 'flag', '1' ]
+			[ $this->site->id, 'page_comment', 'Page Comment', 'cms', 'flag', '0' ],
+			[ $this->site->id, 'post_comment', 'Post Comment', 'cms', 'flag', '1' ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_model_attribute', $columns, $attributes );
+		$this->batchInsert( $this->prefix . 'core_site_attribute', $columns, $attributes );
 	}
 
-	private function insertSystemPages	() {
+	private function insertSystemPages() {
 
 		$columns = [ 'siteId', 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'status', 'visibility', 'icon', 'order', 'featured', 'comments', 'createdAt', 'modifiedAt' ];
 
 		$pages	= [
-			[ $this->site->id, $this->master->id, $this->master->id, 'Home', 'home', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Login', 'login', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Register', 'register', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Confirm Account', 'confirm-account', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Activate Account', 'activate-account', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Forgot Password', 'forgot-password', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Reset Password', 'reset-password', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'About Us', 'about-us', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Terms', 'terms', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Privacy', 'privacy', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', 'blog', CmsGlobal::TYPE_PAGE, Page::STATUS_APPROVED, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->site->id, $this->master->id, $this->master->id, 'Home', 'home', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Login', 'login', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Register', 'register', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Confirm Account', 'confirm-account', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Activate Account', 'activate-account', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Forgot Password', 'forgot-password', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Reset Password', 'reset-password', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'About Us', 'about-us', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Terms', 'terms', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Privacy', 'privacy', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', 'blog', CmsGlobal::TYPE_PAGE, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, null, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_page', $columns, $pages );
@@ -177,3 +179,5 @@ class m160621_065213_cms_data extends \yii\db\Migration {
         return true;
     }
 }
+
+?>

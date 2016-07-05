@@ -9,6 +9,10 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 class CmsProperties extends \cmsgears\core\common\config\CmgProperties {
 
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
 	/**
 	 * The property to find whether comments are enabled at page level.
 	 */
@@ -19,18 +23,26 @@ class CmsProperties extends \cmsgears\core\common\config\CmgProperties {
 	 */
 	const PROP_COMMENT_POST		= "post_comment";
 
-	// Singleton instance
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
 
-	/**
-	 * Return Singleton instance.
-	 */
+	// CMG parent classes --------------------
+
+	// CmgProperties -------------------------
+
+	// Singleton
+
 	public static function getInstance() {
 
 		if( !isset( self::$instance ) ) {
@@ -42,6 +54,8 @@ class CmsProperties extends \cmsgears\core\common\config\CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
 
 	/**
 	 * Returns whether comments are required for pages.

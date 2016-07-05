@@ -31,13 +31,21 @@ class Category extends \cmsgears\core\common\models\resources\Category {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-    public $parentType = 'category';
+	// Public -----------------
 
-	// Private/Protected --
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
@@ -45,27 +53,43 @@ class Category extends \cmsgears\core\common\models\resources\Category {
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
 
-	// Category --------------------------
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Category ------------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-	// Category --------------------------
+	// yii\db\ActiveRecord ----
 
-	// Create -------------
+	// CMG parent classes --------------------
 
-	// Read ---------------
+	// Category ------------------------------
 
-	// Update -------------
+	// Read - Query -----------
 
-	// Delete -------------
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

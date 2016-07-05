@@ -10,101 +10,167 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\mappers\ModelCategory;
 use cmsgears\cms\common\models\entities\Post;
 
-class PostService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\cms\common\services\interfaces\entities\IPostService;
 
-	// Static Methods ----------------------------------------------
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
-	// Read ----------------
+class PostService extends \cmsgears\core\common\services\base\ContentService implements IPostService {
 
-	/**
-	 * @param integer $id
-	 * @return Post
-	 */
-	public static function findById( $id ) {
+	// Variables ---------------------------------------------------
 
-		return Post::findById( $id );
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// PostService ---------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'visibility' => [
+	                'asc' => [ 'visibility' => SORT_ASC ],
+	                'desc' => ['visibility' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'visibility',
+	            ],
+	            'status' => [
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'status',
+	            ],
+	            'template' => [
+	                'asc' => [ 'template' => SORT_ASC ],
+	                'desc' => ['template' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'template',
+	            ],
+	            'cdate' => [
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'cdate',
+	            ],
+	            'pdate' => [
+	                'asc' => [ 'publishedAt' => SORT_ASC ],
+	                'desc' => ['publishedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'pdate',
+	            ],
+	            'udate' => [
+	                'asc' => [ 'updatedAt' => SORT_ASC ],
+	                'desc' => ['updatedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'udate',
+	            ]
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_POST;
+
+		return parent::findPage( $config );
 	}
 
-	/**
-	 * @param string $slug
-	 * @return Post
-	 */
-    public static function findBySlug( $slug ) {
+	// Read ---------------
 
-		return Post::findBySlug( $slug );
-    }
+    // Read - Models ---
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Maps -----
 
-		return self::getDataProvider( new Post(), $config );
-	}
+	// Read - Others ---
 
-	// Create -----------
+	// Create -------------
 
-	/**
-	 * @param Post $post
-	 * @param CmgFile $banner
-	 * @return Post
-	 */
-	public static function create( $post ) {
+	public function create( $model, $config = [] ) {
 
 		$post->type = CmsGlobal::TYPE_POST;
 
-		if( !isset( $post->order ) || strlen( $post->order ) <= 0 ) {
-
-			$post->order = 0;
-		}
-
-		// Create Post
-		$post->save();
-
-		return $post;
+		return parent::create( $model, $config );
 	}
 
-	// Update -----------
+	// Update -------------
 
-	/**
-	 * @param Post $post
-	 * @param CmgFile $banner
-	 * @return Post
-	 */
-	public static function update( $post ) {
+	public function update( $model, $config = [] ) {
 
-		$postToUpdate	= self::findById( $post->id );
+		return parent::update( $model, [
+			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ]
+		]);
+ 	}
 
-		$postToUpdate->copyForUpdateFrom( $post, [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ] );
+	// Delete -------------
 
-		if( !isset( $postToUpdate->order ) || strlen( $postToUpdate->order ) <= 0 ) {
+	// Static Methods ----------------------------------------------
 
-			$postToUpdate->order = 0;
-		}
+	// CMG parent classes --------------------
 
-		$postToUpdate->update();
+	// PostService ---------------------------
 
-		return $postToUpdate;
-	}
+	// Data Provider ------
 
-	// Delete -----------
+	// Read ---------------
 
-	/**
-	 * @param Post $post
-	 * @return boolean
-	 */
-	public static function delete( $post ) {
+    // Read - Models ---
 
-		$existingPost	= self::findById( $post->id );
+    // Read - Lists ----
 
-		// Delete Post
-		$existingPost->delete();
+    // Read - Maps -----
 
-		return true;
-	}
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

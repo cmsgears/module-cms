@@ -19,8 +19,8 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->prefix		= 'cmg_';
 
 		// Get the values via config
-		$this->fk			= Yii::$app->cmgMigration->isFk();
-		$this->options		= Yii::$app->cmgMigration->getTableOptions();
+		$this->fk			= Yii::$app->migration->isFk();
+		$this->options		= Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -69,7 +69,9 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'comments' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime()
+			'modifiedAt' => $this->dateTime(),
+			'content' => $this->text(),
+			'data' => $this->text()
         ], $this->options );
 
         // Index for columns site, parent, creator and modifier
@@ -83,7 +85,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 
         $this->createTable( $this->prefix . 'cms_page_attribute', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'pageId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
 			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
@@ -92,7 +94,7 @@ class m160621_065204_cms extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns site, parent, creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'pageId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'modelId' );
 	}
 
 	private function upBlock() {
@@ -160,7 +162,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 
 		$this->createTable( $this->prefix . 'cms_model_block', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'blockId' => $this->bigInteger( 20 ),
+			'modelId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -168,7 +170,7 @@ class m160621_065204_cms extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns block
-        $this->createIndex( 'idx_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'blockId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'modelId' );
 	}
 
 	private function generateForeignKeys() {
@@ -180,7 +182,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Page Attribute
-		$this->addForeignKey( 'fk_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'pageId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
 		// Block
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_site', $this->prefix . 'cms_block', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
@@ -197,7 +199,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 
 		// Model Block
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'blockId', $this->prefix . 'cms_block', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'modelId', $this->prefix . 'cms_block', 'id', 'CASCADE' );
 	}
 
     public function down() {

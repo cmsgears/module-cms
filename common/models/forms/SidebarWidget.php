@@ -13,7 +13,17 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $widget;
 	public $widgetId;
@@ -23,11 +33,23 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $name; // used for update
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	// yii\base\Model
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -50,12 +72,20 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'widgetId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_WIDGET ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'widgetId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_WIDGET ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// SidebarWidget -------------------------
 }
 
 ?>

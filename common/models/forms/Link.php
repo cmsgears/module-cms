@@ -13,9 +13,19 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
 
-	public $address;	
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $address;
 	public $label;
 	public $htmlOptions;
 	public $urlOptions;
@@ -26,21 +36,23 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $type;
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	public function isPublic() {
+	// Traits ------------------------------------------------------
 
-		if( isset( $this->private ) && $this->private ) {
+	// Constructor and Initialisation ------------------------------
 
-			return false;
-		}
+	// Instance methods --------------------------------------------
 
-		return true;
-	}
+	// Yii interfaces ------------------------
 
-	// yii\base\Model
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -62,14 +74,32 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'address' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-			'private' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
-			'relative' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'address' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+			'private' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
+			'relative' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Link ----------------------------------
+
+	public function isPublic() {
+
+		if( isset( $this->private ) && $this->private ) {
+
+			return false;
+		}
+
+		return true;
 	}
 }
 

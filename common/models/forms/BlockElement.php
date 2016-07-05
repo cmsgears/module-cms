@@ -13,7 +13,17 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $element;
 	public $elementId;
@@ -22,11 +32,23 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $name; // used for update
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	// yii\base\Model
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -49,11 +71,19 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'elementId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_ELEMENT ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'elementId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_ELEMENT ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// BlockElement --------------------------
 }
 
 ?>

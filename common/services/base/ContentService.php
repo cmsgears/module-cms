@@ -17,23 +17,41 @@ use cmsgears\cms\common\models\base\CmsTables;
 /**
  * The class Service defines several useful methods used for pagination and generating map and list by specifying the columns.
  */
-abstract class ContentService extends \cmsgears\core\common\services\base\OService {
+abstract class ContentService extends \cmsgears\core\common\services\base\EntityService {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// OService --------------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ContentService ------------------------
 
 	// Data Provider ------
 
@@ -47,17 +65,17 @@ abstract class ContentService extends \cmsgears\core\common\services\base\OServi
 
 	// Read - Others ---
 
-	// Create ----------------
+	// Create -------------
 
-	// Update ----------------
+	// Update -------------
 
-	// Delete ----------------
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
-	// < parent class > ------------------
+	// CMG parent classes --------------------
 
-	// <Service> -------------------------
+	// ContentService ------------------------
 
 	// Data Provider ------
 
@@ -68,57 +86,45 @@ abstract class ContentService extends \cmsgears\core\common\services\base\OServi
 
 		$contentTable 	= CmsTables::TABLE_MODEL_CONTENT;
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'id' => [
-	                'asc' => [ "$modelTable.id" => SORT_ASC ],
-	                'desc' => [ "$modelTable.id" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Id'
-	            ],
-	            'cdate' => [
-	                'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
-	                'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Created At',
-	            ],
-	            'pdate' => [
-	                'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
-	                'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Published At',
-	            ],
-	            'udate' => [
-	                'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
-	                'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Updated At',
-	            ]
-	        ]
-	    ]);
+		$sort		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
-		if( !isset( $config[ 'query' ] ) ) {
+		if( !$sort ) {
 
-			$modelClass 		= static::$modelClass;
-
-			$config[ 'query' ] 	= $modelClass::queryWithAll();
+		    $sort = new Sort([
+		        'attributes' => [
+		            'id' => [
+		                'asc' => [ "$modelTable.id" => SORT_ASC ],
+		                'desc' => [ "$modelTable.id" => SORT_DESC ],
+		                'default' => SORT_DESC,
+		                'label' => 'Id'
+		            ],
+		            'cdate' => [
+		                'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
+		                'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
+		                'default' => SORT_DESC,
+		                'label' => 'Created At',
+		            ],
+		            'pdate' => [
+		                'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
+		                'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
+		                'default' => SORT_DESC,
+		                'label' => 'Published At',
+		            ],
+		            'udate' => [
+		                'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
+		                'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
+		                'default' => SORT_DESC,
+		                'label' => 'Updated At',
+		            ]
+		        ]
+		    ]);
 		}
 
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		if( !isset( $config[ 'search-col' ] ) ) {
-
-			$config[ 'search-col' ] = 'name';
-		}
-
-		return self::findDataProvider( $modelClass, $config );
+		return parent::findDataProvider( $config );
 	}
 
 	/**
-	 * Generate search query using content, tag and category tables.
+	 * Generate search query using tag and category tables.
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
@@ -127,50 +133,62 @@ abstract class ContentService extends \cmsgears\core\common\services\base\OServi
 		$parentType			= static::$parentType;
 
 		// DB Tables
-		$contentTable		= CmsTables::TABLE_MODEL_CONTENT;
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
 		$categoryTable		= CoreTables::TABLE_CATEGORY;
 		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
 		$tagTable			= CoreTables::TABLE_TAG;
 
+		$contentTable		= CmsTables::TABLE_MODEL_CONTENT;
+
 		// Search Query
 		$query			 	= $modelClass::queryWithAll()->joinWith( 'content' );
 
+		// Params
+		$searchParam		= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
+		$keywords 			= Yii::$app->request->getQueryParam( $searchParam );
+
 		// Tag
-		if( isset( $search ) || isset( $config[ 'tag' ] ) ) {
+		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
 				->leftJoin( $tagTable, "$mtagTable.tagId=$tagTable.id" );
 		}
 
-		if( isset( $config[ 'tag' ] ) ) {
+		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
 
 			$query->andWhere( "$tagTable.id=" . $config[ 'tag' ]->id );
+
+			if( isset( $keywords ) ) {
+
+				$config[ 'search-col' ][]	= "$tagTable.name";
+			}
 		}
 
 		// Category
-		if( isset( $search ) || isset( $config[ 'category' ] ) ) {
+		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
 
 			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
 				->leftJoin( "$categoryTable", "$mcategoryTable.categoryId=$categoryTable.id" );
 		}
 
-		if( isset( $config[ 'category' ] ) ) {
+		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {
 
 			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
+
+			if( isset( $keywords ) ) {
+
+				$config[ 'search-col' ][]	= "$categoryTable.name";
+			}
 		}
 
-		// Search
-		$search 	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $search ) ) {
-
-			$config[ 'search-col' ]	= [ "$contentTable.content", "$categoryTable.name", "$tagTable.name" ];
-		}
-
-		if( isset( $search ) || isset( $config[ 'category' ] ) ) {
+		if( isset( $keywords ) || isset( $config[ 'category' ] ) ) {
 
 			$query->groupBy( "$modelTable.id" );
+		}
+
+		if( isset( $keywords ) ) {
+
+			$config[ 'search-col' ][]	= "$contentTable.content";
 		}
 
 		$config[ 'query' ]	= $query;

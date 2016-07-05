@@ -19,6 +19,8 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\forms\BlockElement;
 
+use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\traits\SlugTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
@@ -48,27 +50,47 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	public $multiSite = true;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $mParentType	= CmsGlobal::TYPE_BLOCK;
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use NameTrait;
+	use SlugTrait;
 	use TemplateTrait;
 	use VisualTrait;
-	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -83,7 +105,7 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
  				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+ 				'value' => new Expression( 'NOW()' )
             ],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
@@ -94,7 +116,7 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
         ];
     }
 
-	// yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -105,19 +127,18 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
         $rules = [
         	[ [ 'name', 'siteId' ], 'required' ],
             [ [ 'id', 'title', 'content', 'data' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumpun' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
+			[ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
             [ 'active', 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'description', 'htmlOptions', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -133,25 +154,25 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
-			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
-			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
@@ -168,7 +189,13 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
 		return false;
 	}
 
-	// Block -----------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Block ---------------------------------
 
 	public function getSite() {
 
@@ -213,7 +240,9 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -223,36 +252,27 @@ class Block extends \cmsgears\core\common\models\base\NamedCmgEntity {
 		return CmsTables::TABLE_BLOCK;
 	}
 
-	// Block -----------------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// Block ---------------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	/**
-	 * @return Block - by slug.
-	 */
-	public static function findBySlug( $slug ) {
+	public static function queryWithAll( $config = [] ) {
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
 	}
 
-	/**
-	 * @param string $name
-	 * @return Block - by name for current site
-	 */
-	public static function findByName( $name ) {
+	// Read - Find ------------
 
-		$siteId	= Yii::$app->cmgCore->siteId;
+	// Create -----------------
 
-		return static::find()->where( 'name=:name AND siteId=:siteId' )
-							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
-							->one();
-	}
+	// Update -----------------
 
-	// Update -------------
-
-	// Delete -------------
+	// Delete -----------------
 }
 
 ?>
