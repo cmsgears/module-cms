@@ -5,13 +5,14 @@ namespace cmsgears\cms\common\services\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\SidebarWidget;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\utilities\SortUtil;
+use cmsgears\core\common\utilities\DataUtil;
 
 use cmsgears\cms\common\services\interfaces\entities\ISidebarService;
 
@@ -68,7 +69,9 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getByName( $name, $first = false ) {
 
-		return $this->getByNameType( $name, CmsGlobal::TYPE_SIDEBAR );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+
+		return parent::getByName( $config );
 	}
 
 	public function getWidgets( $sidebar, $associative = false ) {
@@ -127,12 +130,16 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getIdList( $config = [] ) {
 
-		return $this->getIdListByType( CmsGlobal::TYPE_SIDEBAR, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+
+		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		return $this->getIdNameListByType( CmsGlobal::TYPE_SIDEBAR, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+
+		return parent::getIdNameList( $config );
 	}
 
     // Read - Maps -----
@@ -172,7 +179,7 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 			}
 		}
 
-		$objectData->widgets	= SortUtil::sortObjectArrayByNumber( $objectData->widgets, 'order', true );
+		$objectData->widgets	= DataUtil::sortObjectArrayByNumber( $objectData->widgets, 'order', true );
 
 		$sidebar->generateJsonFromObject( $objectData );
 
@@ -207,5 +214,3 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	// Delete -------------
 }
-
-?>

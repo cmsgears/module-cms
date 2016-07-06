@@ -26,5 +26,3 @@ interface IElementService extends \cmsgears\core\common\services\interfaces\enti
 	// Delete -------------
 
 }
-
-?>

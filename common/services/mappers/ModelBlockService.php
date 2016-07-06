@@ -1,19 +1,24 @@
 <?php
-namespace cmsgears\cms\common\services\entities;
+namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\entities\Block;
+use cmsgears\cms\common\models\mappers\ModelBlock;
 
-use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
+use cmsgears\cms\common\services\interfaces\mappers\IModelBlockService;
 
-class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataService implements IWidgetService {
+use cmsgears\core\common\services\traits\MapperTrait;
+
+/**
+ * The class ModelBlockService is base class to perform database activities for ModelBlock Entity.
+ */
+class ModelBlockService extends \cmsgears\core\common\services\base\EntityService implements IModelBlockService {
 
 	// Variables ---------------------------------------------------
 
@@ -23,7 +28,11 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// Public -----------------
 
-	public static $parentType	= CmsGlobal::TYPE_WIDGET;
+	public static $modelClass	= '\cmsgears\cms\common\models\mappers\ModelBlock';
+
+	public static $modelTable	= CmsTables::TABLE_MODEL_BLOCK;
+
+	public static $parentType	= null;
 
 	// Protected --------------
 
@@ -37,6 +46,8 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// Traits ------------------------------------------------------
 
+	use MapperTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -49,43 +60,15 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// ModelBlockService ---------------------
 
 	// Data Provider ------
-
-	public function getPage( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
-
-		return parent::getPage( $config );
-	}
 
 	// Read ---------------
 
     // Read - Models ---
 
-	public function getByName( $name, $first = false ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getByName( $config );
-	}
-
     // Read - Lists ----
-
-	public function getIdList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getIdList( $config );
-	}
-
-	public function getIdNameList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getIdNameList( $config );
-	}
 
     // Read - Maps -----
 
@@ -101,7 +84,7 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// ModelBlockService ---------------------
 
 	// Data Provider ------
 

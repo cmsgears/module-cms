@@ -56,7 +56,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Public -----------------
 
-	public $multiSite = true;
+	public static $multiSite = true;
 
 	// Protected --------------
 
@@ -128,7 +128,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
             [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'featured', 'comments' ], 'boolean' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -150,16 +150,16 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'createdBy' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'type' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'visibility' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-			'status' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'icon' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'featured' => Yii::$app->services->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
 	}
 
@@ -174,9 +174,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 				$this->parentId = null;
 			}
 
-			if( !isset( $post->order ) || strlen( $post->order ) <= 0 ) {
+			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
 
-				$post->order = 0;
+				$this->order = 0;
 			}
 
 	        return true;
@@ -281,5 +281,3 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Delete -----------------
 }
-
-?>

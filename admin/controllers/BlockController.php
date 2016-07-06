@@ -4,71 +4,69 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 use cmsgears\cms\common\models\resources\Block;
 use cmsgears\cms\common\models\forms\BlockElement;
 
-use cmsgears\core\admin\services\entities\TemplateService;
-use cmsgears\cms\admin\services\entities\ElementService;
-use cmsgears\cms\admin\services\resources\BlockService;
+class BlockController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $templateService;
+	protected $elementService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
+		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'blockService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->elementService	= Yii::$app->factory->get( 'elementService' );
+		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
+
+		$this->returnUrl		= Url::previous( 'blocks' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// BlockController -------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( [ 'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// ElementController ---------------------
 
 	public function actionAll() {
 
-		$dataProvider = BlockService::getPagination();
+		Url::remember( [ 'block/all' ], 'blocks' );
+
+		$dataProvider = $this->modelService->getPage();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -77,12 +75,13 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionCreate() {
 
-		$model			= new Block();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
-		$video 			= CmgFile::loadFile( $model->video, 'Video' );
-		$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
-		$elements		= ElementService::getIdNameList();
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
+		$banner 		= File::loadFile( $model->banner, 'Banner' );
+		$video 			= File::loadFile( $model->video, 'Video' );
+		$texture		= File::loadFile( $model->texture, 'Texture' );
+		$elements		= $this->elementService->getIdNameList();
 
 		// Block Elements
 		$blockElements	= [];
@@ -92,22 +91,17 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 			$blockElements[] = new BlockElement();
 		}
 
-		$model->setScenario( 'create' );
-
-		if( $model->load( Yii::$app->request->post(), 'Block' ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
 			$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
-			$block = BlockService::create( $model, $banner, $video, $texture );
+			$block = $this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
 
-			if( $block ) {
+			$this->modelService->updateElements( $block, $blockElements );
 
-				BlockService::updateElements( $block, $blockElements );
-
-				return $this->redirect( [ 'all' ] );
-			}
+			return $this->redirect( [ 'all' ] );
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -123,31 +117,28 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= BlockService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
-			$video 			= CmgFile::loadFile( $model->video, 'Video' );
-			$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
-			$elements		= ElementService::getIdNameList();
-			$blockElements	= BlockService::getElementsForUpdate( $model, $elements );
+			$banner 		= File::loadFile( $model->banner, 'Banner' );
+			$video 			= File::loadFile( $model->video, 'Video' );
+			$texture		= File::loadFile( $model->texture, 'Texture' );
+			$elements		= $this->elementService->getIdNameList();
+			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
 
-			$model->setScenario( 'update' );
-
-			if( $model->load( Yii::$app->request->post(), 'Block' ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
 				$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
-				if( BlockService::update( $model, $banner, $video, $texture ) ) {
+				$block = $this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
 
-					BlockService::updateElements( $model, $blockElements );
+				$this->modelService->updateElements( $block, $blockElements );
 
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( [ 'all' ] );
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -161,38 +152,34 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= BlockService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$elements		= ElementService::getIdNameList();
-			$blockElements	= BlockService::getElementsForUpdate( $model, $elements );
+			$elements		= $this->elementService->getIdNameList();
+			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
 
-			if( $model->load( Yii::$app->request->post(), 'Block' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				if( BlockService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$banner			= $model->banner;
-			$video			= $model->video;
-			$texture		= $model->texture;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'texture' => $texture,
+	    		'banner' => $model->banner,
+	    		'video' => $model->video,
+	    		'texture' => $model->texture,
 	    		'templatesMap' => $templatesMap,
 	    		'elements' => $elements,
 	    		'blockElements' => $blockElements
@@ -200,8 +187,6 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

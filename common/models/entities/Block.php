@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\models\resources;
+namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
 use \Yii;
@@ -15,6 +15,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\forms\BlockElement;
@@ -60,7 +61,7 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $multiSite = true;
+	public static $multiSite = true;
 
 	// Protected --------------
 
@@ -156,7 +157,7 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-			'textureId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
+			'textureId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_TEXTURE ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
@@ -274,5 +275,3 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 }
-
-?>

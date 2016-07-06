@@ -54,7 +54,9 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_ELEMENT;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_ELEMENT;
 
 		return parent::getPage( $config );
 	}
@@ -65,19 +67,25 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getByName( $name, $first = false ) {
 
-		return $this->getByNameType( $name, CmsGlobal::TYPE_ELEMENT );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_ELEMENT;
+
+		return parent::getByName( $config );
 	}
 
     // Read - Lists ----
 
 	public function getIdList( $config = [] ) {
 
-		return $this->getIdListByType( CmsGlobal::TYPE_ELEMENT, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_ELEMENT;
+
+		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		return $this->getIdNameListByType( CmsGlobal::TYPE_ELEMENT, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_ELEMENT;
+
+		return parent::getIdNameList( $config );
 	}
 
     // Read - Maps -----
@@ -114,5 +122,3 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	// Delete -------------
 }
-
-?>

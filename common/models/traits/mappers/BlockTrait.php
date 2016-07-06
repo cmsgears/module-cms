@@ -10,6 +10,20 @@ use cmsgears\cms\common\models\mappers\ModelBlock;
  */
 trait BlockTrait {
 
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// BlockTrait ----------------------------
+
 	/**
 	 * @return array - ModelBlock associated with parent
 	 */
@@ -32,6 +46,23 @@ trait BlockTrait {
                       	$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
 					});
 	}
-}
 
-?>
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// BlockTrait ----------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+}

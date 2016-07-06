@@ -91,5 +91,3 @@ class Category extends \cmsgears\core\common\models\resources\Category {
 
 	// Delete -----------------
 }
-
-?>

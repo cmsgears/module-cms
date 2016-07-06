@@ -5,13 +5,14 @@ namespace cmsgears\cms\common\services\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\utilities\SortUtil;
+use cmsgears\core\common\utilities\DataUtil;
 
 use cmsgears\cms\common\services\interfaces\entities\IMenuService;
 
@@ -68,7 +69,9 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getByName( $name, $first = false ) {
 
-		return $this->getByNameType( $name, CmsGlobal::TYPE_MENU );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+
+		return parent::getByName( $config );
 	}
 
 	public function getLinks( $menu ) {
@@ -147,12 +150,16 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getIdList( $config = [] ) {
 
-		return $this->getIdListByType( CmsGlobal::TYPE_MENU, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+
+		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		return $this->getIdNameListByType( CmsGlobal::TYPE_MENU, $config );
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+
+		return parent::getIdNameList( $config );
 	}
 
     // Read - Maps -----
@@ -209,7 +216,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 			}
 		}
 
-		$objectData->links	= SortUtil::sortObjectArrayByNumber( $objectData->links, 'order', true );
+		$objectData->links	= DataUtil::sortObjectArrayByNumber( $objectData->links, 'order', true );
 
 		$menu->generateJsonFromObject( $objectData );
 
@@ -244,5 +251,3 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	// Delete -------------
 }
-
-?>

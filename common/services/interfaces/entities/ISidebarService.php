@@ -32,5 +32,3 @@ interface ISidebarService extends \cmsgears\core\common\services\interfaces\enti
 	// Delete -------------
 
 }
-
-?>

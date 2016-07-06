@@ -3,19 +3,23 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\mappers\ModelCategory;
+use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
-class PostService extends \cmsgears\core\common\services\base\ContentService implements IPostService {
+class PostService extends \cmsgears\cms\common\services\base\ContentService implements IPostService {
 
 	// Variables ---------------------------------------------------
 
@@ -25,6 +29,12 @@ class PostService extends \cmsgears\core\common\services\base\ContentService imp
 
 	// Public -----------------
 
+	public static $modelClass	= '\cmsgears\cms\common\models\entities\Post';
+
+	public static $modelTable	= CmsTables::TABLE_PAGE;
+
+	public static $parentType	= CmsGlobal::TYPE_POST;
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -33,11 +43,23 @@ class PostService extends \cmsgears\core\common\services\base\ContentService imp
 
 	// Protected --------------
 
+	protected $fileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use NameTypeTrait;
+	use SlugTypeTrait;
+
 	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService	= $fileService;
+
+        parent::__construct( $config );
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -132,7 +154,7 @@ class PostService extends \cmsgears\core\common\services\base\ContentService imp
 
 	public function create( $model, $config = [] ) {
 
-		$post->type = CmsGlobal::TYPE_POST;
+		$model->type = CmsGlobal::TYPE_POST;
 
 		return parent::create( $model, $config );
 	}
@@ -172,5 +194,3 @@ class PostService extends \cmsgears\core\common\services\base\ContentService imp
 
 	// Delete -------------
 }
-
-?>

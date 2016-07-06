@@ -25,13 +25,13 @@ class Page extends Content {
 
 	// Public -----------------
 
-	public $mParentType	= CmsGlobal::TYPE_PAGE;
-
 	// Protected --------------
 
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $mParentType	= CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
 
@@ -94,5 +94,3 @@ class Page extends Content {
 
 	// Delete -----------------
 }
-
-?>

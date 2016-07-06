@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface IMenuService extends \cmsgears\core\common\services\interfaces\entities\IObjectService {
+use cmsgears\core\common\services\interfaces\base\INameService;
+use cmsgears\core\common\services\interfaces\base\ISlugService;
+
+interface IBlockService extends INameService, ISlugService {
 
 	// Data Provider ------
 
@@ -15,11 +18,9 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 
     // Read - Models ---
 
-	public function getLinks( $menu );
+	public function getElements( $block, $associative = false );
 
-	public function getPageLinks( $menu, $associative = false );
-
-	public function getPageLinksForUpdate( $menu, $pages );
+	public function getElementsForUpdate( $block, $elements );
 
     // Read - Lists ----
 
@@ -29,7 +30,7 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 
 	// Update -------------
 
-	public function updateLinks( $menu, $links, $pageLinks );
+	public function updateElements( $block, $elements );
 
 	// Delete -------------
 

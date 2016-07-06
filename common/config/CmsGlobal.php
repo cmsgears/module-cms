@@ -46,5 +46,3 @@ class CmsGlobal {
 	const FIELD_BACKGROUND			= 'backgroundField';
 	const FIELD_TEXTURE				= 'textureField';
 }
-
-?>

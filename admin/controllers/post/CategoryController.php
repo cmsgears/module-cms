@@ -6,20 +6,46 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+
+		$this->returnUrl		= Url::previous( 'categories' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
 
 	// CategoryController --------------------
 
@@ -30,5 +56,3 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 		return parent::actionAll();
 	}
 }
-
-?>

@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\common\services\interfaces\entities;
+namespace cmsgears\cms\common\services\interfaces\resources;
 
 // Yii Imports
 use \Yii;
@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface IWidgetService extends \cmsgears\core\common\services\interfaces\entities\IObjectService {
+interface IModelContentService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
 	// Data Provider ------
 

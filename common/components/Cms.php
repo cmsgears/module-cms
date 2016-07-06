@@ -70,43 +70,58 @@ class Cms extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'cmsgears\core\common\services\interfaces\resources\IAddressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ICategoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IContentAttributeService', 'cmsgears\cms\common\services\resources\ContentAttributeService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IModelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
 	}
 
 	public function registerMapperServices() {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );
 	}
 
 	public function registerEntityServices() {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IElementService', 'cmsgears\cms\common\services\entities\ElementService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IBlockService', 'cmsgears\cms\common\services\entities\BlockService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IPageService', 'cmsgears\cms\common\services\entities\PageService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IPostService', 'cmsgears\cms\common\services\entities\PostService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IMenuService', 'cmsgears\cms\common\services\entities\MenuService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\ISidebarService', 'cmsgears\cms\common\services\entities\SidebarService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IWidgetService', 'cmsgears\cms\common\services\entities\WidgetService' );
 	}
 
 	public function initResourceServices() {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'addressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
+		$factory->set( 'contentAttributeService', 'cmsgears\cms\common\services\resources\ContentAttributeService' );
+		$factory->set( 'modelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
+
 	}
 
 	public function initMapperServices() {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'modelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'modelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );
 	}
 
 	public function initEntityServices() {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		//$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
+		$factory->set( 'elementService', 'cmsgears\cms\common\services\entities\ElementService' );
+		$factory->set( 'blockService', 'cmsgears\cms\common\services\entities\BlockService' );
+		$factory->set( 'pageService', 'cmsgears\cms\common\services\entities\PageService' );
+		$factory->set( 'postService', 'cmsgears\cms\common\services\entities\PostService' );
+		$factory->set( 'menuService', 'cmsgears\cms\common\services\entities\MenuService' );
+		$factory->set( 'sidebarService', 'cmsgears\cms\common\services\entities\SidebarService' );
+		$factory->set( 'widgetService', 'cmsgears\cms\common\services\entities\WidgetService' );
 	}
 }
-
-?>

@@ -110,5 +110,3 @@ class Post extends Content {
 
 	// Delete -----------------
 }
-
-?>

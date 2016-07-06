@@ -110,6 +110,14 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// yii\db\ActiveRecord ----
 
+    /**
+     * @inheritdoc
+     */
+	public static function tableName() {
+
+		return CmsTables::TABLE_MODEL_BLOCK;
+	}
+
 	// CMG parent classes --------------------
 
 	// ModelBlock ----------------------------
@@ -139,5 +147,3 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// Delete -----------------
 }
-
-?>

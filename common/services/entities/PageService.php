@@ -3,8 +3,10 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -13,7 +15,8 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
@@ -24,6 +27,12 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Constants --------------
 
 	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\cms\common\models\entities\Page';
+
+	public static $modelTable	= CmsTables::TABLE_PAGE;
+
+	public static $parentType	= CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
 
@@ -39,7 +48,8 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -168,7 +178,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function create( $model, $config = [] ) {
 
-		$post->type = CmsGlobal::TYPE_PAGE;
+		$model->type = CmsGlobal::TYPE_PAGE;
 
 		return parent::create( $model, $config );
 	}
@@ -208,5 +218,3 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Delete -------------
 }
-
-?>

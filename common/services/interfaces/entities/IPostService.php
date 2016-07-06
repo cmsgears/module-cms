@@ -26,5 +26,3 @@ interface IPostService extends \cmsgears\core\common\services\interfaces\base\IE
 	// Delete -------------
 
 }
-
-?>

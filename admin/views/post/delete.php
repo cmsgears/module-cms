@@ -68,7 +68,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 				'options' => [ 'id' => 'box-category-mapper', 'class' => 'box-category-mapper' ],
 				'type' => CmsGlobal::TYPE_POST,
 				'model' => $model,
-				'allDisabled' => true
+				'disabled' => true
 			])?>
 		</div>
 

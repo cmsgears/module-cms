@@ -1,19 +1,18 @@
 <?php
-namespace cmsgears\cms\common\services\entities;
+namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\resources\ContentAttribute;
 
-use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
+use cmsgears\cms\common\services\interfaces\resources\IContentAttributeService;
 
-class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataService implements IWidgetService {
+class ContentAttributeService extends \cmsgears\core\common\services\base\AttributeService implements IContentAttributeService {
 
 	// Variables ---------------------------------------------------
 
@@ -23,7 +22,11 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// Public -----------------
 
-	public static $parentType	= CmsGlobal::TYPE_WIDGET;
+	public static $modelClass	= '\cmsgears\cms\common\models\resources\ContentAttribute';
+
+	public static $modelTable	= CmsTables::TABLE_PAGE_ATTRIBUTE;
+
+	public static $parentType	= null;
 
 	// Protected --------------
 
@@ -49,43 +52,15 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// ContentAttributeService ---------------
 
 	// Data Provider ------
-
-	public function getPage( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
-
-		return parent::getPage( $config );
-	}
 
 	// Read ---------------
 
     // Read - Models ---
 
-	public function getByName( $name, $first = false ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getByName( $config );
-	}
-
     // Read - Lists ----
-
-	public function getIdList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getIdList( $config );
-	}
-
-	public function getIdNameList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
-
-		return parent::getIdNameList( $config );
-	}
 
     // Read - Maps -----
 
@@ -101,7 +76,7 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// ContentAttributeService ---------------
 
 	// Data Provider ------
 

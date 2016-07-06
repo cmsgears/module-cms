@@ -60,7 +60,7 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'link', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -89,5 +89,3 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// PageLink ------------------------------
 }
-
-?>

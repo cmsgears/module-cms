@@ -3,61 +3,114 @@ namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\cms\common\models\resources\Category;
 
-/**
- * The class CategoryService is base class to perform database activities for Category Entity.
- */
-class CategoryService extends \cmsgears\core\common\services\resources\CategoryService {
+use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
+
+class CategoryService extends \cmsgears\core\common\services\resources\CategoryService implements ICategoryService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\cms\common\models\resources\Category';
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CategoryService -----------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'parent' => [
+	                'asc' => [ 'parentId' => SORT_ASC ],
+	                'desc' => ['parentId' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'parent',
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	// Read - Models ---
+	// CategoryService -----------------------
 
-	public static function findById( $id ) {
+	// Data Provider ------
 
-		return Category::findById( $id );
-	}
+	// Read ---------------
 
-	public static function findByParentId( $id ) {
+    // Read - Models ---
 
-		return Category::findByParentId( $id );
-	}
+    // Read - Lists ----
 
-	public static function getFeatured() {
+    // Read - Maps -----
 
-		return Category::findAll( [ 'featured' => 1 ] );
-	}
+	// Read - Others ---
 
-	public static function findByName( $name ) {
+	// Create -------------
 
-		return Category::findByName( $name );
-	}
+	// Update -------------
 
-	public static function findByType( $type ) {
-
-		return Category::findByType( $type );
-    }
-
-	public static function findBySlugType( $slug, $type ) {
-
-		return Category::findBySlugType( $slug, $type );
-	}
-
-	// Data Provider ----
-
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
-
-		return self::getDataProvider( new Category(), $config );
-	}
+	// Delete -------------
 }
-
-?>

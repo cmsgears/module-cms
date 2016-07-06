@@ -247,5 +247,3 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block' );
 	}
 }
-
-?>

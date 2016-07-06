@@ -10,15 +10,29 @@ use cmsgears\cms\common\models\resources\ModelContent;
  */
 trait ContentTrait {
 
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// ContentTrait --------------------------
+
 	/**
 	 * @return ModelContent associated with parent.
 	 */
-	public function getContent() {
+	public function getModelContent() {
 
-		$modelTagTable	= CmsTables::TABLE_MODEL_CONTENT;
+		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
     	return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
-					->where( "$modelTagTable.parentType='$this->parentType'" );
+					->where( "$modelContentTable.parentType='$this->mParentType'" );
 	}
 
 	public function getTemplateViewPath() {
@@ -28,6 +42,22 @@ trait ContentTrait {
 
 		return $template->viewPath;
 	}
-}
 
-?>
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// ContentTrait --------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+}

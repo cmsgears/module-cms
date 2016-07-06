@@ -179,5 +179,3 @@ class m160621_065213_cms_data extends \yii\db\Migration {
         return true;
     }
 }
-
-?>

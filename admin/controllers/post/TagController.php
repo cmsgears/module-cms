@@ -6,24 +6,48 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TagController extends \cmsgears\core\admin\controllers\base\TagController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
-
-		$this->type		= CmsGlobal::TYPE_POST;
+		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->type				= CmsGlobal::TYPE_POST;
+		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// CategoryController --------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TagController -------------------------
 
 	public function actionAll() {
 
@@ -32,5 +56,3 @@ class TagController extends \cmsgears\core\admin\controllers\base\TagController 
 		return parent::actionAll();
 	}
 }
-
-?>

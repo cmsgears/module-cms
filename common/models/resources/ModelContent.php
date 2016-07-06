@@ -33,7 +33,8 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
- * @property integer $viewCount
+ * @property integer $views
+ * @property integer $referrals
  * @property string $content
  * @property string $data
  */
@@ -92,7 +93,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
             [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'viewCount' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -119,11 +120,12 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'seoName' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
-			'seoDescription' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
-			'seoKeywords' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
-			'seoRobot' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
-			'viewCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'seoName' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
+			'seoDescription' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
+			'seoKeywords' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
+			'seoRobot' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'views' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
@@ -201,5 +203,3 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	// Delete -----------------
 }
-
-?>

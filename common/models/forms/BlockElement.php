@@ -58,7 +58,7 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -85,5 +85,3 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// BlockElement --------------------------
 }
-
-?>

@@ -73,5 +73,3 @@ class CmsProperties extends \cmsgears\core\common\config\CmgProperties {
 		return $this->properties[ self::PROP_COMMENT_POST ];
 	}
 }
-
-?>

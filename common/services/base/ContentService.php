@@ -212,5 +212,3 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Delete -------------
 }
-
-?>

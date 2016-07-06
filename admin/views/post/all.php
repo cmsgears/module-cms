@@ -32,7 +32,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -111,7 +111,7 @@ if( !isset( $sortOrder ) ) {
 			</thead>
 			<tbody>
 				<?php
-					
+
 					$slugBase	= $siteUrl;
 					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
 
@@ -121,8 +121,8 @@ if( !isset( $sortOrder ) ) {
 						$editUrl	= Html::a( $post->name, [ "/cmgcms/post/update?id=$id" ] );
 						$slug		= $post->slug;
 						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
-						$tags		= $post->getTagMap();
-						$content	= $post->content;
+						$tags		= $post->getTagIdNameMap();
+						$content	= $post->modelContent;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
@@ -139,8 +139,8 @@ if( !isset( $sortOrder ) ) {
 								<tr><td>Robot</td><td><?= $content->seoRobot ?></td></tr>
 							</table>
 						</td>
-						<td><?= $content->createdAt ?></td>
-						<td><?= $content->modifiedAt ?></td>
+						<td><?= $post->createdAt ?></td>
+						<td><?= $post->modifiedAt ?></td>
 						<td><?= $content->publishedAt ?></td>
 						<td class="actions">
 							<span title="Update Post"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

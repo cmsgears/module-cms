@@ -59,7 +59,7 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'htmlOptions', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -87,5 +87,3 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// SidebarWidget -------------------------
 }
-
-?>

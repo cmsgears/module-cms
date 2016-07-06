@@ -98,5 +98,3 @@ class ContentAttribute extends \cmsgears\core\common\models\base\ModelAttribute 
 
 	// Delete -----------------
 }
-
-?>

@@ -4,73 +4,71 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 use cmsgears\cms\common\models\entities\Page;
-use cmsgears\cms\common\models\mappers\ModelContent;
+use cmsgears\cms\common\models\resources\ModelContent;
 
-use cmsgears\core\admin\services\entities\TemplateService;
-use cmsgears\cms\admin\services\entities\PageService;
-use cmsgears\cms\common\services\mappers\ModelContentService;
+class PageController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class PageController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $templateService;
+	protected $modelContentService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+		$this->crudPermission 		= CmsGlobal::PERM_CMS;
+		$this->modelService			= Yii::$app->factory->get( 'pageService' );
+		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$this->sidebar 				= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+
+		$this->returnUrl		= Url::previous( 'pages' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// PageController --------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( [ 'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// ElementController ---------------------
 
 	public function actionAll() {
 
-		$dataProvider = PageService::getPagination();
+		Url::remember( [ 'page/all' ], 'pages' );
+
+		$dataProvider = $this->modelService->getPage();
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -79,32 +77,27 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionCreate() {
 
-		$model				= new Page();
-		$model->siteId		= Yii::$app->cmgCore->siteId;
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+		$model->siteId		= Yii::$app->core->siteId;
 		$model->comments	= false;
 		$content			= new ModelContent();
-		$banner	 			= CmgFile::loadFile( null, 'Banner' );
-		$video	 			= CmgFile::loadFile( null, 'Video' );
+		$banner	 			= File::loadFile( null, 'Banner' );
+		$video	 			= File::loadFile( null, 'Video' );
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+			$model->validate() && $content->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    $model->validate() && $content->validate() ) {
+			$page = $this->modelService->create( $model );
 
-			$page = PageService::create( $model );
+			$this->modelContentService->create( $content, [ 'parent' => $page, 'parentType' => CmsGlobal::TYPE_PAGE, 'publish' => $page->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			if( isset( $page ) ) {
-
-				// Create Content
-				ModelContentService::create( $page, CmsGlobal::TYPE_PAGE, $content, $page->isPublished(), $banner, $video );
-
-				return $this->redirect( [ 'all' ] );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$visibilityMap	= Page::$visibilityMap;
 		$statusMap		= Page::$statusMap;
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -120,34 +113,28 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= PageService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content	= $model->content;
-			$banner	 	= CmgFile::loadFile( $content->banner, 'Banner' );
-			$video	 	= CmgFile::loadFile( $content->video, 'Video' );
+			$content	= $model->modelContent;
+			$banner	 	= File::loadFile( $content->banner, 'Banner' );
+			$video	 	= File::loadFile( $content->video, 'Video' );
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+				$model->validate() && $content->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Page' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    	$model->validate() && $content->validate() ) {
+				$page = $this->modelService->update( $model );
 
-				$page = PageService::update( $model );
+				$this->modelContentService->update( $content, [ 'publish' => $page->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-				if( isset( $page ) ) {
-
-					// Update Content
-					ModelContentService::update( $content, $page->isPublished(), $banner, $video );
-
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -155,46 +142,43 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	    		'banner' => $banner,
 	    		'video' => $video,
 	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
+		    	'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= PageService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$content	= $model->content;
-			$banner		= $content->banner;
-			$video		= $content->video;
+			$content		= $model->modelContent;
 
-			if( $model->load( Yii::$app->request->post(), 'Page' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				if( PageService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					ModelContentService::delete( $content, $banner, $video );
+				$this->modelContentService->delete( $content );
 
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$visibilityMap	= Page::$visibilityMap;
 			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'video' => $video,
+	    		'banner' => $content->banner,
+	    		'video' => $content->video,
 	    		'visibilityMap' => $visibilityMap,
 	    		'statusMap' => $statusMap,
 	    		'templatesMap' => $templatesMap
@@ -202,8 +186,6 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

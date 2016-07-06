@@ -6,40 +6,50 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
 		$this->sidebar 		= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
 
 		$this->type			= CmsGlobal::TYPE_ELEMENT;
+
+		$this->returnUrl	= Url::previous( 'templates' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-		$behaviors	= parent::behaviors();
+	// yii\base\Component -----
 
-		$behaviors[ 'rbac' ][ 'actions' ] = [
-								                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-								                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-								                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-								                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
-							                ];
+	// yii\base\Controller ----
 
-		return $behaviors;
-    }
+	// CMG interfaces ------------------------
 
-	// CategoryController --------------------
+	// CMG parent classes --------------------
+
+	// TemplateController --------------------
 
 	public function actionAll() {
 
@@ -48,5 +58,3 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		return parent::actionAll();
 	}
 }
-
-?>
