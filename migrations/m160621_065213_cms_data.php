@@ -156,17 +156,17 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$columns = [ 'parentId', 'parentType', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'views', 'referrals', 'summary', 'content', 'publishedAt' ];
 
 		$pages	= [
-			[ Page::findBySlug( 'home' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'login' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'register' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'confirm-account' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'activate-account' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'forgot-password' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'reset-password' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'about-us' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'terms' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'privacy' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlug( 'blog' )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ]
+			[ Page::findBySlugType( 'home', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'login', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'register', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'confirm-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'activate-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'forgot-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'reset-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'about-us', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'terms', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'privacy', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );

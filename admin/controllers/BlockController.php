@@ -60,7 +60,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	// CMG parent classes --------------------
 
-	// ElementController ---------------------
+	// BlockController -----------------------
 
 	public function actionAll() {
 
@@ -94,9 +94,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
 			$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
-			$block = $this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+			$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
 
-			$this->modelService->updateElements( $block, $blockElements );
+			$this->modelService->updateElements( $model, $blockElements );
 
 			return $this->redirect( [ 'all' ] );
 		}
@@ -131,9 +131,9 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
 				$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
 
-				$block = $this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+				$this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
 
-				$this->modelService->updateElements( $block, $blockElements );
+				$this->modelService->updateElements( $model, $blockElements );
 
 				return $this->redirect( [ 'all' ] );
 			}

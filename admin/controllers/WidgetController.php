@@ -4,6 +4,7 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -13,86 +14,85 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\admin\models\forms\WidgetForm;
 
-use cmsgears\core\admin\services\entities\TemplateService;
-use cmsgears\cms\admin\services\entities\WidgetService;
+class WidgetController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $templateService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
+		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
+
+		$this->returnUrl		= Url::previous( 'widgets' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'settings' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'    => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ],
-	                'settings' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		$behaviors	= parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+
+		return $behaviors;
     }
 
-	// UserController --------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( [ 'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// WidgetController ----------------------
 
 	public function actionAll() {
 
-		$dataProvider = WidgetService::getPagination();
+		Url::remember( [ 'widget/all' ], 'widgets' );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+	    return parent::actionAll();
 	}
 
 	public function actionCreate() {
 
-		$model			= new ObjectData();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= CmsGlobal::TYPE_WIDGET;
 		$meta			= new WidgetForm();
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
+			$this->modelService->create( $model, [ 'data' => $meta ] );
 
-			if( WidgetService::create( $model, $meta ) ) {
-
-				return $this->redirect( [ 'all' ] );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -104,24 +104,21 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model			= WidgetService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$meta	= new WidgetForm( $model->data );
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && $meta->load( Yii::$app->request->post(), 'WidgetForm' ) && $model->validate() ) {
+				$this->modelService->update( $model, [ 'data' => $meta ] );
 
-				if( WidgetService::update( $model, $meta ) ) {
-
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -131,41 +128,43 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model			= WidgetService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
+			$meta	= new WidgetForm( $model->data );
 
-				if( WidgetService::delete( $model ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-					return $this->redirect( [ 'all' ] );
-				}
+				$this->modelService->delete( $model );
+
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
+	    		'meta' => $meta,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionSettings( $id ) {
 
 		// Find Model
-		$model	= WidgetService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -174,10 +173,9 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 			if( $meta->load( Yii::$app->request->post(), 'WidgetForm' ) ) {
 
-				if( WidgetService::update( $model, $meta ) ) {
+				$this->modelService->update( $model, [ 'data' => $meta ] );
 
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 	    	return $this->render( 'settings', [
@@ -187,8 +185,6 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

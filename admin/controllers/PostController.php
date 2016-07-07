@@ -65,7 +65,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// CMG parent classes --------------------
 
-	// ElementController ---------------------
+	// PostController ------------------------
 
 	public function actionAll() {
 
@@ -91,14 +91,14 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$post = $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-			$this->modelContentService->create( $content, [ 'parent' => $post, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $post->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 			// Bind Categories
 			$binder = new Binder();
 
-			$binder->binderId	= $post->id;
+			$binder->binderId	= $model->id;
 			$binder->load( Yii::$app->request->post(), 'Binder' );
 
 			$this->modelCategoryService->bindCategories( $binder, CmsGlobal::TYPE_POST );
@@ -136,14 +136,14 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$post = $this->modelService->update( $model );
+				$this->modelService->update( $model );
 
-				$this->modelContentService->update( $content, [ 'publish' => $post->isActive(), 'banner' => $banner, 'video' => $video ] );
+				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 				// Bind Categories
 				$binder = new Binder();
 
-				$binder->binderId	= $post->id;
+				$binder->binderId	= $model->id;
 				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				$this->modelCategoryService->bindCategories( $binder, CmsGlobal::TYPE_POST );

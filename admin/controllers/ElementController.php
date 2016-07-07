@@ -64,11 +64,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		Url::remember( [ 'element/all' ], 'elements' );
 
-		$dataProvider = $this->modelService->getPage();
-
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+	    return parent::actionAll();
 	}
 
 	public function actionCreate() {

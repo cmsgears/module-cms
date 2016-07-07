@@ -58,7 +58,9 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_MENU;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
 
 		return parent::getPage( $config );
 	}
@@ -69,7 +71,9 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getByName( $name, $first = false ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
 
 		return parent::getByName( $config );
 	}
@@ -150,14 +154,18 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getIdList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
 
 		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_MENU;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
 
 		return parent::getIdNameList( $config );
 	}

@@ -55,7 +55,9 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	public function getPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_WIDGET;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
 
 		return parent::getPage( $config );
 	}
@@ -66,7 +68,9 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	public function getByName( $name, $first = false ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
 
 		return parent::getByName( $config );
 	}
@@ -75,14 +79,18 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	public function getIdList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
 
 		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_WIDGET;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
 
 		return parent::getIdNameList( $config );
 	}

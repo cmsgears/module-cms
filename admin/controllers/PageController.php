@@ -62,7 +62,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// CMG parent classes --------------------
 
-	// ElementController ---------------------
+	// PageController ------------------------
 
 	public function actionAll() {
 
@@ -88,9 +88,9 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$page = $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-			$this->modelContentService->create( $content, [ 'parent' => $page, 'parentType' => CmsGlobal::TYPE_PAGE, 'publish' => $page->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_PAGE, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 			return $this->redirect( $this->returnUrl );
 		}
@@ -125,9 +125,9 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$page = $this->modelService->update( $model );
+				$this->modelService->update( $model );
 
-				$this->modelContentService->update( $content, [ 'publish' => $page->isActive(), 'banner' => $banner, 'video' => $video ] );
+				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

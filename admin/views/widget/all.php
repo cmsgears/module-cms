@@ -30,7 +30,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -81,7 +81,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $widget->description ?></td>
 						<td><?= $widget->getTemplateName() ?></td>
 						<td class="actions">
-							<span title="Settings"><?= Html::a( "", ["/cmgcms/widget/settings?id=$id"], [ 'class' => 'cmti cmti-setting' ] )  ?></span>
+							<span title="Settings"><?= Html::a( "", ["widget/settings?id=$id"], [ 'class' => 'cmti cmti-setting' ] )  ?></span>
 							<span title="Update Widget"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Widget"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

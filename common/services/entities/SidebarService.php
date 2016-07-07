@@ -58,7 +58,9 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] =  CmsGlobal::TYPE_SIDEBAR;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getPage( $config );
 	}
@@ -69,7 +71,9 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getByName( $name, $first = false ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getByName( $config );
 	}
@@ -130,14 +134,18 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	public function getIdList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_SIDEBAR;
+		$modelTable	= static::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getIdNameList( $config );
 	}

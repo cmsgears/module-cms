@@ -4,6 +4,7 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -13,75 +14,66 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\SidebarWidget;
 
-use cmsgears\cms\admin\services\entities\SidebarService;
-use cmsgears\cms\admin\services\entities\WidgetService;
+class SidebarController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $widgetService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
+		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
+		$this->widgetService	= Yii::$app->factory->get( 'widgetService' );
+		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
+
+		$this->returnUrl		= Url::previous( 'sidebars' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/sidebar/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-              	]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'    => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// SidebarController -----------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( [ 'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// SidebarController ---------------------
 
 	public function actionAll() {
 
-		$dataProvider = SidebarService::getPagination();
+		Url::remember( [ 'sidebar/all' ], 'sidebars' );
 
-	    return $this->render('all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+	    return parent::actionAll();
 	}
 
 	public function actionCreate() {
 
-		$model			= new ObjectData();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= CmsGlobal::TYPE_SIDEBAR;
 		$model->data	= "{ \"widgets\": {} }";
-		$widgets		= WidgetService::getIdNameList();
-
-		$model->setScenario( 'create' );
+		$widgets		= $this->widgetService->getIdNameList();
 
 		// Sidebar Widgets
 		$sidebarWidgets	= [];
@@ -91,14 +83,14 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			$sidebarWidgets[] = new SidebarWidget();
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
 			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
-			$sidebar	= SidebarService::create( $model );
+			$this->modelService->create( $model );
 
-			SidebarService::updateWidgets( $sidebar, $sidebarWidgets );
+			$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-			return $this->redirect( [ 'all' ] );
+			return $this->redirect( $this->returnUrl );
 		}
 
     	return $this->render( 'create', [
@@ -111,64 +103,61 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= SidebarService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( 'update' );
+			$widgets		= $this->modelService->getIdNameList();
+			$sidebarWidgets	= $this->modelService->getWidgetsForUpdate( $model, $widgets );
 
-			$widgets		= WidgetService::getIdNameList();
-			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
+				$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) && SidebarWidget::loadMultiple( $sidebarWidgets, Yii::$app->request->post(), 'SidebarWidget' ) &&
-			$model->validate() && SidebarWidget::validateMultiple( $sidebarWidgets ) ) {
+				$this->modelService->update( $model );
 
-				SidebarService::update( $model );
+				$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-				SidebarService::updateWidgets( $model, $sidebarWidgets );
-
-				return $this->redirect( [ 'all' ] );
+				return $this->redirect( $this->returnUrl );
 			}
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
+	    		'widgets' => $widgets,
 	    		'sidebarWidgets' => $sidebarWidgets
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= SidebarService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$widgets		= WidgetService::getIdNameList();
-			$sidebarWidgets	= SidebarService::getWidgetsForUpdate( $model, $widgets );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
+				$this->modelService->delete( $model );
 
-				if( SidebarService::delete( $model ) ) {
-
-					return $this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
+
+			$widgets		= $this->modelService->getIdNameList();
+			$sidebarWidgets	= $this->modelService->getWidgetsForUpdate( $model, $widgets );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
+	    		'widgets' => $widgets,
 	    		'sidebarWidgets' => $sidebarWidgets
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>
