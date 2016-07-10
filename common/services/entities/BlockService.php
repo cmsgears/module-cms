@@ -13,6 +13,7 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\BlockElement;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Block;
+use cmsgears\cms\common\models\mappers\ModelBlock;
 
 use cmsgears\core\common\utilities\DataUtil;
 
@@ -253,8 +254,13 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function delete( $model, $config = [] ) {
 
-		$this->fileService->saveFiles( deleteFiles, [ $model->banner, $model->texture, $model->video ] );
+		// Delete files
+		$this->fileService->deleteFiles( [ $model->banner, $model->texture, $model->video ] );
 
+		// Delete mappings
+		ModelBlock::deleteByModelId( $model->id );
+
+		// Delete model
 		return parent::delete( $model, $config );
  	}
 

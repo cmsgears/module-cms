@@ -3,7 +3,7 @@ namespace cmsgears\cms\common\services\base;
 
 // Yii Imports
 use \Yii;
-
+use yii\data\Sort;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
 
@@ -141,7 +141,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$contentTable		= CmsTables::TABLE_MODEL_CONTENT;
 
 		// Search Query
-		$query			 	= $modelClass::queryWithAll()->joinWith( 'content' );
+		$query			 	= $modelClass::queryWithAll()->joinWith( 'modelContent' );
 
 		// Params
 		$searchParam		= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
@@ -151,7 +151,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
-				->leftJoin( $tagTable, "$mtagTable.tagId=$tagTable.id" );
+				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
 		}
 
 		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
@@ -168,7 +168,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
 
 			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-				->leftJoin( "$categoryTable", "$mcategoryTable.categoryId=$categoryTable.id" );
+				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
 		}
 
 		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {

@@ -22,6 +22,11 @@ class CmsGlobal {
 
 	const CONFIG_CMS			= 'cms';
 
+	// Templates -------------------------------------------------------
+
+	const TEMPLATE_PAGE			= 'page';
+	const TEMPLATE_POST			= 'post';
+
 	// Errors ----------------------------------------------------------
 
 	// Model Fields ----------------------------------------------------

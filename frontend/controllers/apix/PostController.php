@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\controllers\apix;
+namespace cmsgears\cms\frontend\controllers\apix;
 
 // Yii Imports
 use \Yii;
@@ -11,7 +11,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PageController extends \cmsgears\core\admin\controllers\base\Controller {
+class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -29,8 +29,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->modelService		= Yii::$app->factory->get( 'postService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,14 +47,26 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                // 'test'  => [ 'permission' => $this->crudPermission ]
+					//'comment' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                // 'test' => [ 'post' ]
+					'comment' => [ 'post' ]
                 ]
+            ]
+        ];
+    }
+
+	// yii\base\Controller ----
+
+    public function actions() {
+
+        return [
+            'add-comment' => [
+                'class' => 'cmsgears\core\common\actions\comment\CreateComment',
+                'captcha' => true
             ]
         ];
     }
@@ -63,5 +75,5 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// PageController ------------------------
+	// PostController ------------------------
 }

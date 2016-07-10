@@ -87,8 +87,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 				'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
 				'loadAssets' => true,
 				'model' => $model,
-				'createUrl' => "cmgcms/post/create-tags?slug=$model->slug",
-				'deleteUrl' => "cmgcms/post/delete-tag?slug=$model->slug"
+				'assignUrl' => "cms/post/assign-tags?slug=$model->slug",
+				'removeUrl' => "cms/post/remove-tag?slug=$model->slug"
 			])?>
 		</div>
 	</div>

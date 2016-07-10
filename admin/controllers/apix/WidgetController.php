@@ -4,7 +4,6 @@ namespace cmsgears\cms\admin\controllers\apix;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,42 +11,61 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
 
-use cmsgears\cms\admin\services\entities\WidgetService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class WidgetController extends \yii\web\Controller {
+class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'pageService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'bindSidebars'  => [ 'permission' => CmsGlobal::PERM_CMS ]
+	                'bindSidebars' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'bindSidebars'  => [ 'post' ]
+	                'bindSidebars' => [ 'post' ]
                 ]
             ]
         ];
     }
 
-	// WidgetController
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// WidgetController ----------------------
 
 	public function actionBindSidebars() {
 
@@ -55,16 +73,13 @@ class WidgetController extends \yii\web\Controller {
 
 		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
-			if( WidgetService::bindSidebars( $binder ) ) {
+			$this->modelService->bindSidebars( $binder );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
-
-?>

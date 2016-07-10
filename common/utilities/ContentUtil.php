@@ -29,7 +29,7 @@ class ContentUtil {
 
 			$coreProperties				= $view->context->getCoreProperties();
 
-			$content					= $page->content;
+			$content					= $page->modelContent;
 
 			// Page and Content
 			$view->params[ 'page' ]		= $page;
@@ -77,7 +77,7 @@ class ContentUtil {
 
 			$coreProperties				= $view->context->getCoreProperties();
 
-			$content					= $model->content;
+			$content					= $model->modelContent;
 
 			// Page and Content
 			$view->params[ 'page' ]		= $model;
@@ -160,7 +160,7 @@ class ContentUtil {
 
 			$info				= [];
 			$info[ 'page' ]		= $page;
-			$info[ 'content' ]	= $page->content;
+			$info[ 'content' ]	= $page->modelContent;
 
 			return $info;
 		}
@@ -185,7 +185,7 @@ class ContentUtil {
 		if( isset( $config[ 'slug' ] ) ) {
 
 			$slug	= $config[ 'slug' ];
-			$type	= $config[ 'type' ];
+			$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_PAGE;
 			$page 	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 		}
 
@@ -199,7 +199,7 @@ class ContentUtil {
 			$coreProperties	= Yii::$app->controller->getCoreProperties();
 			$slugUrl		= Url::toRoute( "/$page->slug" );
 
-			$summary		= $page->content->summary;
+			$summary		= $page->modelContent->summary;
 			$summary   	   .= "<div class='page-summary'>$summary</div>";
 			$summary   	   .= "<div class='page-link'><a class='btn btn-medium' href='$slugUrl'>Read More</a></div>";
 
@@ -229,7 +229,7 @@ class ContentUtil {
 
 		if( isset( $page ) ) {
 
-			$content	= $page->content;
+			$content	= $page->modelContent;
 			$content	= $content->content;
 			$content   .= "<div class='page-content'>$content</div>";
 

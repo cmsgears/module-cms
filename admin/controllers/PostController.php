@@ -178,7 +178,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$content		= $model->modelContent;
+			$content	= $model->modelContent;
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 

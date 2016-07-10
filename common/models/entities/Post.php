@@ -92,14 +92,31 @@ class Post extends Content {
 
 	// Read - Query -----------
 
-	public static function queryWithAuthor() {
+	public static function queryWithAll( $config = [] ) {
 
-		$postTable 	= CmsTables::TABLE_PAGE;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent' ];
+		$config[ 'relations' ]	= $relations;
 
-		return self::find()->joinWith( 'content' )->joinWith( 'creator' )->joinWith( [ 'creator.avatar'  => function ( $query ) {
-			$fileTable	= CoreTables::TABLE_FILE;
-			$query->from( "$fileTable avatar" ); }
-		]);
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithContent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modelContent' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithAuthor( $config = [] ) {
+
+		$postTable 					= CmsTables::TABLE_PAGE;
+		$config[ 'relations' ][]	= [ 'creator' ];
+		$config[ 'relations' ][]	= [ 'creator.avatar'  => function ( $query ) {
+											$fileTable	= CoreTables::TABLE_FILE;
+											$query->from( "$fileTable avatar" ); }
+										];
+
+		return parent::queryWithAll( $config );
 	}
 
 	// Read - Find ------------

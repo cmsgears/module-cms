@@ -11,6 +11,10 @@ interface IPostService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Data Provider ------
 
+	public function getPublicPage( $config = [] );
+
+	public function getPublicPageForChildSites( $config = [] );
+
 	// Read ---------------
 
     // Read - Models ---

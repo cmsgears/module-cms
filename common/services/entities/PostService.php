@@ -77,6 +77,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPage( $config = [] ) {
 
+		$modelTable	= static::$modelTable;
+
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
@@ -135,9 +137,42 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			$config[ 'sort' ] = $sort;
 		}
 
-		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_POST;
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'query' ] = Post::queryWithAuthor();
+		}
+
+		$config[ 'conditions' ][ "$modelTable.type" ] 	= CmsGlobal::TYPE_POST;
 
 		return parent::findPage( $config );
+	}
+
+	public function getPublicPage( $config = [] ) {
+
+		$modelTable	= static::$modelTable;
+
+		if( !isset( $config[ 'route' ] ) ) {
+
+			$config[ 'route' ] = 'blog';
+		}
+
+		$config[ 'conditions' ][ "$modelTable.status" ] 		= Post::STATUS_PUBLISHED;
+		$config[ 'conditions' ][ "$modelTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * Return public for all the child sites excluding main site.
+	 */
+	public function getPublicPageForChildSites( $config = [] ) {
+
+		$modelTable	= static::$modelTable;
+
+		$config[ 'filters' ][]	= [ 'not in', "$modelTable.siteId", [ Yii::$app->core->mainSiteId ] ];
+		$config[ 'multiSite' ]	= false;
+
+		return self::getPagination( $config );
 	}
 
 	// Read ---------------

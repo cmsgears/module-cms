@@ -102,7 +102,6 @@ class Cms extends \yii\base\Component {
 		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
 		$factory->set( 'contentAttributeService', 'cmsgears\cms\common\services\resources\ContentAttributeService' );
 		$factory->set( 'modelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
-
 	}
 
 	public function initMapperServices() {

@@ -35,11 +35,9 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
         parent::init();
 
-		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
+		$this->viewPath				= '@cmsgears/module-cms/admin/views/category/';
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
-		$this->type				= CmsGlobal::TYPE_POST;
-		$this->templateType		= CmsGlobal::TYPE_POST;
+		$this->crudPermission 		= CmsGlobal::PERM_CMS;
 
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
@@ -94,7 +92,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-    	return $this->render( '@cmsgears/module-cms/admin/views/category/create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'content' => $content,
     		'banner' => $banner,
@@ -133,7 +131,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( '@cmsgears/module-cms/admin/views/category/update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'content' => $content,
 	    		'banner' => $banner,

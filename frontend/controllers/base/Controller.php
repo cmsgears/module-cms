@@ -7,28 +7,43 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsProperties;
 
-class Controller extends \cmsgears\core\common\controllers\Controller {
+class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
 
-	private $_cmsProperties;
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Private ----------------
+
+	private $cmsProperties;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	// Instance methods --------------------------------------------
 
-        parent::__construct( $id, $module, $config );
-	}
+	// Yii interfaces ------------------------
 
-	// Instance Methods --------------------------------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Controller ----------------------------
 
 	public function getCmsProperties() {
 
-		if( !isset( $this->_cmsProperties ) ) {
+		if( !isset( $this->cmsProperties ) ) {
 
-			$this->_cmsProperties	= CmsProperties::getInstance();
+			$this->cmsProperties	= CmsProperties::getInstance();
 		}
 
-		return $this->_cmsProperties;
+		return $this->cmsProperties;
 	}
 }
-
-?>
