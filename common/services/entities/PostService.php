@@ -156,7 +156,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			$config[ 'route' ] = 'blog';
 		}
 
-		$config[ 'conditions' ][ "$modelTable.status" ] 		= Post::STATUS_PUBLISHED;
+		$config[ 'filters' ][]  = [ 'in', "$modelTable.status", [ Post::STATUS_ACTIVE, Post::STATUS_FROJEN ] ];
+
 		$config[ 'conditions' ][ "$modelTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
 
 		return $this->getPage( $config );
@@ -172,7 +173,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$config[ 'filters' ][]	= [ 'not in', "$modelTable.siteId", [ Yii::$app->core->mainSiteId ] ];
 		$config[ 'multiSite' ]	= false;
 
-		return self::getPagination( $config );
+		return $this->getPublicPage( $config );
 	}
 
 	// Read ---------------
