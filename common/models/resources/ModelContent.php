@@ -22,19 +22,19 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * ModelContent Entity
  *
  * @property integer $id
+ * @property integer $templateId
  * @property integer $bannerId
  * @property integer $videoId
- * @property integer $templateId
  * @property integer $parentId
  * @property string $parentType
  * @property string $summary
- * @property date $publishedAt
  * @property string $seoName
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
  * @property integer $views
  * @property integer $referrals
+ * @property date $publishedAt
  * @property string $content
  * @property string $data
  */

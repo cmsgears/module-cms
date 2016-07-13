@@ -49,7 +49,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
                 'actions' => [
 					'bindCategories' => [ 'permission' => $this->crudPermission ],
 					'assignTags' => [ 'permission' => $this->crudPermission ],
-					'removeTag' => [ 'permission' => $this->crudPermission ]
+					'removeTag' => [ 'permission' => $this->crudPermission ],
+					'submitComment' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -57,7 +58,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
                 'actions' => [
 					'bindCategories' => [ 'post' ],
 					'assignTags' => [ 'post' ],
-					'removeTag' => [ 'post' ]
+					'removeTag' => [ 'post' ],
+					'submitComment' => [ 'post' ]
                 ]
             ]
         ];
@@ -76,6 +78,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
             ],
             'remove-tag' => [
                 'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
+            ],
+            'submit-comment' => [
+            	'class' => 'cmsgears\core\common\actions\comment\CreateComment'
             ]
         ];
     }

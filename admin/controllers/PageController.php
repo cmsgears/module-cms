@@ -4,7 +4,6 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -88,7 +87,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->modelService->create( $model, [ 'admin' => true ] );
 
 			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_PAGE, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
@@ -125,7 +124,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 

@@ -141,13 +141,13 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'summary' => $this->text(),
-			'publishedAt' => $this->dateTime(),
 			'seoName' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'seoDescription' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'seoKeywords' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'seoRobot' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'views' => $this->integer( 11 ),
 			'referrals' => $this->integer( 11 ),
+			'publishedAt' => $this->dateTime(),
 			'content' => $this->text(),
 			'data' => $this->text()
         ], $this->options );

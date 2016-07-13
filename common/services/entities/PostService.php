@@ -199,6 +199,15 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		if( $admin ) {
+
+			return parent::update( $model, [
+				'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured', 'comments' ]
+			]);
+		}
+
 		return parent::update( $model, [
 			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'order', 'featured' ]
 		]);

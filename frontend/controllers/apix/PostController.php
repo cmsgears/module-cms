@@ -47,13 +47,18 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-					//'comment' => [ 'permission' => $this->crudPermission ]
+					'bindCategories' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-					'comment' => [ 'post' ]
+					'bindCategories' => [ 'post' ],
+					'assignTags' => [ 'post' ],
+					'removeTag' => [ 'post' ],
+					'submitComment' => [ 'post' ]
                 ]
             ]
         ];
@@ -64,9 +69,17 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
     public function actions() {
 
         return [
-            'add-comment' => [
-                'class' => 'cmsgears\core\common\actions\comment\CreateComment',
-                'captcha' => true
+        	'bind-categories' => [
+        		'class' => 'cmsgears\core\common\actions\tag\BindCategories'
+        	],
+            'assign-tags' => [
+                'class' => 'cmsgears\core\common\actions\tag\AssignTags'
+            ],
+            'remove-tag' => [
+                'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
+            ],
+            'submit-comment' => [
+            	'class' => 'cmsgears\core\common\actions\comment\CreateComment'
             ]
         ];
     }

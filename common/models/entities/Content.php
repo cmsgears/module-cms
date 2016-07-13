@@ -23,6 +23,7 @@ use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -30,21 +31,24 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * Content Entity
  *
  * @property int $id
- * @property int $parentId
  * @property int $siteId
+ * @property int $parentId
  * @property int $createdBy
  * @property int $modifiedBy
  * @property string $name
  * @property string $slug
  * @property short $type
+ * @property string $icon
+ * @property string $description
  * @property short $status
  * @property short $visibility
- * @property string $icon
  * @property short $order
  * @property short $featured
  * @property short $comments
  * @property date $createdAt
  * @property date $modifiedAt
+ * @property string $content
+ * @property string $data
  */
 class Content extends \cmsgears\core\common\models\base\Entity implements IApproval, IVisibility {
 
@@ -72,6 +76,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	use ApprovalTrait;
 	use CreateModifyTrait;
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 	use VisibilityTrait;
@@ -121,9 +126,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		// model rules
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'slug', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->extraLargeText ],
+			[ [ 'slug', 'icon', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
             [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],

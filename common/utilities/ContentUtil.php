@@ -21,9 +21,9 @@ class ContentUtil {
 	 * @param $controller - The site controller provided by given module to be considered for system pages.
 	 * @return array having SEO related details.
 	 */
-	public static function initPage( $view, $module = 'core', $controller = 'site' ) {
+	public static function initPage( $view, $config = [] ) {
 
-		$page = self::findViewPage( $view, $module, $controller );
+		$page = self::findViewPage( $view, $config );
 
 		if( isset( $page ) ) {
 
@@ -39,7 +39,7 @@ class ContentUtil {
 			$view->params[ 'summary' ]	= $content->summary;
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= $content->seoDescription;
+			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $page->description;
 			$view->params[ 'keywords' ]	= $content->seoKeywords;
 			$view->params[ 'robot' ]	= $content->seoRobot;
 
@@ -53,6 +53,46 @@ class ContentUtil {
 			else if( isset( $page->name ) && strlen( $page->name ) > 0 ) {
 
 				$view->title		= $page->name . " | " . $siteTitle;
+			}
+			else {
+
+				$view->title		= $siteTitle;
+			}
+		}
+	}
+
+	public static function initFormPage( $view, $config = [] ) {
+
+		$controller 	= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
+		$type	 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SITE;
+
+		$form 			= null;
+
+		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
+
+			$slug	= Yii::$app->request->queryParams[ 'slug' ];
+			$form	= Yii::$app->factory->get( 'formService' )->getBySlugType( $slug, $type );
+		}
+
+		if( isset( $form ) ) {
+
+			$coreProperties				= $view->context->getCoreProperties();
+
+			// Form
+			$view->params[ 'form' ]		= $form;
+
+			// SEO H1 - Page Summary
+			$view->params[ 'summary' ]	= $form->description;
+
+			// SEO Meta Tags - Description, Keywords, Robot Text
+			$view->params[ 'desc' ]		= $form->description;
+
+			// SEO - Page Title
+			$siteTitle					= $coreProperties->getSiteTitle();
+
+			if( isset( $form->name ) && strlen( $form->name ) > 0 ) {
+
+				$view->title		= $form->name . " | " . $siteTitle;
 			}
 			else {
 
@@ -101,45 +141,6 @@ class ContentUtil {
 			else if( isset( $page->name ) && strlen( $page->name ) > 0 ) {
 
 				$view->title		= $page->name . " | " . $siteTitle;
-			}
-			else {
-
-				$view->title		= $siteTitle;
-			}
-		}
-	}
-
-	public static function initFormPage( $view, $controller = 'site', $type = CoreGlobal::TYPE_SYSTEM ) {
-
-		$controllerName	= Yii::$app->controller->id;
-		$actionName		= Yii::$app->controller->action->id;
-		$form 			= null;
-
-		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
-
-			$slug	= Yii::$app->request->queryParams[ 'slug' ];
-			$form	= Yii::$app->factory->get( 'formService' )->getBySlugType( $slug, $type );
-		}
-
-		if( isset( $form ) ) {
-
-			$coreProperties				= $view->context->getCoreProperties();
-
-			// Page and Content
-			$view->params[ 'form' ]		= $form;
-
-			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= $form->description;
-
-			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= $form->description;
-
-			// SEO - Page Title
-			$siteTitle					= $coreProperties->getSiteTitle();
-
-			if( isset( $form->name ) && strlen( $form->name ) > 0 ) {
-
-				$view->title		= $form->name . " | " . $siteTitle;
 			}
 			else {
 
@@ -239,11 +240,16 @@ class ContentUtil {
 		return '';
 	}
 
-	public static function findViewPage( $view, $module, $controller ) {
+	public static function findViewPage( $view, $config = [] ) {
+
+		$module 		= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core';
+		$controller 	= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
+		$type	 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
 
 		$moduleName		= $view->context->module->id;
 		$controllerName	= Yii::$app->controller->id;
 		$actionName		= Yii::$app->controller->action->id;
+
 		$page 			= null;
 
 		// System/Public Pages - Landing, Login, Register, Confirm Account, Activate Account, Forgot Password, Reset Password
@@ -261,8 +267,7 @@ class ContentUtil {
 		// Blog/CMS Pages
 		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
-			$actionName	= Yii::$app->request->queryParams[ 'slug' ];
-			$page		= self::getPage( $actionName, CmsGlobal::TYPE_POST );
+			$page	= self::getPage( Yii::$app->request->queryParams[ 'slug' ], $type );
 		}
 
 		return $page;
