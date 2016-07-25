@@ -27,6 +27,7 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property integer $videoId
  * @property integer $parentId
  * @property string $parentType
+ * @property string $type
  * @property string $summary
  * @property string $seoName
  * @property string $seoDescription
@@ -118,6 +119,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'seoName' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),

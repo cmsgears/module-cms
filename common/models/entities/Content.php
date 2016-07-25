@@ -15,6 +15,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\interfaces\IApproval;
 use cmsgears\core\common\models\interfaces\IVisibility;
 
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\cms\common\models\base\CmsTables;
 
@@ -110,8 +111,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ]
         ];
     }
@@ -130,7 +130,6 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'slug', 'icon', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'featured', 'comments' ], 'boolean' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -158,11 +157,12 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
@@ -218,9 +218,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
 	}
 
-	public function getAttributes() {
+	public function getMetas() {
 
-		return $this->hasMany( ContentAttribute::className(), [ 'pageId' => 'id' ] );
+		return $this->hasMany( ContentMeta::className(), [ 'pageId' => 'id' ] );
 	}
 
 	public function isPage() {
@@ -231,6 +231,18 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	public function isPost() {
 
 		return $this->type == CmsGlobal::TYPE_POST;
+	}
+
+	public function isPublished() {
+
+		$user	= Yii::$app->user->getIdentity();
+
+		if( isset( $user ) && $this->createdBy == $user->id ) {
+
+			return true;
+		}
+
+		return $this->isPublic() && $this->isVisibilityPublic();
 	}
 
 	// Static Methods ----------------------------------------------
@@ -277,6 +289,33 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Content -------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'site', 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithContent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modelContent' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithAuthor( $config = [] ) {
+
+		$postTable 					= CmsTables::TABLE_PAGE;
+		$config[ 'relations' ][]	= [ 'modelContent', 'creator' ];
+		$config[ 'relations' ][]	= [ 'creator.avatar'  => function ( $query ) {
+											$fileTable	= CoreTables::TABLE_FILE;
+											$query->from( "$fileTable avatar" ); }
+										];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

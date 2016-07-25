@@ -2,17 +2,17 @@
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
-use Yii;
+use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\cms\common\config\CmsGlobal;
 
-// TODO: Add options to allow user to configure template for search page. A default check in table might be the best option.
-
-class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller {
+class PostController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +24,6 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	protected $templateService;
 
-	protected $pageService;
 	protected $postService;
 
 	protected $categoryService;
@@ -38,11 +37,10 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
-		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
+		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
-		$this->pageService		= Yii::$app->factory->get( 'pageService' );
 		$this->postService		= Yii::$app->factory->get( 'postService' );
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
@@ -57,93 +55,34 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// yii\base\Component -----
 
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->core->getRbacFilterClass(),
+                'actions' => [
+	                // secure actions
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'search' => [ 'get' ],
+                    'category' => [ 'get' ],
+                    'tag' => [ 'get' ],
+                    'single' => [ 'get' ]
+                ]
+            ]
+        ];
+    }
+
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// SiteController ------------------------
-
-	// Site Pages -------------
-
-	/* 1. It finds the associated page for the given slug.
-	 * 2. If page is found, the associated template will be used.
-	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
-	 */
-    public function actionIndex( $slug ) {
-
-		$page 	= $this->pageService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
-
-		if( isset( $page ) ) {
-
-			// Find Template
-			$content	= $page->modelContent;
-			$template	= $content->template;
-
-			// Fallback to default template
-			if( empty( $template ) ) {
-
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
-			}
-
-			// Page using Template
-			if( isset( $template ) ) {
-
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'page' => $page,
-		        	'author' => $page->createdBy,
-		        	'content' => $content,
-		        	'banner' => $content->banner
-		        ], [ 'page' => true ] );
-			}
-
-			// Page without Template - Redirect to System Pages
-			return $this->redirect( 'site/' . $page->slug );
-		}
-
-		// Page not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	// Site Posts -------------
-
-	/* 1. It finds the associated post.
-	 * 2. If post is found, the associated template will be used.
-	 */
-    public function actionPost( $slug ) {
-
-		$post 	= $this->postService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
-
-		if( isset( $post ) ) {
-
-			// Find Template
-			$content	= $post->modelContent;
-			$template	= $content->template;
-
-			// Fallback to default template
-			if( empty( $template ) ) {
-
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
-			}
-
-			// Post using Template
-			if( isset( $template ) ) {
-
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'page' => $post,
-		        	'author' => $post->createdBy,
-		        	'content' => $content,
-		        	'banner' => $content->banner
-		        ], [ 'page' => true ] );
-			}
-
-			return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) ] );
-		}
-
-		// Page not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+	// PostController ------------------------
 
 	public function actionSearch() {
 
@@ -158,7 +97,7 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			]);
 		}
 
-		// Template not found
+		// Error - Template not defined
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 	}
 
@@ -185,11 +124,11 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				]);
 			}
 
-			// Template not found
+			// Error - Template not defined
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Model not found
+		// Error- Post not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
@@ -200,7 +139,14 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		if( isset( $tag ) ) {
 
 			$user		= Yii::$app->user->getIdentity();
-			$template	= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+			$content	= $tag->modelContent;
+			$template	= $content->template;
+
+			// Fallback to default template
+			if( empty( $template ) ) {
+
+				$template	= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+			}
 
 			if( isset( $template ) ) {
 
@@ -209,11 +155,52 @@ class SiteController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				]);
 			}
 
-			// Template not found
+			// Error - Template not defined
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Model not found
+		// Error- Post not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+    public function actionSingle( $slug ) {
+
+		$post 	= $this->postService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+
+		if( isset( $post ) ) {
+
+			if( !$post->isPublished() ) {
+
+				// Error- Not allowed
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+
+			// Find post template
+			$content	= $post->modelContent;
+			$template	= $content->template;
+
+			// Fallback to default template for blog posts in case no post is assigned
+			if( empty( $template ) ) {
+
+				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+			}
+
+			// Render post using template
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewPublic( $template, [
+		        	'page' => $post,
+		        	'author' => $post->createdBy,
+		        	'content' => $content,
+		        	'banner' => $content->banner
+		        ], [ 'page' => true ] );
+			}
+
+			// Error - Template not defined
+			return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) ] );
+		}
+
+		// Error- Post not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

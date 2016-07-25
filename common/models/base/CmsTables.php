@@ -12,7 +12,7 @@ class CmsTables {
 
 	const TABLE_BLOCK			= 'cmg_cms_block';
 
-	const TABLE_PAGE_ATTRIBUTE	= 'cmg_cms_page_attribute';
+	const TABLE_PAGE_META		= 'cmg_cms_page_meta';
 
 	const TABLE_MODEL_CONTENT	= 'cmg_cms_model_content';
 

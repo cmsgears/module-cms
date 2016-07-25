@@ -86,21 +86,6 @@ class Page extends Content {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
-
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent' ];
-		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithContent( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'modelContent' ];
-
-		return parent::queryWithAll( $config );
-	}
-
 	// Read - Find ------------
 
 	// Create -----------------

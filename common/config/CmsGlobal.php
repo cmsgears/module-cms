@@ -8,7 +8,7 @@ class CmsGlobal {
 	const TYPE_ELEMENT			= 'element';
 	const TYPE_BLOCK			= 'block';
 	const TYPE_PAGE				= 'page';
-	const TYPE_POST				= 'post';
+	const TYPE_POST				= 'blog';
 	const TYPE_MENU				= 'menu';
 	const TYPE_SIDEBAR			= 'sidebar';
 	const TYPE_WIDGET			= 'widget';

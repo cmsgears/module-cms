@@ -13,7 +13,7 @@ use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
- * ContentAttribute Entity
+ * ContentMeta Entity
  *
  * @property integer $id
  * @property integer $modelId
@@ -23,7 +23,7 @@ use cmsgears\cms\common\models\entities\Content;
  * @property string $valueType
  * @property string $value
  */
-class ContentAttribute extends \cmsgears\core\common\models\base\ModelAttribute {
+class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -63,7 +63,7 @@ class ContentAttribute extends \cmsgears\core\common\models\base\ModelAttribute 
 
 	// Validators ----------------------------
 
-	// ContentAttribute ----------------------
+	// ContentMeta ---------------------------
 
 	public function getParent() {
 
@@ -81,12 +81,12 @@ class ContentAttribute extends \cmsgears\core\common\models\base\ModelAttribute 
      */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE_ATTRIBUTE;
+		return CmsTables::TABLE_PAGE_META;
 	}
 
 	// CMG parent classes --------------------
 
-	// ContentAttribute ----------------------
+	// ContentMeta ---------------------------
 
 	// Read - Query -----------
 

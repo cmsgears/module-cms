@@ -9,7 +9,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class TagController extends \cmsgears\core\admin\controllers\base\TagController {
+class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 	// Variables ---------------------------------------------------
 

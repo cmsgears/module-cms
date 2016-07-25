@@ -8,11 +8,11 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\resources\ContentAttribute;
+use cmsgears\cms\common\models\resources\ContentMeta;
 
-use cmsgears\cms\common\services\interfaces\resources\IContentAttributeService;
+use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
 
-class ContentAttributeService extends \cmsgears\core\common\services\base\AttributeService implements IContentAttributeService {
+class ContentMetaService extends \cmsgears\core\common\services\base\AttributeService implements IContentMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,9 +22,9 @@ class ContentAttributeService extends \cmsgears\core\common\services\base\Attrib
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\ContentAttribute';
+	public static $modelClass	= '\cmsgears\cms\common\models\resources\ContentMeta';
 
-	public static $modelTable	= CmsTables::TABLE_PAGE_ATTRIBUTE;
+	public static $modelTable	= CmsTables::TABLE_PAGE_META;
 
 	public static $parentType	= null;
 
@@ -52,7 +52,7 @@ class ContentAttributeService extends \cmsgears\core\common\services\base\Attrib
 
 	// CMG parent classes --------------------
 
-	// ContentAttributeService ---------------
+	// ContentMetaService --------------------
 
 	// Data Provider ------
 
@@ -76,7 +76,7 @@ class ContentAttributeService extends \cmsgears\core\common\services\base\Attrib
 
 	// CMG parent classes --------------------
 
-	// ContentAttributeService ---------------
+	// ContentMetaService --------------------
 
 	// Data Provider ------
 

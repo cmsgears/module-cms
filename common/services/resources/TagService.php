@@ -9,12 +9,12 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\resources\Category;
+use cmsgears\cms\common\models\resources\Tag;
 
-use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
+use cmsgears\cms\common\services\interfaces\resources\ITagService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
-class CategoryService extends \cmsgears\core\common\services\resources\CategoryService implements ICategoryService {
+class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +24,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\Category';
+	public static $modelClass	= '\cmsgears\cms\common\models\resources\Tag';
 
 	// Protected --------------
 
@@ -59,7 +59,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	// CMG parent classes --------------------
 
-	// CategoryService -----------------------
+	// TagService ----------------------------
 
 	// Data Provider ------
 
@@ -67,7 +67,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'query' ] = Category::queryWithContent();
+			$config[ 'query' ] = Tag::queryWithContent();
 		}
 
 		return $this->getPage( $config );
@@ -94,7 +94,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 		if( isset( $content ) ) {
 
 			$config[ 'parent' ]			= $model;
-			$config[ 'parentType' ]		= CoreGlobal::TYPE_CATEGORY;
+			$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
 
 			$this->modelContentService->create( $content, $config );
 		}
@@ -138,7 +138,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	// CMG parent classes --------------------
 
-	// CategoryService -----------------------
+	// TagService ----------------------------
 
 	// Data Provider ------
 

@@ -70,9 +70,10 @@ class Cms extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ICategoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
-		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IContentAttributeService', 'cmsgears\cms\common\services\resources\ContentAttributeService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IContentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IModelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ICategoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ITagService', 'cmsgears\cms\common\services\resources\TagService' );
 	}
 
 	public function registerMapperServices() {
@@ -99,9 +100,10 @@ class Cms extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
-		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
-		$factory->set( 'contentAttributeService', 'cmsgears\cms\common\services\resources\ContentAttributeService' );
+		$factory->set( 'contentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
 		$factory->set( 'modelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
+		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
+		$factory->set( 'tagService', 'cmsgears\cms\common\services\resources\TagService' );
 	}
 
 	public function initMapperServices() {

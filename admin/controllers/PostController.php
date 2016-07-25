@@ -107,7 +107,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$visibilityMap	= Post::$visibilityMap;
 		$statusMap		= Post::$statusMap;
-		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,

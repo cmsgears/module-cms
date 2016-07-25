@@ -33,7 +33,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 
 		// Page
 		$this->upPage();
-		$this->upPageAttribute();
+		$this->upPageMeta();
 
 		// Block
 		$this->upBlock();
@@ -81,20 +81,20 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy' );
 	}
 
-	private function upPageAttribute() {
+	private function upPageMeta() {
 
-        $this->createTable( $this->prefix . 'cms_page_attribute', [
+        $this->createTable( $this->prefix . 'cms_page_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'value' => $this->text()
         ], $this->options );
 
         // Index for columns site, parent, creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'modelId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId' );
 	}
 
 	private function upBlock() {
@@ -140,6 +140,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'videoId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'summary' => $this->text(),
 			'seoName' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'seoDescription' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
@@ -165,6 +166,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -181,8 +183,8 @@ class m160621_065204_cms extends \yii\db\Migration {
         $this->addForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
-		// Page Attribute
-		$this->addForeignKey( 'fk_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
+		// Page meta
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
 		// Block
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_site', $this->prefix . 'cms_block', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
@@ -210,7 +212,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		}
 
         $this->dropTable( $this->prefix . 'cms_page' );
-		$this->dropTable( $this->prefix . 'cms_page_attribute' );
+		$this->dropTable( $this->prefix . 'cms_page_meta' );
 
 		$this->dropTable( $this->prefix . 'cms_block' );
 
@@ -226,8 +228,8 @@ class m160621_065204_cms extends \yii\db\Migration {
         $this->dropForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page' );
 
-		// Page Attribute
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_attribute_parent', $this->prefix . 'cms_page_attribute' );
+		// Page meta
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta' );
 
 		// Block
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_site', $this->prefix . 'cms_block' );

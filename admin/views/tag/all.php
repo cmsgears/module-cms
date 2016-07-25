@@ -1,13 +1,14 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Elements | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'All Tags | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -60,28 +61,24 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Icon</th>
-					<th>Active</th>
 					<th>Description</th>
-					<th>Template</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 
-					foreach( $models as $element ) {
+					foreach( $models as $tag ) {
 
-						$id = $element->id;
+						$id 	= $tag->id;
 				?>
 					<tr>
-						<td><?= $element->name ?></td>
-						<td> <span class="<?= $element->icon ?>" title="<?= $element->name ?>"></span></td>
-						<td><?= $element->getActiveStr() ?></td>
-						<td><?= $element->description ?></td>
-						<td><?= $element->getTemplateName() ?></td>
+						<td><?= $tag->name ?></td>
+						<td> <span class="<?= $tag->icon ?>" title="<?= $tag->name ?>"></span></td>
+						<td><?= $tag->description ?></td>
 						<td class="actions">
-							<span title="Update Element"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Element"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

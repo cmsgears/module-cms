@@ -20,6 +20,7 @@ use cmsgears\core\common\models\entities\Site;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\forms\BlockElement;
 
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTrait;
 use cmsgears\core\common\models\traits\SlugTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
@@ -77,6 +78,7 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
+	use CreateModifyTrait;
 	use DataTrait;
 	use NameTrait;
 	use SlugTrait;
@@ -130,8 +132,7 @@ class Block extends \cmsgears\core\common\models\base\Resource {
             [ [ 'id', 'title', 'content', 'data' ], 'safe' ],
             [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
-			[ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
+			[ 'name', 'unique' ],
             [ 'active', 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -259,9 +260,9 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'banner', 'video', 'texture', 'template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );

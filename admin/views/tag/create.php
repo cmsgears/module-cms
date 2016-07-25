@@ -10,24 +10,21 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Create Tag | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Update Category</div>
+		<div class="header">Create Tag</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-category' ] );?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-tag' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
-		<?= $form->field( $model, 'featured' )->checkbox() ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 
 		<div class="box-content clearfix">
@@ -62,7 +59,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="align align-center">
 			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Update" />
+			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
 		<?php ActiveForm::end(); ?>

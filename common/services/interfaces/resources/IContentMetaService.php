@@ -7,11 +7,9 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ICategoryService extends \cmsgears\core\common\services\interfaces\resources\ICategoryService {
+interface IContentMetaService extends \cmsgears\core\common\services\interfaces\base\IMetaService {
 
 	// Data Provider ------
-
-	public function getPageWithContent( $config = [] );
 
 	// Read ---------------
 

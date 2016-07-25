@@ -8,7 +8,6 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\resources\CommentTrait;
@@ -91,33 +90,6 @@ class Post extends Content {
 	// Post ----------------------------------
 
 	// Read - Query -----------
-
-	public static function queryWithAll( $config = [] ) {
-
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent' ];
-		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithContent( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'modelContent' ];
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithAuthor( $config = [] ) {
-
-		$postTable 					= CmsTables::TABLE_PAGE;
-		$config[ 'relations' ][]	= [ 'creator' ];
-		$config[ 'relations' ][]	= [ 'creator.avatar'  => function ( $query ) {
-											$fileTable	= CoreTables::TABLE_FILE;
-											$query->from( "$fileTable avatar" ); }
-										];
-
-		return parent::queryWithAll( $config );
-	}
 
 	// Read - Find ------------
 

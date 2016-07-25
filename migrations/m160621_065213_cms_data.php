@@ -27,7 +27,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$this->prefix		= 'cmg_';
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
-		$this->master	= User::findByUsername( 'demomaster' );
+		$this->master	= User::findByUsername( Yii::$app->migration->getSiteMaster() );
 
 		Yii::$app->core->setSite( $this->site );
 	}
@@ -122,12 +122,12 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		$columns = [ 'modelId', 'name', 'label', 'type', 'valueType', 'value' ];
 
-		$attributes	= [
+		$metas	= [
 			[ $this->site->id, 'page_comment', 'Page Comment', 'cms', 'flag', '0' ],
 			[ $this->site->id, 'post_comment', 'Post Comment', 'cms', 'flag', '1' ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_site_attribute', $columns, $attributes );
+		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
 	}
 
 	private function insertSystemPages() {

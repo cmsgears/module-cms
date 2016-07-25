@@ -21,6 +21,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Protected --------------
 
+	protected $metaService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -31,6 +33,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$this->crudPermission	= CoreGlobal::PERM_USER;
 		$this->modelService		= Yii::$app->factory->get( 'postService' );
+		$this->metaService		= Yii::$app->factory->get( 'contentMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,17 +50,26 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-					'bindCategories' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+	                'assignCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'removeCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'addMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'updateMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+	                'deleteMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-					'bindCategories' => [ 'post' ],
-					'assignTags' => [ 'post' ],
-					'removeTag' => [ 'post' ],
+                    'autoSearch' => [ 'post' ],
+                    'assignCategory' => [ 'post' ],
+                    'removeCategory' => [ 'post' ],
+	                'assignTags' => [ 'post' ],
+	                'removeTag' => [ 'post' ],
+	                'addMeta' => [ 'post' ],
+	                'updateMeta' => [ 'post' ],
+	                'deleteMeta' => [ 'post' ],
 					'submitComment' => [ 'post' ]
                 ]
             ]
@@ -69,18 +81,15 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
     public function actions() {
 
         return [
-        	'bind-categories' => [
-        		'class' => 'cmsgears\core\common\actions\tag\BindCategories'
-        	],
-            'assign-tags' => [
-                'class' => 'cmsgears\core\common\actions\tag\AssignTags'
-            ],
-            'remove-tag' => [
-                'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
-            ],
-            'submit-comment' => [
-            	'class' => 'cmsgears\core\common\actions\comment\CreateComment'
-            ]
+        	'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+            'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\AssignCategory' ],
+            'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory' ],
+            'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags' ],
+            'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag' ],
+            'add-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\CreateMeta' ],
+            'update-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\UpdateMeta' ],
+            'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\DeleteMeta' ],
+            'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
         ];
     }
 

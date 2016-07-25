@@ -16,9 +16,7 @@ class MessageSource extends \yii\base\Component {
 
 	// Protected --------------
 
-	// Private ----------------
-
-	private $messageDb = [
+	protected $messageDb = [
 		// Generic Fields
 		CmsGlobal::FIELD_ELEMENT => 'Element',
 		CmsGlobal::FIELD_BLOCK => 'Block',
@@ -37,6 +35,8 @@ class MessageSource extends \yii\base\Component {
 		CmsGlobal::FIELD_BACKGROUND => 'Background',
 		CmsGlobal::FIELD_TEXTURE => 'Texture'
 	];
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 

@@ -12,10 +12,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\resources\Category;
+use cmsgears\cms\common\models\resources\Tag;
 use cmsgears\cms\common\models\resources\ModelContent;
 
-abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
+abstract class TagController extends \cmsgears\core\admin\controllers\base\TagController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,11 +37,11 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
         parent::init();
 
-		$this->viewPath				= '@cmsgears/module-cms/admin/views/category/';
+		$this->viewPath				= '@cmsgears/module-cms/admin/views/tag/';
 
 		$this->crudPermission 		= CmsGlobal::PERM_CMS;
 
-		$this->templateType			= CoreGlobal::TYPE_CATEGORY;
+		$this->templateType			= CoreGlobal::TYPE_TAG;
 
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
 
@@ -93,7 +93,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 			return $this->redirect( $this->returnUrl );
 		}
 
-		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
     	return $this->render( 'create', [
@@ -101,7 +100,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
     		'content' => $content,
     		'banner' => $banner,
     		'video' => $video,
-    		'categoryMap' => $categoryMap,
     		'templatesMap' => $templatesMap
     	]);
 	}
@@ -126,11 +124,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
-									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
-									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
-								]);
-
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
@@ -138,7 +131,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 	    		'content' => $content,
 	    		'banner' => $banner,
 	    		'video' => $video,
-	    		'categoryMap' => $categoryMap,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
@@ -155,7 +147,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$content	= $model->modelContent;
+			$content = $model->modelContent;
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
@@ -164,7 +156,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
@@ -172,7 +163,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 	    		'content' => $content,
 	    		'banner' => $content->banner,
 	    		'video' => $content->video,
-	    		'categoryMap' => $categoryMap,
 	    		'templatesMap' => $templatesMap
 	    	]);
 		}
