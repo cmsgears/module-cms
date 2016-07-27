@@ -139,8 +139,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		if( isset( $tag ) ) {
 
 			$user		= Yii::$app->user->getIdentity();
-			$content	= $tag->modelContent;
-			$template	= $content->template;
+			$template	= null;
+
+			if( isset( $tag->modelContent ) ) {
+
+				$content	= $tag->modelContent;
+				$template	= $content->template;
+			}
 
 			// Fallback to default template
 			if( empty( $template ) ) {

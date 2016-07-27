@@ -111,6 +111,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
+                'immutable' => true,
                 'ensureUnique' => true
             ]
         ];
