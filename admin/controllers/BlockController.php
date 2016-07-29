@@ -91,14 +91,30 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 			$blockElements[] = new BlockElement();
 		}
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
-			$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+			$create = true;
 
-			$this->modelService->updateElements( $model, $blockElements );
+			if( count( $blockElements ) > 0 ) {
 
-			return $this->redirect( [ 'all' ] );
+				if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
+
+					$create = true;
+				}
+				else {
+
+					$create = false;
+				}
+			}
+
+			if( $create ) {
+
+				$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+
+				$this->modelService->updateElements( $model, $blockElements );
+
+				return $this->redirect( [ 'all' ] );
+			}
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
@@ -128,14 +144,30 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 			$elements		= $this->elementService->getIdNameList();
 			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) &&
-				$model->validate() && BlockElement::validateMultiple( $blockElements ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+				$update = true;
 
-				$this->modelService->updateElements( $model, $blockElements );
+				if( count( $blockElements ) > 0 ) {
 
-				return $this->redirect( [ 'all' ] );
+					if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
+
+						$update = true;
+					}
+					else {
+
+						$update = false;
+					}
+				}
+
+				if( $update ) {
+
+					$this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+
+					$this->modelService->updateElements( $model, $blockElements );
+
+					return $this->redirect( [ 'all' ] );
+				}
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );

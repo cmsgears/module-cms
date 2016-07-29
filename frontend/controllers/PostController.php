@@ -78,6 +78,20 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// yii\base\Controller ----
 
+    public function actions() {
+
+		if ( !Yii::$app->user->isGuest ) {
+
+			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+		}
+
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction'
+            ]
+        ];
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -202,7 +216,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			}
 
 			// Error - Template not defined
-			return $this->render( 'post', [ CoreGlobal::FLASH_GENERIC => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) ] );
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
 		// Error- Post not found

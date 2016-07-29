@@ -71,6 +71,20 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// yii\base\Controller ----
 
+    public function actions() {
+
+		if ( !Yii::$app->user->isGuest ) {
+
+			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+		}
+
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction'
+            ]
+        ];
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
