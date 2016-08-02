@@ -161,7 +161,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 				$this->modelService->delete( $model, [ 'content' => $content ] );
 
-				return $this->redirect( $this->returnUrl );
+				//return $this->redirect( $this->returnUrl );
 			}
 
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );

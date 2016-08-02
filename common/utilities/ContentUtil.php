@@ -104,43 +104,58 @@ class ContentUtil {
 	/**
 	 * The method can be utilised by the Layouts for SEO purpose. It can be used for models using content to render model pages apart from standard cms pages.
 	 * @param $view - The current view being rendered by controller.
-	 * @param $serviceClass - The service class for model to be used to find model.
 	 * @return array having SEO related details.
 	 */
-	public static function initModelPage( $view, $serviceClass ) {
+	public static function initModelPage( $view, $config = [] ) {
 
-		$slug	= Yii::$app->request->queryParams[ 'slug' ];
-		$object = Yii::createObject( $serviceClass );
-		$model	= $object::findBySlug( $slug );
+		$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
+		$service	= $config[ 'service' ];
+		$service	= Yii::$app->factory->get( $service );
+
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
+
+		$slug		= Yii::$app->request->queryParams[ 'slug' ];
+
+		$model		= null;
+
+		if( $typed ) {
+
+			$model = $service->getBySlugType( $slug, $type );
+		}
+		else {
+
+			$model = $service->getBySlug( $slug );
+		}
 
 		if( isset( $model ) ) {
 
 			$coreProperties				= $view->context->getCoreProperties();
 
-			$content					= $model->modelContent;
+			$content					= isset( $model->modelContent ) ? $model->modelContent : null;
+			$description				= isset( $model->description ) ? $model->description : null;
 
 			// Page and Content
-			$view->params[ 'page' ]		= $model;
+			$view->params[ 'model' ]	= $model;
 			$view->params[ 'content' ]	= $content;
 
 			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= $content->summary;
+			$view->params[ 'summary' ]	= isset( $content ) ? $content->summary : $description;
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= $content->seoDescription;
-			$view->params[ 'keywords' ]	= $content->seoKeywords;
-			$view->params[ 'robot' ]	= $content->seoRobot;
+			$view->params[ 'desc' ]		= isset( $content ) ? $content->seoDescription : $description;
+			$view->params[ 'keywords' ]	= isset( $content ) ? $content->seoKeywords : null;
+			$view->params[ 'robot' ]	= isset( $content ) ? $content->seoRobot : null;
 
 			// SEO - Page Title
 			$siteTitle					= $coreProperties->getSiteTitle();
 
-			if( isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
+			if( isset( $content ) && isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
 
 				$view->title		= $content->seoName . " | " . $siteTitle;
 			}
-			else if( isset( $page->name ) && strlen( $page->name ) > 0 ) {
+			else if( isset( $model->name ) && strlen( $model->name ) > 0 ) {
 
-				$view->title		= $page->name . " | " . $siteTitle;
+				$view->title		= $model->name . " | " . $siteTitle;
 			}
 			else {
 
@@ -273,5 +288,3 @@ class ContentUtil {
 		return $page;
 	}
 }
-
-?>
