@@ -112,12 +112,12 @@ if( !isset( $sortOrder ) ) {
 				<?php
 
 					$slugBase	= $siteUrl;
-					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
+					$tagsBase	= Url::toRoute( "/cms/page/all/" );
 
 					foreach( $models as $post ) {
 
 						$id 		= $post->id;
-						$editUrl	= Html::a( $post->name, [ "/cmgcms/post/update?id=$id" ] );
+						$editUrl	= Html::a( $post->name, [ "/cms/post/update?id=$id" ] );
 						$slug		= $post->slug;
 						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
 						$tags		= $post->getTagIdNameMap();

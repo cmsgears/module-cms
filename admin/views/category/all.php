@@ -69,6 +69,7 @@ if( !isset( $sortOrder ) ) {
 					</th>
 					<th>Description</th>
 					<th>Featured</th>
+					<th>Template</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -77,7 +78,10 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $category ) {
 
-						$id 	= $category->id;
+						$id 			= $category->id;
+						$content		= $category->modelContent;
+						$template		= $content->template;
+						$templateName	= isset( $template ) ? $template->name : null;
 				?>
 					<tr>
 						<td><?= $category->name ?></td>
@@ -85,6 +89,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $category->getParentName() ?></td>
 						<td><?= $category->description ?></td>
 						<td><?= $category->getFeaturedStr() ?></td>
+						<td><?= $templateName ?></td>
 						<td class="actions">
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

@@ -149,31 +149,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPublicPage( $config = [] ) {
 
-		$modelTable	= static::$modelTable;
+		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'blog';
 
-		if( !isset( $config[ 'route' ] ) ) {
-
-			$config[ 'route' ] = 'blog';
-		}
-
-		$config[ 'filters' ][]  = [ 'in', "$modelTable.status", [ Post::STATUS_ACTIVE, Post::STATUS_FROJEN ] ];
-
-		$config[ 'conditions' ][ "$modelTable.visibility" ] 	= Post::VISIBILITY_PUBLIC;
-
-		return $this->getPage( $config );
-	}
-
-	/**
-	 * Return public for all the child sites excluding main site.
-	 */
-	public function getPublicPageForChildSites( $config = [] ) {
-
-		$modelTable	= static::$modelTable;
-
-		$config[ 'filters' ][]	= [ 'not in', "$modelTable.siteId", [ Yii::$app->core->mainSiteId ] ];
-		$config[ 'multiSite' ]	= false;
-
-		return $this->getPublicPage( $config );
+		return parent::getPublicPage( $config );
 	}
 
 	// Read ---------------

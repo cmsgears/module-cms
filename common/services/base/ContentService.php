@@ -55,6 +55,17 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Data Provider ------
 
+	public function getPageForSimilar( $config = [] ) {
+
+		$modelClass			= static::$modelClass;
+
+		// Search Query
+		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
+		$config[ 'query' ]	= $query;
+
+		return parent::getPageForSimilar( $config );
+	}
+
 	// Read ---------------
 
     // Read - Models ---
@@ -86,7 +97,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		$contentTable 	= CmsTables::TABLE_MODEL_CONTENT;
 
-		$sort		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		if( !$sort ) {
 
@@ -128,72 +139,16 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
-		$modelClass			= static::$modelClass;
-		$modelTable 		= static::$modelTable;
-		$parentType			= static::$parentType;
-
 		// DB Tables
-		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
-		$categoryTable		= CoreTables::TABLE_CATEGORY;
-		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
-		$tagTable			= CoreTables::TABLE_TAG;
+		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
-		$contentTable		= CmsTables::TABLE_MODEL_CONTENT;
-
-		// Search Query
-		$query			 	= $modelClass::queryWithAll()->joinWith( 'modelContent' );
-
-		// Params
-		$searchParam		= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
-		$keywords 			= Yii::$app->request->getQueryParam( $searchParam );
-
-		// Tag
-		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
-
-			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
-				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
-		}
-
-		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
-
-			$query->andWhere( "$tagTable.id=" . $config[ 'tag' ]->id );
-
-			if( isset( $keywords ) ) {
-
-				$config[ 'search-col' ][]	= "$tagTable.name";
-			}
-		}
-
-		// Category
-		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
-
-			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
-		}
-
-		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {
-
-			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
-
-			if( isset( $keywords ) ) {
-
-				$config[ 'search-col' ][]	= "$categoryTable.name";
-			}
-		}
-
-		if( isset( $keywords ) || isset( $config[ 'category' ] ) ) {
-
-			$query->groupBy( "$modelTable.id" );
-		}
-
+		// Search
 		if( isset( $keywords ) ) {
 
-			$config[ 'search-col' ][]	= "$contentTable.content";
+			$config[ 'search-col' ][] = $contentTable.content;
 		}
 
-		$config[ 'query' ]	= $query;
-
-		return static::findPage( $config );
+		return parent::findPageForSearch( $config );
 	}
 
 	// Read ---------------

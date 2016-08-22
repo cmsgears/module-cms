@@ -93,8 +93,9 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		if( isset( $content ) ) {
 
-			$config[ 'parent' ]			= $model;
-			$config[ 'parentType' ]		= CoreGlobal::TYPE_CATEGORY;
+			$config[ 'parent' ]		= $model;
+			$config[ 'parentType' ]	= CoreGlobal::TYPE_CATEGORY;
+			$config[ 'publish' ]	= true;
 
 			$this->modelContentService->create( $content, $config );
 		}
