@@ -32,7 +32,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
 		parent::init();
 
@@ -51,39 +51,39 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                // secure actions
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'single' => [ 'get' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					// secure actions
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'single' => [ 'get' ]
+				]
+			]
+		];
+	}
 
 	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
 		if ( !Yii::$app->user->isGuest ) {
 
 			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 		}
 
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction'
-            ]
-        ];
-    }
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction'
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 
@@ -97,9 +97,9 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
-    public function actionSingle( $slug ) {
+	public function actionSingle( $slug ) {
 
-		$page 	= $this->pageService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$page	= $this->pageService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
 
 		if( isset( $page ) ) {
 
@@ -123,11 +123,11 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'page' => $page,
-		        	'author' => $page->createdBy,
-		        	'content' => $content,
-		        	'banner' => $content->banner
-		        ], [ 'page' => true ] );
+					'page' => $page,
+					'author' => $page->createdBy,
+					'content' => $content,
+					'banner' => $content->banner
+				], [ 'page' => true ] );
 			}
 
 			// Page without Template - Redirect to System Pages

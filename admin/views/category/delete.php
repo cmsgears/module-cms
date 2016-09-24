@@ -10,7 +10,7 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Category | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Delete Category | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
@@ -22,11 +22,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-category' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
-    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap, [ 'disabled' => true ] ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
-    	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap, [ 'disabled' => true ] ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 
 		<div class="box-content clearfix">
@@ -55,8 +55,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<div class="box-content clearfix">
 			<div class="header">Category SEO</div>
 			<?= $form->field( $content, 'seoName' )->textInput( [ 'readonly'=>'true' ] ) ?>
-	    	<?= $form->field( $content, 'seoDescription' )->textarea( [ 'readonly' => 'true' ] ) ?>
-	    	<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
+			<?= $form->field( $content, 'seoDescription' )->textarea( [ 'readonly' => 'true' ] ) ?>
+			<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => 'true' ] ) ?>
 			<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		</div>
 

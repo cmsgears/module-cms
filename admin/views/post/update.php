@@ -13,7 +13,7 @@ use cmsgears\widgets\category\CategoryMapper;
 use cmsgears\widgets\tag\TagMapper;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Update Post | ' . $coreProperties->getSiteTitle();
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
@@ -24,8 +24,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-post', 'options' => [ 'class' => 'frm-split-40-60' ] ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 		<?= $form->field( $model, 'order' )->textInput() ?>
@@ -57,9 +57,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Post SEO</div>
-	    	<?= $form->field( $content, 'seoName' ) ?>
-	    	<?= $form->field( $content, 'seoDescription' )->textarea() ?>
-	    	<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
+			<?= $form->field( $content, 'seoName' ) ?>
+			<?= $form->field( $content, 'seoDescription' )->textarea() ?>
+			<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
 			<?= $form->field( $content, 'seoRobot' ) ?>
 		</div>
 

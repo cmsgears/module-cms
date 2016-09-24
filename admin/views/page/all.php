@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Pages | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Pages | ' . $coreProperties->getSiteTitle();
 $siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
@@ -116,7 +116,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $pag ) {
 
-						$id 		= $pag->id;
+						$id			= $pag->id;
 						$editUrl	= Html::a( $pag->name, [ "/cmgcms/page/update?id=$id" ] );
 						$slug		= $pag->slug;
 						$slugUrl	= "<a href='" . $slugBase . "$slug'>$slug</a>";

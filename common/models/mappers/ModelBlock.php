@@ -59,28 +59,28 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
-        $rules = [
-            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+		$rules = [
+			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ]
-        ];
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'active' ], 'boolean' ]
+		];
 
 		return $rules;
-    }
+	}
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -112,9 +112,9 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CmsTables::TABLE_MODEL_BLOCK;

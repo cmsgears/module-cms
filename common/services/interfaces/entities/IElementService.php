@@ -13,11 +13,11 @@ interface IElementService extends \cmsgears\core\common\services\interfaces\enti
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

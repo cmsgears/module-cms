@@ -10,7 +10,7 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Page | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Add Page | ' . $coreProperties->getSiteTitle();
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
@@ -21,9 +21,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 		<?= $form->field( $model, 'comments' )->checkbox() ?>
@@ -53,9 +53,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="box-content clearfix">
 			<div class="header">Page SEO</div>
-	    	<?= $form->field( $content, 'seoName' ) ?>
-	    	<?= $form->field( $content, 'seoDescription' )->textarea() ?>
-	    	<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
+			<?= $form->field( $content, 'seoName' ) ?>
+			<?= $form->field( $content, 'seoDescription' )->textarea() ?>
+			<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
 			<?= $form->field( $content, 'seoRobot' ) ?>
 		</div>
 

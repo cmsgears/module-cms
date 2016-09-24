@@ -33,7 +33,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
 		parent::init();
 
@@ -55,42 +55,42 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                // secure actions
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'search' => [ 'get' ],
-                    'category' => [ 'get' ],
-                    'tag' => [ 'get' ],
-                    'single' => [ 'get' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					// secure actions
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'search' => [ 'get' ],
+					'category' => [ 'get' ],
+					'tag' => [ 'get' ],
+					'single' => [ 'get' ]
+				]
+			]
+		];
+	}
 
 	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
 		if ( !Yii::$app->user->isGuest ) {
 
 			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 		}
 
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction'
-            ]
-        ];
-    }
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction'
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 
@@ -182,9 +182,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-    public function actionSingle( $slug ) {
+	public function actionSingle( $slug ) {
 
-		$post 	= $this->postService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$post	= $this->postService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
 		if( isset( $post ) ) {
 
@@ -208,11 +208,11 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'page' => $post,
-		        	'author' => $post->createdBy,
-		        	'content' => $content,
-		        	'banner' => $content->banner
-		        ], [ 'page' => true ] );
+					'page' => $post,
+					'author' => $post->createdBy,
+					'content' => $content,
+					'banner' => $content->banner
+				], [ 'page' => true ] );
 			}
 
 			// Error - Template not defined

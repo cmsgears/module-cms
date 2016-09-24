@@ -44,9 +44,9 @@ class WidgetForm extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        $rules = [
-            [ [ 'classPath', 'data' ], 'safe' ]
-        ];
+		$rules = [
+			[ [ 'classPath', 'data' ], 'safe' ]
+		];
 
 		if( Yii::$app->core->trimFieldValue ) {
 
@@ -56,7 +56,7 @@ class WidgetForm extends \cmsgears\core\common\models\forms\JsonModel {
 		}
 
 		return $rules;
-    }
+	}
 
 	// CMG interfaces ------------------------
 

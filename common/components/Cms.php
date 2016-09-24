@@ -20,16 +20,16 @@ class Cms extends \yii\base\Component {
 
 	// Constructor and Initialisation ------------------------------
 
-    /**
-     * Initialise the CMG Core Component.
-     */
-    public function init() {
+	/**
+	 * Initialise the CMG Core Component.
+	 */
+	public function init() {
 
-        parent::init();
+		parent::init();
 
 		// Register application components and objects i.e. CMG and Project
 		$this->registerComponents();
-    }
+	}
 
 	// Instance methods --------------------------------------------
 

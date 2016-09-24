@@ -13,15 +13,15 @@ interface ISidebarService extends \cmsgears\core\common\services\interfaces\enti
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getWidgets( $sidebar, $associative = false );
 
 	public function getWidgetsForUpdate( $sidebar, $widgets );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

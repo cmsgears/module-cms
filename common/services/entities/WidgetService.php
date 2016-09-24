@@ -57,31 +57,31 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
 
 		return parent::getPage( $config );
 	}
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getByName( $name, $first = false ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
 
 		return parent::getByName( $config );
 	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
 	public function getIdList( $config = [] ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
 
 		return parent::getIdList( $config );
 	}
@@ -90,12 +90,12 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
 
 		return parent::getIdNameList( $config );
 	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -115,11 +115,11 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

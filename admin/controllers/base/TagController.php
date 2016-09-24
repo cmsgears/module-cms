@@ -33,13 +33,13 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/tag/';
 
-		$this->crudPermission 		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_CMS;
 
 		$this->templateType			= CoreGlobal::TYPE_TAG;
 
@@ -67,11 +67,11 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 	public function actionAll() {
 
 		$modelTable		= $this->modelService->getModelTable();
-		$dataProvider 	= $this->modelService->getPageWithContent( [ 'conditions' => [ "$modelTable.type" => $this->type ] ] );
+		$dataProvider	= $this->modelService->getPageWithContent( [ 'conditions' => [ "$modelTable.type" => $this->type ] ] );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionCreate() {
@@ -79,11 +79,11 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 		$modelClass		= $this->modelService->getModelClass();
 		$model			= new $modelClass;
 		$model->siteId	= Yii::$app->core->siteId;
-		$model->type 	= $this->type;
+		$model->type	= $this->type;
 
 		$content		= new ModelContent();
-		$banner	 		= File::loadFile( null, 'Banner' );
-		$video	 		= File::loadFile( null, 'Video' );
+		$banner			= File::loadFile( null, 'Banner' );
+		$video			= File::loadFile( null, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
@@ -95,13 +95,13 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'content' => $content,
-    		'banner' => $banner,
-    		'video' => $video,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'content' => $content,
+			'banner' => $banner,
+			'video' => $video,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -113,8 +113,8 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 		if( isset( $model ) ) {
 
 			$content	= $model->modelContent;
-			$banner	 	= File::loadFile( $content->banner, 'Banner' );
-			$video	 	= File::loadFile( $content->video, 'Video' );
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$video		= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
@@ -126,13 +126,13 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $banner,
+				'video' => $video,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -158,13 +158,13 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $content->banner,
-	    		'video' => $content->video,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $content->banner,
+				'video' => $content->video,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found

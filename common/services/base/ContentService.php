@@ -68,11 +68,11 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -93,42 +93,44 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	public static function findPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
-		$modelTable 	= static::$modelTable;
+		$modelTable		= static::$modelTable;
 
-		$contentTable 	= CmsTables::TABLE_MODEL_CONTENT;
+		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
 		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		if( !$sort ) {
 
-		    $sort = new Sort([
-		        'attributes' => [
-		            'id' => [
-		                'asc' => [ "$modelTable.id" => SORT_ASC ],
-		                'desc' => [ "$modelTable.id" => SORT_DESC ],
-		                'default' => SORT_DESC,
-		                'label' => 'Id'
-		            ],
-		            'cdate' => [
-		                'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
-		                'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
-		                'default' => SORT_DESC,
-		                'label' => 'Created At',
-		            ],
-		            'pdate' => [
-		                'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
-		                'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
-		                'default' => SORT_DESC,
-		                'label' => 'Published At',
-		            ],
-		            'udate' => [
-		                'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
-		                'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
-		                'default' => SORT_DESC,
-		                'label' => 'Updated At',
-		            ]
-		        ]
-		    ]);
+			$sort = new Sort([
+				'attributes' => [
+					'id' => [
+						'asc' => [ "$modelTable.id" => SORT_ASC ],
+						'desc' => [ "$modelTable.id" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Id'
+					],
+					'cdate' => [
+						'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Created At',
+					],
+					'pdate' => [
+						'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Published At',
+					],
+					'udate' => [
+						'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Updated At',
+					]
+				]
+			]);
+
+			$config[ 'sort' ]	= $sort;
 		}
 
 		return parent::findDataProvider( $config );
@@ -153,11 +155,11 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

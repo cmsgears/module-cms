@@ -32,7 +32,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		Yii::$app->core->setSite( $this->site );
 	}
 
-    public function up() {
+	public function up() {
 
 		// Create RBAC and Site Members
 		$this->insertRolePermission();
@@ -45,7 +45,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		// Init system pages
 		$this->insertSystemPages();
-    }
+	}
 
 	private function insertRolePermission() {
 
@@ -93,18 +93,18 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 	private function insertCmsConfig() {
 
 		$this->insert( $this->prefix . 'core_form', [
-            'siteId' => $this->site->id,
-            'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-            'name' => 'Config CMS', 'slug' => 'config-cms',
-            'type' => CoreGlobal::TYPE_SYSTEM,
-            'description' => 'CMS configuration form.',
-            'successMessage' => 'All configurations saved successfully.',
-            'captcha' => false,
-            'visibility' => Form::VISIBILITY_PROTECTED,
-            'active' => true, 'userMail' => false,'adminMail' => false,
-            'createdAt' => DateUtil::getDateTime(),
-            'modifiedAt' => DateUtil::getDateTime()
-        ]);
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'Config CMS', 'slug' => 'config-cms',
+			'type' => CoreGlobal::TYPE_SYSTEM,
+			'description' => 'CMS configuration form.',
+			'successMessage' => 'All configurations saved successfully.',
+			'captcha' => false,
+			'visibility' => Form::VISIBILITY_PROTECTED,
+			'active' => true, 'userMail' => false,'adminMail' => false,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
 
 		$config	= Form::findBySlug( 'config-cms', CoreGlobal::TYPE_SYSTEM );
 
@@ -172,10 +172,10 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );
 	}
 
-    public function down() {
+	public function down() {
 
-        echo "m160621_065213_cms_data will be deleted with m160621_014408_core and m160621_065204_cms.\n";
+		echo "m160621_065213_cms_data will be deleted with m160621_014408_core and m160621_065204_cms.\n";
 
-        return true;
-    }
+		return true;
+	}
 }

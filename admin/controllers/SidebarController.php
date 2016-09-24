@@ -30,14 +30,14 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
 		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
 		$this->widgetService	= Yii::$app->factory->get( 'widgetService' );
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
 
 		$this->returnUrl		= Url::previous( 'sidebars' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/sidebar/all' ], true );
@@ -63,7 +63,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		Url::remember( [ 'sidebar/all' ], 'sidebars' );
 
-	    return parent::actionAll();
+		return parent::actionAll();
 	}
 
 	public function actionCreate() {
@@ -93,11 +93,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 			return $this->redirect( $this->returnUrl );
 		}
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'widgets' => $widgets,
-    		'sidebarWidgets' => $sidebarWidgets
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'widgets' => $widgets,
+			'sidebarWidgets' => $sidebarWidgets
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -121,11 +121,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 				return $this->redirect( $this->returnUrl );
 			}
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'widgets' => $widgets,
-	    		'sidebarWidgets' => $sidebarWidgets
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'widgets' => $widgets,
+				'sidebarWidgets' => $sidebarWidgets
+			]);
 		}
 
 		// Model not found
@@ -150,11 +150,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 			$widgets		= $this->modelService->getIdNameList();
 			$sidebarWidgets	= $this->modelService->getWidgetsForUpdate( $model, $widgets );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'widgets' => $widgets,
-	    		'sidebarWidgets' => $sidebarWidgets
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'widgets' => $widgets,
+				'sidebarWidgets' => $sidebarWidgets
+			]);
 		}
 
 		// Model not found

@@ -33,13 +33,13 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/category/';
 
-		$this->crudPermission 		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_CMS;
 
 		$this->templateType			= CoreGlobal::TYPE_CATEGORY;
 
@@ -67,11 +67,11 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 	public function actionAll() {
 
 		$modelTable		= $this->modelService->getModelTable();
-		$dataProvider 	= $this->modelService->getPageWithContent( [ 'conditions' => [ "$modelTable.type" => $this->type ] ] );
+		$dataProvider	= $this->modelService->getPageWithContent( [ 'conditions' => [ "$modelTable.type" => $this->type ] ] );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionCreate() {
@@ -79,11 +79,11 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		$modelClass		= $this->modelService->getModelClass();
 		$model			= new $modelClass;
 		$model->siteId	= Yii::$app->core->siteId;
-		$model->type 	= $this->type;
+		$model->type	= $this->type;
 
 		$content		= new ModelContent();
-		$banner	 		= File::loadFile( null, 'Banner' );
-		$video	 		= File::loadFile( null, 'Video' );
+		$banner			= File::loadFile( null, 'Banner' );
+		$video			= File::loadFile( null, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
@@ -96,14 +96,14 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'content' => $content,
-    		'banner' => $banner,
-    		'video' => $video,
-    		'categoryMap' => $categoryMap,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'content' => $content,
+			'banner' => $banner,
+			'video' => $video,
+			'categoryMap' => $categoryMap,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -115,8 +115,8 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		if( isset( $model ) ) {
 
 			$content	= $model->modelContent;
-			$banner	 	= File::loadFile( $content->banner, 'Banner' );
-			$video	 	= File::loadFile( $content->video, 'Video' );
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$video		= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
@@ -133,14 +133,14 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'categoryMap' => $categoryMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $banner,
+				'video' => $video,
+				'categoryMap' => $categoryMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -167,14 +167,14 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $content->banner,
-	    		'video' => $content->video,
-	    		'categoryMap' => $categoryMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $content->banner,
+				'video' => $content->video,
+				'categoryMap' => $categoryMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found

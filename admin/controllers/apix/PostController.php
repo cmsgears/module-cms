@@ -25,7 +25,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
 		parent::init();
 
@@ -43,47 +43,47 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
 					'bindCategories' => [ 'permission' => $this->crudPermission ],
 					'assignTags' => [ 'permission' => $this->crudPermission ],
 					'removeTag' => [ 'permission' => $this->crudPermission ],
 					'submitComment' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
 					'bindCategories' => [ 'post' ],
 					'assignTags' => [ 'post' ],
 					'removeTag' => [ 'post' ],
 					'submitComment' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+				]
+			]
+		];
+	}
 
 	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
-        return [
-        	'bind-categories' => [
-        		'class' => 'cmsgears\core\common\actions\tag\BindCategories'
-        	],
-            'assign-tags' => [
-                'class' => 'cmsgears\core\common\actions\tag\AssignTags'
-            ],
-            'remove-tag' => [
-                'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
-            ],
-            'submit-comment' => [
-            	'class' => 'cmsgears\core\common\actions\comment\CreateComment'
-            ]
-        ];
-    }
+		return [
+			'bind-categories' => [
+				'class' => 'cmsgears\core\common\actions\tag\BindCategories'
+			],
+			'assign-tags' => [
+				'class' => 'cmsgears\core\common\actions\tag\AssignTags'
+			],
+			'remove-tag' => [
+				'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
+			],
+			'submit-comment' => [
+				'class' => 'cmsgears\core\common\actions\comment\CreateComment'
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

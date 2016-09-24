@@ -78,9 +78,9 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		$trim		= [];
@@ -90,15 +90,15 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
-        $rules = [
-            [ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
-            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		$rules = [
+			[ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
+			[ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
 		if( Yii::$app->core->trimFieldValue ) {
 
@@ -106,11 +106,11 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 		}
 
 		return $rules;
-    }
+	}
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -136,15 +136,15 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
 			if( $this->templateId <= 0 ) {
 
 				$this->templateId = null;
 			}
 
-	        return true;
-	    }
+			return true;
+		}
 
 		return false;
 	}
@@ -183,9 +183,9 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CmsTables::TABLE_MODEL_CONTENT;

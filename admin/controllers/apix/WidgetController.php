@@ -27,7 +27,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
 		parent::init();
 
@@ -45,21 +45,21 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                'bindSidebars' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'bindSidebars' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'bindSidebars' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'bindSidebars' => [ 'post' ]
+				]
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 
@@ -80,6 +80,6 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }

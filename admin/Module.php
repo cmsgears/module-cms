@@ -16,9 +16,9 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	// Public -----------------
 
-    public $controllerNamespace = 'cmsgears\cms\admin\controllers';
+	public $controllerNamespace = 'cmsgears\cms\admin\controllers';
 
-	public $config 				= [ CmsGlobal::CONFIG_CMS ];
+	public $config				= [ CmsGlobal::CONFIG_CMS ];
 
 	// Protected --------------
 
@@ -28,12 +28,12 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-cms/admin/views' );
-    }
+		$this->setViewPath( '@cmsgears/module-cms/admin/views' );
+	}
 
 	// Instance methods --------------------------------------------
 

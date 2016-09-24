@@ -31,14 +31,14 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
 		$this->modelService		= Yii::$app->factory->get( 'menuService' );
 		$this->pageService		= Yii::$app->factory->get( 'pageService' );
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
 
 		$this->returnUrl		= Url::previous( 'menus' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
@@ -64,7 +64,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		Url::remember( [ 'menu/all' ], 'menus' );
 
-	    return parent::actionAll();
+		return parent::actionAll();
 	}
 
 	public function actionCreate() {
@@ -103,12 +103,12 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			return $this->redirect( $this->returnUrl );
 		}
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'pages' => $pages,
-    		'links' => $links,
-    		'pageLinks' => $pageLinks
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'pages' => $pages,
+			'links' => $links,
+			'pageLinks' => $pageLinks
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -144,12 +144,12 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 				return $this->redirect( $this->returnUrl );
 			}
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'pages' => $pages,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'pages' => $pages,
+				'links' => $links,
+				'pageLinks' => $pageLinks
+			]);
 		}
 
 		// Model not found
@@ -175,12 +175,12 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			$links		= $this->modelService->getLinks( $model );
 			$pageLinks	= $this->modelService->getPageLinksForUpdate( $model, $pages );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'pages' => $pages,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'pages' => $pages,
+				'links' => $links,
+				'pageLinks' => $pageLinks
+			]);
 		}
 
 		// Model not found

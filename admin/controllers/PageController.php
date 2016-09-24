@@ -33,15 +33,15 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_CMS;
 		$this->modelService			= Yii::$app->factory->get( 'pageService' );
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
-		$this->sidebar 				= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		$this->returnUrl		= Url::previous( 'pages' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
@@ -69,9 +69,9 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$dataProvider = $this->modelService->getPage();
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionCreate() {
@@ -81,8 +81,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$model->siteId		= Yii::$app->core->siteId;
 		$model->comments	= false;
 		$content			= new ModelContent();
-		$banner	 			= File::loadFile( null, 'Banner' );
-		$video	 			= File::loadFile( null, 'Video' );
+		$banner				= File::loadFile( null, 'Banner' );
+		$video				= File::loadFile( null, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
@@ -98,15 +98,15 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$statusMap		= Page::$statusMap;
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'content' => $content,
-    		'banner' => $banner,
-    		'video' => $video,
-    		'visibilityMap' => $visibilityMap,
-	    	'statusMap' => $statusMap,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'content' => $content,
+			'banner' => $banner,
+			'video' => $video,
+			'visibilityMap' => $visibilityMap,
+			'statusMap' => $statusMap,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -118,8 +118,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( isset( $model ) ) {
 
 			$content	= $model->modelContent;
-			$banner	 	= File::loadFile( $content->banner, 'Banner' );
-			$video	 	= File::loadFile( $content->video, 'Video' );
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$video		= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
@@ -135,15 +135,15 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'visibilityMap' => $visibilityMap,
-		    	'statusMap' => $statusMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $banner,
+				'video' => $video,
+				'visibilityMap' => $visibilityMap,
+				'statusMap' => $statusMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -173,15 +173,15 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			$statusMap		= Page::$statusMap;
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $content->banner,
-	    		'video' => $content->video,
-	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $content->banner,
+				'video' => $content->video,
+				'visibilityMap' => $visibilityMap,
+				'statusMap' => $statusMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found

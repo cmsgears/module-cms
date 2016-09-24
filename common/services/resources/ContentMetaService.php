@@ -58,11 +58,11 @@ class ContentMetaService extends \cmsgears\core\common\services\base\AttributeSe
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -82,11 +82,11 @@ class ContentMetaService extends \cmsgears\core\common\services\base\AttributeSe
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

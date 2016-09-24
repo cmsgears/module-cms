@@ -23,14 +23,14 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
 		$this->type				= CmsGlobal::TYPE_POST;
 		$this->templateType		= CmsGlobal::TYPE_POST;
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 
 		$this->returnUrl		= Url::previous( 'categories' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );

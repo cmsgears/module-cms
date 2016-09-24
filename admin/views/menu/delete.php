@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -14,8 +14,8 @@ $this->title 	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-menu' ] );?>
 
 		<div class="frm-split frm-split-40-60 clearfix">
-	    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
-	    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+			<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+			<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 			<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => 'true' ] ) ?>
 		</div>
 

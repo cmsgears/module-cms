@@ -9,7 +9,7 @@ use cmsgears\icons\widgets\IconChooser;
 use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Element | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Delete Element | ' . $coreProperties->getSiteTitle();
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
@@ -20,10 +20,10 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-widget' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
-    	<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => 'true' ] ) ?>
+		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => 'true' ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => 'true' ] ) ?>
 
 		<div class="box-content clearfix">

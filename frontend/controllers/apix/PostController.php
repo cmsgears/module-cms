@@ -27,7 +27,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
 		parent::init();
 
@@ -46,52 +46,52 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                'assignCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'removeCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'addMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'updateMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-	                'deleteMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'autoSearch' => [ 'post' ],
-                    'assignCategory' => [ 'post' ],
-                    'removeCategory' => [ 'post' ],
-	                'assignTags' => [ 'post' ],
-	                'removeTag' => [ 'post' ],
-	                'addMeta' => [ 'post' ],
-	                'updateMeta' => [ 'post' ],
-	                'deleteMeta' => [ 'post' ],
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'assignCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'removeCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'addMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'updateMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'deleteMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'autoSearch' => [ 'post' ],
+					'assignCategory' => [ 'post' ],
+					'removeCategory' => [ 'post' ],
+					'assignTags' => [ 'post' ],
+					'removeTag' => [ 'post' ],
+					'addMeta' => [ 'post' ],
+					'updateMeta' => [ 'post' ],
+					'deleteMeta' => [ 'post' ],
 					'submitComment' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+				]
+			]
+		];
+	}
 
 	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
-        return [
-        	'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-            'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\AssignCategory' ],
-            'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory' ],
-            'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags' ],
-            'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag' ],
-            'add-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\CreateMeta' ],
-            'update-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\UpdateMeta' ],
-            'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\DeleteMeta' ],
-            'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
-        ];
-    }
+		return [
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\AssignCategory' ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory' ],
+			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags' ],
+			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\CreateMeta' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\UpdateMeta' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\DeleteMeta' ],
+			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

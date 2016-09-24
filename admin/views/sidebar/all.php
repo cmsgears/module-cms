@@ -7,7 +7,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Sidebars | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Sidebars | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();

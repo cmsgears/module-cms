@@ -7,7 +7,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Widgets | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Widgets | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -81,7 +81,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $widget->getTemplateName() ?></td>
 						<td class="actions">
 							<span title="Settings"><?= Html::a( "", ["widget/settings?id=$id"], [ 'class' => 'cmti cmti-setting' ] )  ?></span>
-							<span title="Update Widget"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Update Widget"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )	 ?></span>
 							<span title="Delete Widget"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>

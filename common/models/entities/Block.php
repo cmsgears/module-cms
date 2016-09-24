@@ -95,50 +95,50 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression( 'NOW()' )
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ]
-        ];
-    }
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression( 'NOW()' )
+			],
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
 
 	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		// model rules
-        $rules = [
-        	[ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'title', 'content', 'data' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+		$rules = [
+			[ [ 'name', 'siteId' ], 'required' ],
+			[ [ 'id', 'title', 'content', 'data' ], 'safe' ],
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'slug', 'description', 'icon', 'htmlOptions' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'name', 'unique' ],
-            [ 'active', 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+			[ 'active', 'boolean' ],
+			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'bannerId', 'videoId', 'textureId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
 		// trim if required
 		if( Yii::$app->core->trimFieldValue ) {
@@ -149,11 +149,11 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 		}
 
 		return $rules;
-    }
+	}
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -179,15 +179,15 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
 			if( $this->templateId <= 0 ) {
 
 				$this->templateId = null;
 			}
 
-	        return true;
-	    }
+			return true;
+		}
 
 		return false;
 	}
@@ -247,9 +247,9 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CmsTables::TABLE_BLOCK;

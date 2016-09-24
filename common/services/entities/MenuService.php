@@ -60,20 +60,20 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_MENU;
 
 		return parent::getPage( $config );
 	}
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getByName( $name, $first = false ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_MENU;
 
 		return parent::getByName( $config );
 	}
@@ -150,13 +150,13 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 		return $linkObjects;
 	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
 	public function getIdList( $config = [] ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_MENU;
 
 		return parent::getIdList( $config );
 	}
@@ -165,12 +165,12 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_MENU;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_MENU;
 
 		return parent::getIdNameList( $config );
 	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -200,7 +200,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 						$link->order	= 0;
 					}
 
-					$objectData->links[] 	= $link;
+					$objectData->links[]	= $link;
 				}
 			}
 		}
@@ -219,7 +219,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 						$link->order	= 0;
 					}
 
-					$objectData->links[] 	= $link;
+					$objectData->links[]	= $link;
 				}
 			}
 		}
@@ -245,11 +245,11 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

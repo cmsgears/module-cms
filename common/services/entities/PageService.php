@@ -53,12 +53,12 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, $config = [] ) {
 
 		$this->fileService	= $fileService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -76,80 +76,80 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name',
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name',
-	            ],
-	            'visibility' => [
-	                'asc' => [ 'visibility' => SORT_ASC ],
-	                'desc' => ['visibility' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'visibility',
-	            ],
-	            'status' => [
-	                'asc' => [ 'status' => SORT_ASC ],
-	                'desc' => ['status' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'status',
-	            ],
-	            'template' => [
-	                'asc' => [ 'template' => SORT_ASC ],
-	                'desc' => ['template' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'template',
-	            ],
-	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'cdate',
-	            ],
-	            'pdate' => [
-	                'asc' => [ 'publishedAt' => SORT_ASC ],
-	                'desc' => ['publishedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'pdate',
-	            ],
-	            'udate' => [
-	                'asc' => [ 'updatedAt' => SORT_ASC ],
-	                'desc' => ['updatedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'udate',
-	            ]
-	        ]
-	    ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name',
+				],
+				'slug' => [
+					'asc' => [ 'slug' => SORT_ASC ],
+					'desc' => ['slug' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name',
+				],
+				'visibility' => [
+					'asc' => [ 'visibility' => SORT_ASC ],
+					'desc' => ['visibility' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'visibility',
+				],
+				'status' => [
+					'asc' => [ 'status' => SORT_ASC ],
+					'desc' => ['status' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'status',
+				],
+				'template' => [
+					'asc' => [ 'template' => SORT_ASC ],
+					'desc' => ['template' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'template',
+				],
+				'cdate' => [
+					'asc' => [ 'createdAt' => SORT_ASC ],
+					'desc' => ['createdAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'cdate',
+				],
+				'pdate' => [
+					'asc' => [ 'publishedAt' => SORT_ASC ],
+					'desc' => ['publishedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'pdate',
+				],
+				'udate' => [
+					'asc' => [ 'updatedAt' => SORT_ASC ],
+					'desc' => ['updatedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'udate',
+				]
+			]
+		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
 		}
 
-		$config[ 'conditions' ][ 'type' ] 	= CmsGlobal::TYPE_PAGE;
+		$config[ 'conditions' ][ 'type' ]	= CmsGlobal::TYPE_PAGE;
 
 		return parent::findPage( $config );
 	}
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getMenuPages( $pages, $map = false ) {
+	public function getMenuPages( $pages, $map = false ) {
 
 		if( count( $pages ) > 0 ) {
 
 			if( $map ) {
 
-				$pages 		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				$pages		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
 				$pageMap	= [];
 
 				foreach ( $pages as $page ) {
@@ -166,11 +166,11 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		}
 
 		return [];
-    }
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -199,7 +199,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		return parent::update( $model, [
 			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ]
 		]);
- 	}
+	}
 
 	// Delete -------------
 
@@ -213,11 +213,11 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

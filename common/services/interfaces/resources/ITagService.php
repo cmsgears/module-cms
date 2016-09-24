@@ -15,11 +15,11 @@ interface ITagService extends \cmsgears\core\common\services\interfaces\resource
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

@@ -92,51 +92,51 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ]
-        ];
-    }
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			],
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
 
 	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		// model rules
-        $rules = [
-            [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+		$rules = [
+			[ [ 'name', 'siteId' ], 'required' ],
+			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'slug', 'icon', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'featured', 'comments' ], 'boolean' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'featured', 'comments' ], 'boolean' ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
 		// trim if required
 		if( Yii::$app->core->trimFieldValue ) {
@@ -147,11 +147,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		}
 
 		return $rules;
-    }
+	}
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -173,7 +173,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
 			if( $this->parentId <= 0 ) {
 
@@ -185,8 +185,8 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 				$this->order = 0;
 			}
 
-	        return true;
-	    }
+			return true;
+		}
 
 		return false;
 	}
@@ -252,9 +252,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CmsTables::TABLE_PAGE;
@@ -262,7 +262,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// yii\db\BaseActiveRecord
 
-    public static function instantiate( $row ) {
+	public static function instantiate( $row ) {
 
 		switch( $row['type'] ) {
 
@@ -282,8 +282,8 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		$model = new $class( null );
 
-        return $model;
-    }
+		return $model;
+	}
 
 	// CMG parent classes --------------------
 
@@ -308,7 +308,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	public static function queryWithAuthor( $config = [] ) {
 
-		$postTable 					= CmsTables::TABLE_PAGE;
+		$postTable					= CmsTables::TABLE_PAGE;
 		$config[ 'relations' ][]	= [ 'modelContent', 'creator' ];
 		$config[ 'relations' ][]	= [ 'creator.avatar'  => function ( $query ) {
 											$fileTable	= CoreTables::TABLE_FILE;

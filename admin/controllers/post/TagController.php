@@ -23,13 +23,13 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
 		$this->type				= CmsGlobal::TYPE_POST;
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/all' ], true );
 	}
 

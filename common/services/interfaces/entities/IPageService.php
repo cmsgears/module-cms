@@ -13,13 +13,13 @@ interface IPageService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getMenuPages( $pages, $map = false );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

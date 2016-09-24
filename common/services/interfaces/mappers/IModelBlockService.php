@@ -13,11 +13,11 @@ interface IModelBlockService extends \cmsgears\core\common\services\interfaces\b
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

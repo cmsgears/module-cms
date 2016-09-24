@@ -16,15 +16,15 @@ interface IBlockService extends INameService, ISlugService {
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getElements( $block, $associative = false );
 
 	public function getElementsForUpdate( $block, $elements );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

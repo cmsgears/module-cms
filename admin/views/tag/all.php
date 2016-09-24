@@ -8,7 +8,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Tags | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Tags | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -70,7 +70,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $tag ) {
 
-						$id 	= $tag->id;
+						$id		= $tag->id;
 				?>
 					<tr>
 						<td><?= $tag->name ?></td>

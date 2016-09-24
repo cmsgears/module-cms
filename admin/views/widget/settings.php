@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Widget Settings | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Widget Settings | ' . $coreProperties->getSiteTitle();
 $template		= $model->template;
 ?>
 <div class="box box-cud">

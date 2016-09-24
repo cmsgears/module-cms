@@ -7,7 +7,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Menus | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Menus | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -77,7 +77,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $menu->description ?></td>
 						<td class="actions">
 							<span title="Update Menu"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Menu"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Delete Menu"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )	?></span>
 						</td>
 					</tr>
 				<?php } ?>

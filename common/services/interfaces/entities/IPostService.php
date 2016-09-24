@@ -13,11 +13,11 @@ interface IPostService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

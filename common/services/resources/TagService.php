@@ -75,11 +75,11 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -87,7 +87,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function create( $model, $config = [] ) {
 
-		$model 		= parent::create( $model, $config );
+		$model		= parent::create( $model, $config );
 
 		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
@@ -106,7 +106,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function update( $model, $config = [] ) {
 
-		$model 		= parent::update( $model, $config );
+		$model		= parent::update( $model, $config );
 
 		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
@@ -144,11 +144,11 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

@@ -56,7 +56,7 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        $rules = [
+		$rules = [
 			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];

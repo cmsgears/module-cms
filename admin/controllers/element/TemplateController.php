@@ -23,11 +23,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->sidebar 		= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
 
 		$this->type			= CmsGlobal::TYPE_ELEMENT;
 

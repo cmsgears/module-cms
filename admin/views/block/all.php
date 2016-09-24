@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Blocks | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Blocks | ' . $coreProperties->getSiteTitle();
 $siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
@@ -94,7 +94,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $block ) {
 
-						$id 		= $block->id;
+						$id			= $block->id;
 						$editUrl	= Html::a( $block->name, [ "/cmgcms/block/update?id=$id" ] );
 				?>
 					<tr>
@@ -107,8 +107,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $block->createdAt ?></td>
 						<td><?= $block->modifiedAt ?></td>
 						<td class="actions">
-							<span title="Update Block"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Block"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update Block"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )	?></span>
+							<span title="Delete Block"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )	 ?></span>
 						</td>
 					</tr>
 				<?php } ?>

@@ -70,9 +70,9 @@ class Page extends Content {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function find() {
 
 		$pageTable = CmsTables::TABLE_PAGE;

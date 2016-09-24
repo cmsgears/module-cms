@@ -13,7 +13,7 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getLinks( $menu );
 
@@ -21,9 +21,9 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 
 	public function getPageLinksForUpdate( $menu, $pages );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Create -------------
 

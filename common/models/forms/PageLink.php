@@ -55,7 +55,7 @@ class PageLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        $rules = [
+		$rules = [
 			[ [ 'link', 'pageId', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];

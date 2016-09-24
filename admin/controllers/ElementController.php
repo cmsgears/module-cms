@@ -31,14 +31,14 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
 		$this->modelService		= Yii::$app->factory->get( 'elementService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
 
 		$this->returnUrl		= Url::previous( 'elements' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
@@ -64,7 +64,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		Url::remember( [ 'element/all' ], 'elements' );
 
-	    return parent::actionAll();
+		return parent::actionAll();
 	}
 
 	public function actionCreate() {
@@ -73,7 +73,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 		$model			= new $modelClass;
 		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= CmsGlobal::TYPE_ELEMENT;
-		$banner	 		= File::loadFile( null, 'Banner' );
+		$banner			= File::loadFile( null, 'Banner' );
 		$meta			= new ElementForm();
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
@@ -85,12 +85,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'banner' => $banner,
-    		'meta' => $meta,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'banner' => $banner,
+			'meta' => $meta,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -113,12 +113,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'banner' => $banner,
-	    		'meta' => $meta,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'banner' => $banner,
+				'meta' => $meta,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -133,7 +133,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$banner	 	= $model->banner;
+			$banner		= $model->banner;
 			$meta		= new ElementForm( $model->data );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
@@ -145,12 +145,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'banner' => $banner,
-	    		'meta' => $meta,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'banner' => $banner,
+				'meta' => $meta,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found

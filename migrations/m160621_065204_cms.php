@@ -29,7 +29,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		}
 	}
 
-    public function up() {
+	public function up() {
 
 		// Page
 		$this->upPage();
@@ -48,11 +48,11 @@ class m160621_065204_cms extends \yii\db\Migration {
 
 			$this->generateForeignKeys();
 		}
-    }
+	}
 
 	private function upPage() {
 
-        $this->createTable( $this->prefix . 'cms_page', [
+		$this->createTable( $this->prefix . 'cms_page', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 ),
@@ -72,10 +72,10 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'modifiedAt' => $this->dateTime(),
 			'content' => $this->text(),
 			'data' => $this->text()
-        ], $this->options );
+		], $this->options );
 
-        // Index for columns site, parent, creator and modifier
-        $this->createIndex( 'idx_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId' );
+		// Index for columns site, parent, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy' );
@@ -83,7 +83,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 
 	private function upPageMeta() {
 
-        $this->createTable( $this->prefix . 'cms_page_meta', [
+		$this->createTable( $this->prefix . 'cms_page_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
@@ -91,15 +91,15 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'value' => $this->text()
-        ], $this->options );
+		], $this->options );
 
-        // Index for columns site, parent, creator and modifier
+		// Index for columns site, parent, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId' );
 	}
 
 	private function upBlock() {
 
-        $this->createTable( $this->prefix . 'cms_block', [
+		$this->createTable( $this->prefix . 'cms_block', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'templateId' => $this->bigInteger( 20 ),
@@ -119,10 +119,10 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'htmlOptions' => $this->text(),
 			'content' => $this->text(),
 			'data' => $this->text()
-        ], $this->options );
+		], $this->options );
 
-        // Index for columns site, parent, creator and modifier
-        $this->createIndex( 'idx_' . $this->prefix . 'block_site', $this->prefix . 'cms_block', 'siteId' );
+		// Index for columns site, parent, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'block_site', $this->prefix . 'cms_block', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'block_template', $this->prefix . 'cms_block', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'block_banner', $this->prefix . 'cms_block', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'block_texture', $this->prefix . 'cms_block', 'textureId' );
@@ -151,10 +151,10 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->text(),
 			'data' => $this->text()
-        ], $this->options );
+		], $this->options );
 
-        // Index for columns base, creator and modifier
-        $this->createIndex( 'idx_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId' );
+		// Index for columns base, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId' );
 	}
@@ -169,10 +169,10 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
-        ], $this->options );
+		], $this->options );
 
-        // Index for columns block
-        $this->createIndex( 'idx_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'modelId' );
+		// Index for columns block
+		$this->createIndex( 'idx_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'modelId' );
 	}
 
 	private function generateForeignKeys() {
@@ -180,7 +180,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		// Page
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId', $this->prefix . 'cms_page', 'id', 'SET NULL' );
-        $this->addForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Page meta
@@ -192,7 +192,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_banner', $this->prefix . 'cms_block', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_texture', $this->prefix . 'cms_block', 'textureId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_video', $this->prefix . 'cms_block', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
-        $this->addForeignKey( 'fk_' . $this->prefix . 'block_creator', $this->prefix . 'cms_block', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'block_creator', $this->prefix . 'cms_block', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'block_modifier', $this->prefix . 'cms_block', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Model Content
@@ -204,28 +204,28 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_block_parent', $this->prefix . 'cms_model_block', 'modelId', $this->prefix . 'cms_block', 'id', 'CASCADE' );
 	}
 
-    public function down() {
+	public function down() {
 
 		if( $this->fk ) {
 
 			$this->dropForeignKeys();
 		}
 
-        $this->dropTable( $this->prefix . 'cms_page' );
+		$this->dropTable( $this->prefix . 'cms_page' );
 		$this->dropTable( $this->prefix . 'cms_page_meta' );
 
 		$this->dropTable( $this->prefix . 'cms_block' );
 
 		$this->dropTable( $this->prefix . 'cms_model_content' );
 		$this->dropTable( $this->prefix . 'cms_model_block' );
-    }
+	}
 
 	private function dropForeignKeys() {
 
 		// Page
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page' );
-        $this->dropForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page' );
 
 		// Page meta
@@ -237,7 +237,7 @@ class m160621_065204_cms extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_banner', $this->prefix . 'cms_block' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_texture', $this->prefix . 'cms_block' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_video', $this->prefix . 'cms_block' );
-        $this->dropForeignKey( 'fk_' . $this->prefix . 'block_creator', $this->prefix . 'cms_block' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_creator', $this->prefix . 'cms_block' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'block_modifier', $this->prefix . 'cms_block' );
 
 		// Model Content

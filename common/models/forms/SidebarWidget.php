@@ -53,7 +53,7 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        $rules = [
+		$rules = [
 			[ [ 'widgetId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'widget', 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true ]

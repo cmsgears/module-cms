@@ -60,20 +60,20 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getPage( $config );
 	}
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getByName( $name, $first = false ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getByName( $config );
 	}
@@ -130,13 +130,13 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 		return $widgetObjects;
 	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
 	public function getIdList( $config = [] ) {
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getIdList( $config );
 	}
@@ -145,12 +145,12 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 		$modelTable	= static::$modelTable;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =  CmsGlobal::TYPE_SIDEBAR;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_SIDEBAR;
 
 		return parent::getIdNameList( $config );
 	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -182,7 +182,7 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 						$widget->order	= 0;
 					}
 
-					$objectData->widgets[] 	= $widget;
+					$objectData->widgets[]	= $widget;
 				}
 			}
 		}
@@ -208,11 +208,11 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

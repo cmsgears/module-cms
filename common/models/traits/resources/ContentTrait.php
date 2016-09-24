@@ -31,7 +31,7 @@ trait ContentTrait {
 
 		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
-    	return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
 					->where( "$modelContentTable.parentType='$this->mParentType'" );
 	}
 

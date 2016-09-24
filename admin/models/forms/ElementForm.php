@@ -44,10 +44,10 @@ class ElementForm extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        return [
-            [ [ 'content', 'data' ], 'safe' ]
-        ];
-    }
+		return [
+			[ [ 'content', 'data' ], 'safe' ]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

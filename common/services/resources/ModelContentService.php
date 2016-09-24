@@ -48,12 +48,12 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, $config = [] ) {
 
 		$this->fileService	= $fileService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -71,16 +71,16 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'pDate' => [
-	                'asc' => [ 'publishedAt' => SORT_ASC ],
-	                'desc' => ['publishedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Published At'
-	            ]
-	        ]
-	    ]);
+		$sort = new Sort([
+			'attributes' => [
+				'pDate' => [
+					'asc' => [ 'publishedAt' => SORT_ASC ],
+					'desc' => ['publishedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Published At'
+				]
+			]
+		]);
 
 		$config[ 'sort' ] = $sort;
 
@@ -89,11 +89,11 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -102,15 +102,15 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 	public function create( $model, $config = [] ) {
 
 		$parent		= $config[ 'parent' ];
-		$publish 	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$video	 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// publish
-    	if( $publish && !isset( $model->publishedAt ) ) {
+		if( $publish && !isset( $model->publishedAt ) ) {
 
-    		$model->publishedAt	= DateUtil::getDateTime();
-    	}
+			$model->publishedAt	= DateUtil::getDateTime();
+		}
 
 		// parent
 		$model->parentId	= $parent->id;
@@ -125,15 +125,15 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function update( $model, $config = [] ) {
 
-		$publish 	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$video	 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// publish
-    	if( $publish && !isset( $model->publishedAt ) ) {
+		if( $publish && !isset( $model->publishedAt ) ) {
 
-    		$model->publishedAt	= DateUtil::getDateTime();
-    	}
+			$model->publishedAt	= DateUtil::getDateTime();
+		}
 
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
@@ -170,11 +170,11 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 

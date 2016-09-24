@@ -75,9 +75,9 @@ class Post extends Content {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function find() {
 
 		$postTable = CmsTables::TABLE_PAGE;

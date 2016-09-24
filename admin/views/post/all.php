@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Posts | ' . $coreProperties->getSiteTitle();
+$this->title	= 'All Posts | ' . $coreProperties->getSiteTitle();
 $siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
@@ -116,7 +116,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $post ) {
 
-						$id 		= $post->id;
+						$id			= $post->id;
 						$editUrl	= Html::a( $post->name, [ "/cms/post/update?id=$id" ] );
 						$slug		= $post->slug;
 						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";

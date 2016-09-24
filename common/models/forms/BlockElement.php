@@ -52,7 +52,7 @@ class BlockElement extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public function rules() {
 
-        $rules = [
+		$rules = [
 			[ [ 'elementId', 'htmlOptions', 'order' ], 'safe' ],
 			[ 'element', 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true ]

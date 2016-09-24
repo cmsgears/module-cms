@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -13,8 +13,8 @@ $this->title 	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<div class="box-content clearfix">

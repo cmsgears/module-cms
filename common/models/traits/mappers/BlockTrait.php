@@ -29,7 +29,7 @@ trait BlockTrait {
 	 */
 	public function getModelBlocks() {
 
-    	return $this->hasMany( ModelBlock::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelBlock::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$this->parentType'" );
 	}
 
@@ -38,12 +38,12 @@ trait BlockTrait {
 	 */
 	public function getBlocks() {
 
-    	return $this->hasMany( Block::className(), [ 'id' => 'blockId' ] )
+		return $this->hasMany( Block::className(), [ 'id' => 'blockId' ] )
 					->viaTable( CmsTables::TABLE_MODEL_BLOCK, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_BLOCK;
 
-                      	$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
+						$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
 					});
 	}
 

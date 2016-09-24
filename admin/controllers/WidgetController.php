@@ -30,14 +30,14 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
 		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-		$this->sidebar 			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
 
 		$this->returnUrl		= Url::previous( 'widgets' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/all' ], true );
@@ -51,7 +51,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
 		$behaviors	= parent::behaviors();
 
@@ -60,7 +60,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		return $behaviors;
-    }
+	}
 
 	// yii\base\Controller ----
 
@@ -74,7 +74,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		Url::remember( [ 'widget/all' ], 'widgets' );
 
-	    return parent::actionAll();
+		return parent::actionAll();
 	}
 
 	public function actionCreate() {
@@ -94,11 +94,11 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'meta' => $meta,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'meta' => $meta,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
@@ -120,11 +120,11 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'meta' => $meta,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'meta' => $meta,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -150,11 +150,11 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'meta' => $meta,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'meta' => $meta,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
@@ -178,10 +178,10 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 				return $this->redirect( $this->returnUrl );
 			}
 
-	    	return $this->render( 'settings', [
-	    		'model' => $model,
-	    		'meta' => $meta
-	    	]);
+			return $this->render( 'settings', [
+				'model' => $model,
+				'meta' => $meta
+			]);
 		}
 
 		// Model not found

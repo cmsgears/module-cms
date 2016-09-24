@@ -63,10 +63,10 @@ class ContentUtil {
 
 	public static function initFormPage( $view, $config = [] ) {
 
-		$controller 	= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
-		$type	 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SITE;
+		$controller		= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
+		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SITE;
 
-		$form 			= null;
+		$form			= null;
 
 		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
@@ -202,7 +202,7 @@ class ContentUtil {
 
 			$slug	= $config[ 'slug' ];
 			$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_PAGE;
-			$page 	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
+			$page	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 		}
 
 		if( isset( $config[ 'page' ] ) ) {
@@ -216,8 +216,8 @@ class ContentUtil {
 			$slugUrl		= Url::toRoute( "/$page->slug" );
 
 			$summary		= $page->modelContent->summary;
-			$summary   	   .= "<div class='page-summary'>$summary</div>";
-			$summary   	   .= "<div class='page-link'><a class='btn btn-medium' href='$slugUrl'>Read More</a></div>";
+			$summary	   .= "<div class='page-summary'>$summary</div>";
+			$summary	   .= "<div class='page-link'><a class='btn btn-medium' href='$slugUrl'>Read More</a></div>";
 
 			return $summary;
 		}
@@ -235,7 +235,7 @@ class ContentUtil {
 
 			$slug	= $config[ 'slug' ];
 			$type	= $config[ 'type' ];
-			$page 	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
+			$page	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 		}
 
 		if( isset( $config[ 'page' ] ) ) {
@@ -257,15 +257,15 @@ class ContentUtil {
 
 	public static function findViewPage( $view, $config = [] ) {
 
-		$module 		= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core';
-		$controller 	= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
-		$type	 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
+		$module			= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core';
+		$controller		= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
+		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
 
 		$moduleName		= $view->context->module->id;
 		$controllerName	= Yii::$app->controller->id;
 		$actionName		= Yii::$app->controller->action->id;
 
-		$page 			= null;
+		$page			= null;
 
 		// System/Public Pages - Landing, Login, Register, Confirm Account, Activate Account, Forgot Password, Reset Password
 		if( strcmp( $moduleName, $module ) == 0 && strcmp( $controllerName, $controller ) == 0 ) {

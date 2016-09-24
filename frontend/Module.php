@@ -16,7 +16,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	// Public -----------------
 
-    public $controllerNamespace = 'cmsgears\cms\frontend\controllers';
+	public $controllerNamespace = 'cmsgears\cms\frontend\controllers';
 
 	// Protected --------------
 
@@ -26,12 +26,12 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-cms/frontend/views' );
-    }
+		$this->setViewPath( '@cmsgears/module-cms/frontend/views' );
+	}
 
 	// Instance methods --------------------------------------------
 

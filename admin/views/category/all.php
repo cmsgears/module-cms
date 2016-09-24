@@ -8,7 +8,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Categories';
+$this->title	= $coreProperties->getSiteTitle() . ' | All Categories';
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -78,7 +78,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $category ) {
 
-						$id 			= $category->id;
+						$id				= $category->id;
 						$content		= $category->modelContent;
 						$template		= $content->template;
 						$templateName	= isset( $template ) ? $template->name : null;

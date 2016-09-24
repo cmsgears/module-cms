@@ -9,7 +9,7 @@ use cmsgears\icons\widgets\IconChooser;
 use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Element | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Update Element | ' . $coreProperties->getSiteTitle();
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
@@ -20,9 +20,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-widget' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 

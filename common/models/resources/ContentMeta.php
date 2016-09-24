@@ -76,9 +76,9 @@ class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
 
 	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CmsTables::TABLE_PAGE_META;

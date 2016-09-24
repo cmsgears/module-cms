@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Widget | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Add Widget | ' . $coreProperties->getSiteTitle();
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -16,9 +16,9 @@ $this->title 	= 'Add Widget | ' . $coreProperties->getSiteTitle();
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-widget' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
 

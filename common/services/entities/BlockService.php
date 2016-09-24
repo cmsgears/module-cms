@@ -58,12 +58,12 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, $config = [] ) {
 
 		$this->fileService	= $fileService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -81,40 +81,40 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name'
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'slug'
-	            ],
-	            'template' => [
-	                'asc' => [ 'template' => SORT_ASC ],
-	                'desc' => ['template' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'template',
-	            ],
-	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'cdate',
-	            ],
-	            'udate' => [
-	                'asc' => [ 'updatedAt' => SORT_ASC ],
-	                'desc' => ['updatedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'udate',
-	            ]
-	        ]
-	    ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name'
+				],
+				'slug' => [
+					'asc' => [ 'slug' => SORT_ASC ],
+					'desc' => ['slug' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'slug'
+				],
+				'template' => [
+					'asc' => [ 'template' => SORT_ASC ],
+					'desc' => ['template' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'template',
+				],
+				'cdate' => [
+					'asc' => [ 'createdAt' => SORT_ASC ],
+					'desc' => ['createdAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'cdate',
+				],
+				'udate' => [
+					'asc' => [ 'updatedAt' => SORT_ASC ],
+					'desc' => ['updatedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'udate',
+				]
+			]
+		]);
 
 		$config[ 'sort' ] = $sort;
 
@@ -123,7 +123,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
 	public function getElements( $model, $associative = false ) {
 
@@ -182,9 +182,9 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 		return $elementObjects;
 	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -192,9 +192,9 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function create( $model, $config = [] ) {
 
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$texture 	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
-		$video	 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$texture	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
+		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'textureId' => $texture, 'videoId' => $video ] );
 
@@ -205,16 +205,16 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function update( $model, $config = [] ) {
 
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$texture 	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
-		$video	 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$texture	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
+		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'textureId' => $texture, 'videoId' => $video ] );
 
 		return parent::update( $model, [
 			'attributes' => [ 'templateId', 'bannerId', 'textureId', 'videoId', 'name', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ]
 		]);
- 	}
+	}
 
 	public function updateElements( $block, $elements ) {
 
@@ -236,7 +236,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 						$element->order	= 0;
 					}
 
-					$objectData->elements[] 	= $element;
+					$objectData->elements[]		= $element;
 				}
 			}
 		}
@@ -262,7 +262,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 		// Delete model
 		return parent::delete( $model, $config );
- 	}
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -274,11 +274,11 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
 	// Read - Others ---
 
