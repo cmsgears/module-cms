@@ -10,13 +10,16 @@ class CmsTables {
 
 	// Resources ------------
 
-	const TABLE_BLOCK			= 'cmg_cms_block';
-
+	// Page attributes
 	const TABLE_PAGE_META		= 'cmg_cms_page_meta';
 
+	// Blocks
+	const TABLE_BLOCK			= 'cmg_cms_block';
+
+	// Model Resources
 	const TABLE_MODEL_CONTENT	= 'cmg_cms_model_content';
 
-	// Mappers & Traits -----
+	// Mappers --------------
 
 	const TABLE_MODEL_BLOCK		= 'cmg_cms_model_block';
 }
