@@ -83,17 +83,13 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->core->trimFieldValue ) {
-
-			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
 		$rules = [
+			// Required, Safe
 			[ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
-			[ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			// Text Limit
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
 			[ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -101,6 +97,8 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 		];
 
 		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

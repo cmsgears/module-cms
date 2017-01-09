@@ -126,11 +126,15 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
 			[ [ 'id', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'slug', 'icon', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'featured', 'comments' ], 'boolean' ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
