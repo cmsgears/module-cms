@@ -4,6 +4,7 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -14,73 +15,66 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
 
-use cmsgears\cms\admin\services\MenuService;
-use cmsgears\cms\admin\services\PageService;
+class MenuController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $pageService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'menuService' );
+		$this->pageService		= Yii::$app->factory->get( 'pageService' );
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
+
+		$this->returnUrl		= Url::previous( 'menus' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-              	]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'    => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// MenuController --------------------
-	
-	public function actionIndex() {
+	// yii\base\Controller ----
 
-		$this->redirect( [ 'all' ] );
-	}
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// MenuController ------------------------
 
 	public function actionAll() {
 
-		$dataProvider = MenuService::getPagination();
+		Url::remember( [ 'menu/all' ], 'menus' );
 
-	    return $this->render('all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return parent::actionAll();
 	}
 
 	public function actionCreate() {
 
-		$model			= new ObjectData();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= CmsGlobal::TYPE_MENU;
 		$model->data	= "{ \"links\": {} }";
-		$pages			= PageService::getIdNameList();
-
-		$model->setScenario( 'create' );
+		$pages			= $this->pageService->getIdNameList();
 
 		// Menu Pages
 		$pageLinks	= [];
@@ -93,102 +87,103 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 		// Menu Links
 		$links	= [];
 
-		for ( $i = 0; $i < 4; $i++ ) {
+		for ( $i = 0; $i < 6; $i++ ) {
 
 			$links[] = new Link();
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
 			$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
 
-			$menu = MenuService::create( $model );
+			$this->modelService->create( $model );
 
-			if( $menu ) {
+			$this->modelService->updateLinks( $model, $links, $pageLinks );
 
-				MenuService::updateLinks( $menu, $links, $pageLinks );
-
-				$this->redirect( [ 'all' ] );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'pages' => $pages,
-    		'links' => $links,
-    		'pageLinks' => $pageLinks
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'pages' => $pages,
+			'links' => $links,
+			'pageLinks' => $pageLinks
+		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= MenuService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( 'update' );
+			$pages		= $this->pageService->getIdNameList();
+			$links		= $this->modelService->getLinks( $model );
+			$pageLinks	= $this->modelService->getPageLinksForUpdate( $model, $pages );
 
-			$pages		= PageService::getIdNameList();
-			$links		= MenuService::getLinks( $model );
-			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' );
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) &&  
-				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) && 
-				$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
+			if( count( $links ) < 5 ) {
 
-				if( MenuService::update( $model ) ) {
+				for( $i = 0; $i < 4; $i++ ) {
 
-					MenuService::updateLinks( $model, $links, $pageLinks );
-
-					$this->redirect( [ 'all' ] );
+					$links[]	= new Link();
 				}
 			}
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
-	    	]);
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
+				$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
+
+				$this->modelService->update( $model );
+
+				$this->modelService->updateLinks( $model, $links, $pageLinks );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'update', [
+				'model' => $model,
+				'pages' => $pages,
+				'links' => $links,
+				'pageLinks' => $pageLinks
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= MenuService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$pages		= PageService::getIdNameList();
-			$links		= MenuService::getLinks( $model );
-			$pageLinks	= MenuService::getPageLinksForUpdate( $model, $pages );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'ObjectData' ) ) {
+				$this->modelService->delete( $model );
 
-				if( MenuService::delete( $model ) ) {
-
-					$this->redirect( [ 'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$pages	= PageService::getIdNameList();
+			$pages		= $this->pageService->getIdNameList();
+			$links		= $this->modelService->getLinks( $model );
+			$pageLinks	= $this->modelService->getPageLinksForUpdate( $model, $pages );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'links' => $links,
-	    		'pageLinks' => $pageLinks
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'pages' => $pages,
+				'links' => $links,
+				'pageLinks' => $pageLinks
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

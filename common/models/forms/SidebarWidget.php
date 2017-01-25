@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,37 +13,55 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
-	
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
 	public $widget;
 	public $widgetId;
-	public $options;
+	public $htmlOptions;
 	public $icon;
 	public $order;
-	
+
 	public $name; // used for update
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	// yii\base\Model
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'widget', 'widgetId', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-			[ [ 'widget', 'widgetId', 'options', 'icon', 'order' ], 'safe' ],
+		$rules = [
+			[ [ 'widgetId', 'htmlOptions', 'icon', 'order' ], 'safe' ],
+			[ 'widget', 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'htmlOptions', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -53,12 +72,18 @@ class SidebarWidget extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'widgetId' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_WIDGET ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'widgetId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_WIDGET ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
-}
 
-?>
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// SidebarWidget -------------------------
+}

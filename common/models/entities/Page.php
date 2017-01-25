@@ -5,51 +5,92 @@ namespace cmsgears\cms\common\models\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\cms\common\models\traits\ContentTrait;
-use cmsgears\cms\common\models\traits\BlockTrait;
+use cmsgears\cms\common\models\base\CmsTables;
+
+use cmsgears\core\common\models\traits\resources\CommentTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\cms\common\models\traits\resources\ContentTrait;
+use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 
 class Page extends Content {
 
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $mParentType	= CmsGlobal::TYPE_PAGE;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
 	use FileTrait;
-
-	public $fileType	= CmsGlobal::TYPE_PAGE;
-
+	use CommentTrait;
 	use ContentTrait;
-
-	public $contentType	= CmsGlobal::TYPE_PAGE;
-
 	use BlockTrait;
 
-	public $blockType	= CmsGlobal::TYPE_PAGE;
+	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Page ----------------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    /**
-     * @inheritdoc
-     */
-	public static function find() {
-
-		$postTable = CmsTables::TABLE_PAGE;
-
-		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_PAGE ] );
-	}
-
-	// Page ------------------------------
+	// yii\db\ActiveRecord ----
 
 	/**
-	 * @return Page - by slug.
+	 * @inheritdoc
 	 */
-	public static function findBySlug( $slug ) {
+	public static function find() {
 
-		return self::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => Yii::$app->cmgCore->siteId ] )->one();
+		$pageTable = CmsTables::TABLE_PAGE;
+
+		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
 	}
-}
 
-?>
+	// CMG parent classes --------------------
+
+	// Page ----------------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+}

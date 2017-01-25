@@ -1,0 +1,171 @@
+<?php
+namespace cmsgears\cms\common\services\base;
+
+// Yii Imports
+use \Yii;
+use yii\data\Sort;
+use yii\db\Query;
+use yii\data\ActiveDataProvider;
+
+use yii\helpers\HtmlPurifier;
+use yii\helpers\ArrayHelper;
+
+// CMG Imports
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\cms\common\models\base\CmsTables;
+
+/**
+ * The class Service defines several useful methods used for pagination and generating map and list by specifying the columns.
+ */
+abstract class ContentService extends \cmsgears\core\common\services\base\EntityService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ContentService ------------------------
+
+	// Data Provider ------
+
+	public function getPageForSimilar( $config = [] ) {
+
+		$modelClass			= static::$modelClass;
+
+		// Search Query
+		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
+		$config[ 'query' ]	= $query;
+
+		return parent::getPageForSimilar( $config );
+	}
+
+	// Read ---------------
+
+	// Read - Models ---
+
+	// Read - Lists ----
+
+	// Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ContentService ------------------------
+
+	// Data Provider ------
+
+	public static function findPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
+
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+
+		if( !$sort ) {
+
+			$sort = new Sort([
+				'attributes' => [
+					'id' => [
+						'asc' => [ "$modelTable.id" => SORT_ASC ],
+						'desc' => [ "$modelTable.id" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Id'
+					],
+					'cdate' => [
+						'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Created At',
+					],
+					'pdate' => [
+						'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Published At',
+					],
+					'udate' => [
+						'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
+						'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Updated At',
+					]
+				]
+			]);
+
+			$config[ 'sort' ]	= $sort;
+		}
+
+		return parent::findDataProvider( $config );
+	}
+
+	/**
+	 * Generate search query using tag and category tables.
+	 */
+	public static function findPageForSearch( $config = [] ) {
+
+		// DB Tables
+		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
+
+		// Search
+		if( isset( $keywords ) ) {
+
+			$config[ 'search-col' ][] = $contentTable.content;
+		}
+
+		return parent::findPageForSearch( $config );
+	}
+
+	// Read ---------------
+
+	// Read - Models ---
+
+	// Read - Lists ----
+
+	// Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+}

@@ -4,172 +4,221 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\cms\common\models\entities\Block;
+use cmsgears\core\common\models\resources\File;
+use cmsgears\cms\common\models\resources\Block;
+use cmsgears\cms\common\models\forms\BlockElement;
 
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\cms\admin\services\BlockService;
+class BlockController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $templateService;
+	protected $elementService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'blockService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->elementService	= Yii::$app->factory->get( 'elementService' );
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
+
+		$this->returnUrl		= Url::previous( 'blocks' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// BlockController -------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		$this->redirect( [ 'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// BlockController -----------------------
 
 	public function actionAll() {
 
-		$dataProvider = BlockService::getPagination();
+		Url::remember( [ 'block/all' ], 'blocks' );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		$dataProvider = $this->modelService->getPage();
+
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionCreate() {
 
-		$model			= new Block();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
-		$video 			= CmgFile::loadFile( $model->video, 'Video' );
-		$texture		= CmgFile::loadFile( $model->texture, 'Texture' );
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
+		$banner			= File::loadFile( $model->banner, 'Banner' );
+		$video			= File::loadFile( $model->video, 'Video' );
+		$texture		= File::loadFile( $model->texture, 'Texture' );
+		$elements		= $this->elementService->getIdNameList();
 
-		$model->setScenario( 'create' );
+		// Block Elements
+		$blockElements	= [];
 
-		if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
+		for ( $i = 0, $j = count( $elements ); $i < $j; $i++ ) {
 
-			if( BlockService::create( $model, $banner, $video, $texture ) ) {
+			$blockElements[] = new BlockElement();
+		}
 
-				$this->redirect( [ 'all' ] );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+			$create = true;
+
+			if( count( $blockElements ) > 0 ) {
+
+				if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
+
+					$create = true;
+				}
+				else {
+
+					$create = false;
+				}
+			}
+
+			if( $create ) {
+
+				$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+
+				$this->modelService->updateElements( $model, $blockElements );
+
+				return $this->redirect( [ 'all' ] );
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'banner' => $banner,
-    		'video' => $video,
-    		'texture' => $texture,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'banner' => $banner,
+			'video' => $video,
+			'texture' => $texture,
+			'templatesMap' => $templatesMap,
+			'elements' => $elements,
+			'blockElements' => $blockElements
+		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= BlockService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
-			$video 		= CmgFile::loadFile( $model->video, 'Video' );
-			$texture	= CmgFile::loadFile( $model->texture, 'Texture' );
+			$banner			= File::loadFile( $model->banner, 'Banner' );
+			$video			= File::loadFile( $model->video, 'Video' );
+			$texture		= File::loadFile( $model->texture, 'Texture' );
+			$elements		= $this->elementService->getIdNameList();
+			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Block' ) && $model->validate() ) {
+				$update = true;
 
-				if( BlockService::update( $model, $banner, $video, $texture ) ) {
-	
-					$this->redirect( [ 'all' ] );
+				if( count( $blockElements ) > 0 ) {
+
+					if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
+
+						$update = true;
+					}
+					else {
+
+						$update = false;
+					}
+				}
+
+				if( $update ) {
+
+					$this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
+
+					$this->modelService->updateElements( $model, $blockElements );
+
+					return $this->redirect( [ 'all' ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'texture' => $texture,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'banner' => $banner,
+				'video' => $video,
+				'texture' => $texture,
+				'templatesMap' => $templatesMap,
+				'elements' => $elements,
+				'blockElements' => $blockElements
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= BlockService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Block' ) ) {
+			$elements		= $this->elementService->getIdNameList();
+			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
 
-				if( BlockService::delete( $model ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-					$this->redirect( [ 'all' ] );
-				}
+				$this->modelService->delete( $model );
+
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$banner			= $model->banner;
-			$video			= $model->video;
-			$texture		= $model->texture;
-			$templatesMap	= TemplateService::getIdNameMap( [ 'conditions' => [ 'type' => CmsGlobal::TYPE_BLOCK ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Template' ] ] ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'banner' => $banner,
-	    		'video' => $video,
-	    		'texture' => $texture,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'banner' => $model->banner,
+				'video' => $model->video,
+				'texture' => $model->texture,
+				'templatesMap' => $templatesMap,
+				'elements' => $elements,
+				'blockElements' => $blockElements
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

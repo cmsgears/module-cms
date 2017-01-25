@@ -4,76 +4,58 @@ namespace cmsgears\cms\admin\controllers\post;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
+class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+		$this->type				= CmsGlobal::TYPE_POST;
+		$this->templateType		= CmsGlobal::TYPE_POST;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+
+		$this->returnUrl		= Url::previous( 'categories' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete'  => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
 
 	// CategoryController --------------------
 
-	public function actionAll( $type = null ) {
-		
+	public function actionAll() {
+
 		Url::remember( [ 'post/category/all' ], 'categories' );
 
-		return parent::actionAll( CmsGlobal::TYPE_POST, false );
-	}
-	
-	public function actionCreate() {
-
-		return parent::actionCreate( CmsGlobal::TYPE_POST, false );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CmsGlobal::TYPE_POST, false );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CmsGlobal::TYPE_POST, false );
+		return parent::actionAll();
 	}
 }
-
-?>

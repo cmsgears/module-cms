@@ -3,6 +3,7 @@ namespace cmsgears\cms\common\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,50 +13,57 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
 
-	public $address;	
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $address;
 	public $label;
-	public $options;
+	public $htmlOptions;
+	public $urlOptions;
 	public $private;
 	public $relative;
 	public $icon;
 	public $order;
-	
+
 	public $type;
 
-	// Constructor -------------------------------------------------
+	// Protected --------------
 
-	// Instance Methods --------------------------------------------
+	// Private ----------------
 
-	public function isPublic() {
+	// Traits ------------------------------------------------------
 
-		if( isset( $this->private ) && $this->private ) {
+	// Constructor and Initialisation ------------------------------
 
-			return false;
-		}
+	// Instance methods --------------------------------------------
 
-		return true;
-	}
+	// Yii interfaces ------------------------
 
-	// yii\base\Model
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
-		
-		$trim		= [];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-			[ [ 'address', 'label', 'private', 'relative', 'options', 'icon', 'order' ], 'safe' ],
+		$rules = [
+			[ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'safe' ],
 			[ 'order', 'number', 'integerOnly' => true ]
 		];
 
+		if( Yii::$app->core->trimFieldValue ) {
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+			$trim[] = [ [ 'address', 'label', 'private', 'relative', 'htmlOptions', 'urlOptions', 'icon', 'order' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -66,15 +74,31 @@ class Link extends \cmsgears\core\common\models\forms\JsonModel {
 	public function attributeLabels() {
 
 		return [
-			'address' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-			'private' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
-			'relative' => Yii::$app->cmgCmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'address' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+			'private' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
+			'relative' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_URL_RELATIVE ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
-}
 
-?>
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Link ----------------------------------
+
+	public function isPublic() {
+
+		if( isset( $this->private ) && $this->private ) {
+
+			return false;
+		}
+
+		return true;
+	}
+}

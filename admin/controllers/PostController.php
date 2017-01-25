@@ -4,237 +4,198 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\cms\common\models\entities\Page;
+use cmsgears\core\common\models\resources\File;
+use cmsgears\core\common\models\resources\Category;
 use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\entities\ModelContent;
+use cmsgears\cms\common\models\resources\ModelContent;
 
-use cmsgears\cms\common\services\ModelContentService;
-use cmsgears\core\admin\services\TemplateService;
-use cmsgears\core\admin\services\CategoryService;
-use cmsgears\cms\admin\services\PostService;
+class PostController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-class PostController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $templateService;
+
+	protected $modelContentService;
+	protected $modelCategoryService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission		= CmsGlobal::PERM_CMS;
+
+		$this->modelService			= Yii::$app->factory->get( 'postService' );
+
+		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+
+		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+
+		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+
+		$this->returnUrl		= Url::previous( 'posts' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'all'    => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'create' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'update' => [ 'permission' => CmsGlobal::PERM_CMS ],
-	                'delete' => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// PostController --------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		$this->redirect( [  'all' ] );
-	}
+	// CMG parent classes --------------------
+
+	// PostController ------------------------
 
 	public function actionAll() {
 
-		$dataProvider = PostService::getPaginationForSite();
+		Url::remember( [ 'post/all' ], 'posts' );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
-	}
+		$dataProvider = $this->modelService->getPage();
 
-	public function actionMatrix() {
-
-		$dataProvider 	= PostService::getPagination();
-		$categoriesList	= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-
-	    return $this->render( 'matrix', [
-	         'dataProvider' => $dataProvider,
-	         'categoriesList' => $categoriesList
-	    ]);
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionCreate() {
 
-		$model			= new Post();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$content		= new ModelContent();
-		$banner	 		= CmgFile::loadFile( null, 'File' );
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+		$model->siteId		= Yii::$app->core->siteId;
+		$model->comments	= true;
+		$content			= new ModelContent();
+		$banner				= File::loadFile( null, 'Banner' );
+		$video				= File::loadFile( null, 'Video' );
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+			$model->validate() && $content->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    $model->validate() && $content->validate() ) {
+			$this->modelService->create( $model, [ 'admin' => true ] );
 
-			$post = PostService::create( $model );
+			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			if( isset( $post ) ) {
+			$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
-				// Create Content
-				ModelContentService::create( $post, CmsGlobal::TYPE_POST, $content, $post->isPublished(), $banner );
-
-				// Bind Categories
-				$binder = new Binder();
-
-				$binder->binderId	= $model->id;
-				$binder->load( Yii::$app->request->post(), 'Binder' );
-
-				PostService::bindCategories( $binder );
-
-				$this->redirect( [  'all' ] );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-		$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-		$visibilityMap	= Page::$visibilityMap;
-		$statusMap		= Page::$statusMap;
-		$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$visibilityMap	= Post::$visibilityMap;
+		$statusMap		= Post::$statusMap;
+		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'content' => $content,
-    		'banner' => $banner,
-    		'categories' => $categories,
-    		'visibilityMap' => $visibilityMap,
-	    	'statusMap' => $statusMap,
-    		'templatesMap' => $templatesMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'content' => $content,
+			'banner' => $banner,
+			'video' => $video,
+			'visibilityMap' => $visibilityMap,
+			'statusMap' => $statusMap,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= PostService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
-			$content	= $model->content;
-			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
-		
-			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Post' ) && $content->load( Yii::$app->request->post(), 'ModelContent' ) &&
-		    	$model->validate() && $content->validate() ) {
+			$content	= $model->modelContent;
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$video		= File::loadFile( $content->video, 'Video' );
 
-				$post = PostService::update( $model );
-	
-				if( isset( $post ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+				$model->validate() && $content->validate() ) {
 
-					// Update Content
-					ModelContentService::update( $content, $post->isPublished(), $banner );
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
-					// Bind Categories
-					$binder = new Binder();
+				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-					$binder->binderId	= $model->id;
-					$binder->load( Yii::$app->request->post(), 'Binder' );
+				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
-					PostService::bindCategories( $binder );
-
-					$this->redirect( [  'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$visibilityMap	= Post::$visibilityMap;
+			$statusMap		= Post::$statusMap;
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'categories' => $categories,
-	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $banner,
+				'video' => $video,
+				'visibilityMap' => $visibilityMap,
+				'statusMap' => $statusMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= PostService::findById( $id );
-		$banner = new CmgFile();
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$content	= $model->content;
+			$content	= $model->modelContent;
 
-			if( $model->load( Yii::$app->request->post(), 'Post' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				if( PostService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					ModelContentService::delete( $content );
+				$this->modelContentService->delete( $content );
 
-					$this->redirect( [  'all' ] );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$categories		= CategoryService::getIdNameListByType( CmsGlobal::TYPE_POST );
-			$visibilityMap	= Page::$visibilityMap;
-			$statusMap		= Page::$statusMap;
-			$banner			= $content->banner;
-			$templatesMap	= TemplateService::getIdNameMapByType( CmsGlobal::TYPE_POST );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$visibilityMap	= Post::$visibilityMap;
+			$statusMap		= Post::$statusMap;
+			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'content' => $content,
-	    		'banner' => $banner,
-	    		'categories' => $categories,
-	    		'visibilityMap' => $visibilityMap,
-	    		'statusMap' => $statusMap,
-	    		'templatesMap' => $templatesMap
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'content' => $content,
+				'banner' => $content->banner,
+				'video' => $content->video,
+				'visibilityMap' => $visibilityMap,
+				'statusMap' => $statusMap,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }
-
-?>

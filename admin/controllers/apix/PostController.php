@@ -4,67 +4,90 @@ namespace cmsgears\cms\admin\controllers\apix;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-
-use cmsgears\cms\admin\services\PostService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PostController extends \yii\web\Controller {
+class PostController extends \cmsgears\core\admin\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->modelService		= Yii::$app->factory->get( 'postService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'bindCategories'  => [ 'permission' => CmsGlobal::PERM_CMS ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'bindCategories'  => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// PostController
+	public function behaviors() {
 
-	public function actionBindCategories() {
-
-		$binder = new Binder();
-
-		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
-
-			if( PostService::bindCategories( $binder ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-		}
-
-		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'bindCategories' => [ 'permission' => $this->crudPermission ],
+					'assignTags' => [ 'permission' => $this->crudPermission ],
+					'removeTag' => [ 'permission' => $this->crudPermission ],
+					'submitComment' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'bindCategories' => [ 'post' ],
+					'assignTags' => [ 'post' ],
+					'removeTag' => [ 'post' ],
+					'submitComment' => [ 'post' ]
+				]
+			]
+		];
 	}
+
+	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'bind-categories' => [
+				'class' => 'cmsgears\core\common\actions\tag\BindCategories'
+			],
+			'assign-tags' => [
+				'class' => 'cmsgears\core\common\actions\tag\AssignTags'
+			],
+			'remove-tag' => [
+				'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
+			],
+			'submit-comment' => [
+				'class' => 'cmsgears\core\common\actions\comment\CreateComment'
+			]
+		];
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// PostController ------------------------
 }
-
-?>
