@@ -42,10 +42,12 @@ class m160621_065815_cms_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_name', $this->prefix . 'cms_page_meta', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_type', $this->prefix . 'cms_page_meta', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_type_v', $this->prefix . 'cms_page_meta', 'valueType' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_mit', $this->prefix . 'cms_page_meta', [ 'modelId', 'type' ] );
 
 		// Model Content
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type', $this->prefix . 'cms_model_content', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type_p', $this->prefix . 'cms_model_content', 'parentType' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_content_piptt', $this->prefix . 'cms_model_content', [ 'parentId', 'parentType', 'type' ] );
 
 		// Model Block
 		$this->createIndex( 'idx_' . $this->prefix . 'model_block_type', $this->prefix . 'cms_model_block', 'type' );
@@ -80,10 +82,12 @@ class m160621_065815_cms_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'page_meta_name', $this->prefix . 'cms_page_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'page_meta_type', $this->prefix . 'cms_page_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'page_meta_type_v', $this->prefix . 'cms_page_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'page_meta_mit', $this->prefix . 'cms_page_meta' );
 
 		// Model Content
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_content_type', $this->prefix . 'cms_model_content' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_content_type_p', $this->prefix . 'cms_model_content' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_content_piptt', $this->prefix . 'cms_model_content' );
 
 		// Model Block
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_block_type', $this->prefix . 'cms_model_block' );
