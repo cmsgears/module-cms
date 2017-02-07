@@ -9,7 +9,6 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'All Blocks | ' . $coreProperties->getSiteTitle();
-$siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -89,13 +88,10 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-					$tagsBase	= Url::toRoute( '/cmgcms/block/all/' );
-
 					foreach( $models as $block ) {
 
 						$id			= $block->id;
-						$editUrl	= Html::a( $block->name, [ "/cmgcms/block/update?id=$id" ] );
+						$editUrl	= Html::a( $block->name, [ "update?id=$id" ] );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>

@@ -9,7 +9,6 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'All Pages | ' . $coreProperties->getSiteTitle();
-$siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -62,12 +61,6 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Icon</th>
-					<th>Slug
-						<span class='box-icon-sort'>
-							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
 					<th>Visibility
 						<span class='box-icon-sort'>
 							<span sort-order='visibility' class="icon-sort <?php if( strcmp( $sortOrder, 'visibility') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -111,21 +104,15 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-					$tagsBase	= Url::toRoute( "/cmgcms/page/all/" );
-
 					foreach( $models as $pag ) {
 
 						$id			= $pag->id;
-						$editUrl	= Html::a( $pag->name, [ "/cmgcms/page/update?id=$id" ] );
-						$slug		= $pag->slug;
-						$slugUrl	= "<a href='" . $slugBase . "$slug'>$slug</a>";
+						$editUrl	= Html::a( $pag->name, [ "update?id=$id" ] );
 						$content	= $pag->modelContent;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $pag->icon ?>" title="<?= $pag->name ?>"></span></td>
-						<td><?= $slugUrl ?></td>
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
 						<td><?= $content->getTemplateName() ?></td>

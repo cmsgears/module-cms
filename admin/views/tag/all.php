@@ -70,10 +70,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $tag ) {
 
-						$id		= $tag->id;
+						$id			= $tag->id;
+						$editUrl	= Html::a( $tag->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $tag->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $tag->icon ?>" title="<?= $tag->name ?>"></span></td>
 						<td><?= $tag->description ?></td>
 						<td class="actions">

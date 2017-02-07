@@ -69,10 +69,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $menu ) {
 
-						$id = $menu->id;
+						$id			= $menu->id;
+						$editUrl	= Html::a( $menu->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $menu->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $menu->getActiveStr() ?></td>
 						<td><?= $menu->description ?></td>
 						<td class="actions">

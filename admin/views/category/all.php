@@ -79,12 +79,14 @@ if( !isset( $sortOrder ) ) {
 					foreach( $models as $category ) {
 
 						$id				= $category->id;
+						$editUrl		= Html::a( $category->name, [ "update?id=$id" ] );
+
 						$content		= $category->modelContent;
 						$template		= $content->template;
 						$templateName	= isset( $template ) ? $template->name : null;
 				?>
 					<tr>
-						<td><?= $category->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $category->icon ?>" title="<?= $category->name ?>"></span></td>
 						<td><?= $category->getParentName() ?></td>
 						<td><?= $category->description ?></td>

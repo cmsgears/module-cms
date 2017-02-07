@@ -69,10 +69,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $sidebar ) {
 
-						$id = $sidebar->id;
+						$id 		= $sidebar->id;
+						$editUrl	= Html::a( $sidebar->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $sidebar->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $sidebar->getActiveStr() ?></td>
 						<td><?= $sidebar->description ?></td>
 						<td class="actions">

@@ -71,10 +71,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $widget ) {
 
-						$id = $widget->id;
+						$id 		= $widget->id;
+						$editUrl	= Html::a( $widget->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $widget->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $widget->icon ?>" title="<?= $widget->name ?>"></span></td>
 						<td><?= $widget->getActiveStr() ?></td>
 						<td><?= $widget->description ?></td>

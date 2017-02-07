@@ -71,10 +71,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $element ) {
 
-						$id = $element->id;
+						$id 		= $element->id;
+						$editUrl	= Html::a( $element->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $element->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $element->icon ?>" title="<?= $element->name ?>"></span></td>
 						<td><?= $element->getActiveStr() ?></td>
 						<td><?= $element->description ?></td>

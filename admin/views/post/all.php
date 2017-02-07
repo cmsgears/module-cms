@@ -9,7 +9,6 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'All Posts | ' . $coreProperties->getSiteTitle();
-$siteUrl		= $coreProperties->getSiteUrl();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -61,12 +60,6 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Slug
-						<span class='box-icon-sort'>
-							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
 					<th>Visibility
 						<span class='box-icon-sort'>
 							<span sort-order='visibility' class="icon-sort <?php if( strcmp( $sortOrder, 'visibility') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -111,25 +104,19 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-					$tagsBase	= Url::toRoute( "/cms/page/all/" );
-
 					foreach( $models as $post ) {
 
 						$id			= $post->id;
-						$editUrl	= Html::a( $post->name, [ "/cms/post/update?id=$id" ] );
-						$slug		= $post->slug;
-						$slugUrl	= "<a href='" . $slugBase . "post/$slug'>$slug</a>";
+						$editUrl	= Html::a( $post->name, [ "update?id=$id" ] );
 						$tags		= $post->getTagIdNameMap();
 						$content	= $post->modelContent;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
-						<td><?= $slugUrl ?></td>
 						<td><?= $post->getVisibilityStr() ?></td>
 						<td><?= $post->getStatusStr() ?></td>
 						<td><?= $content->getTemplateName() ?></td>
-						<td><?= CodeGenUtil::generateLinksFromMap( $tagsBase, $tags ) ?></td>
+						<td><?= CodeGenUtil::generateLinksFromMap( '/cms/post/tag/update?id=', $tags, true, false ) ?></td>
 						<td>
 							<table>
 								<tr><td>Name</td><td><?= $content->seoName ?></td></tr>
