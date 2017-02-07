@@ -91,13 +91,16 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
-		if( isset( $content ) ) {
+		// Model content is required for all the tags to form tag page
+		if( !isset( $content ) ) {
 
-			$config[ 'parent' ]			= $model;
-			$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
-
-			$this->modelContentService->create( $content, $config );
+			$content = new ModelContent();
 		}
+
+		$config[ 'parent' ]			= $model;
+		$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
+
+		$this->modelContentService->create( $content, $config );
 
 		return $model;
 	}
