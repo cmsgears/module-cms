@@ -12,6 +12,8 @@ use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\cms\common\models\entities\Page;
 
+use cmsgears\core\common\services\base\EntityService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 class m160621_065213_cms_data extends \yii\db\Migration {
@@ -113,6 +115,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$fields	= [
 			[ $config->id, 'page_comment','Page Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable/disable comments on pages. It can also be set for individual pages from Edit Page.\"}' ],
 			[ $config->id, 'post_comment','Post Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable/disable comments on posts. It can also be set for individual pages from Edit Post.\"}' ],
+			[ $config->id, 'post_limit','Post Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{\"title\":\"Number of posts displayed on a page.\,\"placeholder\":\"Post limit\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -124,7 +127,8 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		$metas	= [
 			[ $this->site->id, 'page_comment', 'Page Comment', 'cms', 'flag', '0' ],
-			[ $this->site->id, 'post_comment', 'Post Comment', 'cms', 'flag', '1' ]
+			[ $this->site->id, 'post_comment', 'Post Comment', 'cms', 'flag', '1' ],
+			[ $this->site->id, 'post_limit', 'Post Limit', 'cms', 'text', EntityService::PAGE_LIMIT ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

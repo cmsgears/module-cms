@@ -70,8 +70,10 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'comments' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			// Cached content, JSON data and cached widget JSON data
 			'content' => $this->text(),
-			'data' => $this->text()
+			'data' => $this->text(),
+			'widgetData' => $this->text()
 		], $this->options );
 
 		// Index for columns site, parent, creator and modifier
@@ -146,8 +148,11 @@ class m160621_065204_cms extends \yii\db\Migration {
 			'seoDescription' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'seoKeywords' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'seoRobot' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'views' => $this->integer( 11 ),
-			'referrals' => $this->integer( 11 ),
+			'views' => $this->integer( 11 )->defaultValue( 0 ),
+			'referrals' => $this->integer( 11 )->defaultValue( 0 ),
+			'comments' => $this->integer( 11 )->defaultValue( 0 ),
+			'weight' => $this->integer( 11 )->defaultValue( 0 ),
+			'rank' => $this->integer( 11 )->defaultValue( 0 ),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->text(),
 			'data' => $this->text()

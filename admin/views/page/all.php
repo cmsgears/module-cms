@@ -128,6 +128,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $pag->modifiedAt ?></td>
 						<td><?= $content->publishedAt ?></td>
 						<td class="actions">
+							<span title="Comments"><?= Html::a( "", [ "comment/all?pid=$id" ], [ 'class' => 'cmti cmti-comment' ] ) ?></span>
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

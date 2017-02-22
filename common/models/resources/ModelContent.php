@@ -35,6 +35,9 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property string $seoRobot
  * @property integer $views
  * @property integer $referrals
+ * @property integer $comments
+ * @property integer $weight
+ * @property integer $rank
  * @property date $publishedAt
  * @property string $content
  * @property string $data
@@ -90,7 +93,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			// Other
-			[ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'views', 'referrals', 'comments', 'weight', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

@@ -12,7 +12,7 @@ use cmsgears\cms\common\models\resources\ContentMeta;
 
 use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
 
-class ContentMetaService extends \cmsgears\core\common\services\base\AttributeService implements IContentMetaService {
+class ContentMetaService extends \cmsgears\core\common\services\base\MetaService implements IContentMetaService {
 
 	// Variables ---------------------------------------------------
 

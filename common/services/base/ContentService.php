@@ -11,6 +11,8 @@ use yii\helpers\HtmlPurifier;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreProperties;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\cms\common\models\base\CmsTables;
 
@@ -133,7 +135,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 			$config[ 'sort' ]	= $sort;
 		}
 
-		return parent::findDataProvider( $config );
+		return parent::findPage( $config );
 	}
 
 	/**
@@ -141,13 +143,31 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
-		// DB Tables
-		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
+		$searchContent 	= isset( $config[ 'searchContent' ] ) ? $config[ 'searchContent' ] : false;
+		$keywords 		= Yii::$app->request->getQueryParam( 'keywords' );
 
 		// Search
-		if( isset( $keywords ) ) {
+		if( $searchContent && isset( $keywords ) ) {
 
-			$config[ 'search-col' ][] = $contentTable.content;
+			$modelTable		= static::$modelTable;
+			$caching		= CoreProperties::getInstance()->isCaching();
+
+			// Search in model cache
+			if( $caching ) {
+
+				$config[ 'search-col' ][] = $modelTable . ".content";
+			}
+			// Joined with model content
+			else {
+
+				// Search Query
+				$modelClass			= static::$modelClass;
+				$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
+				$config[ 'query' ]	= $query;
+
+				// Search in model content
+				$config[ 'search-col' ][] = "modelContent.content";
+			}
 		}
 
 		return parent::findPageForSearch( $config );
@@ -168,4 +188,5 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Update -------------
 
 	// Delete -------------
+
 }

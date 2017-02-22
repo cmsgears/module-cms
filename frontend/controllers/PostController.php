@@ -101,10 +101,14 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	public function actionSearch() {
 
 		$user			= Yii::$app->user->getIdentity();
-		$dataProvider	= $this->postService->getPageForSearch( [ 'route' => 'post/search' ] );
 		$template		= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 
 		if( isset( $template ) ) {
+
+			$dataProvider	= $this->postService->getPageForSearch([
+									'route' => 'blog/search', 'searchContent' => true,
+									'searchCategory' => true, 'searchTag' => true
+								]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
 				'dataProvider' => $dataProvider

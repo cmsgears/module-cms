@@ -105,8 +105,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			if( !$page->isPublished() ) {
 
-				// Error- Not allowed
-				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+				// Error- No access
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
 			// Find Template

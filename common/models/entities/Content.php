@@ -50,6 +50,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property date $modifiedAt
  * @property string $content
  * @property string $data
+ * @property string $widgetData
  */
 class Content extends \cmsgears\core\common\models\base\Entity implements IApproval, IVisibility {
 
@@ -128,7 +129,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

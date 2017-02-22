@@ -50,27 +50,27 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'assignCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'removeCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'addMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'updateMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'deleteMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+					'assign-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'assign-tags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-tag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'autoSearch' => [ 'post' ],
-					'assignCategory' => [ 'post' ],
-					'removeCategory' => [ 'post' ],
-					'assignTags' => [ 'post' ],
-					'removeTag' => [ 'post' ],
-					'addMeta' => [ 'post' ],
-					'updateMeta' => [ 'post' ],
-					'deleteMeta' => [ 'post' ],
-					'submitComment' => [ 'post' ]
+					'auto-search' => [ 'post' ],
+					'assign-category' => [ 'post' ],
+					'remove-category' => [ 'post' ],
+					'assign-tags' => [ 'post' ],
+					'remove-tag' => [ 'post' ],
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
+					'submit-comment' => [ 'post' ]
 				]
 			]
 		];
@@ -98,4 +98,5 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	// CMG parent classes --------------------
 
 	// PostController ------------------------
+
 }
