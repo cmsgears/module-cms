@@ -151,6 +151,12 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 		]);
 	}
 
+	public function updateViews( $model, $views ) {
+
+        $model->views   = $views;
+        $model->update();
+    }
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
