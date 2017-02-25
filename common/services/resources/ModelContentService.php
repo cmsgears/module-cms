@@ -151,11 +151,12 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 		]);
 	}
 
-	public function updateViews( $model, $views ) {
+	public function updateViewCount( $model, $views ) {
 
-        $model->views   = $views;
-        $model->update();
-    }
+		$model->views   = $views;
+
+		$model->update();
+	}
 
 	// Delete -------------
 

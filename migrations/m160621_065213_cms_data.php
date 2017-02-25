@@ -18,7 +18,11 @@ use cmsgears\core\common\utilities\DateUtil;
 
 class m160621_065213_cms_data extends \yii\db\Migration {
 
-	public $prefix;
+	// Public Variables
+
+	// Private Variables
+
+	private $prefix;
 
 	private $site;
 
@@ -26,7 +30,8 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 	public function init() {
 
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix	= Yii::$app->migration->cmgPrefix;
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( Yii::$app->migration->getSiteMaster() );
@@ -38,6 +43,9 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		// Create RBAC and Site Members
 		$this->insertRolePermission();
+
+		// Create post permission groups and CRUD permissions
+		$this->insertPostPermissions();
 
 		// Create various config
 		$this->insertCmsConfig();
@@ -70,7 +78,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'CMS', 'cms', CoreGlobal::TYPE_SYSTEM, null, 'The permission cms is to manage templates, pages, menus, sidebars and widgets from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'CMS', 'cms', CoreGlobal::TYPE_SYSTEM, null, 'The permission cms is to manage elements, blocks, pages, page templates, posts, post templates, post categories, post tags, menus, sidebars and widgets from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
@@ -90,6 +98,50 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
+	}
+
+	private function insertPostPermissions() {
+
+		// Permissions
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Permission Groups
+			[ $this->master->id, $this->master->id, 'Post Manager', 'post-manager', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission Post Manager allows user to manage their posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+
+			// System Permissions
+			[ $this->master->id, $this->master->id, 'View Posts', 'view-posts', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view posts allows users to view their posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Add Post', 'add-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add post allows users to create post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Update Post', 'update-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update post allows users to update post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Delete Post', 'delete-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete post allows users to delete post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Permission Groups
+		$postManagerPerm	= Permission::findBySlugType( 'post-manager', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$viewPerm			= Permission::findBySlugType( 'view-posts', CoreGlobal::TYPE_SYSTEM );
+		$addPerm			= Permission::findBySlugType( 'add-post', CoreGlobal::TYPE_SYSTEM );
+		$updatePerm			= Permission::findBySlugType( 'update-post', CoreGlobal::TYPE_SYSTEM );
+		$deletePerm			= Permission::findBySlugType( 'delete-post', CoreGlobal::TYPE_SYSTEM );
+
+		//Hierarchy
+
+		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
+
+		$hierarchy = [
+			// Org Admin Hierarchy
+			[ null, null, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 10 ],
+			[ $postManagerPerm->id, $viewPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 9 ],
+			[ $postManagerPerm->id, $addPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 8 ],
+			[ $postManagerPerm->id, $updatePerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 7 ],
+			[ $postManagerPerm->id, $deletePerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 6 ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
 	}
 
 	private function insertCmsConfig() {

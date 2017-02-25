@@ -23,6 +23,10 @@ interface IModelContentService extends \cmsgears\core\common\services\interfaces
 
 	// Update -------------
 
+	public function updateBanner( $model, $banner );
+
+	public function updateViewCount( $model, $views );
+
 	// Delete -------------
 
 }
