@@ -9,11 +9,11 @@ $user	= Yii::$app->user->getIdentity();
 
 <?php if( $core->hasModule( 'cms' ) && $user->isPermitted( 'cms' ) ) { ?>
 	<div id="sidebar-cms" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'active';?>">
-		<div class="collapsible-tab-header clearfix">
-			<div class="colf colf5 wrap-icon"><span class="cmti cmti-chart-column"></span></div>
-			<div class="colf colf5x4">CMS</div>
+		<div class="row tab-header">
+			<div class="tab-icon"><span class="cmti cmti-chart-column"></span></div>
+			<div class="tab-title">CMS</div>
 		</div>
-		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
+		<div class="tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
 				<li class='page-element <?php if( strcmp( $child, 'element' ) == 0 ) echo 'active';?>'><?= Html::a( "Elements", ['/cms/element/all'] ) ?></li>
 				<li class='page-element-template <?php if( strcmp( $child, 'element-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Element Templates", ['/cms/element/template/all'] ) ?></li>
