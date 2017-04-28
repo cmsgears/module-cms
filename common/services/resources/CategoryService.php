@@ -125,7 +125,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	public function delete( $model, $config = [] ) {
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : ( isset( $model->modelContent ) ? $model->modelContent : null );
 
 		if( isset( $content ) ) {
 

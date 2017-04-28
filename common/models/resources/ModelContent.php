@@ -4,6 +4,7 @@ namespace cmsgears\cms\common\models\resources;
 // Yii Imports
 use \Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -160,22 +161,26 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_SMALL ) {
 
-		if( strlen( $this->summary ) > $limit ) {
+		$summary	= $this->summary;
 
-			return substr( $this->summary, 0, $limit );
+		if( strlen( $summary ) > $limit ) {
+
+			$summary = substr( $summary, 0, $limit );
 		}
 
-		return $this->summary;
+		return HtmlPurifier::process( $summary );
 	}
 
 	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
 
-		if( strlen( $this->content ) > $limit ) {
+		$content	= $this->content;
 
-			return substr( $this->content, 0, $limit );
+		if( strlen( $content ) > $limit ) {
+
+			$content = substr( $content, 0, $limit );
 		}
 
-		return $this->content;
+		return HtmlPurifier::process( $content );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -205,4 +210,5 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

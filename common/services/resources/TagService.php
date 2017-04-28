@@ -9,6 +9,7 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\cms\common\models\resources\Tag;
 
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
