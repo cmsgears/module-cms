@@ -154,6 +154,11 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		return parent::getPublicPage( $config );
 	}
 
+	public function getFeatured() {
+
+		return Post::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
