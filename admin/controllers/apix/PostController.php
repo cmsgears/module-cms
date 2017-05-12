@@ -74,10 +74,12 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				'class' => 'cmsgears\core\common\actions\tag\BindCategories'
 			],
 			'assign-tags' => [
-				'class' => 'cmsgears\core\common\actions\tag\AssignTags'
+				'class' => 'cmsgears\core\common\actions\tag\AssignTags',
+				'typed' => true, 'parent' => true
 			],
 			'remove-tag' => [
-				'class' => 'cmsgears\core\common\actions\tag\RemoveTag'
+				'class' => 'cmsgears\core\common\actions\tag\RemoveTag',
+				'typed' => true, 'parent' => true
 			],
 			'submit-comment' => [
 				'class' => 'cmsgears\core\common\actions\comment\CreateComment'

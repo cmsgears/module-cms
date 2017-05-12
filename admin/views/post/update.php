@@ -84,11 +84,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<div class="box-content clearfix">
 			<div class="header">Tags</div>
 			<?= TagMapper::widget([
-				'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
+				'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper mapper-tag' ],
 				'loadAssets' => true,
 				'model' => $model,
-				'assignUrl' => "cms/post/assign-tags?slug=$model->slug",
-				'removeUrl' => "cms/post/remove-tag?slug=$model->slug"
+				'assignUrl' => "cms/post/assign-tags?slug=$model->slug&model-type=$model->type",
+				'removeUrl' => "cms/post/remove-tag?slug=$model->slug&model-type=$model->type"
 			])?>
 		</div>
 	</div>

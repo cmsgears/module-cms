@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\cms\common\models\entities\Post;
@@ -90,6 +91,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$content			= new ModelContent();
 		$banner				= File::loadFile( null, 'Banner' );
 		$video				= File::loadFile( null, 'Video' );
+		$binder				= new Binder();
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
@@ -112,6 +114,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			'content' => $content,
 			'banner' => $banner,
 			'video' => $video,
+			'binder' => $binder,
 			'visibilityMap' => $visibilityMap,
 			'statusMap' => $statusMap,
 			'templatesMap' => $templatesMap
