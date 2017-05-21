@@ -126,7 +126,7 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $pag->icon ?>" title="<?= $pag->name ?>"></span></td>
 						<td><?= $pag->getVisibilityStr() ?></td>
 						<td><?= $pag->getStatusStr() ?></td>
-						<td><?= $content->getTemplateName() ?></td>
+						<td><?= $content != null ? $content->getTemplateName() : null ?></td>
 						<td>
 							<table>
 								<tr><td>Name</td><td><?= $content->seoName ?></td></tr>

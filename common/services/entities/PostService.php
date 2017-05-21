@@ -158,6 +158,11 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Read - Models ---
 
+	public function getFeatured() {
+
+		return Post::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -216,4 +221,5 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Update -------------
 
 	// Delete -------------
+
 }

@@ -15,6 +15,8 @@ interface IPostService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Read - Models ---
 
+	public function getFeatured();
+
 	// Read - Lists ----
 
 	// Read - Maps -----
