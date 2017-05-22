@@ -1,11 +1,8 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+
 
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\ContentMeta;
@@ -95,4 +92,5 @@ class ContentMetaService extends \cmsgears\core\common\services\base\MetaService
 	// Update -------------
 
 	// Delete -------------
+
 }

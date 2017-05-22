@@ -1,13 +1,8 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\data\Sort;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\resources\Category;
 
@@ -158,4 +153,5 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 	// Update -------------
 
 	// Delete -------------
+
 }

@@ -1,19 +1,14 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\data\Sort;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\cms\common\models\resources\Tag;
 
-use cmsgears\cms\common\services\interfaces\resources\ITagService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
+use cmsgears\cms\common\services\interfaces\resources\ITagService;
 
 class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
 
@@ -161,4 +156,5 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 	// Update -------------
 
 	// Delete -------------
+
 }

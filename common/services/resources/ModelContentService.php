@@ -1,18 +1,12 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
-
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\ModelContent;
 
-use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -190,4 +184,5 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 	// Update -------------
 
 	// Delete -------------
+
 }

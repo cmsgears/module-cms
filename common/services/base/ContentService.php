@@ -5,15 +5,10 @@ namespace cmsgears\cms\common\services\base;
 use \Yii;
 use yii\data\Sort;
 use yii\db\Query;
-use yii\data\ActiveDataProvider;
-
-use yii\helpers\HtmlPurifier;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\cms\common\models\base\CmsTables;
 
 /**
@@ -166,7 +161,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 				$config[ 'query' ]	= $query;
 
 				// Search in model content
-				$config[ 'search-col' ][] = "modelContent.content";
+				$config[ 'search-col' ][] = 'modelContent.content';
 			}
 		}
 
