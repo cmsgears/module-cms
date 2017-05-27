@@ -35,9 +35,12 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->modelService		= Yii::$app->factory->get( 'menuService' );
+
 		$this->pageService		= Yii::$app->factory->get( 'pageService' );
+
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
 
 		$this->returnUrl		= Url::previous( 'menus' );

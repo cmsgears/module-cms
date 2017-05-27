@@ -39,7 +39,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/tag/';
 
-		$this->crudPermission		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->templateType			= CoreGlobal::TYPE_TAG;
 

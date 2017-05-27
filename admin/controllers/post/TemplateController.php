@@ -27,9 +27,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
-		$this->type			= CmsGlobal::TYPE_POST;
+		$this->type				= CmsGlobal::TYPE_POST;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
 
 		$this->returnUrl	= Url::previous( 'templates' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/template/all' ], true );

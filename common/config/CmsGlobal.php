@@ -16,11 +16,12 @@ class CmsGlobal {
 
 	// Permissions -----------------------------------------------------
 
-	const PERM_CMS				= 'cms';
+	// File
+	const PERM_BLOG_ADMIN		= 'admin-blog';
 
 	// Config ----------------------------------------------------------
 
-	const CONFIG_CMS			= 'cms';
+	const CONFIG_BLOG			= 'blog';
 
 	// Templates -------------------------------------------------------
 

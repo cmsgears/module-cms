@@ -3,11 +3,14 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 $core	= Yii::$app->core;
 $user	= Yii::$app->user->getIdentity();
 ?>
 
-<?php if( $core->hasModule( 'cms' ) && $user->isPermitted( 'cms' ) ) { ?>
+<?php if( $core->hasModule( 'cms' ) && $user->isPermitted( CmsGlobal::PERM_BLOG_ADMIN ) ) { ?>
 	<div id="sidebar-cms" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'active';?>">
 		<div class="row tab-header">
 			<div class="tab-icon"><span class="cmti cmti-chart-column"></span></div>

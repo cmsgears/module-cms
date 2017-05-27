@@ -29,7 +29,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\CommentCon
 
         parent::init();
 
-		$this->crudPermission 	= CmsGlobal::PERM_CMS;
+        $this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->parentUrl		= '/cms/post/comment/all?pid=';
 		$this->commentUrl		= 'post/comment';

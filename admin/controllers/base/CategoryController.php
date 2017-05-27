@@ -39,7 +39,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/category/';
 
-		$this->crudPermission		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->templateType			= CoreGlobal::TYPE_CATEGORY;
 

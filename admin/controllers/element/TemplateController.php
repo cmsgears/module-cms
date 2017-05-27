@@ -27,12 +27,14 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
 
-		$this->type			= CmsGlobal::TYPE_ELEMENT;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
+		$this->type				= CmsGlobal::TYPE_ELEMENT;
+
+		$this->returnUrl		= Url::previous( 'templates' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------

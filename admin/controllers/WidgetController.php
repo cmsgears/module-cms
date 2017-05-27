@@ -34,9 +34,12 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
+
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
 
 		$this->returnUrl		= Url::previous( 'widgets' );

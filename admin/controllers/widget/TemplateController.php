@@ -27,9 +27,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ];
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
-		$this->type			= CmsGlobal::TYPE_WIDGET;
+		$this->type				= CmsGlobal::TYPE_WIDGET;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'widget-template' ];
 
 		$this->returnUrl	= Url::previous( 'templates' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/template/all' ], true );

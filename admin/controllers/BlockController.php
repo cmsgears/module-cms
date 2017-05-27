@@ -36,10 +36,13 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->modelService		= Yii::$app->factory->get( 'blockService' );
+
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 		$this->elementService	= Yii::$app->factory->get( 'elementService' );
+
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
 
 		$this->returnUrl		= Url::previous( 'blocks' );

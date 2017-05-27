@@ -40,7 +40,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		$this->crudPermission		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->modelService			= Yii::$app->factory->get( 'postService' );
 

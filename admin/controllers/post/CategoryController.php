@@ -27,6 +27,8 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 		parent::init();
 
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->type				= CmsGlobal::TYPE_POST;
 		$this->templateType		= CmsGlobal::TYPE_POST;
 

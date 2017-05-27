@@ -34,9 +34,12 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
+
 		$this->widgetService	= Yii::$app->factory->get( 'widgetService' );
+
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
 
 		$this->returnUrl		= Url::previous( 'sidebars' );

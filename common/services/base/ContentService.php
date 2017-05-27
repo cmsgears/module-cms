@@ -56,7 +56,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		$modelClass			= static::$modelClass;
 
-		// Search Query
+		// Search Query - If hasOne config is passed, make sure that modelContent is listed in hasOne relationships
 		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
 		$config[ 'query' ]	= $query;
 
@@ -150,7 +150,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 			// Search in model cache
 			if( $caching ) {
 
-				$config[ 'search-col' ][] = $modelTable . ".content";
+				$config[ 'search-col' ][] = "$modelTable.content";
 			}
 			// Joined with model content
 			else {

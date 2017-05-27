@@ -28,7 +28,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\CommentCon
 
 		parent::init();
 
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->commentUrl		= 'comment';
 		$this->returnUrl		= Url::previous( $this->commentUrl );
@@ -36,6 +36,8 @@ class CommentController extends \cmsgears\core\admin\controllers\base\CommentCon
 
 		$this->parentType		= CmsGlobal::TYPE_POST;
 		$this->commentType		= ModelComment::TYPE_COMMENT;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 
 		$this->parentService	= Yii::$app->factory->get( 'postService' );
 	}

@@ -35,9 +35,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
 		$this->modelService		= Yii::$app->factory->get( 'elementService' );
+
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
 
 		$this->returnUrl		= Url::previous( 'elements' );
