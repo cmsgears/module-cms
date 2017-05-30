@@ -13,7 +13,7 @@ $user	= Yii::$app->user->getIdentity();
 <?php if( $core->hasModule( 'cms' ) && $user->isPermitted( CmsGlobal::PERM_BLOG_ADMIN ) ) { ?>
 	<div id="sidebar-cms" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'active';?>">
 		<div class="row tab-header">
-			<div class="tab-icon"><span class="cmti cmti-chart-column"></span></div>
+			<div class="tab-icon"><span class="cmti cmti-tachometer"></span></div>
 			<div class="tab-title">CMS</div>
 		</div>
 		<div class="tab-content clear <?php if( strcmp( $parent, 'sidebar-cms' ) == 0 ) echo 'expanded visible';?>">
