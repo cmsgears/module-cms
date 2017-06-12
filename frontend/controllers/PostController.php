@@ -37,6 +37,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
+		$this->crudPermission		= CoreGlobal::PERM_USER;
+		
 		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
@@ -62,6 +64,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// secure actions
+					'all' => [ 'permission' => $this->crudPermission ],
 				]
 			],
 			'verbs' => [
@@ -70,11 +73,14 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					'search' => [ 'get' ],
 					'category' => [ 'get' ],
 					'tag' => [ 'get' ],
-					'single' => [ 'get' ]
+					'single' => [ 'get' ],
+					'all' => [ 'get', 'post' ],
 				]
 			]
 		];
 	}
+	
+	
 
 	// yii\base\Controller ----
 
@@ -226,4 +232,28 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		// Error- Post not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+	
+	public function actionAll($status = null,  $owner = null ) { 	
+		//return "hello";
+		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE	;
+		
+		$user			= Yii::$app->user->getIdentity();
+		$dataProvider 	= null;
+		$limit			= 10;
+		if( isset( $user ) ) {
+			
+			$dataProvider = $this->postService->getPageByOwnerId($user->id);
+			
+			$this->view->params[ 'currentPage' ]	= 'Post';
+			$this->view->params[ 'currentHeading' ]	= 'All';
+
+			return $this->render( 'all', [
+				 'dataProvider' => $dataProvider,
+				 'status' => $status
+			]);
+			
+		}
+		
+	}
+	
 }
