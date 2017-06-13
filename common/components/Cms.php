@@ -2,11 +2,7 @@
 namespace cmsgears\cms\common\components;
 
 // Yii Imports
-use \Yii;
-use yii\di\Container;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 class Cms extends \yii\base\Component {
 
@@ -80,6 +76,8 @@ class Cms extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelCategoryService', 'cmsgears\cms\common\services\mappers\ModelCategoryService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelTagService', 'cmsgears\cms\common\services\mappers\ModelTagService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );
 	}
 
@@ -110,6 +108,8 @@ class Cms extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'modelCategoryService', 'cmsgears\cms\common\services\mappers\ModelCategoryService' );
+		$factory->set( 'modelTagService', 'cmsgears\cms\common\services\mappers\ModelTagService' );
 		$factory->set( 'modelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );
 	}
 

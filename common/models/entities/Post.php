@@ -24,24 +24,23 @@ class Post extends Content {
 
 	// Constants --------------
 
-	// Public -----------------
-
-	
 	// Pre-Defined Status
 	const STATUS_BASIC		=  20;
 	const STATUS_MEDIA		=  40;
-	const STATUS_SETTINGS	= 480;
-	const STATUS_ATTRIBUTES	= 490;
+	const STATUS_ATTRIBUTES	= 480;
+	const STATUS_SETTINGS	= 490;
 	const STATUS_REVIEW		= 499;
-	
-	public $mParentType		= CmsGlobal::TYPE_POST;
-	public $categoryType	= CmsGlobal::TYPE_POST;
+
+	// Public -----------------
 
 	// Protected --------------
 
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $mParentType		= CmsGlobal::TYPE_POST;
+	public $categoryType	= CmsGlobal::TYPE_POST;
 
 	// Protected --------------
 
@@ -92,31 +91,28 @@ class Post extends Content {
 		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
 	}
 
-	
+
 	public function getTabStatus() {
 
 		$action	= Yii::$app->controller->action->id;
 
 		switch( $action ) {
 
-			case 'basic':
-			case 'info': {
+			case 'basic': {
 
 				return self::STATUS_BASIC;
 			}
-		
 			case 'media': {
 
 				return self::STATUS_MEDIA;
 			}
-			
-			case 'settings': {
-
-				return self::STATUS_SETTINGS;
-			}
 			case 'attributes': {
 
 				return self::STATUS_ATTRIBUTES;
+			}
+			case 'settings': {
+
+				return self::STATUS_SETTINGS;
 			}
 			case 'review': {
 
@@ -136,25 +132,19 @@ class Post extends Content {
 
 		switch( $status ) {
 
-			case self::STATUS_NEW: {
-
-				return self::STATUS_BASIC;
-			}
-			
 			case self::STATUS_BASIC: {
 
 				return self::STATUS_MEDIA;
 			}
-			
 			case self::STATUS_MEDIA: {
-
-				return self::STATUS_SETTINGS;
-			}
-			case self::STATUS_SETTINGS: {
 
 				return self::STATUS_ATTRIBUTES;
 			}
 			case self::STATUS_ATTRIBUTES: {
+
+				return self::STATUS_SETTINGS;
+			}
+			case self::STATUS_SETTINGS: {
 
 				return self::STATUS_REVIEW;
 			}
@@ -174,18 +164,17 @@ class Post extends Content {
 
 				return "$basePath/info?slug=$this->slug";
 			}
-		
-			case 'settings': {
+			case 'attributes': {
 
 				return "$basePath/media?slug=$this->slug";
 			}
-			case 'attributes': {
+			case 'settings': {
 
-				return "$basePath/settings?slug=$this->slug";
+				return "$basePath/attributes?slug=$this->slug";
 			}
 			case 'review': {
 
-				return "$basePath/attributes?slug=$this->slug";
+				return "$basePath/settings?slug=$this->slug";
 			}
 		}
 
@@ -199,20 +188,19 @@ class Post extends Content {
 
 		switch( $action ) {
 
-			case 'info': {
+			case 'basic': {
 
 				return "$basePath/media?slug=$this->slug";
 			}
-		
 			case 'media': {
-
-				return "$basePath/settings?slug=$this->slug";
-			}
-			case 'settings': {
 
 				return "$basePath/attributes?slug=$this->slug";
 			}
 			case 'attributes': {
+
+				return "$basePath/settings?slug=$this->slug";
+			}
+			case 'settings': {
 
 				return "$basePath/review?slug=$this->slug";
 			}
@@ -220,7 +208,7 @@ class Post extends Content {
 
 		return null;
 	}
-	
+
 	// CMG parent classes --------------------
 
 	// Post ----------------------------------
@@ -234,4 +222,5 @@ class Post extends Content {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -2,14 +2,11 @@
 namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -29,7 +26,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 		$this->modelService		= Yii::$app->factory->get( 'postService' );
 	}
 

@@ -19,6 +19,15 @@ class CmsGlobal {
 	// File
 	const PERM_BLOG_ADMIN		= 'admin-blog';
 
+	const PERM_BLOG_VIEW		= 'view-posts';
+	const PERM_BLOG_ADD			= 'add-post';
+	const PERM_BLOG_UPDATE		= 'update-post';
+	const PERM_BLOG_DELETE		= 'delete-post';
+	const PERM_BLOG_APPROVE		= 'approve-post';
+	const PERM_BLOG_PRINT		= 'print-post';
+	const PERM_BLOG_IMPORT		= 'import-posts';
+	const PERM_BLOG_EXPORT		= 'export-posts';
+
 	// Config ----------------------------------------------------------
 
 	const CONFIG_BLOG			= 'blog';

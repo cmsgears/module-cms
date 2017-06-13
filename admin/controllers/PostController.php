@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\resources\ModelContent;
@@ -85,6 +86,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$model				= new $modelClass;
 		$model->siteId		= Yii::$app->core->siteId;
 		$model->comments	= true;
+
+		$binder				= new Binder();
+
 		$content			= new ModelContent();
 		$banner				= File::loadFile( null, 'Banner' );
 		$video				= File::loadFile( null, 'Video' );
@@ -92,7 +96,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->modelService->add( $model, [ 'admin' => true, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 			return $this->redirect( $this->returnUrl );
 		}

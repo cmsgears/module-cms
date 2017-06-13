@@ -62,7 +62,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Public -----------------
 
-	public static $multiSite = true;
+	public static $multiSite	= true;
+
+	public static $postClass	= 'cmsgears\cms\common\models\entities\Post';
 
 	// Protected --------------
 
@@ -271,15 +273,15 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		switch( $row['type'] ) {
 
-			case CmsGlobal::TYPE_PAGE:
-			{
+			case CmsGlobal::TYPE_PAGE: {
+
 				$class = 'cmsgears\cms\common\models\entities\Page';
 
 				break;
 			}
-			case CmsGlobal::TYPE_POST:
-			{
-				$class = 'cmsgears\cms\common\models\entities\Post';
+			case CmsGlobal::TYPE_POST: {
+
+				$class = static::$postClass;
 
 				break;
 			}

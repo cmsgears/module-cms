@@ -2,11 +2,9 @@
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
-use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TagController extends \cmsgears\cms\admin\controllers\base\TagController {

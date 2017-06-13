@@ -2,7 +2,9 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
@@ -12,6 +14,7 @@ use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
+use cmsgears\cms\common\services\resources\ModelContentService;
 
 use cmsgears\core\common\services\traits\ApprovalTrait;
 use cmsgears\core\common\services\traits\NameTypeTrait;
@@ -76,8 +79,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelClass			= static::$modelClass;
+		$modelTable			= static::$modelTable;
+		$modelContentTable	= ModelContentService::$modelTable;
 
 		// Sorting ----------
 

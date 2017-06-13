@@ -1,9 +1,6 @@
 <?php
 namespace cmsgears\cms\common\config;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
@@ -49,7 +46,7 @@ class CmsProperties extends \cmsgears\core\common\config\CmgProperties {
 
 			self::$instance	= new CmsProperties();
 
-			self::$instance->init( CmsGlobal::CONFIG_CMS );
+			self::$instance->init( CmsGlobal::CONFIG_BLOG );
 		}
 
 		return self::$instance;
