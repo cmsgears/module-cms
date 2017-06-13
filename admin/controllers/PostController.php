@@ -2,8 +2,7 @@
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -11,9 +10,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\resources\Category;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\resources\ModelContent;
 
@@ -91,16 +88,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$content			= new ModelContent();
 		$banner				= File::loadFile( null, 'Banner' );
 		$video				= File::loadFile( null, 'Video' );
-		$binder				= new Binder();
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->modelService->create( $model, [ 'admin' => true ] );
-
-			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
-
-			$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+			$this->modelService->add( $model, [ 'admin' => true, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 			return $this->redirect( $this->returnUrl );
 		}

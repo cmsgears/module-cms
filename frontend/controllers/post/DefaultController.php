@@ -2,10 +2,8 @@
 namespace cmsgears\cms\frontend\controllers\post;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -25,17 +23,19 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 	// Globals ----------------
 
 	// Public -----------------
+
 	public $basePath;
+
 	// Protected --------------
 
 	protected $templateService;
 
-	protected $postService;
-
 	protected $categoryService;
 	protected $tagService;
+
 	protected $modelContentService;
 	protected $modelCategoryService;
+
 	protected $contentMetaService;
 
 	// Private ----------------
@@ -46,21 +46,22 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		parent::init();
 
-		$this->basePath	 			= 'post/default';
-		$this->crudPermission		= CoreGlobal::PERM_USER;
-		
+		$this->basePath	 		= 'post/default';
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+
 		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-
-		$this->postService		= Yii::$app->factory->get( 'postService' );
 		$this->modelService			= Yii::$app->factory->get( 'postService' );
+
+		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+
+		$this->categoryService		= Yii::$app->factory->get( 'categoryService' );
+		$this->tagService			= Yii::$app->factory->get( 'tagService' );
+
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
-		$this->contentMetaService = Yii::$app->factory->get( 'contentMetaService' );
 
-		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
-		$this->tagService		= Yii::$app->factory->get( 'tagService' );
+		$this->contentMetaService	= Yii::$app->factory->get( 'contentMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -78,8 +79,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// secure actions
+					'add' => [ 'permission' => $this->crudPermission ],
 					'basic' => [ 'permission' => $this->crudPermission ],
-					'info' => [ 'permission' => $this->crudPermission ],
 					'media' => [ 'permission' => $this->crudPermission ],
 					'settings' => [ 'permission' => $this->crudPermission ],
 					'attribute' => [ 'permission' => $this->crudPermission ],
@@ -99,8 +100,6 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			]
 		];
 	}
-	
-	
 
 	// yii\base\Controller ----
 
@@ -124,45 +123,40 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// PostController ------------------------
 
-	public function actionBasic() {
-		
-		
+	public function actionAdd() {
+
 		$model				= new Post();
 		$model->siteId		= Yii::$app->core->siteId;
 		$model->comments	= false;
-		
-		$content	= new ModelContent;
-		
-		$visibilityMap	= Page::$visibilityMap;
-		
-		if( $model->load(Yii::$app->request->post(), $model->getClassName()) && $model->validate() && $content->load(Yii::$app->request->post(),'ModelContent' ) && $content->getClassName() ) {
-			
+
+		$content			= new ModelContent();
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() && $content->load(Yii::$app->request->post(),'ModelContent' ) && $content->getClassName() ) {
+
 			$model->status	= Post::STATUS_BASIC;
-			
-			$model =  $this->modelService->create( $model );
-			
-			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $model->isActive() ] );
-			
+
+			$this->modelService->register( $model, [ 'publish' => $model->isActive() ] );
+
 			return $this->checkRefresh( $model );
 		}
-		
-		//return var_dump(Yii::$app->request->post());
-		
-		return $this->render( 'reg/basic', [ 'model' => $model, 'content' => $content, 'visibilityMap' => $visibilityMap,
-				
+
+		$visibilityMap	= Page::$visibilityMap;
+
+		return $this->render( 'reg/basic', [
+			'model' => $model, 'content' => $content,
+			'visibilityMap' => $visibilityMap
 		]);
-		
 	}
-	
-	public function actionInfo( $slug ) {
-		
+
+	public function actionBasic( $slug ) {
+
 		$model	= $this->modelService->getBySlug( $slug, true );
-	
+
 		if( $model ) {
-			
-			$content	= $model->modelContent;
+
+			$content		= $model->modelContent;
 			$visibilityMap	= Page::$visibilityMap;
-			
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
@@ -170,42 +164,41 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 			}
-			
+
 			return $this->render( 'reg/basic', [
 	    		'model' => $model,
 				'content' => $content,
 				'visibilityMap' => $visibilityMap,
 	    	]);
 		}
-		
 	}
-	
+
 	public function actionMedia( $slug ) {
-		
+
 		$model	= $this->modelService->getBySlug( $slug, true );
-	
+
 		if( $model ) {
-			
+
 			$content	= $model->modelContent;
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$video		= File::loadFile( $content->video, 'Video' );
 
 			if(   $content->validate() ) {
-				
+
 				if( $model->status <= Post::STATUS_MEDIA ) {
-				
+
 					$this->modelService->updateStatus( $model, Post::STATUS_MEDIA );
-				} 
-				
+				}
+
 				$this->modelService->update( $model );
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
-				
+
 				//$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
 				//return $this->redirect( $this->returnUrl );
-			} 
-			
+			}
+
 			return $this->render( 'reg/media', [
 	    		'model' => $model,
 				'content' => $content,
@@ -213,17 +206,17 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				'video' => $video,
 	    	]);
 		}
-		
+
 	}
-	
+
 	public function actionSettings( $slug ) {
-	
+
 		$model	= $this->modelService->getBySlug( $slug, true );
 		if( $model ) {
-			
+
 			$content	= $model->modelContent;
 			if( $content->load( Yii::$app->request->post(), $content->getClassName()) && $content->validate()  ) {
-				
+
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive()] );
 
 				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
@@ -233,24 +226,24 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				'content' => $content,
 	    	]);
 		}
-		
+
 	}
-	
+
 	public function actionAttributes( $slug ) {
-		
+
 		$model	= $this->modelService->getBySlug( $slug, true );
-	
+
 		if( $model ) {
-			
-	
+
+
 			//return var_dump($this->contentMetaService->getModelClass());
-			
+
 			$metasToLoad	= [];
 			$metas			= Yii::$app->request->post( 'ContentMeta' );
 			$count 			= count( $metas );
-			
+
 			// Create models if form submitted
-			
+
 			if( $count > 0 ) {
 
 				$metas	= array_values( $metas );
@@ -275,35 +268,35 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				// Update attributes
 				$this->contentMetaService->updateMultiple( $metasToLoad, [ 'parent' => $model ] );
 				//return var_dump($model->status);
-				
+
 				if( $model->status < Post::STATUS_ATTRIBUTES ) {
 
 					return $this->updateStatus( $model, Post::STATUS_ATTRIBUTES );
 				}
 			}
-			
+
 			//return var_dump($modelMeta);
 			return $this->render( 'reg/attributes', [
 	    		'model' => $model,
 				'metas' => $metasToLoad,
 	    	]);
 		}
-		
+
 	}
-	
+
 	public function actionReview( $slug ) {
-		
+
 		$model	= $this->modelService->getBySlug( $slug, true );
-	
+
 		if( $model ) {
-			
+
 			$content	= $post->modelContent;
-			
+
 			$metasToLoad	= [];
-			
+
 			$metasToLoad	= $this->contentMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
-			
-			
+
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				// Update Listing Status
@@ -348,17 +341,17 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 				return $this->refresh();
 			}
-	
+
 			return $this->render( 'reg/review', [
 	    		'model' => $model,
 				'content' => $content,
 				'metas' => $metasToLoad,
-				
+
 	    	]);
 		}
-		
+
 	}
-	
+
 	// State Handling ---------
 
 	protected function checkStatus( $post ) {
@@ -371,7 +364,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 				return $this->redirect( [ "$this->basePath/info?slug=$slug" ] );
 			}
-	
+
 			case Post::STATUS_SETTINGS: {
 
 				return $this->redirect( [ "$this->basePath/attributes?slug=$slug" ] );
@@ -429,12 +422,12 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		return $this->checkStatus( $post );
 	}
-	
+
 	protected function getUserMeta( $post, $meta = null ) {
 
 		$postMeta		=  $this->contentMetaService->getModelClass();
 		$metaToLoad		= new $postMeta;
-		
+
 		if( isset( $meta ) && isset( $meta[ 'id' ] ) && $meta[ 'id' ] > 0 ) {
 
 			$metaToLoad	= $this->contentMetaService->findByNameType( $post->id, $meta[ 'name' ], CoreGlobal::META_TYPE_USER );
@@ -446,6 +439,4 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		return $metaToLoad;
 	}
-	
-	
 }

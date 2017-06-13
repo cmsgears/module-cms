@@ -1,21 +1,18 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\traits\mappers\BlockTrait;
+use cmsgears\cms\common\models\traits\resources\ContentTrait;
 
-use cmsgears\core\common\models\traits\resources\CommentTrait;
+use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\TagTrait;
-use cmsgears\cms\common\models\traits\resources\ContentTrait;
-use cmsgears\cms\common\models\traits\mappers\BlockTrait;
+use cmsgears\core\common\models\traits\resources\CommentTrait;
 
 class Post extends Content {
 
@@ -42,6 +39,7 @@ class Post extends Content {
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use CategoryTrait;
 	use TagTrait;
 	use FileTrait;
@@ -98,4 +96,5 @@ class Post extends Content {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

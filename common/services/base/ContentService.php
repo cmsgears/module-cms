@@ -4,7 +4,6 @@ namespace cmsgears\cms\common\services\base;
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
-use yii\db\Query;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
