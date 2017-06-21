@@ -25,6 +25,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-post', 'options' => [ 'class' => 'frm-split-40-60' ] ] );?>
 
 		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>

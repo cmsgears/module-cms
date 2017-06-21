@@ -22,6 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page' ] );?>
 
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'disabled' => true ] ) ?>
