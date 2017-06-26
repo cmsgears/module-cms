@@ -89,8 +89,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 				'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper mapper-tag' ],
 				'loadAssets' => true,
 				'model' => $model,
-				'assignUrl' => "cms/post/assign-tags?slug=$model->slug&model-type=$model->type",
-				'removeUrl' => "cms/post/remove-tag?slug=$model->slug&model-type=$model->type"
+				'assignUrl' => "cms/post/assign-tags?slug=$model->slug&parent-type=$model->type",
+				'removeUrl' => "cms/post/remove-tag?slug=$model->slug&parent-type=$model->type"
 			])?>
 		</div>
 	</div>
