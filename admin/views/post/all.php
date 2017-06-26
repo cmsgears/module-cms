@@ -121,6 +121,7 @@ if( !isset( $sortOrder ) ) {
 						$editUrl	= Html::a( $post->name, [ "update?id=$id" ] );
 						$tags		= $post->getTagIdNameMap();
 						$content	= $post->modelContent;
+						$galleryId	= $post->galleryId != null ? "&galleryId=$post->galleryId" : null;
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
@@ -142,6 +143,7 @@ if( !isset( $sortOrder ) ) {
 						<td class="actions">
 							<span title="Comments"><?= Html::a( "", [ "comment/all?pid=$id" ], [ 'class' => 'cmti cmti-comment' ] ) ?></span>
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Gallery"><?= Html::a( "", [ "post/gallery/items?postId=$id$galleryId" ], [ 'class' => 'cmti cmti-image' ] ) ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>

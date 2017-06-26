@@ -25,13 +25,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-post', 'options' => [ 'class' => 'frm-split-40-60' ] ] );?>
 
 		<?= $form->field( $model, 'name' ) ?>
-		<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'title' ) ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 		<?= $form->field( $model, 'order' )->textInput() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 		<?= $form->field( $model, 'comments' )->checkbox() ?>
+		<?= $form->field( $model, 'showGallery' )->checkbox() ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Post Summary</div>

@@ -192,12 +192,12 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		if( $admin ) {
 
 			return parent::update( $model, [
-				'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'comments' ]
+				'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'comments', 'title' ]
 			]);
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ]
+			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'title' ]
 		]);
 	}
 

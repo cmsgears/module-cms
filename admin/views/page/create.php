@@ -22,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page' ] );?>
 
 		<?= $form->field( $model, 'name' ) ?>
-		<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'title' ) ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>

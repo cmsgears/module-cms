@@ -6,7 +6,7 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CacheProperties;
+use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\cms\common\models\base\CmsTables;
 
@@ -144,10 +144,10 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		if( $searchContent && isset( $keywords ) ) {
 
 			$modelTable		= static::$modelTable;
-			$cache			= CacheProperties::getInstance()->isCaching();
+			$caching		= CoreProperties::getInstance()->isCaching();
 
 			// Search in model cache
-			if( $cache ) {
+			if( $caching ) {
 
 				$config[ 'search-col' ][] = "$modelTable.content";
 			}
@@ -180,6 +180,18 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Create -------------
 
 	// Update -------------
+
+	public function updateGalleryId( $model, $galleryId ) {
+
+		$existingModel	= self::findById( $model->id );
+
+		if( isset( $existingModel ) ) {
+
+			$existingModel->galleryId	= $galleryId;
+
+			$existingModel->update();
+		}
+	}
 
 	// Delete -------------
 
