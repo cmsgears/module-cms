@@ -2,7 +2,7 @@
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -10,7 +10,6 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\resources\Gallery;
-use yii\helpers\VarDumper;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 

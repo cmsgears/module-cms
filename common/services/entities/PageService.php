@@ -2,11 +2,11 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -187,17 +187,16 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function update( $model, $config = [] ) {
 
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'icon', 'title' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		if( $admin ) {
 
-			return parent::update( $model, [
-				'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'comments', 'title' ]
-			]);
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'title' ]
+			'attributes' => $attributes
 		]);
 	}
 

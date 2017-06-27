@@ -25,6 +25,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'disabled' => true ] ) ?>

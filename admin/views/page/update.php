@@ -23,6 +23,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<?= $form->field( $model, 'name' ) ?>
 		<?= $form->field( $model, 'title' ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
 		<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>

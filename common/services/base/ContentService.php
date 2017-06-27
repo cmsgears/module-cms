@@ -2,7 +2,7 @@
 namespace cmsgears\cms\common\services\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -75,6 +75,18 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Create -------------
 
 	// Update -------------
+
+	public function updateGalleryId( $model, $galleryId ) {
+
+		$existingModel	= self::findById( $model->id );
+
+		if( isset( $existingModel ) ) {
+
+			$existingModel->galleryId	= $galleryId;
+
+			$existingModel->update();
+		}
+	}
 
 	// Delete -------------
 
@@ -180,18 +192,6 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Create -------------
 
 	// Update -------------
-
-	public function updateGalleryId( $model, $galleryId ) {
-
-		$existingModel	= self::findById( $model->id );
-
-		if( isset( $existingModel ) ) {
-
-			$existingModel->galleryId	= $galleryId;
-
-			$existingModel->update();
-		}
-	}
 
 	// Delete -------------
 

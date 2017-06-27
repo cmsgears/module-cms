@@ -134,15 +134,15 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'widgetData', 'title', 'showGallery' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'slug', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'featured', 'comments' ], 'boolean' ],
+			[ [ 'featured', 'comments', 'showGallery' ], 'boolean' ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -341,4 +341,5 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Update -----------------
 
 	// Delete -----------------
+
 }
