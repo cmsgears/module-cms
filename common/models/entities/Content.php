@@ -26,6 +26,7 @@ use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -87,6 +88,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	use NameTypeTrait;
 	use SlugTypeTrait;
 	use VisibilityTrait;
+	use OwnerTrait;
 
 	// Constructor and Initialisation ------------------------------
 

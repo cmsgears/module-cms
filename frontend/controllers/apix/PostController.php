@@ -86,9 +86,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory' ],
 			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags' ],
 			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag' ],
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\UpdateMeta' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\DeleteMeta' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
 			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
 		];
 	}

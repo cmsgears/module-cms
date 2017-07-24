@@ -135,7 +135,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$model->status	= Post::STATUS_BASIC;
 
-			$this->modelService->register( $model, [ 'publish' => $model->isActive() ] );
+			$this->modelService->register( $model, [ 'publish' => $model->isActive(), 'content' => $content ] );
 
 			return $this->checkRefresh( $model );
 		}
