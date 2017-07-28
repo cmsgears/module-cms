@@ -2,16 +2,13 @@
 namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
-class PageController extends \cmsgears\core\admin\controllers\base\Controller {
+class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -23,6 +20,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Private ----------------
 
+
 	// Constructor and Initialisation ------------------------------
 
 	public function init() {
@@ -30,10 +28,11 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
-		
+		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
+
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->modelService		= Yii::$app->factory->get( 'blockService' );
+
 	}
 
 	// Instance methods --------------------------------------------
@@ -50,7 +49,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					
+				
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -71,7 +70,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-		
+			
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
@@ -81,5 +80,6 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// PageController ------------------------
+	// BlockController ---------------------
+
 }

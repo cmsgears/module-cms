@@ -38,19 +38,31 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
+		// permissions	
 		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService			= Yii::$app->factory->get( 'postService' );
-
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
-
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
+		// Sidebar
 		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'posts' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Post' ] ],
+			'create' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
+		
 	}
 
 	// Instance methods --------------------------------------------
@@ -98,7 +110,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$visibilityMap	= Post::$visibilityMap;
@@ -138,7 +150,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$visibilityMap	= Post::$visibilityMap;

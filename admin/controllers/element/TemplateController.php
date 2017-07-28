@@ -27,14 +27,26 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
+		// Services
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
 
+		// Permissions
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->type				= CmsGlobal::TYPE_ELEMENT;
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'templates' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			
+			'all' => [ [ 'label' => 'Elements' ] ],
+			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,8 +67,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll() {
 
-		Url::remember( [ 'element/template/all' ], 'templates' );
+		Url::remember(  Yii::$app->request->getUrl(), 'templates' );
 
 		return parent::actionAll();
 	}
+	
 }

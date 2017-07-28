@@ -90,7 +90,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 			$this->modelService->create( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
@@ -123,7 +123,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 				$this->modelService->update( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [

@@ -78,8 +78,13 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 	// BlockService --------------------------
 
 	// Data Provider ------
-
+	
 	public function getPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
@@ -108,17 +113,48 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 					'label' => 'cdate',
 				],
 				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
+					'asc' => [ 'modifiedAt' => SORT_ASC ],
+					'desc' => ['modifiedAt' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'udate',
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -200,7 +236,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 		return parent::create( $model, $config );
 	}
-
+	
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
@@ -262,6 +298,28 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 		// Delete model
 		return parent::delete( $model, $config );
+	}
+	
+	
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Static Methods ----------------------------------------------

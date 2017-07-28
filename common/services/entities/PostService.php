@@ -79,9 +79,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass			= static::$modelClass;
-		$modelTable			= static::$modelTable;
-		$modelContentTable	= ModelContentService::$modelTable;
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
 
 		// Sorting ----------
 
@@ -147,11 +146,16 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 		if( !isset( $config[ 'query' ] ) ) {
 
+			$config[ 'hasOne' ] = true;
+		}
+		
+		if( !isset( $config[ 'query' ] ) ) {
+
 			$config[ 'query' ] = Post::queryWithAuthor();
 		}
 
 		// Filters ----------
-
+		
 		// Filter - Status
 		$status	= Yii::$app->request->getQueryParam( 'status' );
 
@@ -159,7 +163,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}
-
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -180,6 +183,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$config[ 'conditions' ][ "$modelTable.type" ]	= CmsGlobal::TYPE_POST;
 
 		return parent::getPage( $config );
+
 	}
 
 	public function getPublicPage( $config = [] ) {
@@ -293,6 +297,27 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+	
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

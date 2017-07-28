@@ -2,16 +2,13 @@
 namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
-class PageController extends \cmsgears\core\admin\controllers\base\Controller {
+class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -31,9 +28,9 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
-		
+
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -81,5 +78,6 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// PageController ------------------------
+	// CategoryController ---------------------
+
 }

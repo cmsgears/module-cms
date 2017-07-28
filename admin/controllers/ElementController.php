@@ -35,16 +35,28 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
+		// Permissions
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'elementService' );
-
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
+		// Sidebar	
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'elements' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Elements' ] ],
+			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -83,7 +95,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$this->modelService->create( $model, [ 'data' => $meta, 'banner' => $banner ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
@@ -111,7 +123,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 				$this->modelService->update( $model, [ 'data' => $meta, 'banner' => $banner ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );

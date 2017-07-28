@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class PostController extends \cmsgears\core\admin\controllers\base\Controller {
+class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -20,6 +20,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Private ----------------
 
+
 	// Constructor and Initialisation ------------------------------
 
 	public function init() {
@@ -28,9 +29,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Permissions
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
-		
+
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'postService' );
+		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
+
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,10 +49,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'bindCategories' => [ 'permission' => $this->crudPermission ],
-					'assignTags' => [ 'permission' => $this->crudPermission ],
-					'removeTag' => [ 'permission' => $this->crudPermission ],
-					'submitComment' => [ 'permission' => $this->crudPermission ],
+				
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -58,10 +57,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'bindCategories' => [ 'post' ],
-					'assignTags' => [ 'post' ],
-					'removeTag' => [ 'post' ],
-					'submitComment' => [ 'post' ],
+				
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -74,26 +70,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			'bind-categories' => [
-				'class' => 'cmsgears\core\common\actions\tag\BindCategories'
-			],
-			'assign-tags' => [
-				'class' => 'cmsgears\core\common\actions\tag\AssignTags',
-				'typed' => true, 'parent' => true
-			],
-			'remove-tag' => [
-				'class' => 'cmsgears\core\common\actions\tag\RemoveTag',
-				'typed' => true, 'parent' => true
-			],
-			'submit-comment' => [
-				'class' => 'cmsgears\core\common\actions\comment\CreateComment'
-			],
-			'bulk' => [ 
-				'class' => 'cmsgears\core\common\actions\grid\Bulk' 
-			],
-			'delete' => [ 
-				'class' => 'cmsgears\core\common\actions\grid\Delete' 
-			]
+			
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
 
@@ -101,5 +80,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// PostController ------------------------
+	// SidebarController ---------------------
+
 }

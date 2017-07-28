@@ -36,18 +36,30 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 	public function init() {
 
 		parent::init();
-
+		
+		// Permission
 		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Service
 		$this->modelService			= Yii::$app->factory->get( 'pageService' );
-
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
+		// Sidebar
 		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'pages' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Pages' ] ],
+			'create' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -94,7 +106,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_PAGE, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$visibilityMap	= Page::$visibilityMap;
@@ -131,7 +143,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$visibilityMap	= Page::$visibilityMap;

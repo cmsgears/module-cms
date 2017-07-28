@@ -35,16 +35,29 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Service
 		$this->modelService		= Yii::$app->factory->get( 'menuService' );
 
 		$this->pageService		= Yii::$app->factory->get( 'pageService' );
 
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'menus' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Menu' ] ],
+			'create' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -65,7 +78,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	public function actionAll() {
 
-		Url::remember( [ 'menu/all' ], 'menus' );
+		Url::remember( Yii::$app->request->getUrl(), 'menus' );
 
 		return parent::actionAll();
 	}
@@ -103,7 +116,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->updateLinks( $model, $links, $pageLinks );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -144,7 +157,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelService->updateLinks( $model, $links, $pageLinks );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			return $this->render( 'update', [

@@ -34,16 +34,29 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		parent::init();
 
+		// Permissions
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'widgets' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Widget' ] ],
+			'create' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -75,7 +88,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	public function actionAll() {
 
-		Url::remember( [ 'widget/all' ], 'widgets' );
+		Url::remember( Yii::$app->request->getUrl(), 'widgets' );
 
 		return parent::actionAll();
 	}
@@ -92,7 +105,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 			$this->modelService->create( $model, [ 'data' => $meta ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
@@ -118,7 +131,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 				$this->modelService->update( $model, [ 'data' => $meta ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );

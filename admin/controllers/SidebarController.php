@@ -34,16 +34,28 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
+		// Permissions
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
-
 		$this->widgetService	= Yii::$app->factory->get( 'widgetService' );
 
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'sidebars' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/sidebar/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Widget' ] ],
+			'create' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -64,7 +76,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	public function actionAll() {
 
-		Url::remember( [ 'sidebar/all' ], 'sidebars' );
+		Url::remember( Yii::$app->request->getUrl(), 'sidebars' );
 
 		return parent::actionAll();
 	}
@@ -93,7 +105,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -121,7 +133,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 				$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			return $this->render( 'update', [

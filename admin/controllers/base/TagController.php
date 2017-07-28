@@ -90,7 +90,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 			$this->modelService->create( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -121,7 +121,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 				$this->modelService->update( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

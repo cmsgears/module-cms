@@ -3,7 +3,6 @@ namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -12,7 +11,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\resources\Block;
 use cmsgears\cms\common\models\forms\BlockElement;
 
 class BlockController extends \cmsgears\core\admin\controllers\base\CrudController {
@@ -36,17 +34,29 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'blockService' );
-
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 		$this->elementService	= Yii::$app->factory->get( 'elementService' );
 
+		// Sidebar	
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'blocks' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Blocks' ] ],
+			'create' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -67,7 +77,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	public function actionAll() {
 
-		Url::remember( [ 'block/all' ], 'blocks' );
+		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
 
 		$dataProvider = $this->modelService->getPage();
 
@@ -115,8 +125,8 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 				$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
 
 				$this->modelService->updateElements( $model, $blockElements );
-
-				return $this->redirect( [ 'all' ] );
+				
+				return $this->redirect( "update?id=$model->id" );
 			}
 		}
 
@@ -169,7 +179,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 					$this->modelService->updateElements( $model, $blockElements );
 
-					return $this->redirect( [ 'all' ] );
+					return $this->redirect( "update?id=$model->id" );
 				}
 			}
 
