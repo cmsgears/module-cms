@@ -10,7 +10,6 @@ use yii\helpers\HtmlPurifier;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Template;
 use cmsgears\cms\common\models\base\CmsTables;
 

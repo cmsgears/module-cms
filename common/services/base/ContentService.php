@@ -118,22 +118,22 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 						'label' => 'Id'
 					],
 					'cdate' => [
-						'asc' => [ "$contentTable.createdAt" => SORT_ASC ],
-						'desc' => [ "$contentTable.createdAt" => SORT_DESC ],
+						'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+						'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 						'default' => SORT_DESC,
-						'label' => 'Created At',
+						'label' => 'Created At'
+					],
+					'udate' => [
+						'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
+						'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Updated At'
 					],
 					'pdate' => [
 						'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
 						'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
 						'default' => SORT_DESC,
-						'label' => 'Published At',
-					],
-					'udate' => [
-						'asc' => [ "$contentTable.updatedAt" => SORT_ASC ],
-						'desc' => [ "$contentTable.updatedAt" => SORT_DESC ],
-						'default' => SORT_DESC,
-						'label' => 'Updated At',
+						'label' => 'Published At'
 					]
 				]
 			]);

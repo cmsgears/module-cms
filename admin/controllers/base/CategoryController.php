@@ -2,9 +2,7 @@
 namespace cmsgears\cms\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -12,7 +10,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\resources\Category;
 use cmsgears\cms\common\models\resources\ModelContent;
 
 abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
@@ -37,12 +34,16 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 		parent::init();
 
+		// Views
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/category/';
 
+		// Permission
 		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Template
 		$this->templateType			= CoreGlobal::TYPE_CATEGORY;
 
+		// Services
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
@@ -123,7 +124,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 				$this->modelService->update( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( "update?id=$model->id" );
+				return $this->refresh();
 			}
 
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
