@@ -50,11 +50,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 		
 		// Breadcrumbs
 		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Widget' ] ],
-			'create' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'all' => [ [ 'label' => 'Sidebar' ] ],
+			'create' => [ [ 'label' => 'Sidebar', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Sidebar', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Sidebar', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Sidebar', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
 		];
 	}
 

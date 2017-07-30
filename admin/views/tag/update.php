@@ -17,6 +17,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Tag | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
+
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block', 'options' => [ 'class' => 'form' ] ] ); ?>
@@ -118,7 +119,7 @@ $returnUrl		= $this->context->returnUrl;
 
 		<div class="align align-right">
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Create" />
+			<input class="element-medium" type="submit" value="Update" />
 		</div>
 
 		<div class="filler-height filler-height-medium"></div>

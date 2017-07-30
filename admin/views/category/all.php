@@ -36,7 +36,7 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
-		'icon' => 'Icon',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) { $icon = "<div class='align align-center'><i class='fa-2x " . $model->icon ."'></i></div>" ; return $icon;  } ],
 		'description' => 'Description',
 		'featured'	=> [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
 		'parent'	=> [ 'title' => 'Parent', 'generate' => function( $model ) { return $model->getParentName(); } ],

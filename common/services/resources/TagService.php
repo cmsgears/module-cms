@@ -1,6 +1,7 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 

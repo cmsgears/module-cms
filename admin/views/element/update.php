@@ -55,33 +55,34 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 					</div>
 					<div class="filler-height"> </div>
-					<div class="box box-crud">
-						<div class="box-header">
-							<div class="box-header-title">Images</div>
-						</div>
-						<div class="box-content">
-							<div class="box-content">
-								<div class="row row-inline padding padding-small-v">
-								
-									<div class="col col12x4">
-										<label> Texture </label>
-										<?= ImageUploader::widget([ 'directory' => 'banner' ,  'model' => $banner,  'modelClass' => 'Banner' ]); ?>
-									</div>
-								
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
-						<div class="col col1">
+						<div class="box-content clearfix">
 							<label> Element Content </label>
 							<?= $form->field( $meta, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 						</div>
-					</div>	
+					</div>
 				</div>
 			</div>
 		</div>
+		<div class="filler-height"> </div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Images</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row row-inline padding padding-small-v">
+
+						<div class="col col12x4">
+							<label> Banner </label>
+							<?= ImageUploader::widget([ 'directory' => 'banner' ,  'model' => $banner,  'modelClass' => 'Banner' ]); ?>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		
 
 		<div class="filler-height filler-height-medium"></div>
 

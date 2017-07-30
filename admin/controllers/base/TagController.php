@@ -87,7 +87,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
-
+			
 			$this->modelService->create( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
 			return $this->redirect( "update?id=$model->id" );
@@ -115,7 +115,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 			$content	= $model->modelContent;
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$video		= File::loadFile( $content->video, 'Video' );
-
+			
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 

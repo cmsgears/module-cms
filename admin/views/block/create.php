@@ -56,34 +56,44 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 					</div>
 					
-					
-					<div class="box box-crud">
-						<div class="box-header">
-							<div class="box-header-title">Images</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height"> </div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Images</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+
+						<div class="col col12x4">
+							<label> Texture </label>
+							<?= ImageUploader::widget([ 'directory' => 'texture' ,  'model' => $texture,  'modelClass' => 'Texture' ]); ?>
 						</div>
-						<div class="box-content">
-							<div class="box-content">
-								<div class="row padding padding-small-v">
-								
-									<div class="col col12x4">
-										<label> Texture </label>
-										<?= ImageUploader::widget([ 'directory' => 'texture' ,  'model' => $texture,  'modelClass' => 'Texture' ]); ?>
-									</div>
-									<div class="col col12x4">
-										<label> Banner </label>
-										<?= ImageUploader::widget([ 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] ); ?>
-									</div>
-										<div class="col col12x4">
-										<label> Video </label>
-										<?= VideoUploader::widget([  'model' => $video  ]); ?>
-									</div>
-								</div>
-							</div>
+						<div class="col col12x4">
+							<label> Banner </label>
+							<?= ImageUploader::widget([ 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] ); ?>
+						</div>
+							<div class="col col12x4">
+							<label> Video </label>
+							<?= VideoUploader::widget([  'model' => $video  ]); ?>
 						</div>
 					</div>
-					
-					<div class="row">
-						<div class="box-content col col1">
+				</div>
+			</div>
+		</div>
+		<div class="filler-height"> </div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title"> Link Elements </div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+
+						<div class="col col1">
 							<label> Link Elements </label>
 							<?php foreach ( $elements as $key => $element ) { ?>
 								<span class="box-half">
@@ -95,11 +105,11 @@ $returnUrl		= $this->context->returnUrl;
 									</div>
 								</span>
 							<?php } ?>
-						</div>
-					</div>	
+						</div>	
+					</div>
 				</div>
 			</div>
-		</div>
+		</div>	
 
 		<div class="filler-height filler-height-medium"></div>
 

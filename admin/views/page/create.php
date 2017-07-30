@@ -9,8 +9,6 @@ use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
-
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
@@ -52,7 +50,6 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
 							<label> Page Summary </label>
@@ -125,7 +122,7 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="filler-height filler-height-medium"></div>
 
 		<div class="align align-right">
-			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+			<?= Html::a( 'Cancle', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
 

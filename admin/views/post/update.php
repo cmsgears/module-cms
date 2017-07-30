@@ -13,7 +13,7 @@ use cmsgears\widgets\category\CategoryMapper;
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Post | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box-crud-wrap row">
@@ -65,14 +65,15 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
+							
 							<?= $form->field( $model, 'order' )->textInput() ?>
 						</div>	
 						<div class="col col2">
+						
 							<?= $form->field( $model, 'featured' )->checkbox() ?>
 						</div>	
 					</div>
 					<div class="filler-height"> </div>
-				
 					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'comments' )->checkbox() ?>
