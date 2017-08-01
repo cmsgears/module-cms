@@ -14,7 +14,6 @@ use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
-use cmsgears\cms\common\services\resources\ModelContentService;
 
 use cmsgears\core\common\services\traits\ApprovalTrait;
 use cmsgears\core\common\services\traits\NameTypeTrait;
@@ -79,8 +78,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass			= static::$modelClass;
+		$modelTable			= static::$modelTable;
+		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
 		// Sorting ----------
 
@@ -148,14 +148,14 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 			$config[ 'hasOne' ] = true;
 		}
-		
+
 		if( !isset( $config[ 'query' ] ) ) {
 
 			$config[ 'query' ] = Post::queryWithAuthor();
 		}
 
 		// Filters ----------
-		
+
 		// Filter - Status
 		$status	= Yii::$app->request->getQueryParam( 'status' );
 
@@ -298,7 +298,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			'attributes' => $attributes
 		]);
 	}
-	
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
