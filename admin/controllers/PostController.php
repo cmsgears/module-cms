@@ -38,7 +38,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		// permissions	
+		// Permissions
 		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
@@ -48,21 +48,19 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
 		// Sidebar
-		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'posts' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
-		
+		$this->returnUrl	= Url::previous( 'posts' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Post' ] ],
-			'create' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Post', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		$this->breadcrumbs	= [
+			'all' => [ [ 'label' => 'Posts' ] ],
+			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
-		
 	}
 
 	// Instance methods --------------------------------------------

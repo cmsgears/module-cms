@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\cms\admin\controllers\post;
+namespace cmsgears\cms\admin\controllers\page;
 
 // Yii Imports
 use Yii;
@@ -19,7 +19,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 	// Public -----------------
 
-	public $postService;
+	public $pageService;
 
 	// Protected --------------
 
@@ -32,18 +32,18 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 		parent::init();
 
 		// Services
-		$this->postService	= Yii::$app->factory->get( 'postService' );
+		$this->pageService	= Yii::$app->factory->get( 'pageService' );
 
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		// Return Url
-		$this->returnUrl	= Url::previous( 'posts' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all/' ], true );
+		$this->returnUrl	= Url::previous( 'pages' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all/' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
+			'base' => [ [ 'label' => 'Pages', 'url' =>  [ '/cms/page/all' ] ] ],
 			'index' => [ [ 'label' => 'Gallery' ] ],
 			'items' => [ [ 'label' => 'Gallery', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ],
 		];
@@ -67,13 +67,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 	public function actionIndex( $pid = null ) {
 
-		$post = $this->postService->getById( $pid );
+		$page = $this->pageService->getById( $pid );
 
-		if( isset( $post ) ) {
+		if( isset( $page ) ) {
 
-			Url::remember( [ '/cms/post/all' ], 'galleries' );
+			Url::remember( [ '/cms/page/all' ], 'galleries' );
 
-			$gallery = $post->gallery;
+			$gallery = $page->gallery;
 
 			if( isset( $gallery ) ) {
 
@@ -82,17 +82,17 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 			else {
 
 				$gallery 			= new Gallery();
-				$gallery->name		= $post->name;
-				$gallery->type		= CmsGlobal::TYPE_POST;
+				$gallery->name		= $page->name;
+				$gallery->type		= CmsGlobal::TYPE_PAGE;
 				$gallery->siteId	= Yii::$app->core->siteId;
 
 				if( $gallery->load( Yii::$app->request->post(), 'Gallery' )  && $gallery->validate() ) {
 
 					$this->modelService->create( $gallery );
 
-					if( $this->postService->linkGallery( $post, $gallery ) ) {
+					if( $this->pageService->linkGallery( $page, $gallery ) ) {
 
-						$this->redirect( [ "index?pid=$post->id" ] );
+						$this->redirect( [ "index?pid=$page->id" ] );
 					}
 				}
 

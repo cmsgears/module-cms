@@ -2,11 +2,10 @@
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
@@ -27,14 +26,27 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
-		$this->type				= CmsGlobal::TYPE_POST;
+		// Type
+		$this->type			= CmsGlobal::TYPE_POST;
 
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
+		// Sidebar
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
 
+		// Return Url
 		$this->returnUrl	= Url::previous( 'templates' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/template/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
+			'all' => [ [ 'label' => 'Templates' ] ],
+			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,7 +67,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll() {
 
-		Url::remember( [ 'post/template/all' ], 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
 		return parent::actionAll();
 	}

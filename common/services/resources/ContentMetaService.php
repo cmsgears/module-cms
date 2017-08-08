@@ -2,10 +2,7 @@
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
-
-
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\resources\ContentMeta;
 
 use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
 

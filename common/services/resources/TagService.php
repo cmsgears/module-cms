@@ -1,7 +1,6 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -132,27 +131,6 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 		}
 
 		return parent::delete( $model, $config );
-	}
-	
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
-
-		switch( $column ) {
-
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'delete': {
-
-						$this->delete( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
-		}
 	}
 
 	// Static Methods ----------------------------------------------

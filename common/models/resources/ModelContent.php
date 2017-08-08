@@ -2,7 +2,7 @@
 namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 
@@ -10,7 +10,6 @@ use yii\helpers\HtmlPurifier;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\Template;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\ResourceTrait;

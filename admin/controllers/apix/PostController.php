@@ -87,14 +87,14 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		return [
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
-			'update-banner' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateContentBanner' ],
-			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\AssignCategory', 'typed' => true, 'parentType' => CmsGlobal::TYPE_POST ],
-			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory', 'typed' => true, 'parentType' => CmsGlobal::TYPE_POST ],
-			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags', 'typed' => true, 'parentType' => CmsGlobal::TYPE_POST ],
-			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag', 'typed' => true, 'parentType' => CmsGlobal::TYPE_POST ],
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
+			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
+			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

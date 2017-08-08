@@ -33,6 +33,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public static $modelTable	= CmsTables::TABLE_PAGE;
 
+	public static $typed		= true;
+
 	public static $parentType	= CmsGlobal::TYPE_POST;
 
 	// Protected --------------
@@ -296,6 +298,15 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 		return parent::update( $model, [
 			'attributes' => $attributes
+		]);
+	}
+
+	public function linkGallery( $model, $gallery ) {
+
+		$model->galleryId	= $gallery->id;
+
+		return parent::update( $model, [
+			'attributes' => [ 'galleryId' ]
 		]);
 	}
 

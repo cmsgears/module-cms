@@ -1,14 +1,10 @@
 <?php
 namespace cmsgears\cms\admin\controllers\apix;
 
-// Yii Imports
-use Yii;
-use yii\filters\VerbFilter;
-
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
+class CommentController extends \cmsgears\core\admin\controllers\apix\CommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -29,10 +25,6 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 
 		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
-
-		// Services
-		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
-
 	}
 
 	// Instance methods --------------------------------------------
@@ -43,38 +35,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// yii\base\Component -----
 
-	public function behaviors() {
-
-		return [
-			'rbac' => [
-				'class' => Yii::$app->core->getRbacFilterClass(),
-				'actions' => [
-				
-					'bulk' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
-				]
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-				
-					'bulk' => [ 'post' ],
-					'delete' => [ 'post' ]
-				]
-			]
-		];
-	}
-
 	// yii\base\Controller ----
-
-	public function actions() {
-
-		return [
-			
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
-			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
-		];
-	}
 
 	// CMG interfaces ------------------------
 

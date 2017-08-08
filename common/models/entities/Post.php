@@ -2,7 +2,7 @@
 namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
@@ -39,7 +39,8 @@ class Post extends Content {
 
 	// Public -----------------
 
-	public $mParentType		= CmsGlobal::TYPE_POST;
+	public $modelType		= CmsGlobal::TYPE_POST;
+
 	public $categoryType	= CmsGlobal::TYPE_POST;
 
 	// Protected --------------

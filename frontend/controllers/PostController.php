@@ -2,7 +2,7 @@
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;

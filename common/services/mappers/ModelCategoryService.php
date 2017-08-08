@@ -2,8 +2,6 @@
 namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\mappers\ModelCategory;
-
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\mappers\IModelCategoryService;
 

@@ -1,15 +1,8 @@
 <?php
 namespace cmsgears\core\common\services\mappers;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\entities\Block;
-use cmsgears\cms\common\models\mappers\ModelBlock;
 
 use cmsgears\cms\common\services\interfaces\mappers\IModelBlockService;
 

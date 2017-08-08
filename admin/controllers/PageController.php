@@ -2,8 +2,7 @@
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -11,7 +10,6 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\resources\ModelContent;
@@ -36,7 +34,7 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 	public function init() {
 
 		parent::init();
-		
+
 		// Permission
 		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
@@ -46,19 +44,18 @@ class PageController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
 		// Sidebar
-		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'pages' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
-		
+		$this->returnUrl	= Url::previous( 'pages' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs	= [
 			'all' => [ [ 'label' => 'Pages' ] ],
 			'create' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

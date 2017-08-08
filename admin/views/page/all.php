@@ -17,12 +17,10 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	'searchColumns' => [ 'name' => 'Name',  ],
 	'sortColumns' => [
 		'name' => 'Name', 'slug' => 'Slug', 'active' => 'Active'
-		
 	],
 	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
@@ -46,9 +44,9 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => '@themes/admin/views/templates/widget/grid',
-	//'dataView' => "$moduleTemplates/grid/data/gallery",
-	//'cardView' => "$moduleTemplates/grid/cards/gallery",
-	//'actionView' => "$moduleTemplates/grid/actions/Block"
+	//'dataView' => "$moduleTemplates/grid/data/page",
+	//'cardView' => "$moduleTemplates/grid/cards/page",
+	'actionView' => "$moduleTemplates/grid/actions/page"
 ]) ?>
 
 <?= Popup::widget([

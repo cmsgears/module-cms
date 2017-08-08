@@ -94,7 +94,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 			return $this->redirect( "update?id=$model->id" );
 		}
 
-		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+		//$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 		return $this->render( 'create', [
@@ -102,7 +102,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 			'content' => $content,
 			'banner' => $banner,
 			'video' => $video,
-			'categoryMap' => $categoryMap,
+			//'categoryMap' => $categoryMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -127,10 +127,11 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				return $this->refresh();
 			}
 
+			/*
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
 									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
 									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
-								]);
+								]); */
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
@@ -139,7 +140,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				'content' => $content,
 				'banner' => $banner,
 				'video' => $video,
-				'categoryMap' => $categoryMap,
+				//'categoryMap' => $categoryMap,
 				'templatesMap' => $templatesMap
 			]);
 		}
@@ -165,7 +166,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+			//$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 			return $this->render( 'delete', [
@@ -173,7 +174,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 				'content' => $content,
 				'banner' => $content->banner,
 				'video' => $content->video,
-				'categoryMap' => $categoryMap,
+				//'categoryMap' => $categoryMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

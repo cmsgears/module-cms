@@ -2,15 +2,11 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
 
@@ -118,7 +114,7 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 		// Result -----------
 
 		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
-		
+
 		return parent::getPage( $config );
 	}
 
@@ -154,7 +150,7 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 		return parent::getIdNameList( $config );
 	}
-	
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {

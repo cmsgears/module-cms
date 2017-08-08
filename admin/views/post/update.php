@@ -36,89 +36,91 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap ) ?>
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'status' )->dropDownList( $statusMap ) ?>
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
-							<label> Page Summary </label>
-							<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
-						</div>
-						<div class="col col2">
-							<label> Page Content </label>
-							<?= $form->field( $content, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
-						</div>
-					</div>
-					<div class="filler-height"> </div>
-					<div class="row">
-						<div class="col col2">
-
 							<?= $form->field( $model, 'order' )->textInput() ?>
 						</div>
 						<div class="col col2">
-
-							<?= $form->field( $model, 'featured' )->checkbox() ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'comments' )->checkbox() ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'showGallery' )->checkbox() ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'showGallery', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
-
 				</div>
 			</div>
 		</div>
-		<div class="filler-height"> </div>
+		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud">
 			<div class="box-header">
-				<div class="box-header-title">Images</div>
+				<div class="box-header-title">Files</div>
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row  padding padding-small-v">
+					<div class="row padding padding-small-v">
 						<div class="col col12x4">
-							<label> Banner </label>
+							<label>Banner</label>
 							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
 						</div>
 						<div class="col col12x4">
-							<label> Video </label>
+							<label>Video</label>
 							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="filler-height"> </div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Summary</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Content</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $content, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Page SEO</div>
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row  padding padding-small-v">
-
+					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoName' ) ?>
 						</div>
@@ -126,7 +128,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $content, 'seoRobot' ) ?>
 						</div>
 					</div>
-					<div class="row  padding padding-small-v">
+					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
 						</div>
@@ -158,8 +160,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'type' => CmsGlobal::TYPE_POST,
 						'model' => $model, 'app' => 'category',
-						'mapActionUrl' => "cms/post/assign-category?slug=$model->slug&model-type=$model->type",
-						'deleteActionUrl' => "cms/post/remove-category?slug=$model->slug&model-type=$model->type"
+						'mapActionUrl' => "cms/post/assign-category?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "cms/post/remove-category?slug=$model->slug&type=$model->type"
 					]) ?>
 				</div>
 			</div>
@@ -173,8 +175,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
 						'loadAssets' => true,
 						'model' => $model, 'app' => 'category',
-						'mapActionUrl' => "cms/post/assign-tags?slug=$model->slug&model-type=$model->type",
-						'deleteActionUrl' => "cms/post/remove-tag?slug=$model->slug&model-type=$model->type"
+						'mapActionUrl' => "cms/post/assign-tags?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "cms/post/remove-tag?slug=$model->slug&type=$model->type"
 					])?>
 				</div>
 			</div>

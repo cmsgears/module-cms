@@ -130,27 +130,6 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 		return parent::delete( $model, $config );
 	}
 
-	
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
-
-		switch( $column ) {
-
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'delete': {
-
-						$this->delete( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
-		}
-	}
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

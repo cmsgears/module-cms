@@ -2,8 +2,6 @@
 namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\mappers\ModelTag;
-
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
 use cmsgears\cms\common\services\interfaces\mappers\IModelTagService;
 

@@ -29,6 +29,7 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Config
 		$this->type				= CmsGlobal::TYPE_POST;
 
 		// Sidebar
@@ -36,14 +37,14 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 		// Return Url
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/all' ], true );
-		
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Tag' ] ],
-			'create' => [ [ 'label' => 'Tag', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Tag', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Tag', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Tag', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
+			'all' => [ [ 'label' => 'Tags' ] ],
+			'create' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

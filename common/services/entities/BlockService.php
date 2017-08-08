@@ -2,17 +2,14 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\BlockElement;
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\entities\Block;
 use cmsgears\cms\common\models\mappers\ModelBlock;
 
 use cmsgears\core\common\utilities\DataUtil;
@@ -78,7 +75,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 	// BlockService --------------------------
 
 	// Data Provider ------
-	
+
 	public function getPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
@@ -236,7 +233,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 		return parent::create( $model, $config );
 	}
-	
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
@@ -299,8 +296,8 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 		// Delete model
 		return parent::delete( $model, $config );
 	}
-	
-	
+
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {

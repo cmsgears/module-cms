@@ -8,9 +8,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
-
 use cmsgears\cms\common\services\interfaces\entities\IElementService;
 
 class ElementService extends \cmsgears\core\common\services\entities\ObjectDataService implements IElementService {
@@ -53,7 +50,6 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 	// Data Provider ------
 
-	
 	public function getPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
@@ -120,7 +116,7 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_ELEMENT;
 
 		return parent::getPage( $config );
-	}	
+	}
 
 
 	// Read ---------------
@@ -149,7 +145,7 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 		return parent::getIdNameList( $config );
 	}
-	
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {

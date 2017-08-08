@@ -2,11 +2,10 @@
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
@@ -27,7 +26,6 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 		parent::init();
 
-		
 		// Permission
 		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
 
@@ -40,14 +38,14 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 		// Return Url
 		$this->returnUrl		= Url::previous( 'categories' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
-		
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Category' ] ],
-			'create' => [ [ 'label' => 'Category', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Category', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Category', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Category', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
+			'all' => [ [ 'label' => 'Categories' ] ],
+			'create' => [ [ 'label' => 'Categories', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Categories', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Categories', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -69,10 +67,8 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 	public function actionAll() {
 
-		Url::remember( Yii::$app->request->getUrl() , 'categories' );
+		Url::remember( Yii::$app->request->getUrl(), 'categories' );
 
 		return parent::actionAll();
 	}
-	
-	
 }

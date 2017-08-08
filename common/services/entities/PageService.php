@@ -32,6 +32,8 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public static $modelTable	= CmsTables::TABLE_PAGE;
 
+	public static $typed		= true;
+
 	public static $parentType	= CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
@@ -73,7 +75,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// PageService ---------------------------
 
 	// Data Provider ------
-	
+
 	public function getPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
@@ -253,7 +255,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			}
 		}
 	}
-	
+
 	// Delete -------------
 
 	// Static Methods ----------------------------------------------

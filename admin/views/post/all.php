@@ -18,12 +18,12 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	'searchColumns' => [ 'name' => 'Name',  ],
 	'sortColumns' => [
 		'name' => 'Name', 'slug' => 'Slug', 'active' => 'Active'
-		
+
 	],
 	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		
+
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
@@ -39,9 +39,9 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->modelContent->getTemplateName(); } ],
-		'tag'	=> [ 'title' => 'Tags' , 'generate' => function( $model ) { 
-				$value =  CodeGenUtil::generateLinksFromMap( '/cms/post/tag/update?id=', $model->getTagIdNameMap(), true, false );  
-				return $value; } 
+		'tag'	=> [ 'title' => 'Tags' , 'generate' => function( $model ) {
+				$value =  CodeGenUtil::generateLinksFromMap( '/cms/post/tag/update?id=', $model->getTagIdNameMap(), true, false );
+				return $value; }
 			],
 		'createdAt'=>'Created on',
 		'modifiedAt'=>'Updated on',
@@ -50,8 +50,8 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => '@themes/admin/views/templates/widget/grid',
-	//'dataView' => "$moduleTemplates/grid/data/gallery",
-	//'cardView' => "$moduleTemplates/grid/cards/gallery",
+	//'dataView' => "$moduleTemplates/grid/data/post",
+	//'cardView' => "$moduleTemplates/grid/cards/post",
 	'actionView' => "$moduleTemplates/grid/actions/post"
 ]) ?>
 

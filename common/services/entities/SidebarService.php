@@ -2,16 +2,13 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\SidebarWidget;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\DataUtil;
 
@@ -109,7 +106,7 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 		// Result -----------
 
 		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_SIDEBAR;
-		
+
 		return parent::getPage( $config );
 	}
 
@@ -243,7 +240,7 @@ class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 		return true;
 	}
-	
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
