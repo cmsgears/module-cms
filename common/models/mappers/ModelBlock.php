@@ -105,7 +105,7 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// ModelBlock ----------------------------
 
-	public function getBlock() {
+	public function getModel() {
 
 		return $this->hasOne( Block::className(), [ 'id' => 'modelId' ] );
 	}
