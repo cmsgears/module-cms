@@ -138,10 +138,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			[ [ 'name', 'siteId' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
 			// Text Limit
-			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'name', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'featured', 'comments', 'showGallery' ], 'boolean' ],

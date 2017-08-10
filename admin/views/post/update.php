@@ -10,7 +10,7 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 
-use cmsgears\widgets\category\CategoryAutoBox;
+use cmsgears\widgets\category\CategoryAuto;
 use cmsgears\widgets\tag\TagMapper;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -156,7 +156,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Categories</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= CategoryAutoBox::widget([
+					<?= CategoryAuto::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'type' => CmsGlobal::TYPE_POST,
 						'model' => $model, 'app' => 'category',
