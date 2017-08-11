@@ -76,18 +76,6 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Update -------------
 
-	public function updateGalleryId( $model, $galleryId ) {
-
-		$existingModel	= self::findById( $model->id );
-
-		if( isset( $existingModel ) ) {
-
-			$existingModel->galleryId	= $galleryId;
-
-			$existingModel->update();
-		}
-	}
-
 	// Delete -------------
 
 	// Static Methods ----------------------------------------------

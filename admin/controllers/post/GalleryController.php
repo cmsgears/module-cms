@@ -4,12 +4,9 @@ namespace cmsgears\cms\admin\controllers\post;
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-use cmsgears\core\common\models\resources\Gallery;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
@@ -31,8 +28,12 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
+		// Config
+		$this->type			= CmsGlobal::TYPE_POST;
+		$this->parentUrl	= '/cms/post/all';
+
 		// Services
-		$this->postService	= Yii::$app->factory->get( 'postService' );
+		$this->parentService	= Yii::$app->factory->get( 'postService' );
 
 		// Sidebar
 		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
@@ -65,47 +66,4 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 	// GalleryController ---------------------
 
-	public function actionIndex( $pid = null ) {
-
-		$post = $this->postService->getById( $pid );
-
-		if( isset( $post ) ) {
-
-			Url::remember( [ '/cms/post/all' ], 'galleries' );
-
-			$gallery = $post->gallery;
-
-			if( isset( $gallery ) ) {
-
-		    	return $this->redirect( [ 'items', 'id' => $gallery->id ] );
-			}
-			else {
-
-				$gallery 			= new Gallery();
-				$gallery->name		= $post->name;
-				$gallery->type		= CmsGlobal::TYPE_POST;
-				$gallery->siteId	= Yii::$app->core->siteId;
-
-				if( $gallery->load( Yii::$app->request->post(), 'Gallery' )  && $gallery->validate() ) {
-
-					$this->modelService->create( $gallery );
-
-					if( $this->postService->linkGallery( $post, $gallery ) ) {
-
-						$this->redirect( [ "index?pid=$post->id" ] );
-					}
-				}
-
-				$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
-
-				return $this->render( 'create', [
-					'model' => $gallery,
-					'templatesMap' => $templatesMap
-				]);
-			}
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
 }

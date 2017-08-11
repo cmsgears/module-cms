@@ -1,14 +1,12 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
-// Yii Imports
-use Yii;
-
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
 
+use cmsgears\core\common\models\traits\TabTrait;
 use cmsgears\core\common\models\traits\resources\CommentTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -49,14 +47,28 @@ class Post extends Content {
 
 	// Traits ------------------------------------------------------
 
-	use CategoryTrait;
-	use TagTrait;
-	use FileTrait;
+	use BlockTrait;
 	use CommentTrait;
 	use ContentTrait;
-	use BlockTrait;
+	use CategoryTrait;
+	use FileTrait;
+	use TabTrait;
+	use TagTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->tabStatus	= [ 'basic' => self::STATUS_BASIC, 'media' => self::STATUS_MEDIA, 'attributes' => self::STATUS_ATTRIBUTES, 'settings' => self::STATUS_SETTINGS, 'review' => self::STATUS_REVIEW ];
+
+		$this->nextStatus	= [ self::STATUS_BASIC => self::STATUS_MEDIA, self::STATUS_MEDIA => self::STATUS_ATTRIBUTES, self::STATUS_ATTRIBUTES => self::STATUS_SETTINGS, self::STATUS_SETTINGS => self::STATUS_REVIEW ];
+
+		$this->previousTab	= [ 'media' => 'basic', 'attributes' => 'media', 'settings' => 'attributes', 'review' => 'settings' ];
+
+		$this->nextTab		= [ 'basic' => 'media', 'media' => 'attributes', 'attributes' => 'settings', 'settings' => 'review' ];
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -92,124 +104,6 @@ class Post extends Content {
 		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
 	}
 
-
-	public function getTabStatus() {
-
-		$action	= Yii::$app->controller->action->id;
-
-		switch( $action ) {
-
-			case 'basic': {
-
-				return self::STATUS_BASIC;
-			}
-			case 'media': {
-
-				return self::STATUS_MEDIA;
-			}
-			case 'attributes': {
-
-				return self::STATUS_ATTRIBUTES;
-			}
-			case 'settings': {
-
-				return self::STATUS_SETTINGS;
-			}
-			case 'review': {
-
-				return self::STATUS_REVIEW;
-			}
-		}
-
-		return null;
-	}
-
-	public function getNextStatus( $status = null ) {
-
-		if( !isset( $status ) ) {
-
-			$status	= $this->status;
-		}
-
-		switch( $status ) {
-
-			case self::STATUS_BASIC: {
-
-				return self::STATUS_MEDIA;
-			}
-			case self::STATUS_MEDIA: {
-
-				return self::STATUS_ATTRIBUTES;
-			}
-			case self::STATUS_ATTRIBUTES: {
-
-				return self::STATUS_SETTINGS;
-			}
-			case self::STATUS_SETTINGS: {
-
-				return self::STATUS_REVIEW;
-			}
-		}
-
-		return null;
-	}
-
-	public function getPreviousTab() {
-
-		$action		= Yii::$app->controller->action->id;
-		$basePath	= Yii::$app->controller->basePath;
-
-		switch( $action ) {
-
-			case 'media': {
-
-				return "$basePath/info?slug=$this->slug";
-			}
-			case 'attributes': {
-
-				return "$basePath/media?slug=$this->slug";
-			}
-			case 'settings': {
-
-				return "$basePath/attributes?slug=$this->slug";
-			}
-			case 'review': {
-
-				return "$basePath/settings?slug=$this->slug";
-			}
-		}
-
-		return null;
-	}
-
-	public function getNextTab() {
-
-		$action		= Yii::$app->controller->action->id;
-		$basePath	= Yii::$app->controller->basePath;
-
-		switch( $action ) {
-
-			case 'basic': {
-
-				return "$basePath/media?slug=$this->slug";
-			}
-			case 'media': {
-
-				return "$basePath/attributes?slug=$this->slug";
-			}
-			case 'attributes': {
-
-				return "$basePath/settings?slug=$this->slug";
-			}
-			case 'settings': {
-
-				return "$basePath/review?slug=$this->slug";
-			}
-		}
-
-		return null;
-	}
-
 	// CMG parent classes --------------------
 
 	// Post ----------------------------------
@@ -225,3 +119,9 @@ class Post extends Content {
 	// Delete -----------------
 
 }
+
+Post::$statusMap[ Post::STATUS_BASIC ]		= 'Reg - Basic';
+Post::$statusMap[ Post::STATUS_MEDIA ]		= 'Reg - Media';
+Post::$statusMap[ Post::STATUS_ATTRIBUTES ]	= 'Reg - Attributes';
+Post::$statusMap[ Post::STATUS_SETTINGS ]	= 'Reg - Settings';
+Post::$statusMap[ Post::STATUS_REVIEW ]		= 'Reg - Review';

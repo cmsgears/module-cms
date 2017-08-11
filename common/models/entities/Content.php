@@ -68,6 +68,8 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	public static $multiSite	= true;
 
+	public static $pageClass	= 'cmsgears\cms\common\models\entities\Page';
+
 	public static $postClass	= 'cmsgears\cms\common\models\entities\Post';
 
 	// Protected --------------
@@ -287,7 +289,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 			case CmsGlobal::TYPE_PAGE: {
 
-				$class = 'cmsgears\cms\common\models\entities\Page';
+				$class = static::$pageClass;
 
 				break;
 			}
