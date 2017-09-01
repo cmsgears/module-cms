@@ -48,14 +48,14 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 		// Return Url
 		$this->returnUrl		= Url::previous( 'widgets' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/all' ], true );
-		
+
 		// Breadcrumbs
 		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Widget' ] ],
-			'create' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Widget', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'all' => [ [ 'label' => 'Widgets' ] ],
+			'create' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
