@@ -146,7 +146,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+				//$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
 				return $this->redirect( "update?id=$model->id" );
 			}
