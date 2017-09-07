@@ -42,9 +42,7 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => '@themes/admin/views/templates/widget/grid',
-	//'dataView' => "$moduleTemplates/grid/data/gallery",
-	//'cardView' => "$moduleTemplates/grid/cards/gallery",
-	//'actionView' => "$moduleTemplates/grid/actions/Block"
+	'actionView' => "$moduleTemplates/grid/actions/widget"
 ]) ?>
 
 <?= Popup::widget([
