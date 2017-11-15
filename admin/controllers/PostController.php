@@ -29,6 +29,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	protected $modelContentService;
 	protected $modelCategoryService;
+	protected $activityService;
 
 	// Private ----------------
 
@@ -46,6 +47,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$this->activityService		= Yii::$app->factory->get( 'activityService' );
 
 		// Sidebar
 		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
@@ -108,7 +110,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( "update?id=$model->id" );
+			$model->refresh();
+
+			$this->model = $model;
+
+			return $this->redirect( "all" );
 		}
 
 		$visibilityMap	= Post::$visibilityMap;
@@ -148,7 +154,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				//$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
-				return $this->redirect( "update?id=$model->id" );
+				$model->refresh();
+
+				$this->model = $model;
+
+				return $this->redirect( "all" );
 			}
 
 			$visibilityMap	= Post::$visibilityMap;
@@ -186,6 +196,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelContentService->delete( $content );
 
+				$model->refresh();
+
+				$this->model = $model;
+
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -206,5 +220,47 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

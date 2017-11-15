@@ -3,7 +3,6 @@ namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -11,7 +10,6 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\forms\SidebarWidget;
 
 class SidebarController extends \cmsgears\core\admin\controllers\base\CrudController {
@@ -25,6 +23,7 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 	// Protected --------------
 
 	protected $widgetService;
+	protected $activityService;
 
 	// Private ----------------
 
@@ -40,7 +39,8 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
 		$this->widgetService	= Yii::$app->factory->get( 'widgetService' );
-
+		$this->activityService		= Yii::$app->factory->get( 'activityService' );
+		
 		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'sdebar' ];
 
@@ -105,7 +105,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-			return $this->redirect( "update?id=$model->id" );
+			$model->refresh();
+
+			$this->model = $model;
+
+			return $this->redirect( "all" );
 		}
 
 		return $this->render( 'create', [
@@ -133,7 +137,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 				$this->modelService->updateWidgets( $model, $sidebarWidgets );
 
-				return $this->redirect( "update?id=$model->id" );
+				$model->refresh();
+
+				$this->model = $model;
+
+				return $this->redirect( "all" );
 			}
 
 			return $this->render( 'update', [
@@ -159,6 +167,10 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 				$this->modelService->delete( $model );
 
+				$model->refresh();
+
+				$this->model = $model;
+
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -174,5 +186,47 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

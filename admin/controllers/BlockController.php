@@ -25,6 +25,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	protected $templateService;
 	protected $elementService;
+	protected $activityService;
 
 	// Private ----------------
 
@@ -41,6 +42,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 		$this->modelService		= Yii::$app->factory->get( 'blockService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 		$this->elementService	= Yii::$app->factory->get( 'elementService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 
 		// Sidebar	
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
@@ -126,7 +128,11 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 				$this->modelService->updateElements( $model, $blockElements );
 				
-				return $this->redirect( "update?id=$model->id" );
+				$model->refresh();
+			
+				$this->model = $model;
+				
+				return $this->redirect( "all" );
 			}
 		}
 
@@ -179,7 +185,11 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 					$this->modelService->updateElements( $model, $blockElements );
 
-					return $this->redirect( "update?id=$model->id" );
+					$model->refresh();
+			
+					$this->model = $model;
+					
+					return $this->redirect( "all" );
 				}
 			}
 
@@ -215,6 +225,8 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 				$this->modelService->delete( $model );
 
+				$this->model = $model;
+				
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -233,5 +245,47 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

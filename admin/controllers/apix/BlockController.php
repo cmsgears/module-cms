@@ -18,6 +18,8 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Protected --------------
 
+	protected $activityService;
+	
 	// Private ----------------
 
 
@@ -32,6 +34,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'blockService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 
 	}
 
@@ -74,6 +77,32 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
+	}
+	
+	public function beforeAction( $action ) {
+
+		$id	= Yii::$app->request->get( 'id' ) != null ? Yii::$app->request->get( 'id' ) : null;
+
+		if( isset( $id ) ) {
+
+			$model	= $this->modelService->getById( $id );
+		
+			$parentType = $this->modelService->getParentType();
+
+			switch( $action->id ) {
+
+				case 'delete': {
+
+					if( isset( $model ) ) {
+
+						$this->activityService->deleteActivity( $model, $parentType );
+					}
+
+					break;
+				}
+			}
+		}
+		return parent::beforeAction( $action);
 	}
 
 	// CMG interfaces ------------------------

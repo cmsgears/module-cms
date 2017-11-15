@@ -314,6 +314,8 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 						$this->delete( $model );
 
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
 						break;
 					}
 				}

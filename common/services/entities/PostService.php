@@ -322,6 +322,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 						$this->delete( $model );
 
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
 						break;
 					}
 				}

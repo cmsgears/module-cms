@@ -25,7 +25,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 	// Protected --------------
 
 	protected $templateService;
-
+	protected $activityService;
+	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -41,6 +42,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->activityService  = Yii::$app->factory->get( 'activityService' );
 
 		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'widget' ];
@@ -105,7 +107,11 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 			$this->modelService->create( $model, [ 'data' => $meta ] );
 
-			return $this->redirect( "update?id=$model->id" );
+			$model->refresh();
+
+			$this->model = $model;
+
+			return $this->redirect( "all" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
@@ -131,7 +137,11 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 				$this->modelService->update( $model, [ 'data' => $meta ] );
 
-				return $this->redirect( "update?id=$model->id" );
+				$model->refresh();
+
+				$this->model = $model;
+
+				return $this->redirect( "all" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_WIDGET, [ 'default' => true ] );
@@ -160,6 +170,10 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
 				$this->modelService->delete( $model );
+
+				$model->refresh();
+
+				$this->model = $model;
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -202,5 +216,47 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

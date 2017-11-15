@@ -158,6 +158,8 @@ class ElementService extends \cmsgears\core\common\services\entities\ObjectDataS
 
 						$this->delete( $model );
 
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
 						break;
 					}
 				}

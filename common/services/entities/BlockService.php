@@ -310,6 +310,8 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 						$this->delete( $model );
 
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
 						break;
 					}
 				}

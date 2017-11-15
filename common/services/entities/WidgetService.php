@@ -163,6 +163,8 @@ class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataSe
 
 						$this->delete( $model );
 
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
 						break;
 					}
 				}

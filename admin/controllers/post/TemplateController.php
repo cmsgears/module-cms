@@ -18,6 +18,8 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// Protected --------------
 
+	protected $activityService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -32,6 +34,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		// Type
 		$this->type			= CmsGlobal::TYPE_POST;
 
+		// Services
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+		
 		// Sidebar
 		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
 
@@ -70,5 +75,47 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
 		return parent::actionAll();
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }
