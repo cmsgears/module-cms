@@ -18,12 +18,12 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	'searchColumns' => [ 'name' => 'Name',  ],
 	'sortColumns' => [
 		'name' => 'Name', 'slug' => 'Slug', 'active' => 'Active'
-		
+
 	],
 	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		
+
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
@@ -48,13 +48,13 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Block', 'size' => 'medium',
+	'title' => 'Update Menu', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "cms/menu/bulk" ]
+	'data' => [ 'model' => 'Menu', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "cms/menu/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Delete Block', 'size' => 'medium',
+	'title' => 'Delete Menu', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "cms/menu/delete?id=" ]
+	'data' => [ 'model' => 'Menu', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "cms/menu/delete?id=" ]
 ]) ?>
