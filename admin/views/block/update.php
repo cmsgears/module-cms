@@ -12,6 +12,8 @@ use cmsgears\icons\widgets\IconChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -26,7 +28,7 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						
+
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -37,7 +39,7 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
-						</div>		
+						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
@@ -51,11 +53,18 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 								<?= $form->field( $model, 'active' )->checkbox() ?>
 						</div>
-						<div class="col col2">
-								
-						</div>
 					</div>
-					
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Content</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 				</div>
 			</div>
 		</div>
@@ -105,11 +114,11 @@ $returnUrl		= $this->context->returnUrl;
 									</div>
 								</span>
 							<?php } ?>
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="filler-height filler-height-medium"></div>
 
