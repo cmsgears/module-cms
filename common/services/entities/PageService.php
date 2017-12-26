@@ -17,6 +17,7 @@ use cmsgears\cms\common\services\interfaces\entities\IPageService;
 
 use cmsgears\core\common\services\traits\NameTypeTrait;
 use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\MultiSiteTrait;
 
 class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
@@ -52,6 +53,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use MultiSiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
