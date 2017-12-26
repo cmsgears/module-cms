@@ -122,7 +122,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -139,6 +139,8 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
+			// Unique
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ [ 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
