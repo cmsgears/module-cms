@@ -156,6 +156,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$content		= $model->modelContent;
 			$visibilityMap	= Page::$visibilityMap;
+            $banner         = File::loadFile( null, 'banner' );
+            $video          = File::loadFile( null, 'video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
@@ -299,13 +301,12 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				// Update Listing Status
+				// Update Post Status
 				if( $model->status < Post::STATUS_SUBMITTED ) {
 
 					$this->modelService->updateStatus( $model, Post::STATUS_SUBMITTED );
 
-					// Send admin notification for new listing.
-					//$this->modelService->sendNewListingNotification( $model );
+					// Send admin notification for new Post.
 
 					$model->refresh();
 
@@ -315,12 +316,11 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 					$this->modelService->updateStatus( $model, Post::STATUS_RE_SUBMIT );
 
-					// Send admin notification for re-submit listing.
-					//$this->modelService->sendResubmitNotification( $model );
+					// Send admin notification for re-submit post.
 				}
 				else if( $model->isFrojen() || $model->isBlocked() ) {
 
-					Yii::$app->listingMailer->sendActivationRequestMail( $model );
+					Yii::$app->cmsMailer->sendActivationRequestMail( $model );
 
 					if( $model->isFrojen() ) {
 
@@ -358,7 +358,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		$slug	= $post->slug;
 
-		switch( $listing->status ) {
+		switch( $post->status ) {
 
 			case Post::STATUS_BASIC: {
 
@@ -389,18 +389,18 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 	}
 
 	/**
-	 * Check whether listing is under review. It will disable the registration tabs if status is new.
+	 * Check whether post is under review. It will disable the registration tabs if status is new.
 	 */
 	protected function checkEditable( $post ) {
 
-		if( !$listing->isEditable() ) {
+		if( !$post->isEditable() ) {
 
-			Yii::$app->getResponse()->redirect( [ "$this->basePath/review?slug=$listing->slug" ] )->send();
+			Yii::$app->getResponse()->redirect( [ "$this->basePath/review?slug=$post->slug" ] )->send();
 		}
 	}
 
 	/**
-	 * Check whether listing is being registered and redirect user to the last step filled by user.
+	 * Check whether post is being registered and redirect user to the last step filled by user.
 	 */
 	protected function checkRefresh( $post ) {
 
@@ -413,11 +413,11 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 	}
 
 	/**
-	 * Update listing status and redirect to the last step filled by user.
+	 * Update post status and redirect to the last step filled by user.
 	 */
 	protected function updateStatus( $post, $status ) {
 
-		// Update Listing Status
+		// Update Post Status
 		$this->modelService->updateStatus( $post, $status );
 
 		return $this->checkStatus( $post );
