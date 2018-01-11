@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\services\mappers;
+namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
 use cmsgears\cms\common\models\base\CmsTables;
