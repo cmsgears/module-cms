@@ -1,13 +1,7 @@
 <?php
 namespace cmsgears\cms\common\models\resources;
 
-// Yii Imports
-use \Yii;
-use yii\helpers\ArrayHelper;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\cms\common\models\entities\Content;

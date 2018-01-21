@@ -1,18 +1,12 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\resources\ContentMeta;
 
 use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
 
-class ContentMetaService extends \cmsgears\core\common\services\base\AttributeService implements IContentMetaService {
+class ContentMetaService extends \cmsgears\core\common\services\base\MetaService implements IContentMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -95,4 +89,5 @@ class ContentMetaService extends \cmsgears\core\common\services\base\AttributeSe
 	// Update -------------
 
 	// Delete -------------
+
 }

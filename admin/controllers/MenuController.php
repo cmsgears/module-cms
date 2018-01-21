@@ -26,7 +26,8 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 	// Protected --------------
 
 	protected $pageService;
-
+	protected $activityService;
+	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -35,13 +36,29 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		// Permission
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
+		// Service
 		$this->modelService		= Yii::$app->factory->get( 'menuService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 		$this->pageService		= Yii::$app->factory->get( 'pageService' );
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'menus' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Menu' ] ],
+			'create' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -62,7 +79,7 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	public function actionAll() {
 
-		Url::remember( [ 'menu/all' ], 'menus' );
+		Url::remember( Yii::$app->request->getUrl(), 'menus' );
 
 		return parent::actionAll();
 	}
@@ -100,7 +117,11 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->updateLinks( $model, $links, $pageLinks );
 
-			return $this->redirect( $this->returnUrl );
+			$model->refresh();
+			
+			$this->model = $model;
+			
+			return $this->redirect( "all" );
 		}
 
 		return $this->render( 'create', [
@@ -141,7 +162,11 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelService->updateLinks( $model, $links, $pageLinks );
 
-				return $this->redirect( $this->returnUrl );
+				$model->refresh();
+			
+				$this->model = $model;
+				
+				return $this->redirect( "all" );
 			}
 
 			return $this->render( 'update', [
@@ -168,6 +193,8 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelService->delete( $model );
 
+				$this->model = $model;
+				
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -185,5 +212,47 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

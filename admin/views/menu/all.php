@@ -1,95 +1,60 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
+// CMG Imports
+use cmsgears\widgets\popup\Popup;
 
+use cmsgears\widgets\grid\DataGrid;
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
-
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'All Menus | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Menu | ' . $coreProperties->getSiteTitle();
 
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+// Templates
+$moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 ?>
-<div class="header-content clearfix">
-	<div class="header-actions col15x10">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="header-search col15x5">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
 
-<div class="data-grid">
-	<div class="grid-header clearfix">
-		<div class="col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Name
-						<span class='box-icon-sort'>
-							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Active</th>
-					<th>Description</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name',  ],
+	'sortColumns' => [
+		'name' => 'Name', 'slug' => 'Slug', 'active' => 'Active'
 
-					foreach( $models as $menu ) {
+	],
+	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
+	'reportColumns' => [
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 
-						$id = $menu->id;
-				?>
-					<tr>
-						<td><?= $menu->name ?></td>
-						<td><?= $menu->getActiveStr() ?></td>
-						<td><?= $menu->description ?></td>
-						<td class="actions">
-							<span title="Update Menu"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Menu"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )	?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="grid-header clearfix">
-		<div class="col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
+		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'model' => [ 'delete' => 'Delete' ]
+	],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x4', 'x3', 'x5', 'x2'  ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'name' => 'Name',
+		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
+		'description' => 'Description',
+		'actions'	=> 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	//'dataView' => "$moduleTemplates/grid/data/gallery",
+	//'cardView' => "$moduleTemplates/grid/cards/gallery",
+	//'actionView' => "$moduleTemplates/grid/actions/gallery"
+]) ?>
+
+<?= Popup::widget([
+	'title' => 'Update Menu', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Menu', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "cms/menu/bulk" ]
+]) ?>
+
+<?= Popup::widget([
+	'title' => 'Delete Menu', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'data' => [ 'model' => 'Menu', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "cms/menu/delete?id=" ]
+]) ?>

@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\cms\common\models\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\cms\common\models\traits\resources\ContentTrait;
 
 /**
@@ -97,4 +92,5 @@ class Category extends \cmsgears\core\common\models\resources\Category {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -32,7 +32,7 @@ trait ContentTrait {
 		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
 
 		return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )->from( "$modelContentTable as modelContent" )
-					->where( "modelContent.parentType='$this->mParentType'" );
+					->where( "modelContent.parentType='$this->modelType'" );
 	}
 
 	public function getTemplateViewPath() {
@@ -60,4 +60,5 @@ trait ContentTrait {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

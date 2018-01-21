@@ -26,8 +26,6 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	protected $templateService;
 
-	protected $pageService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -38,9 +36,9 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->modelService		= Yii::$app->factory->get( 'pageService' );
 
-		$this->pageService		= Yii::$app->factory->get( 'pageService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -99,14 +97,14 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	 */
 	public function actionSingle( $slug ) {
 
-		$page	= $this->pageService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$page	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
 
 		if( isset( $page ) ) {
 
 			if( !$page->isPublished() ) {
 
-				// Error- Not allowed
-				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+				// Error- No access
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
 			// Find Template

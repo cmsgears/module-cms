@@ -2,11 +2,11 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -17,6 +17,7 @@ use cmsgears\cms\common\services\interfaces\entities\IPageService;
 
 use cmsgears\core\common\services\traits\NameTypeTrait;
 use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\MultiSiteTrait;
 
 class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
@@ -31,6 +32,8 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	public static $modelClass	= '\cmsgears\cms\common\models\entities\Page';
 
 	public static $modelTable	= CmsTables::TABLE_PAGE;
+
+	public static $typed		= true;
 
 	public static $parentType	= CmsGlobal::TYPE_PAGE;
 
@@ -50,6 +53,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use MultiSiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -75,6 +79,11 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
@@ -134,7 +143,35 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			$config[ 'sort' ] = $sort;
 		}
 
-		$config[ 'conditions' ][ 'type' ]	= CmsGlobal::TYPE_PAGE;
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template"
+		];
+
+		// Result -----------
+
+		//$config[ 'conditions' ][ 'type' ]	= CmsGlobal::TYPE_PAGE;
 
 		return parent::findPage( $config );
 	}
@@ -187,18 +224,40 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function update( $model, $config = [] ) {
 
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'icon', 'title' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		if( $admin ) {
 
-			return parent::update( $model, [
-				'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured', 'comments' ]
-			]);
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'parentId', 'name', 'status', 'visibility', 'icon', 'order', 'featured' ]
+			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

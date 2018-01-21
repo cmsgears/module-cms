@@ -1,13 +1,8 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\data\Sort;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\resources\Category;
 
@@ -125,7 +120,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	public function delete( $model, $config = [] ) {
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : ( isset( $model->modelContent ) ? $model->modelContent : null );
 
 		if( isset( $content ) ) {
 
@@ -158,4 +153,5 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 	// Update -------------
 
 	// Delete -------------
+
 }

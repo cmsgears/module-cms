@@ -10,72 +10,126 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Add Block | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Block | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Add Block</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block' ] );?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'name' ) ?>
+						</div>
 
-		<?= $form->field( $model, 'name' ) ?>
-		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-		<?= $form->field( $model, 'description' )->textarea() ?>
-		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
-		<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
-		<?= $form->field( $model, 'title' ) ?>
-		<?= $form->field( $model, 'active' )->checkbox() ?>
-
-		<div class="box-content clearfix">
-			<div class="header">Block Content</div>
-			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
-		</div>
-
-		<div class="box-content clearfix">
-			<div class="header">Block Banner</div>
-			<?= ImageUploader::widget([
-					'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ],
-					'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner'
-			]); ?>
-		</div>
-
-		<div class="box-content clearfix">
-			<div class="header">Block Video</div>
-			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'model-video', 'class' => 'file-uploader' ], 'model' => $video ]); ?>
-		</div>
-
-		<div class="box-content clearfix">
-			<div class="header">Block Texture</div>
-			<?= ImageUploader::widget([
-					'options' => [ 'id' => 'model-texture', 'class' => 'file-uploader' ],
-					'model' => $texture, 'modelClass' => 'Texture', 'directory' => 'texture'
-			]); ?>
-		</div>
-
-		<div class="box-content clearfix">
-			<div class="header">Link Elements</div>
-			<?php foreach ( $elements as $key => $element ) { ?>
-				<span class="box-half">
-					<?= $form->field( $blockElements[ $key ], "[$key]element" )->checkbox( [ 'label' => $element[ 'name' ] ] ) ?>
-					<?= $form->field( $blockElements[ $key ], "[$key]elementId" )->hiddenInput( [ 'value' => $element['id'] ] )->label( false ) ?>
-					<div class="frm-split-40-60 clearfix">
-						<?= $form->field( $blockElements[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "item options" ] ) ?>
-						<?= $form->field( $blockElements[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
 					</div>
-				</span>
-			<?php } ?>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'title' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+								<?= $form->field( $model, 'active' )->checkbox() ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Content</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height"> </div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Images</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+
+						<div class="col col12x4">
+							<label> Texture </label>
+							<?= ImageUploader::widget([ 'directory' => 'texture' ,  'model' => $texture,  'modelClass' => 'Texture' ]); ?>
+						</div>
+						<div class="col col12x4">
+							<label> Banner </label>
+							<?= ImageUploader::widget([ 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] ); ?>
+						</div>
+							<div class="col col12x4">
+							<label> Video </label>
+							<?= VideoUploader::widget([  'model' => $video  ]); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height"> </div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title"> Link Elements </div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+
+						<div class="col col1">
+							<label> Link Elements </label>
+							<?php foreach ( $elements as $key => $element ) { ?>
+								<span class="box-half">
+									<?= $form->field( $blockElements[ $key ], "[$key]element" )->checkbox( [ 'label' => $element[ 'name' ] ] ) ?>
+									<?= $form->field( $blockElements[ $key ], "[$key]elementId" )->hiddenInput( [ 'value' => $element['id'] ] )->label( false ) ?>
+									<div class="frm-split-40-60 clearfix">
+										<?= $form->field( $blockElements[ $key ], "[$key]htmlOptions" )->textInput( [ "placeholder" => "item options" ] ) ?>
+										<?= $form->field( $blockElements[ $key ], "[$key]order" )->textInput( [ "placeholder" => "order" ] ) ?>
+									</div>
+								</span>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<div class="filler-height"></div>
+		<div class="filler-height filler-height-medium"></div>
 
-		<div class="align align-center">
-			<?=Html::a( 'Cancel',  [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+		<div class="align align-right">
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

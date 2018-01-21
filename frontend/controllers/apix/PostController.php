@@ -2,14 +2,11 @@
 namespace cmsgears\cms\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -31,7 +28,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_USER;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'postService' );
 		$this->metaService		= Yii::$app->factory->get( 'contentMetaService' );
 	}
@@ -50,27 +50,31 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'assignCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'removeCategory' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'assignTags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'removeTag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'addMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'updateMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'deleteMeta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+					'update-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'update-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'assign-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'assign-tags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-tag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'autoSearch' => [ 'post' ],
-					'assignCategory' => [ 'post' ],
-					'removeCategory' => [ 'post' ],
-					'assignTags' => [ 'post' ],
-					'removeTag' => [ 'post' ],
-					'addMeta' => [ 'post' ],
-					'updateMeta' => [ 'post' ],
-					'deleteMeta' => [ 'post' ],
-					'submitComment' => [ 'post' ]
+					'auto-search' => [ 'post' ],
+					'update-avatar' => [ 'post' ],
+					'update-banner' => [ 'post' ],
+					'assign-category' => [ 'post' ],
+					'remove-category' => [ 'post' ],
+					'assign-tags' => [ 'post' ],
+					'remove-tag' => [ 'post' ],
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
+					'submit-comment' => [ 'post' ]
 				]
 			]
 		];
@@ -82,13 +86,15 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\AssignCategory' ],
-			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\RemoveCategory' ],
-			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\AssignTags' ],
-			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\RemoveTag' ],
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\UpdateMeta' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\attribute\DeleteMeta' ],
+			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
+			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
+			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
+			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
 		];
 	}
@@ -98,4 +104,5 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	// CMG parent classes --------------------
 
 	// PostController ------------------------
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -18,6 +18,7 @@ use cmsgears\core\common\models\interfaces\IVisibility;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\core\common\models\resources\Gallery;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
@@ -25,6 +26,7 @@ use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -37,6 +39,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property int $createdBy
  * @property int $modifiedBy
  * @property string $name
+ * @property string $title
  * @property string $slug
  * @property short $type
  * @property string $icon
@@ -44,12 +47,14 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property short $status
  * @property short $visibility
  * @property short $order
+ * @property boolean $showGallery
  * @property short $featured
  * @property short $comments
  * @property date $createdAt
  * @property date $modifiedAt
  * @property string $content
  * @property string $data
+ * @property string $widgetData
  */
 class Content extends \cmsgears\core\common\models\base\Entity implements IApproval, IVisibility {
 
@@ -61,7 +66,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Public -----------------
 
-	public static $multiSite = true;
+	public static $multiSite	= true;
+
+	public static $pageClass	= 'cmsgears\cms\common\models\entities\Page';
+
+	public static $postClass	= 'cmsgears\cms\common\models\entities\Post';
 
 	// Protected --------------
 
@@ -81,6 +90,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	use NameTypeTrait;
 	use SlugTypeTrait;
 	use VisibilityTrait;
+	use OwnerTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -112,7 +122,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -128,15 +138,18 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
+			// Unique
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
-			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'featured', 'comments' ], 'boolean' ],
+			[ [ 'featured', 'comments', 'showGallery' ], 'boolean' ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -161,7 +174,8 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		return [
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
@@ -228,6 +242,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		return $this->hasMany( ContentMeta::className(), [ 'pageId' => 'id' ] );
 	}
 
+	public function getGallery() {
+
+		return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
+	}
+
 	public function isPage() {
 
 		return $this->type == CmsGlobal::TYPE_PAGE;
@@ -270,15 +289,15 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		switch( $row['type'] ) {
 
-			case CmsGlobal::TYPE_PAGE:
-			{
-				$class = 'cmsgears\cms\common\models\entities\Page';
+			case CmsGlobal::TYPE_PAGE: {
+
+				$class = static::$pageClass;
 
 				break;
 			}
-			case CmsGlobal::TYPE_POST:
-			{
-				$class = 'cmsgears\cms\common\models\entities\Post';
+			case CmsGlobal::TYPE_POST: {
+
+				$class = static::$postClass;
 
 				break;
 			}
@@ -329,4 +348,5 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Update -----------------
 
 	// Delete -----------------
+
 }

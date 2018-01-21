@@ -20,6 +20,8 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 	// Public -----------------
 
 	// Protected --------------
+	
+	protected $activityService;
 
 	// Private ----------------
 
@@ -29,8 +31,12 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		// Permissions
+		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
+		
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,18 +53,59 @@ class PageController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// 'test'  => [ 'permission' => $this->crudPermission ]
+					
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					// 'test' => [ 'post' ]
+				
+					'bulk' => [ 'post' ],
+					'delete' => [ 'post' ]
 				]
 			]
 		];
 	}
 
+	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+		
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+		];
+	}
+
+	public function beforeAction( $action ) {
+
+		$id	= Yii::$app->request->get( 'id' ) != null ? Yii::$app->request->get( 'id' ) : null;
+
+		if( isset( $id ) ) {
+
+			$model	= $this->modelService->getById( $id );
+		
+			$parentType = $this->modelService->getParentType();
+
+			switch( $action->id ) {
+
+				case 'delete': {
+
+					if( isset( $model ) ) {
+
+						$this->activityService->deleteActivity( $model, $parentType );
+					}
+
+					break;
+				}
+			}
+		}
+		return parent::beforeAction( $action);
+	}
+	
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------

@@ -2,15 +2,14 @@
 namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Template;
 use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\ResourceTrait;
@@ -35,6 +34,9 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property string $seoRobot
  * @property integer $views
  * @property integer $referrals
+ * @property integer $comments
+ * @property integer $weight
+ * @property integer $rank
  * @property date $publishedAt
  * @property string $content
  * @property string $data
@@ -90,7 +92,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			// Other
-			[ [ 'views', 'referrals' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'views', 'referrals', 'comments', 'weight', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -157,22 +159,26 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_SMALL ) {
 
-		if( strlen( $this->summary ) > $limit ) {
+		$summary	= $this->summary;
 
-			return substr( $this->summary, 0, $limit );
+		if( strlen( $summary ) > $limit ) {
+
+			$summary = substr( $summary, 0, $limit );
 		}
 
-		return $this->summary;
+		return HtmlPurifier::process( $summary );
 	}
 
 	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
 
-		if( strlen( $this->content ) > $limit ) {
+		$content	= $this->content;
 
-			return substr( $this->content, 0, $limit );
+		if( strlen( $content ) > $limit ) {
+
+			$content = substr( $content, 0, $limit );
 		}
 
-		return $this->content;
+		return HtmlPurifier::process( $content );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -202,4 +208,5 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

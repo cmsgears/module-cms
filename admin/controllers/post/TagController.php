@@ -2,11 +2,10 @@
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
@@ -27,10 +26,26 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		// Permission
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
+		// Config
 		$this->type				= CmsGlobal::TYPE_POST;
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
+
+		// Return Url
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
+			'all' => [ [ 'label' => 'Tags' ] ],
+			'create' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Tags', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,7 +66,7 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 	public function actionAll() {
 
-		Url::remember( [ 'post/tag/all' ], 'tags' );
+		Url::remember( Yii::$app->request->getUrl(), 'tags' );
 
 		return parent::actionAll();
 	}

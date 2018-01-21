@@ -18,7 +18,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 	// Public -----------------
 
 	// Protected --------------
-
+	
+	protected $activityService;
+	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -27,12 +29,29 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
+		// Services
+		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element-template' ];
 
-		$this->type			= CmsGlobal::TYPE_ELEMENT;
+		// Services
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
+		// Permissions
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
+		$this->type				= CmsGlobal::TYPE_ELEMENT;
+
+		// Return Url
+		$this->returnUrl		= Url::previous( 'templates' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/template/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			
+			'all' => [ [ 'label' => 'Elements' ] ],
+			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -53,8 +72,50 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll() {
 
-		Url::remember( [ 'element/template/all' ], 'templates' );
+		Url::remember(  Yii::$app->request->getUrl(), 'templates' );
 
 		return parent::actionAll();
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

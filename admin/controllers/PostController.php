@@ -2,8 +2,7 @@
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -11,8 +10,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\resources\Category;
 use cmsgears\cms\common\models\entities\Post;
 use cmsgears\cms\common\models\resources\ModelContent;
 
@@ -30,6 +29,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	protected $modelContentService;
 	protected $modelCategoryService;
+	protected $activityService;
 
 	// Private ----------------
 
@@ -39,19 +39,30 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		$this->crudPermission		= CmsGlobal::PERM_CMS;
+		// Permissions
+		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Services
 		$this->modelService			= Yii::$app->factory->get( 'postService' );
-
 		$this->templateService		= Yii::$app->factory->get( 'templateService' );
-
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$this->activityService		= Yii::$app->factory->get( 'activityService' );
 
-		$this->sidebar				= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		// Sidebar
+		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 
-		$this->returnUrl		= Url::previous( 'posts' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+		// Return Url
+		$this->returnUrl	= Url::previous( 'posts' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'all' => [ [ 'label' => 'Posts' ] ],
+			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -87,6 +98,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$model				= new $modelClass;
 		$model->siteId		= Yii::$app->core->siteId;
 		$model->comments	= true;
+
+		$binder				= new Binder();
+
 		$content			= new ModelContent();
 		$banner				= File::loadFile( null, 'Banner' );
 		$video				= File::loadFile( null, 'Video' );
@@ -94,13 +108,13 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->modelService->create( $model, [ 'admin' => true ] );
+			$this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-			$this->modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$model->refresh();
 
-			$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+			$this->model = $model;
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "all" );
 		}
 
 		$visibilityMap	= Post::$visibilityMap;
@@ -112,6 +126,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			'content' => $content,
 			'banner' => $banner,
 			'video' => $video,
+			'binder' => $binder,
 			'visibilityMap' => $visibilityMap,
 			'statusMap' => $statusMap,
 			'templatesMap' => $templatesMap
@@ -137,9 +152,13 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
-				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+				//$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
 
-				return $this->redirect( $this->returnUrl );
+				$model->refresh();
+
+				$this->model = $model;
+
+				return $this->redirect( "all" );
 			}
 
 			$visibilityMap	= Post::$visibilityMap;
@@ -177,6 +196,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 				$this->modelContentService->delete( $content );
 
+				$model->refresh();
+
+				$this->model = $model;
+
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -197,5 +220,47 @@ class PostController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

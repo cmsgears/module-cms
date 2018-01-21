@@ -1,18 +1,14 @@
 <?php
 namespace cmsgears\cms\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\data\Sort;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\cms\common\models\resources\Tag;
 
-use cmsgears\cms\common\services\interfaces\resources\ITagService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
+use cmsgears\cms\common\services\interfaces\resources\ITagService;
 
 class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
 
@@ -91,13 +87,16 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
-		if( isset( $content ) ) {
+		// Model content is required for all the tags to form tag page
+		if( !isset( $content ) ) {
 
-			$config[ 'parent' ]			= $model;
-			$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
-
-			$this->modelContentService->create( $content, $config );
+			$content = new ModelContent();
 		}
+
+		$config[ 'parent' ]			= $model;
+		$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
+
+		$this->modelContentService->create( $content, $config );
 
 		return $model;
 	}
@@ -157,4 +156,5 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 	// Update -------------
 
 	// Delete -------------
+
 }

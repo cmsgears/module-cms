@@ -1,15 +1,12 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
 
+use cmsgears\core\common\models\traits\TabTrait;
 use cmsgears\core\common\models\traits\resources\CommentTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -25,10 +22,14 @@ class Post extends Content {
 
 	// Constants --------------
 
-	// Public -----------------
+	// Pre-Defined Status
+	const STATUS_BASIC		=  20;
+	const STATUS_MEDIA		=  40;
+	const STATUS_ATTRIBUTES	= 480;
+	const STATUS_SETTINGS	= 490;
+	const STATUS_REVIEW		= 499;
 
-	public $mParentType		= CmsGlobal::TYPE_POST;
-	public $categoryType	= CmsGlobal::TYPE_POST;
+	// Public -----------------
 
 	// Protected --------------
 
@@ -36,20 +37,38 @@ class Post extends Content {
 
 	// Public -----------------
 
+	public $modelType		= CmsGlobal::TYPE_POST;
+
+	public $categoryType	= CmsGlobal::TYPE_POST;
+
 	// Protected --------------
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use CategoryTrait;
-	use TagTrait;
-	use FileTrait;
+	use BlockTrait;
 	use CommentTrait;
 	use ContentTrait;
-	use BlockTrait;
+	use CategoryTrait;
+	use FileTrait;
+	use TabTrait;
+	use TagTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->tabStatus	= [ 'basic' => self::STATUS_BASIC, 'media' => self::STATUS_MEDIA, 'attributes' => self::STATUS_ATTRIBUTES, 'settings' => self::STATUS_SETTINGS, 'review' => self::STATUS_REVIEW ];
+
+		$this->nextStatus	= [ self::STATUS_BASIC => self::STATUS_MEDIA, self::STATUS_MEDIA => self::STATUS_ATTRIBUTES, self::STATUS_ATTRIBUTES => self::STATUS_SETTINGS, self::STATUS_SETTINGS => self::STATUS_REVIEW ];
+
+		$this->previousTab	= [ 'media' => 'basic', 'attributes' => 'media', 'settings' => 'attributes', 'review' => 'settings' ];
+
+		$this->nextTab		= [ 'basic' => 'media', 'media' => 'attributes', 'attributes' => 'settings', 'settings' => 'review' ];
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -98,4 +117,11 @@ class Post extends Content {
 	// Update -----------------
 
 	// Delete -----------------
+
 }
+
+Post::$statusMap[ Post::STATUS_BASIC ]		= 'Reg - Basic';
+Post::$statusMap[ Post::STATUS_MEDIA ]		= 'Reg - Media';
+Post::$statusMap[ Post::STATUS_ATTRIBUTES ]	= 'Reg - Attributes';
+Post::$statusMap[ Post::STATUS_SETTINGS ]	= 'Reg - Settings';
+Post::$statusMap[ Post::STATUS_REVIEW ]		= 'Reg - Review';

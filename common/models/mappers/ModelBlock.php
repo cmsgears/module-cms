@@ -2,13 +2,14 @@
 namespace cmsgears\cms\common\models\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\entities\Block;
 
 use cmsgears\core\common\models\traits\MapperTrait;
 
@@ -105,7 +106,7 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	// ModelBlock ----------------------------
 
-	public function getBlock() {
+	public function getModel() {
 
 		return $this->hasOne( Block::className(), [ 'id' => 'modelId' ] );
 	}
@@ -132,7 +133,7 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'block' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
@@ -140,7 +141,7 @@ class ModelBlock extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithModel( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'block' ];
+		$config[ 'relations' ]	= [ 'model' ];
 
 		return parent::queryWithAll( $config );
 	}

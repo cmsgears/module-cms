@@ -39,7 +39,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		$this->viewPath				= '@cmsgears/module-cms/admin/views/tag/';
 
-		$this->crudPermission		= CmsGlobal::PERM_CMS;
+		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
 
 		$this->templateType			= CoreGlobal::TYPE_TAG;
 
@@ -87,10 +87,10 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
-
+			
 			$this->modelService->create( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -115,13 +115,13 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 			$content	= $model->modelContent;
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$video		= File::loadFile( $content->video, 'Video' );
-
+			
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
 				$this->modelService->update( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

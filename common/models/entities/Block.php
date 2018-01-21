@@ -2,7 +2,7 @@
 namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -12,8 +12,6 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\core\common\models\entities\Site;
 
@@ -70,7 +68,7 @@ class Block extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType	= CmsGlobal::TYPE_BLOCK;
+	public $modelType	= CmsGlobal::TYPE_BLOCK;
 
 	// Protected --------------
 

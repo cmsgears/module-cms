@@ -2,15 +2,13 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use \Yii;
-
+use Yii;
+use yii\data\Sort;
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
-use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\utilities\DataUtil;
 
@@ -58,7 +56,78 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 
 	public function getPage( $config = [] ) {
 
-		$modelTable	= static::$modelTable;
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name'
+				],
+				'slug' => [
+					'asc' => [ 'slug' => SORT_ASC ],
+					'desc' => ['slug' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'slug'
+				],
+				'template' => [
+					'asc' => [ 'template' => SORT_ASC ],
+					'desc' => ['template' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'template',
+				],
+				'cdate' => [
+					'asc' => [ 'createdAt' => SORT_ASC ],
+					'desc' => ['createdAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'cdate',
+				],
+				'udate' => [
+					'asc' => [ 'modifiedAt' => SORT_ASC ],
+					'desc' => ['modifiedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'udate',
+				]
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
 
 		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_MENU;
 
@@ -231,6 +300,29 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 		$menu->update();
 
 		return true;
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
+						
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

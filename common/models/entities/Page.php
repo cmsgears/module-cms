@@ -1,11 +1,7 @@
 <?php
 namespace cmsgears\cms\common\models\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -31,7 +27,7 @@ class Page extends Content {
 
 	// Public -----------------
 
-	public $mParentType	= CmsGlobal::TYPE_PAGE;
+	public $modelType	= CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
 

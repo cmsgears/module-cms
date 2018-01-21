@@ -2,7 +2,7 @@
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
@@ -24,8 +24,6 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	protected $templateService;
 
-	protected $postService;
-
 	protected $categoryService;
 	protected $tagService;
 
@@ -37,11 +35,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+
 		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->modelService		= Yii::$app->factory->get( 'postService' );
 
-		$this->postService		= Yii::$app->factory->get( 'postService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 		$this->tagService		= Yii::$app->factory->get( 'tagService' );
@@ -62,11 +62,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// secure actions
+					'all' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
+					'all' => [ 'get' ],
 					'search' => [ 'get' ],
 					'category' => [ 'get' ],
 					'tag' => [ 'get' ],
@@ -98,13 +100,37 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// PostController ------------------------
 
+	public function actionAll( $status = null ) {
+
+		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE	;
+
+		$user			= Yii::$app->user->getIdentity();
+		$dataProvider 	= null;
+
+		if( isset( $user ) ) {
+
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id );
+
+			// TODO: Get data provider for status using textual representation of status
+
+			return $this->render( 'all', [
+				 'dataProvider' => $dataProvider,
+				 'status' => $status
+			]);
+		}
+	}
+
 	public function actionSearch() {
 
 		$user			= Yii::$app->user->getIdentity();
-		$dataProvider	= $this->postService->getPageForSearch( [ 'route' => 'post/search' ] );
 		$template		= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 
 		if( isset( $template ) ) {
+
+			$dataProvider	= $this->modelService->getPageForSearch([
+									'route' => 'blog/search', 'searchContent' => true,
+									'searchCategory' => true, 'searchTag' => true
+								]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
 				'dataProvider' => $dataProvider
@@ -184,7 +210,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionSingle( $slug ) {
 
-		$post	= $this->postService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$post	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
 		if( isset( $post ) ) {
 

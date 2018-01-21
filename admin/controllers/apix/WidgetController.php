@@ -23,6 +23,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	// Protected --------------
 
+	protected $activityService;
+	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -30,9 +32,13 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 	public function init() {
 
 		parent::init();
-
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		
+		// Permission
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		
+		// Service
+		$this->modelService		= Yii::$app->factory->get( 'widgetService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -49,13 +55,19 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'bindSidebars' => [ 'permission' => $this->crudPermission ]
+					'bindSidebars' => [ 'permission' => $this->crudPermission ],
+					
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'bindSidebars' => [ 'post' ]
+					'bindSidebars' => [ 'post' ],
+					
+					'bulk' => [ 'post' ],
+					'delete' => [ 'post' ]
 				]
 			]
 		];
@@ -67,6 +79,15 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	// WidgetController ----------------------
 
+	public function actions() {
+
+		return [
+			
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+		];
+	}
+	
 	public function actionBindSidebars() {
 
 		$binder = new Binder();
@@ -81,5 +102,31 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	}
+	
+	public function beforeAction( $action ) {
+
+		$id	= Yii::$app->request->get( 'id' ) != null ? Yii::$app->request->get( 'id' ) : null;
+
+		if( isset( $id ) ) {
+
+			$model	= $this->modelService->getById( $id );
+		
+			$parentType = $this->modelService->getParentType();
+
+			switch( $action->id ) {
+
+				case 'delete': {
+
+					if( isset( $model ) ) {
+
+						$this->activityService->deleteActivity( $model, $parentType );
+					}
+
+					break;
+				}
+			}
+		}
+		return parent::beforeAction( $action);
 	}
 }

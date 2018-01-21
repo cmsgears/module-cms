@@ -26,7 +26,8 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 	// Protected --------------
 
 	protected $templateService;
-
+	protected $activityService;
+	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -35,13 +36,29 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
-		$this->crudPermission	= CmsGlobal::PERM_CMS;
+		// Permissions
+		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'elementService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+
+		// Sidebar	
 		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'elements' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Elements' ] ],
+			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -80,7 +97,11 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 			$this->modelService->create( $model, [ 'data' => $meta, 'banner' => $banner ] );
 
-			return $this->redirect( $this->returnUrl );
+			$model->refresh();
+			
+			$this->model = $model;
+			
+			return $this->redirect( "all" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
@@ -107,8 +128,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
 
 				$this->modelService->update( $model, [ 'data' => $meta, 'banner' => $banner ] );
-
-				return $this->redirect( $this->returnUrl );
+				
+				$model->refresh();
+			
+				$this->model = $model;
+				
+				return $this->redirect( "all" );
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
@@ -140,6 +165,8 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 				$this->modelService->delete( $model, [ 'banner' => $banner ] );
 
+				$this->model = $model;
+				
 				return $this->redirect( $this->returnUrl );
 			}
 
@@ -155,5 +182,47 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+	
+	public function afterAction( $action, $result ) {
+
+		$parentType = $this->modelService->getParentType();
+		
+		switch( $action->id ) {
+
+			case 'create':
+			case 'update': {
+
+				if( isset( $this->model ) ) {
+
+					// Refresh Listing
+					$this->model->refresh();
+
+					// Activity
+					if( $action->id == 'create' ) { 
+					
+						$this->activityService->createActivity( $this->model, $parentType );
+					}
+					
+					if( $action->id == 'update' ) {
+					
+						$this->activityService->updateActivity( $this->model, $parentType );
+					}
+				}
+
+				break;
+			}
+			case 'delete': {
+
+				if( isset( $this->model ) ) {
+
+					$this->activityService->deleteActivity( $this->model, $parentType );
+				}
+
+				break;
+			}
+		}
+
+		return parent::afterAction( $action, $result );
 	}
 }

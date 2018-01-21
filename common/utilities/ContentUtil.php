@@ -212,11 +212,16 @@ class ContentUtil {
 
 		if( isset( $page ) ) {
 
+			$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : null;
+			$ellipsis		= isset( $config[ 'ellipsis' ] ) ? $config[ 'ellipsis' ] : true;
+
 			$coreProperties	= Yii::$app->controller->getCoreProperties();
 			$slugUrl		= Url::toRoute( "/$page->slug" );
-
 			$summary		= $page->modelContent->summary;
-			$summary	   .= "<div class='page-summary'>$summary</div>";
+
+			$summary		= isset( $limit ) && strlen( $summary ) > $limit ? substr( $summary, 0, $limit ) : $page->modelContent->summary;
+			$summary		= $ellipsis ? "$summary ..." : $summary;
+			$summary	    = "<div class='page-summary'>$summary</div>";
 			$summary	   .= "<div class='page-link'><a class='btn btn-medium' href='$slugUrl'>Read More</a></div>";
 
 			return $summary;
