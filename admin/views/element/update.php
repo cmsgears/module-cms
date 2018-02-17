@@ -20,30 +20,26 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
-				<div class="box-header-title">Basic Details</div>
+                            <div class="box-header-title">Basic Details</div>
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'name' ) ?>
-		
-						</div>
-						
-						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
-						</div>
+                                            <div class="col col2">
+                                                    <?= $form->field( $model, 'name' ) ?>		
+                                            </div>
+                                            <div class="col col2">
+                                                    <?= $form->field( $model, 'title' ) ?>		
+                                            </div>
 					</div>
 					<div class="filler-height"> </div>
 					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
-		
-						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
-		
-						</div>		
+                                            <div class="col col2">
+                                                    <?= $form->field( $model, 'description' )->textarea() ?>
+                                            </div>
+                                            <div class="col col2">
+                                                    <?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
+                                            </div>		
 					</div>
 					<div class="filler-height"> </div>
 					<div class="row">
@@ -51,7 +47,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'active' )->checkbox() ?>
 						</div>
 						<div class="col col2">
-						
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 					<div class="filler-height"> </div>

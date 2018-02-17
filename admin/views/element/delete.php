@@ -26,13 +26,11 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
-		
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>		
 						</div>
-						
 						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ], 'disabled' => true ] ) ?>
-						</div>
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>		
+						</div>						
 					</div>
 					<div class="filler-height"> </div>
 					<div class="row">
@@ -51,7 +49,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-						
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ], 'disabled' => true ] ) ?>
 						</div>
 					</div>
 					<div class="filler-height"> </div>

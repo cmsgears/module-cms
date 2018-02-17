@@ -26,13 +26,12 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'name' ) ?>
-		
+							<?= $form->field( $model, 'name' ) ?>		
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'title' ) ?>		
 						</div>
 						
-						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
-						</div>
 					</div>
 					<div class="filler-height"> </div>
 					<div class="row">
@@ -51,7 +50,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'active' )->checkbox() ?>
 						</div>
 						<div class="col col2">
-						
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 					<div class="filler-height"> </div>

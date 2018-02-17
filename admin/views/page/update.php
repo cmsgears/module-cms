@@ -28,13 +28,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
+                                                <div class="col col2">
+							<?= $form->field( $model, 'title' ) ?>
 						</div>
+						
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
@@ -51,6 +52,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+                                                <div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 				</div>

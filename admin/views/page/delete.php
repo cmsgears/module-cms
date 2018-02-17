@@ -33,9 +33,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 					</div>
 					<div class="row">
-						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
-						</div>
+						
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
 						</div>
@@ -51,6 +49,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+						</div>
+                                                <div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 				</div>
