@@ -118,13 +118,20 @@ class ContentUtil {
 
 		$model		= null;
 
-		if( $typed ) {
-
-			$model = $service->getBySlugType( $slug, $type );
+		if( isset( $config[ 'model' ] ) ){
+			
+			$model = $config[ 'model' ];
 		}
 		else {
+		
+			if( $typed ) {
 
-			$model = $service->getBySlug( $slug );
+				$model = $service->getBySlugType( $slug, $type );
+			}
+			else {
+
+				$model = $service->getBySlug( $slug );
+			}
 		}
 
 		if( isset( $model ) ) {
