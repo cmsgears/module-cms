@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
@@ -10,20 +18,28 @@ use yii\helpers\HtmlPurifier;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\core\common\models\interfaces\base\IModelResource;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\ITemplate;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 
-use cmsgears\core\common\models\traits\ResourceTrait;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\core\common\models\base\Resource;
+
+use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
-use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 /**
- * ModelContent Entity
+ * ModelContent represents the additional data required to form a page with basic SEO
+ * attributes. The models forming single public page can use it.
  *
  * @property integer $id
  * @property integer $templateId
  * @property integer $bannerId
  * @property integer $videoId
+ * @property integer $galleryId
  * @property integer $parentId
  * @property string $parentType
  * @property string $type
@@ -35,13 +51,15 @@ use cmsgears\core\common\models\traits\mappers\TemplateTrait;
  * @property integer $views
  * @property integer $referrals
  * @property integer $comments
+ * @property integer $likes
+ * @property integer $wish
  * @property integer $weight
  * @property integer $rank
  * @property date $publishedAt
  * @property string $content
  * @property string $data
  */
-class ModelContent extends \cmsgears\core\common\models\base\Entity {
+class ModelContent extends Resource implements IData, IModelResource, ITemplate, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -64,7 +82,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
-	use ResourceTrait;
+	use ModelResourceTrait;
 	use TemplateTrait;
 	use VisualTrait;
 
@@ -85,19 +103,22 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'id', 'parentId', 'parentType', 'summary', 'content', 'data' ], 'safe' ],
+			[ [ 'parentId', 'parentType' ], 'required' ],
+			[ [ 'id', 'summary', 'content', 'data' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ [ 'views', 'referrals', 'comments', 'weight', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'bannerId', 'videoId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'views', 'referrals', 'comments', 'likes', 'wish', 'weight', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'bannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -114,9 +135,10 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	public function attributeLabels() {
 
 		return [
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
-			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
@@ -128,12 +150,18 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 			'seoRobot' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
 			'views' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
 			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'likes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'wish' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
@@ -157,9 +185,15 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 
 	// ModelContent --------------------------
 
-	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_SMALL ) {
+	/**
+	 * Returns cut down part of [[$summary]].
+	 *
+	 * @param integer $limit
+	 * @return string
+	 */
+	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
 
-		$summary	= $this->summary;
+		$summary = $this->summary;
 
 		if( strlen( $summary ) > $limit ) {
 
@@ -169,9 +203,15 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 		return HtmlPurifier::process( $summary );
 	}
 
+	/**
+	 * Returns cut down part of [[$content]].
+	 *
+	 * @param integer $limit
+	 * @return string
+	 */
 	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
 
-		$content	= $this->content;
+		$content = $this->content;
 
 		if( strlen( $content ) > $limit ) {
 
@@ -192,7 +232,7 @@ class ModelContent extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CmsTables::TABLE_MODEL_CONTENT;
+		return CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT );
 	}
 
 	// CMG parent classes --------------------

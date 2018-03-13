@@ -1,13 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
 use cmsgears\cms\common\models\base\CmsTables;
 
+use cmsgears\core\common\models\base\Meta;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
- * ContentMeta Entity
+ * ContentMeta stores meta and attributes specific to page and post.
  *
  * @property integer $id
  * @property integer $modelId
@@ -17,7 +26,7 @@ use cmsgears\cms\common\models\entities\Content;
  * @property string $valueType
  * @property string $value
  */
-class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
+class ContentMeta extends Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -59,6 +68,11 @@ class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
 
 	// ContentMeta ---------------------------
 
+	/**
+	 * Return corresponding content.
+	 *
+	 * @return \cmsgears\cms\common\models\entities\Content
+	 */
 	public function getParent() {
 
 		return $this->hasOne( Content::className(), [ 'id' => 'modelId' ] );
@@ -75,7 +89,7 @@ class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
 	 */
 	public static function tableName() {
 
-		return CmsTables::TABLE_PAGE_META;
+		return CmsTables::getTableName( CmsTables::TABLE_PAGE_META );
 	}
 
 	// CMG parent classes --------------------
@@ -91,4 +105,5 @@ class ContentMeta extends \cmsgears\core\common\models\base\ModelMeta {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

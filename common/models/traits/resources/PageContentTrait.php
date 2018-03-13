@@ -6,9 +6,9 @@ use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\ModelContent;
 
 /**
- * ContentTrait can be used to add seo optimised content to relevant models to form public pages.
+ * PageContentTrait can be used to add seo optimised content to relevant models to form public pages.
  */
-trait ContentTrait {
+trait PageContentTrait {
 
 	// Instance methods --------------------------------------------
 
@@ -52,6 +52,19 @@ trait ContentTrait {
 	// ContentTrait --------------------------
 
 	// Read - Query -----------
+
+	/**
+	 * Return query to find the category with content.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with content.
+	 */
+	public static function queryWithContent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modelContent' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

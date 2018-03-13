@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\entities;
 
 // Yii Imports
@@ -12,51 +20,80 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\interfaces\IApproval;
-use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\IOwner;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IComment;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
+use cmsgears\core\common\models\interfaces\mappers\IGallery;
+use cmsgears\cms\common\models\interfaces\resources\IPageContent;
+use cmsgears\cms\common\models\interfaces\mappers\IBlock;
+use cmsgears\cms\common\models\interfaces\mappers\IElement;
+use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\core\common\models\resources\Gallery;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
-use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\base\VisibilityTrait;
+use cmsgears\core\common\models\traits\resources\CommentTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\GalleryTrait;
+use cmsgears\cms\common\models\traits\resources\PageContentTrait;
+use cmsgears\cms\common\models\traits\mappers\BlockTrait;
+use cmsgears\cms\common\models\traits\mappers\ElementTrait;
+use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Content Entity
+ * The Content is base class of Page and Post.
  *
- * @property int $id
- * @property int $siteId
- * @property int $parentId
- * @property int $createdBy
- * @property int $modifiedBy
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $parentId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
- * @property string $title
  * @property string $slug
- * @property short $type
+ * @property string $type
  * @property string $icon
+ * @property string $texture
+ * @property string $title
  * @property string $description
- * @property short $status
- * @property short $visibility
- * @property short $order
- * @property boolean $showGallery
- * @property short $featured
- * @property short $comments
+ * @property integer $status
+ * @property integer $visibility
+ * @property integer $order
+ * @property integer $featured
+ * @property integer $comments
  * @property date $createdAt
  * @property date $modifiedAt
  * @property string $content
  * @property string $data
- * @property string $widgetData
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Content extends \cmsgears\core\common\models\base\Entity implements IApproval, IVisibility {
+class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement,
+	IFile, IGallery, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -65,8 +102,6 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Constants --------------
 
 	// Public -----------------
-
-	public static $multiSite	= true;
 
 	public static $pageClass	= 'cmsgears\cms\common\models\entities\Page';
 
@@ -85,12 +120,22 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
-	use CreateModifyTrait;
+	use AuthorTrait;
+	use BlockTrait;
+	use CommentTrait;
+	use ContentTrait;
 	use DataTrait;
+	use ElementTrait;
+	use FileTrait;
+	use GalleryTrait;
+	use GridCacheTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
+	use OwnerTrait;
+	use PageContentTrait;
 	use SlugTypeTrait;
 	use VisibilityTrait;
-	use OwnerTrait;
+	use WidgetTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -109,20 +154,20 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
-				'immutable' => true,
-				'ensureUnique' => false
+				'slugAttribute' => 'slug', // Unique for Site Id
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
 			]
 		];
 	}
@@ -134,31 +179,30 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'siteId' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'widgetData' ], 'safe' ],
-			// Unique
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
-			[ [ 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'featured', 'comments', 'showGallery' ], 'boolean' ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'featured', 'comments', 'gridCacheValid' ], 'boolean' ],
+			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -175,20 +219,28 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENT ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
@@ -217,6 +269,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Content -------------------------------
 
+	/**
+	 * Returns the immediate parent.
+	 *
+	 * @return Content
+	 */
 	public function getParent() {
 
 		switch( $row['type'] ) {
@@ -232,31 +289,41 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		}
 	}
 
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
+	/**
+	 * Returns meta and attributes.
+	 *
+	 * @return \cmsgears\cms\common\models\resources\ContentMeta[]
+	 */
 	public function getMetas() {
 
 		return $this->hasMany( ContentMeta::className(), [ 'pageId' => 'id' ] );
 	}
 
-	public function getGallery() {
-
-		return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
-	}
-
+	/**
+	 * Check whether content type is page.
+	 *
+	 * @return boolean
+	 */
 	public function isPage() {
 
 		return $this->type == CmsGlobal::TYPE_PAGE;
 	}
 
+	/**
+	 * Check whether content type is post.
+	 *
+	 * @return boolean
+	 */
 	public function isPost() {
 
 		return $this->type == CmsGlobal::TYPE_POST;
 	}
 
+	/**
+	 * Check whether content is published.
+	 *
+	 * @return boolean
+	 */
 	public function isPublished() {
 
 		$user	= Yii::$app->user->getIdentity();
@@ -280,14 +347,17 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public static function tableName() {
 
-		return CmsTables::TABLE_PAGE;
+		return CmsTables::getTableName( CmsTables::TABLE_PAGE );
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function instantiate( $row ) {
 
-		switch( $row['type'] ) {
+		switch( $row[ 'type' ] ) {
 
 			case CmsGlobal::TYPE_PAGE: {
 
@@ -314,6 +384,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'site', 'creator', 'modifier' ];
@@ -322,21 +395,20 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithContent( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'modelContent' ];
-
-		return parent::queryWithAll( $config );
-	}
-
+	/**
+	 * Return query to find the content with author.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with author.
+	 */
 	public static function queryWithAuthor( $config = [] ) {
 
-		$postTable					= CmsTables::TABLE_PAGE;
-		$config[ 'relations' ][]	= [ 'modelContent', 'creator' ];
-		$config[ 'relations' ][]	= [ 'creator.avatar'  => function ( $query ) {
-											$fileTable	= CoreTables::TABLE_FILE;
-											$query->from( "$fileTable avatar" ); }
-										];
+		$config[ 'relations' ][] = [ 'modelContent', 'creator' ];
+
+		$config[ 'relations' ][] = [ 'creator.avatar'  => function ( $query ) {
+			$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+			$query->from( "$fileTable avatar" ); }
+		];
 
 		return parent::queryWithAll( $config );
 	}

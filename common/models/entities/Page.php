@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
@@ -6,11 +14,11 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\base\CmsTables;
 
-use cmsgears\core\common\models\traits\resources\CommentTrait;
-use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\cms\common\models\traits\resources\ContentTrait;
-use cmsgears\cms\common\models\traits\mappers\BlockTrait;
-
+/**
+ * Page represents pages used for site page and articles.
+ *
+ * @since 1.0.0
+ */
 class Page extends Content {
 
 	// Variables ---------------------------------------------------
@@ -27,18 +35,13 @@ class Page extends Content {
 
 	// Public -----------------
 
-	public $modelType	= CmsGlobal::TYPE_PAGE;
-
 	// Protected --------------
 
 	// Private ----------------
 
-	// Traits ------------------------------------------------------
+	private $modelType	= CmsGlobal::TYPE_PAGE;
 
-	use FileTrait;
-	use CommentTrait;
-	use ContentTrait;
-	use BlockTrait;
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -71,7 +74,7 @@ class Page extends Content {
 	 */
 	public static function find() {
 
-		$pageTable = CmsTables::TABLE_PAGE;
+		$pageTable = CmsTables::getTableName( CmsTables::TABLE_PAGE );
 
 		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
 	}
@@ -89,4 +92,5 @@ class Page extends Content {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

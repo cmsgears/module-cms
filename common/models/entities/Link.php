@@ -12,12 +12,9 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\interfaces\mappers\IElement;
-
 use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\traits\mappers\ElementTrait;
 
-class Block extends ObjectData implements IElement {
+class Link extends ObjectData {
 
 	// Variables ---------------------------------------------------
 
@@ -37,11 +34,9 @@ class Block extends ObjectData implements IElement {
 
 	// Private ----------------
 
-	private $modelType	= CmsGlobal::TYPE_BLOCK;
+	private $modelType	= CmsGlobal::TYPE_LINK;
 
 	// Traits ------------------------------------------------------
-
-	use ElementTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -61,7 +56,7 @@ class Block extends ObjectData implements IElement {
 
 	// Validators ----------------------------
 
-	// Block ---------------------------------
+	// Link ----------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -71,7 +66,7 @@ class Block extends ObjectData implements IElement {
 
 	// CMG parent classes --------------------
 
-	// Block ---------------------------------
+	// Link ----------------------------------
 
 	// Read - Query -----------
 

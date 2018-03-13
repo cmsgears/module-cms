@@ -7,17 +7,17 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\models\entities;
+namespace cmsgears\cms\common\models\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\core\common\models\mappers\ModelObject;
 
-use cmsgears\cms\common\models\interfaces\mappers\IElement;
-
-use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\traits\mappers\ElementTrait;
-
-class Block extends ObjectData implements IElement {
+/**
+ * ModelLink mapper can be used to map links to other models.
+ *
+ * @since 1.0.0
+ */
+class ModelLink extends ModelObject {
 
 	// Variables ---------------------------------------------------
 
@@ -37,11 +37,7 @@ class Block extends ObjectData implements IElement {
 
 	// Private ----------------
 
-	private $modelType	= CmsGlobal::TYPE_BLOCK;
-
 	// Traits ------------------------------------------------------
-
-	use ElementTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -61,7 +57,7 @@ class Block extends ObjectData implements IElement {
 
 	// Validators ----------------------------
 
-	// Block ---------------------------------
+	// ModelElement --------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -71,7 +67,7 @@ class Block extends ObjectData implements IElement {
 
 	// CMG parent classes --------------------
 
-	// Block ---------------------------------
+	// ModelLink -----------------------------
 
 	// Read - Query -----------
 

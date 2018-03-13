@@ -1,7 +1,17 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\base\Migration;
 
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
@@ -16,7 +26,12 @@ use cmsgears\core\common\services\base\EntityService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class m160621_065213_cms_data extends \yii\db\Migration {
+/**
+ * The cms data migration inserts the base data required to run the application.
+ *
+ * @since 1.0.0
+ */
+class m160621_065213_cms_data extends Migration {
 
 	// Public Variables
 
@@ -142,7 +157,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
 
 		$hierarchy = [
-			// Post Manager - Organization
+			// Post Manager - Organization, Approver
 			[ null, null, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
 			[ $postManagerPerm->id, $vPostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
 			[ $postManagerPerm->id, $aPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],
@@ -183,7 +198,7 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-blog', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-blog', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -232,20 +247,20 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 		$summary = "Lorem ipsum is a pseudo-Latin text used in web design, typography, layout, and printing in place of English to emphasise design elements over content. It\'s also called placeholder (or filler) text. It\'s a convenient tool for mock-ups. It helps to outline the visual elements of a document or presentation, eg typography, font, or layout. Lorem ipsum is mostly a part of a Latin text by the classical author and philosopher Cicero.";
 		$content = "Lorem ipsum is a pseudo-Latin text used in web design, typography, layout, and printing in place of English to emphasise design elements over content. It\'s also called placeholder (or filler) text. It\'s a convenient tool for mock-ups. It helps to outline the visual elements of a document or presentation, eg typography, font, or layout. Lorem ipsum is mostly a part of a Latin text by the classical author and philosopher Cicero.";
 
-		$columns = [ 'parentId', 'parentType', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'views', 'referrals', 'summary', 'content', 'publishedAt' ];
+		$columns = [ 'parentId', 'parentType', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'views', 'referrals', 'likes', 'wish', 'summary', 'content', 'publishedAt' ];
 
 		$pages	= [
-			[ Page::findBySlugType( 'home', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'login', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'register', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'confirm-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'activate-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'forgot-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'reset-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'about-us', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'terms', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'privacy', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, $summary, $content, DateUtil::getDateTime() ]
+			[ Page::findBySlugType( 'home', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'login', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'register', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'confirm-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'activate-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'forgot-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'reset-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'about-us', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'terms', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'privacy', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );
@@ -257,4 +272,5 @@ class m160621_065213_cms_data extends \yii\db\Migration {
 
 		return true;
 	}
+
 }

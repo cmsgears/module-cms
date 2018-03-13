@@ -1,23 +1,63 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\config;
 
+/**
+ * CmsGlobal defines the global constants and variables available for cms and dependent modules.
+ *
+ * @since 1.0.0
+ */
 class CmsGlobal {
 
-	// Traits - Metas, Tags, Attachments, Addresses --------------------
+	// System Sites ---------------------------------------------------
 
-	const TYPE_ELEMENT			= 'element';
-	const TYPE_BLOCK			= 'block';
-	const TYPE_PAGE				= 'page';
-	const TYPE_POST				= 'blog';
-	const TYPE_MENU				= 'menu';
-	const TYPE_SIDEBAR			= 'sidebar';
-	const TYPE_WIDGET			= 'widget';
-	const TYPE_LINK				= 'link';
+	const SITE_BLOG		= 'blog';
+
+	// System Pages ---------------------------------------------------
+
+	const PAGE_BLOG		= 'blog';
+
+	// Grouping by type ------------------------------------------------
+
+	const TYPE_ELEMENT	= 'element';
+	const TYPE_BLOCK	= 'block';
+
+	const TYPE_PAGE		= 'page';
+	const TYPE_POST		= 'blog';
+
+	const TYPE_MENU		= 'menu';
+	const TYPE_LINK		= 'link';
+
+	const TYPE_SIDEBAR	= 'sidebar';
+	const TYPE_WIDGET	= 'widget';
+
+	// Templates -------------------------------------------------------
+
+	const TEMPLATE_PAGE	= 'page';
+	const TEMPLATE_POST	= 'post';
+
+	// Config ----------------------------------------------------------
+
+	const CONFIG_BLOG	= 'blog';
+
+	// Roles -----------------------------------------------------------
+
+	const ROLE_BLOG_ADMIN		= 'blog-admin';
 
 	// Permissions -----------------------------------------------------
 
-	// File
+	// Blog
 	const PERM_BLOG_ADMIN		= 'admin-blog';
+
+	const PERM_BLOG_MANAGE		= 'manage-posts';
+	const PERM_BLOG_AUTHOR		= 'post-author';
 
 	const PERM_BLOG_VIEW		= 'view-posts';
 	const PERM_BLOG_ADD			= 'add-post';
@@ -28,14 +68,11 @@ class CmsGlobal {
 	const PERM_BLOG_IMPORT		= 'import-posts';
 	const PERM_BLOG_EXPORT		= 'export-posts';
 
-	// Config ----------------------------------------------------------
+	// Model Attributes ------------------------------------------------
 
-	const CONFIG_BLOG			= 'blog';
+	// Default Maps ----------------------------------------------------
 
-	// Templates -------------------------------------------------------
-
-	const TEMPLATE_PAGE			= 'page';
-	const TEMPLATE_POST			= 'post';
+	// Messages --------------------------------------------------------
 
 	// Errors ----------------------------------------------------------
 
@@ -44,10 +81,15 @@ class CmsGlobal {
 	// Generic Fields
 	const FIELD_ELEMENT			= 'elementField';
 	const FIELD_BLOCK			= 'blockField';
+
 	const FIELD_PAGE			= 'pageField';
+
 	const FIELD_MENU			= 'menuField';
+	const FIELD_LINK			= 'linkField';
+
 	const FIELD_WIDGET			= 'widgetField';
 	const FIELD_SIDEBAR			= 'sidebarField';
+
 	const FIELD_URL_RELATIVE	= 'relativeUrlField';
 	const FIELD_KEYWORDS		= 'keywordsField';
 
@@ -60,4 +102,5 @@ class CmsGlobal {
 	// Block Fields
 	const FIELD_BACKGROUND			= 'backgroundField';
 	const FIELD_TEXTURE				= 'textureField';
+
 }

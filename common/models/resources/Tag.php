@@ -1,21 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\cms\common\models\traits\resources\ContentTrait;
+use cmsgears\core\common\models\resources\Tag as ParentTag;
+
+use cmsgears\cms\common\models\interfaces\resources\IPageContent;
+
+use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 
 /**
- * Tag Entity
- *
- * @property long $id
- * @property long $siteId
- * @property string $name
- * @property string $slug
- * @property string $type
- * @property string $icon
- * @property string $description
+ * @inheritdoc
  */
-class Tag extends \cmsgears\core\common\models\resources\Tag {
+class Tag extends ParentTag implements IPageContent {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +41,7 @@ class Tag extends \cmsgears\core\common\models\resources\Tag {
 
 	// Traits ------------------------------------------------------
 
-	use ContentTrait;
+	use PageContentTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -70,13 +74,6 @@ class Tag extends \cmsgears\core\common\models\resources\Tag {
 	// Tag -----------------------------------
 
 	// Read - Query -----------
-
-	public static function queryWithContent( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'modelContent' ];
-
-		return parent::queryWithAll( $config );
-	}
 
 	// Read - Find ------------
 

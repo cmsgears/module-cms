@@ -1,11 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\base;
 
-class CmsTables {
+// CMG Imports
+use cmsgears\core\common\models\base\DbTables;
+
+class CmsTables extends DbTables {
 
 	// Entities -------------
 
-	// Content - Page and Block
+	// Content - Page and Post
 	const TABLE_PAGE			= 'cmg_cms_page';
 
 	// Resources ------------
@@ -13,13 +24,9 @@ class CmsTables {
 	// Page attributes
 	const TABLE_PAGE_META		= 'cmg_cms_page_meta';
 
-	// Blocks
-	const TABLE_BLOCK			= 'cmg_cms_block';
-
 	// Model Resources
 	const TABLE_MODEL_CONTENT	= 'cmg_cms_model_content';
 
 	// Mappers --------------
 
-	const TABLE_MODEL_BLOCK		= 'cmg_cms_model_block';
 }

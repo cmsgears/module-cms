@@ -1,14 +1,35 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\cms\common\models\entities\Block;
 use cmsgears\cms\common\models\mappers\ModelBlock;
 
 /**
- * BlockTrait can be used to form page using blocks.
+ * BlockTrait can be used to map blocks to other models.
  */
 trait BlockTrait {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Instance methods --------------------------------------------
 
@@ -25,28 +46,62 @@ trait BlockTrait {
 	// BlockTrait ----------------------------
 
 	/**
-	 * @return array - ModelBlock associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelBlocks() {
 
-		return $this->hasMany( ModelBlock::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+
+		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
+			->where( "$modelBlockTable.parentType='$this->modelType' AND $modelBlockTable.type='$mapperType'" );
 	}
 
 	/**
-	 * @return array - Block associated with parent
+	 * @inheritdoc
+	 */
+	public function getActiveModelBlocks() {
+
+		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+
+		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
+			->where( "$modelBlockTable.parentType='$this->modelType' AND $modelBlockTable.type='$mapperType' AND $modelBlockTable.active=1" );
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getBlocks() {
 
-		return $this->hasMany( Block::className(), [ 'id' => 'blockId' ] )
-					->viaTable( CmsTables::TABLE_MODEL_BLOCK, [ 'parentId' => 'id' ], function( $query ) {
+		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
 
-						$modelCategory	= CoreTables::TABLE_MODEL_BLOCK;
+		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelBlockTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelBlockTable, &$mapperType ) {
 
-						$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
-					});
+					$query->onCondition( [ "$modelBlockTable.parentType" => $this->modelType, "$modelBlockTable.type" => $mapperType ] );
+				}
+			);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveBlocks() {
+
+		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+
+		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelBlockTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelBlockTable, &$mapperType ) {
+
+					$query->onCondition( [ "$modelBlockTable.parentType" => $this->modelType, "$modelBlockTable.type" => $mapperType, "$modelBlockTable.active" => true ] );
+				}
+			);
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -65,4 +120,5 @@ trait BlockTrait {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

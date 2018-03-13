@@ -12,12 +12,12 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\interfaces\mappers\IElement;
+use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\traits\mappers\ElementTrait;
+use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 
-class Block extends ObjectData implements IElement {
+class Sidebar extends ObjectData implements IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -37,11 +37,11 @@ class Block extends ObjectData implements IElement {
 
 	// Private ----------------
 
-	private $modelType	= CmsGlobal::TYPE_BLOCK;
+	private $modelType	= CmsGlobal::TYPE_SIDEBAR;
 
 	// Traits ------------------------------------------------------
 
-	use ElementTrait;
+	use WidgetTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -61,7 +61,7 @@ class Block extends ObjectData implements IElement {
 
 	// Validators ----------------------------
 
-	// Block ---------------------------------
+	// Sidebar -------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -71,7 +71,7 @@ class Block extends ObjectData implements IElement {
 
 	// CMG parent classes --------------------
 
-	// Block ---------------------------------
+	// Sidebar -------------------------------
 
 	// Read - Query -----------
 
