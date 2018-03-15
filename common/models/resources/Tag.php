@@ -10,7 +10,7 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Tag as ParentTag;
+use cmsgears\core\common\models\resources\Tag as BaseTag;
 
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 
@@ -19,7 +19,7 @@ use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 /**
  * @inheritdoc
  */
-class Tag extends ParentTag implements IPageContent {
+class Tag extends BaseTag implements IPageContent {
 
 	// Variables ---------------------------------------------------
 

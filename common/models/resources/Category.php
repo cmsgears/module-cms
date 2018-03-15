@@ -10,7 +10,7 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Category as ParentCategory;
+use cmsgears\core\common\models\resources\Category as BaseCategory;
 
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 
@@ -19,7 +19,7 @@ use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 /**
  * @inheritdoc
  */
-class Category extends ParentCategory implements IPageContent {
+class Category extends BaseCategory implements IPageContent {
 
 	// Variables ---------------------------------------------------
 

@@ -37,9 +37,9 @@ class Page extends Content {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CmsGlobal::TYPE_PAGE;
 
-	private $modelType	= CmsGlobal::TYPE_PAGE;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

@@ -280,11 +280,11 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 			case self::TYPE_PAGE: {
 
-				return $this->hasOne( Page::className(), [ 'id' => 'parentId' ] );
+				return $this->hasOne( Page::class, [ 'id' => 'parentId' ] );
 			}
 			case self::TYPE_POST: {
 
-				return $this->hasOne( Post::className(), [ 'id' => 'parentId' ] );
+				return $this->hasOne( Post::class, [ 'id' => 'parentId' ] );
 			}
 		}
 	}
@@ -296,7 +296,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public function getMetas() {
 
-		return $this->hasMany( ContentMeta::className(), [ 'pageId' => 'id' ] );
+		return $this->hasMany( ContentMeta::class, [ 'pageId' => 'id' ] );
 	}
 
 	/**

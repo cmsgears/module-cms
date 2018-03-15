@@ -52,9 +52,9 @@ class Post extends Content implements ICategory, ITab, ITag {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CmsGlobal::TYPE_POST;
 
-	private $modelType		= CmsGlobal::TYPE_POST;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

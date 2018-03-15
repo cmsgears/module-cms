@@ -12,6 +12,11 @@ namespace cmsgears\cms\common\models\base;
 // CMG Imports
 use cmsgears\core\common\models\base\DbTables;
 
+/**
+ * It provide table name constants of db tables available in CMS Module.
+ *
+ * @since 1.0.0
+ */
 class CmsTables extends DbTables {
 
 	// Entities -------------

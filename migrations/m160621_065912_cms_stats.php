@@ -69,4 +69,5 @@ class m160621_065912_cms_stats extends Migration {
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_META ) );
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT ) );
 	}
+
 }

@@ -32,9 +32,9 @@ class Link extends ObjectData {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CmsGlobal::TYPE_LINK;
 
-	private $modelType	= CmsGlobal::TYPE_LINK;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

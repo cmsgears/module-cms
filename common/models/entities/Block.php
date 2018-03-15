@@ -35,9 +35,9 @@ class Block extends ObjectData implements IElement {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CmsGlobal::TYPE_BLOCK;
 
-	private $modelType	= CmsGlobal::TYPE_BLOCK;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

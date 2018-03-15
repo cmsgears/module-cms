@@ -92,4 +92,5 @@ class m160621_065815_cms_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_content_type_p', $this->prefix . 'cms_model_content' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_content_piptt', $this->prefix . 'cms_model_content' );
 	}
+
 }

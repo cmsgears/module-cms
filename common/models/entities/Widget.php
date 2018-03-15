@@ -32,9 +32,9 @@ class Widget extends ObjectData {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CmsGlobal::TYPE_WIDGET;
 
-	private $modelType	= CmsGlobal::TYPE_WIDGET;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
