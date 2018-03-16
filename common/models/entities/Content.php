@@ -182,7 +182,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'siteId' ], 'required' ],
+			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

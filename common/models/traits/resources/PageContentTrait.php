@@ -54,7 +54,7 @@ trait PageContentTrait {
 	// Read - Query -----------
 
 	/**
-	 * Return query to find the category with content.
+	 * Return query to find the model with content.
 	 *
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query with content.
@@ -62,6 +62,19 @@ trait PageContentTrait {
 	public static function queryWithContent( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'modelContent' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the model with content, template, banner, video and gallery.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with content, banner, video and gallery.
+	 */
+	public static function queryWithFullContent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template', 'modelContent.banner', 'modelContent.video', 'modelContent.gallery' ];
 
 		return parent::queryWithAll( $config );
 	}

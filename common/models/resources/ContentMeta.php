@@ -10,9 +10,8 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
-
 use cmsgears\core\common\models\base\Meta;
+use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
