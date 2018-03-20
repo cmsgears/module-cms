@@ -216,6 +216,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
