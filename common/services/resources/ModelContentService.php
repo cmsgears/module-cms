@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
@@ -9,9 +17,16 @@ use cmsgears\core\common\services\traits\ResourceTrait;
 
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
+use cmsgears\core\common\services\base\ModelResourceService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
-class ModelContentService extends \cmsgears\core\common\services\base\EntityService implements IModelContentService {
+/**
+ * ModelContentService provide service methods of model content.
+ *
+ * @since 1.0.0
+ */
+class ModelContentService extends ModelResourceService implements IModelContentService {
 
 	// Variables ---------------------------------------------------
 
@@ -163,6 +178,14 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

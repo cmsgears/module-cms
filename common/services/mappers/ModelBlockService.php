@@ -1,17 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
-
 use cmsgears\cms\common\services\interfaces\mappers\IModelBlockService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\mappers\ModelObjectService;
 
 /**
- * The class ModelBlockService is base class to perform database activities for ModelBlock Entity.
+ * ModelBlockService provide service methods of model block mapper.
+ *
+ * @since 1.0.0
  */
-class ModelBlockService extends \cmsgears\core\common\services\base\EntityService implements IModelBlockService {
+class ModelBlockService extends  ModelObjectService implements IModelBlockService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,10 +30,6 @@ class ModelBlockService extends \cmsgears\core\common\services\base\EntityServic
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\cms\common\models\mappers\ModelBlock';
-
-	public static $modelTable	= CmsTables::TABLE_MODEL_BLOCK;
-
-	public static $parentType	= null;
 
 	// Protected --------------
 
@@ -38,8 +42,6 @@ class ModelBlockService extends \cmsgears\core\common\services\base\EntityServic
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -73,6 +75,14 @@ class ModelBlockService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Delete -------------
 
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------
@@ -96,4 +106,5 @@ class ModelBlockService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }

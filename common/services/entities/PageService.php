@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
@@ -9,17 +17,19 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
-use cmsgears\core\common\services\traits\MultiSiteTrait;
+use cmsgears\cms\common\services\base\ContentService;
 
-class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
+/**
+ * PageService provide service methods of page model.
+ *
+ * @since 1.0.0
+ */
+class PageService extends ContentService implements IPageService {
 
 	// Variables ---------------------------------------------------
 
@@ -30,10 +40,6 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\cms\common\models\entities\Page';
-
-	public static $modelTable	= CmsTables::TABLE_PAGE;
-
-	public static $typed		= true;
 
 	public static $parentType	= CmsGlobal::TYPE_PAGE;
 
@@ -50,10 +56,6 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use NameTypeTrait;
-	use SlugTypeTrait;
-	use MultiSiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -250,7 +252,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 						$this->delete( $model );
 
 						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
+
 						break;
 					}
 				}
@@ -261,6 +263,14 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

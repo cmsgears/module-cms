@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
@@ -9,18 +17,20 @@ use yii\data\Sort;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\forms\BlockElement;
-use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\mappers\ModelBlock;
+
+use cmsgears\cms\common\services\interfaces\entities\IBlockService;
+
+use cmsgears\core\common\services\entities\ObjectDataService;
 
 use cmsgears\core\common\utilities\DataUtil;
 
-use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\cms\common\services\interfaces\entities\IBlockService;
-
-use cmsgears\core\common\services\traits\NameTrait;
-use cmsgears\core\common\services\traits\SlugTrait;
-
-class BlockService extends \cmsgears\core\common\services\base\EntityService implements IBlockService {
+/**
+ * BlockService provide service methods of block model.
+ *
+ * @since 1.0.0
+ */
+class BlockService extends ObjectDataService implements IBlockService {
 
 	// Variables ---------------------------------------------------
 
@@ -32,8 +42,6 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public static $modelClass	= '\cmsgears\cms\common\models\entities\Block';
 
-	public static $modelTable	= CmsTables::TABLE_BLOCK;
-
 	public static $parentType	= CmsGlobal::TYPE_BLOCK;
 
 	// Protected --------------
@@ -44,23 +52,11 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Protected --------------
 
-	protected $fileService;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use NameTrait;
-	use SlugTrait;
-
 	// Constructor and Initialisation ------------------------------
-
-	public function __construct( IFileService $fileService, $config = [] ) {
-
-		$this->fileService	= $fileService;
-
-		parent::__construct( $config );
-	}
 
 	// Instance methods --------------------------------------------
 
@@ -311,7 +307,7 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 						$this->delete( $model );
 
 						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
+
 						break;
 					}
 				}
@@ -320,6 +316,14 @@ class BlockService extends \cmsgears\core\common\services\base\EntityService imp
 			}
 		}
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

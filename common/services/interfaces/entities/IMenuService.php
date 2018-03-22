@@ -1,13 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\entities\IObjectService;
 
-interface IMenuService extends \cmsgears\core\common\services\interfaces\entities\IObjectService {
+/**
+ * IMenuService declares methods specific to menu model.
+ *
+ * @since 1.0.0
+ */
+interface IMenuService extends IObjectService {
 
 	// Data Provider ------
 
@@ -25,6 +35,8 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -32,5 +44,13 @@ interface IMenuService extends \cmsgears\core\common\services\interfaces\entitie
 	public function updateLinks( $menu, $links, $pageLinks );
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

@@ -1,16 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\entities\IObjectService;
 
-use cmsgears\core\common\services\interfaces\base\INameService;
-use cmsgears\core\common\services\interfaces\base\ISlugService;
-
-interface IBlockService extends INameService, ISlugService {
+/**
+ * IBlockService declares methods specific to block model.
+ *
+ * @since 1.0.0
+ */
+interface IBlockService extends IObjectService {
 
 	// Data Provider ------
 
@@ -26,6 +33,8 @@ interface IBlockService extends INameService, ISlugService {
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -33,5 +42,13 @@ interface IBlockService extends INameService, ISlugService {
 	public function updateElements( $block, $elements );
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

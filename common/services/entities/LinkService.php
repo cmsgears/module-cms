@@ -16,16 +16,16 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
+use cmsgears\cms\common\services\interfaces\entities\ILinkService;
 
 use cmsgears\core\common\services\entities\ObjectDataService;
 
 /**
- * WidgetService provide service methods of widget model.
+ * LinkService provide service methods of link model.
  *
  * @since 1.0.0
  */
-class WidgetService extends ObjectDataService implements IWidgetService {
+class LinkService extends ObjectDataService implements ILinkService {
 
 	// Variables ---------------------------------------------------
 
@@ -35,9 +35,9 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Widget';
+	public static $modelClass	= '\cmsgears\cms\common\models\entities\Link';
 
-	public static $parentType	= CmsGlobal::TYPE_WIDGET;
+	public static $parentType	= CmsGlobal::TYPE_LINK;
 
 	// Protected --------------
 
@@ -63,7 +63,7 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// LinkService ---------------------------
 
 	// Data Provider ------
 
@@ -87,12 +87,6 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 					'desc' => ['slug' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'slug'
-				],
-				'template' => [
-					'asc' => [ 'template' => SORT_ASC ],
-					'desc' => ['template' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'template',
 				]
 			]
 		]);
@@ -117,7 +111,7 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug" ];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -125,15 +119,16 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug",  'active' => "$modelTable.active"
 		];
 
 		// Result -----------
 
-		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_LINK;
 
 		return parent::getPage( $config );
 	}
+
 
 	// Read ---------------
 
@@ -141,9 +136,7 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	public function getByName( $name, $first = false ) {
 
-		$modelTable	= static::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
 
 		return parent::getByName( $config );
 	}
@@ -152,18 +145,14 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	public function getIdList( $config = [] ) {
 
-		$modelTable	= static::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
 
 		return parent::getIdList( $config );
 	}
 
 	public function getIdNameList( $config = [] ) {
 
-		$modelTable	= static::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_WIDGET;
+		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
 
 		return parent::getIdNameList( $config );
 	}
@@ -213,7 +202,7 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// LinkService ---------------------------
 
 	// Data Provider ------
 
@@ -232,4 +221,5 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 	// Update -------------
 
 	// Delete -------------
+
 }

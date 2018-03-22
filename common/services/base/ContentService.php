@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\base;
 
 // Yii Imports
@@ -12,10 +20,20 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 use cmsgears\cms\common\models\base\CmsTables;
 
+use cmsgears\cms\common\services\interfaces\base\IContentService;
+
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+
 /**
- * The class Service defines several useful methods used for pagination and generating map and list by specifying the columns.
+ * ContentService is base service of page and post.
+ *
+ * @since 1.0.0
  */
-abstract class ContentService extends \cmsgears\core\common\services\base\EntityService {
+abstract class ContentService extends EntityService implements IContentService {
 
 	// Variables ---------------------------------------------------
 
@@ -24,6 +42,10 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Constants --------------
 
 	// Public -----------------
+
+	public static $modelTable	= CmsTables::TABLE_PAGE;
+
+	public static $typed		= true;
 
 	// Protected --------------
 
@@ -36,6 +58,10 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use MultiSiteTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -79,6 +105,14 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

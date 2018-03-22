@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
@@ -10,11 +18,18 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\cms\common\models\forms\Link;
 use cmsgears\cms\common\models\forms\PageLink;
 
-use cmsgears\core\common\utilities\DataUtil;
-
 use cmsgears\cms\common\services\interfaces\entities\IMenuService;
 
-class MenuService extends \cmsgears\core\common\services\entities\ObjectDataService implements IMenuService {
+use cmsgears\core\common\services\entities\ObjectDataService;
+
+use cmsgears\core\common\utilities\DataUtil;
+
+/**
+ * MenuService provide service methods of menu model.
+ *
+ * @since 1.0.0
+ */
+class MenuService extends ObjectDataService implements IMenuService {
 
 	// Variables ---------------------------------------------------
 
@@ -23,6 +38,8 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 	// Constants --------------
 
 	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\cms\common\models\entities\Menu';
 
 	public static $parentType	= CmsGlobal::TYPE_MENU;
 
@@ -315,7 +332,7 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 						$this->delete( $model );
 
 						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
+
 						break;
 					}
 				}
@@ -326,6 +343,14 @@ class MenuService extends \cmsgears\core\common\services\entities\ObjectDataServ
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

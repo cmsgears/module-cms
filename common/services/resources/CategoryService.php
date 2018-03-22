@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
@@ -9,7 +17,14 @@ use cmsgears\cms\common\models\resources\Category;
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
-class CategoryService extends \cmsgears\core\common\services\resources\CategoryService implements ICategoryService {
+use cmsgears\core\common\services\resources\CategoryService as BaseCategoryService;
+
+/**
+ * CategoryService provide service methods of category model.
+ *
+ * @since 1.0.0
+ */
+class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -129,6 +144,14 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

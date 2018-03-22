@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
@@ -10,7 +18,14 @@ use cmsgears\cms\common\models\resources\Tag;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
 
-class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
+use cmsgears\core\common\services\resources\TagService as BaseTagService;
+
+/**
+ * TagService provide service methods of tag model.
+ *
+ * @since 1.0.0
+ */
+class TagService extends BaseTagService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -132,6 +147,14 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

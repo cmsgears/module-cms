@@ -10,17 +10,16 @@
 namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\services\interfaces\resources\ITagService;
-use cmsgears\cms\common\services\interfaces\mappers\IModelTagService;
+use cmsgears\cms\common\services\interfaces\mappers\IModelWidgetService;
 
-use cmsgears\core\common\services\mappers\ModelTagService;
+use cmsgears\core\common\services\mappers\ModelObjectService;
 
 /**
- * ModelTagService provide service methods of model tag mapper.
+ * ModelWidgetService provide service methods of model widget mapper.
  *
  * @since 1.0.0
  */
-class ModelTagService extends ModelTagService implements IModelTagService {
+class ModelWidgetService extends ModelObjectService implements IModelWidgetService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,6 +28,8 @@ class ModelTagService extends ModelTagService implements IModelTagService {
 	// Constants --------------
 
 	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\cms\common\models\mappers\ModelWidget';
 
 	// Protected --------------
 
@@ -44,11 +45,6 @@ class ModelTagService extends ModelTagService implements IModelTagService {
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( ITagService $tagService, $config = [] ) {
-
-		parent::__construct( $tagService, $config );
-	}
-
 	// Instance methods --------------------------------------------
 
 	// Yii parent classes --------------------
@@ -59,7 +55,7 @@ class ModelTagService extends ModelTagService implements IModelTagService {
 
 	// CMG parent classes --------------------
 
-	// ModelTagService -----------------------
+	// ModelWidgetService --------------------
 
 	// Data Provider ------
 
@@ -91,7 +87,7 @@ class ModelTagService extends ModelTagService implements IModelTagService {
 
 	// CMG parent classes --------------------
 
-	// ModelTagService -----------------------
+	// ModelWidgetService --------------------
 
 	// Data Provider ------
 

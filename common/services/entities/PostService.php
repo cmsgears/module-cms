@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
@@ -15,11 +23,16 @@ use cmsgears\cms\common\models\entities\Post;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 
-use cmsgears\core\common\services\traits\ApprovalTrait;
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\cms\common\services\base\ContentService;
 
-class PostService extends \cmsgears\cms\common\services\base\ContentService implements IPostService {
+use cmsgears\core\common\services\traits\ApprovalTrait;
+
+/**
+ * PostService provide service methods of post model.
+ *
+ * @since 1.0.0
+ */
+class PostService extends ContentService implements IPostService {
 
 	// Variables ---------------------------------------------------
 
@@ -30,10 +43,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\cms\common\models\entities\Post';
-
-	public static $modelTable	= CmsTables::TABLE_PAGE;
-
-	public static $typed		= true;
 
 	public static $parentType	= CmsGlobal::TYPE_POST;
 
@@ -323,7 +332,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 						$this->delete( $model );
 
 						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
+
 						break;
 					}
 				}
@@ -334,6 +343,14 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

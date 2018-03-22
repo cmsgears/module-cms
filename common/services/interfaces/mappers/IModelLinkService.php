@@ -7,17 +7,16 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\services\interfaces\resources;
+namespace cmsgears\cms\common\services\interfaces\mappers;
 
-// CMG Imports
-use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
 /**
- * IModelContentService declares methods specific to model content.
+ * IModelLinkService declares methods specific to model link.
  *
  * @since 1.0.0
  */
-interface IModelContentService extends IModelResourceService {
+interface IModelLinkService extends IModelObjectService {
 
 	// Data Provider ------
 
@@ -34,10 +33,6 @@ interface IModelContentService extends IModelResourceService {
 	// Create -------------
 
 	// Update -------------
-
-	public function updateBanner( $model, $banner );
-
-	public function updateViewCount( $model, $views );
 
 	// Delete -------------
 
