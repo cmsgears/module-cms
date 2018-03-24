@@ -22,7 +22,7 @@ use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\core\common\services\base\EntityService;
+use cmsgears\core\common\services\base\ActiveRecordService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -218,7 +218,7 @@ class m160621_065213_cms_data extends Migration {
 		$metas	= [
 			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 'flag', '0' ],
 			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 'flag', '1' ],
-			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 'text', EntityService::PAGE_LIMIT ]
+			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 'text', ActiveRecordService::PAGE_LIMIT ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

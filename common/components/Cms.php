@@ -58,9 +58,6 @@ class Cms extends Component {
 	 */
 	public function registerComponents() {
 
-		// Init system services
-		$this->initSystemServices();
-
 		// Register services
 		$this->registerResourceServices();
 		$this->registerMapperServices();
@@ -70,16 +67,6 @@ class Cms extends Component {
 		$this->initResourceServices();
 		$this->initMapperServices();
 		$this->initEntityServices();
-	}
-
-	/**
-	 * Register and initialize system services.
-	 */
-	public function initSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<name>', '<classpath>' );
 	}
 
 	/**
