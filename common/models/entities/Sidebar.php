@@ -35,7 +35,7 @@ class Sidebar extends ObjectData implements IWidget {
 
 	// Protected --------------
 
-	protected $modelType	= CmsGlobal::TYPE_SIDEBAR;
+	protected $modelType = CmsGlobal::TYPE_SIDEBAR;
 
 	// Private ----------------
 

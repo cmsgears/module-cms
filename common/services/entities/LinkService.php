@@ -9,10 +9,6 @@
 
 namespace cmsgears\cms\common\services\entities;
 
-// Yii Imports
-use Yii;
-use yii\data\Sort;
-
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
@@ -67,118 +63,11 @@ class LinkService extends ObjectDataService implements ILinkService {
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-
-		// Sorting ----------
-
-		$sort = new Sort([
-			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name'
-				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'slug'
-				]
-			]
-		]);
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		// Query ------------
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'hasOne' ] = true;
-		}
-
-		// Filters ----------
-
-		// Searching --------
-
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $searchCol ) ) {
-
-			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug" ];
-
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-
-		// Reporting --------
-
-		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug",  'active' => "$modelTable.active"
-		];
-
-		// Result -----------
-
-		$config[ 'conditions' ][ "$modelTable.type" ] =	 CmsGlobal::TYPE_LINK;
-
-		return parent::getPage( $config );
-	}
-
-
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getByName( $name, $first = false ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
-
-		return parent::getByName( $config );
-	}
-
 	// Read - Lists ----
-
-	public function getIdList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
-
-		return parent::getIdList( $config );
-	}
-
-	public function getIdNameList( $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = CmsGlobal::TYPE_LINK;
-
-		return parent::getIdNameList( $config );
-	}
-
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
-
-		switch( $column ) {
-
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'delete': {
-
-						$this->delete( $model );
-
-						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-
-						break;
-					}
-				}
-
-				break;
-			}
-		}
-	}
 
 	// Read - Maps -----
 

@@ -50,6 +50,7 @@ class m160621_065204_cms extends Migration {
 		// Page
 		$this->upPage();
 		$this->upPageMeta();
+		$this->upPageFollower();
 
 		// Resources
 		$this->upModelContent();
@@ -112,6 +113,23 @@ class m160621_065204_cms extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId' );
 	}
 
+	private function upPageFollower() {
+
+        $this->createTable( $this->prefix . 'cms_page_follower', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'userId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime()
+        ], $this->options );
+
+        // Index for columns user and model
+		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'userId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId' );
+	}
+
 	private function upModelContent() {
 
 		$this->createTable( $this->prefix . 'cms_model_content', [
@@ -157,6 +175,10 @@ class m160621_065204_cms extends Migration {
 		// Page meta
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
+		// Page Follower
+        $this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
+
 		// Model Content
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -172,6 +194,7 @@ class m160621_065204_cms extends Migration {
 
 		$this->dropTable( $this->prefix . 'cms_page' );
 		$this->dropTable( $this->prefix . 'cms_page_meta' );
+		$this->dropTable( $this->prefix . 'cms_page_follower' );
 
 		$this->dropTable( $this->prefix . 'cms_model_content' );
 	}
@@ -186,6 +209,10 @@ class m160621_065204_cms extends Migration {
 
 		// Page meta
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta' );
+
+		// Page Follower
+        $this->dropForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower' );
 
 		// Model Content
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content' );

@@ -25,10 +25,6 @@ interface IBlockService extends IObjectService {
 
 	// Read - Models ---
 
-	public function getElements( $block, $associative = false );
-
-	public function getElementsForUpdate( $block, $elements );
-
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -38,8 +34,6 @@ interface IBlockService extends IObjectService {
 	// Create -------------
 
 	// Update -------------
-
-	public function updateElements( $block, $elements );
 
 	// Delete -------------
 

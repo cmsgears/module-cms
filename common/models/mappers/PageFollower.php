@@ -7,17 +7,27 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\models\entities;
+namespace cmsgears\cms\common\models\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\core\common\models\base\Follower;
+use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\entities\Content;
 
-use cmsgears\cms\common\models\interfaces\mappers\IElement;
-
-use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\traits\mappers\ElementTrait;
-
-class Block extends ObjectData implements IElement {
+/**
+ * PageFollower represents interest of user in page or post.
+ *
+ * @property int $id
+ * @property int $modelId
+ * @property int $followerId
+ * @property string $type
+ * @property boolean $active
+ * @property int $createdAt
+ * @property int $modifiedAt
+ *
+ * @since 1.0.0
+ */
+class PageFollower extends Follower {
 
 	// Variables ---------------------------------------------------
 
@@ -35,13 +45,9 @@ class Block extends ObjectData implements IElement {
 
 	// Protected --------------
 
-	protected $modelType = CmsGlobal::TYPE_BLOCK;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ElementTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -61,7 +67,17 @@ class Block extends ObjectData implements IElement {
 
 	// Validators ----------------------------
 
-	// Block ---------------------------------
+	// PageFollower --------------------------
+
+	/**
+	 * Return corresponding page or post.
+	 *
+	 * @return \cmsgears\cms\common\models\entities\Content
+	 */
+	public function getModel() {
+
+		return $this->hasOne( Content::class, [ 'id' => 'modelId' ] );
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -69,9 +85,17 @@ class Block extends ObjectData implements IElement {
 
 	// yii\db\ActiveRecord ----
 
+    /**
+     * @inheritdoc
+     */
+	public static function tableName() {
+
+		return CmsTables::getTableName( CmsTables::TABLE_PAGE_FOLLOWER );
+	}
+
 	// CMG parent classes --------------------
 
-	// Block ---------------------------------
+	// PageFollower --------------------------
 
 	// Read - Query -----------
 

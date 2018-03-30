@@ -35,7 +35,7 @@ class Menu extends ObjectData implements ILink {
 
 	// Protected --------------
 
-	protected $modelType	= CmsGlobal::TYPE_MENU;
+	protected $modelType = CmsGlobal::TYPE_MENU;
 
 	// Private ----------------
 

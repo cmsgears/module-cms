@@ -35,7 +35,7 @@ class TagService extends BaseTagService implements ITagService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\Tag';
+	public static $modelClass = '\cmsgears\cms\common\models\resources\Tag';
 
 	// Protected --------------
 
@@ -76,9 +76,11 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function getPageWithContent( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'query' ] = Tag::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		return $this->getPage( $config );
@@ -98,9 +100,9 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function create( $model, $config = [] ) {
 
-		$model		= parent::create( $model, $config );
+		$model = parent::create( $model, $config );
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		// Model content is required for all the tags to form tag page
 		if( !isset( $content ) ) {
@@ -108,8 +110,8 @@ class TagService extends BaseTagService implements ITagService {
 			$content = new ModelContent();
 		}
 
-		$config[ 'parent' ]			= $model;
-		$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
+		$config[ 'parent' ]		= $model;
+		$config[ 'parentType' ]	= self::$parentType;
 
 		$this->modelContentService->create( $content, $config );
 
@@ -120,13 +122,13 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function update( $model, $config = [] ) {
 
-		$model		= parent::update( $model, $config );
+		$model = parent::update( $model, $config );
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ]	= true;
+			$config[ 'publish' ] = true;
 
 			$this->modelContentService->update( $content, $config );
 		}
@@ -138,7 +140,7 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function delete( $model, $config = [] ) {
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		if( isset( $content ) ) {
 

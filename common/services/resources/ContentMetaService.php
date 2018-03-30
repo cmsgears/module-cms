@@ -10,8 +10,6 @@
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
-
 use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
 
 use cmsgears\core\common\services\base\MetaService;
@@ -31,11 +29,7 @@ class ContentMetaService extends MetaService implements IContentMetaService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\ContentMeta';
-
-	public static $modelTable	= CmsTables::TABLE_PAGE_META;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\cms\common\models\resources\ContentMeta';
 
 	// Protected --------------
 

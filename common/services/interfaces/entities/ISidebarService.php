@@ -25,10 +25,6 @@ interface ISidebarService extends IObjectService {
 
 	// Read - Models ---
 
-	public function getWidgets( $sidebar, $associative = false );
-
-	public function getWidgetsForUpdate( $sidebar, $widgets );
-
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -38,8 +34,6 @@ interface ISidebarService extends IObjectService {
 	// Create -------------
 
 	// Update -------------
-
-	public function updateWidgets( $sidebar, $widgets );
 
 	// Delete -------------
 

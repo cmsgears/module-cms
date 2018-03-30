@@ -32,7 +32,7 @@ class Element extends ObjectData {
 
 	// Protected --------------
 
-	protected $modelType	= CmsGlobal::TYPE_ELEMENT;
+	protected $modelType = CmsGlobal::TYPE_ELEMENT;
 
 	// Private ----------------
 

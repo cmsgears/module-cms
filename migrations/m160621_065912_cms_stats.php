@@ -57,6 +57,7 @@ class m160621_065912_cms_stats extends Migration {
 		$tableData	= [
 			[ $this->prefix . 'cms_page', 'rows', 0 ],
 			[ $this->prefix . 'cms_page_meta', 'rows', 0 ],
+			[ $this->prefix . 'cms_page_follower', 'rows', 0 ],
 			[ $this->prefix . 'cms_model_content', 'rows', 0 ]
 		];
 
@@ -67,6 +68,7 @@ class m160621_065912_cms_stats extends Migration {
 
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE ) );
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_META ) );
+		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_FOLLOWER ) );
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT ) );
 	}
 

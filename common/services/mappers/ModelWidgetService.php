@@ -29,7 +29,7 @@ class ModelWidgetService extends ModelObjectService implements IModelWidgetServi
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\mappers\ModelWidget';
+	public static $modelClass = '\cmsgears\cms\common\models\mappers\ModelWidget';
 
 	// Protected --------------
 

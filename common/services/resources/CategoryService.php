@@ -12,8 +12,6 @@ namespace cmsgears\cms\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\cms\common\models\resources\Category;
-
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
@@ -34,7 +32,7 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\Category';
+	public static $modelClass = '\cmsgears\cms\common\models\resources\Category';
 
 	// Protected --------------
 
@@ -75,9 +73,11 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function getPageWithContent( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'query' ] = Category::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		return $this->getPage( $config );
@@ -97,9 +97,9 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function create( $model, $config = [] ) {
 
-		$model		= parent::create( $model, $config );
+		$model = parent::create( $model, $config );
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		if( isset( $content ) ) {
 

@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
+use cmsgears\core\common\models\interfaces\mappers\IFollower;
 use cmsgears\core\common\models\interfaces\mappers\IGallery;
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
@@ -41,6 +42,7 @@ use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\mappers\PageFollower;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -54,6 +56,7 @@ use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\FollowerTrait;
 use cmsgears\core\common\models\traits\mappers\GalleryTrait;
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
@@ -93,7 +96,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement,
-	IFile, IGallery, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
+	IFile, IFollower, IGallery, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -127,6 +130,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	use DataTrait;
 	use ElementTrait;
 	use FileTrait;
+	use FollowerTrait;
 	use GalleryTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
@@ -166,8 +170,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug' ] ]
 			]
 		];
 	}
@@ -288,6 +293,16 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 				return $this->hasOne( Post::class, [ 'id' => 'parentId' ] );
 			}
 		}
+	}
+
+	/**
+	 * Returns page or post followers.
+	 *
+	 * @return \cmsgears\cms\common\models\mappers\PageFollower[]
+	 */
+	public function getPageFollowers() {
+
+		return $this->hasMany( PageFollower::class, [ 'modelId' => 'id' ] );
 	}
 
 	/**

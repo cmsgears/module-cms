@@ -16,9 +16,10 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CacheProperties;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\resources\ModelComment;
-use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\core\common\models\mappers\ModelOption;
+use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\base\IContentService;
 
@@ -43,9 +44,7 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// Public -----------------
 
-	public static $modelTable	= CmsTables::TABLE_PAGE;
-
-	public static $typed		= true;
+	public static $typed = true;
 
 	// Protected --------------
 
@@ -79,9 +78,141 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
+		$contentTable = ModelContent::tableName();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'template' => [
+					'asc' => [ "$modelTable.templateId" => SORT_ASC ],
+					'desc' => [ "$modelTable.templateId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Template',
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+				'visibility' => [
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
+				],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'pdate' => [
+					'asc' => [ "$modelTable.publishedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.publishedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Published At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'query' ] = Post::queryWithAuthor();
+		}
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "$contentTable.summary",
+			'content' => "$contentTable.content"
+		];
+
+		// Result -----------
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getPage( $config );
+	}
+
 	public function getPageForSimilar( $config = [] ) {
 
-		$modelClass			= static::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		// Search Query - If hasOne config is passed, make sure that modelContent is listed in hasOne relationships
 		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
@@ -124,12 +255,13 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	public static function findPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
-		$contentTable	= CmsTables::TABLE_MODEL_CONTENT;
+		$contentTable	= ModelContent::tableName();
 
-		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$sort = isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		if( !$sort ) {
 
@@ -194,8 +326,10 @@ abstract class ContentService extends EntityService implements IContentService {
 		// Filters
 		$optionFilters	= isset( $config[ 'optionFilters' ] ) ? $config[ 'optionFilters' ] : [];
 
-		$modelTable		= static::$modelTable;
-		$parentType		= static::$parentType;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+		$parentType	= static::$parentType;
 
 		// Search
 		if( $searchContent && isset( $keywords ) ) {
@@ -241,7 +375,7 @@ abstract class ContentService extends EntityService implements IContentService {
 				$type = ModelComment::TYPE_REVIEW;
 			}
 
-			$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+			$commentTable	= ModelComment::tableName();
 			$approved		= ModelComment::STATUS_APPROVED;
 
 			$query->leftJoin( $commentTable,
@@ -253,8 +387,8 @@ abstract class ContentService extends EntityService implements IContentService {
 		if( count( $optionFilters ) > 0 ) {
 
 			$query			= $config[ 'query' ];
-			$optionTable	= CoreTables::TABLE_OPTION;
-			$mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+			$optionTable	= Option::tableName();
+			$mOptionTable	= ModelOption::tableName();
 
 			foreach ( $optionFilters as $key => $option ) {
 

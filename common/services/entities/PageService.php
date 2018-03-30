@@ -10,14 +10,10 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
-use Yii;
-use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
@@ -80,104 +76,6 @@ class PageService extends ContentService implements IPageService {
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-
-		// Sorting ----------
-
-		$sort = new Sort([
-			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => ['visibility' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'visibility',
-				],
-				'status' => [
-					'asc' => [ 'status' => SORT_ASC ],
-					'desc' => ['status' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'status',
-				],
-				'template' => [
-					'asc' => [ 'template' => SORT_ASC ],
-					'desc' => ['template' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'template',
-				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'cdate',
-				],
-				'pdate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'pdate',
-				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate',
-				]
-			]
-		]);
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		// Query ------------
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'hasOne' ] = true;
-		}
-
-		// Filters ----------
-
-		// Searching --------
-
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $searchCol ) ) {
-
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
-
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-
-		// Reporting --------
-
-		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template"
-		];
-
-		// Result -----------
-
-		//$config[ 'conditions' ][ 'type' ]	= CmsGlobal::TYPE_PAGE;
-
-		return parent::findPage( $config );
-	}
-
 	// Read ---------------
 
 	// Read - Models ---
@@ -186,10 +84,13 @@ class PageService extends ContentService implements IPageService {
 
 		if( count( $pages ) > 0 ) {
 
+			$modelClass	= static::$modelClass;
+
 			if( $map ) {
 
-				$pages		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
-				$pageMap	= [];
+				$pages = $modelClass::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+
+				$pageMap = [];
 
 				foreach ( $pages as $page ) {
 
@@ -200,7 +101,7 @@ class PageService extends ContentService implements IPageService {
 			}
 			else {
 
-				return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
 			}
 		}
 
@@ -239,29 +140,6 @@ class PageService extends ContentService implements IPageService {
 		]);
 	}
 
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
-
-		switch( $column ) {
-
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'delete': {
-
-						$this->delete( $model );
-
-						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-
-						break;
-					}
-				}
-
-				break;
-			}
-		}
-	}
-
 	// Delete -------------
 
 	// Bulk ---------------
@@ -295,4 +173,5 @@ class PageService extends ContentService implements IPageService {
 	// Update -------------
 
 	// Delete -------------
+
 }

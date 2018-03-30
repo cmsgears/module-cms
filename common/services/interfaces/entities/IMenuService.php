@@ -25,12 +25,6 @@ interface IMenuService extends IObjectService {
 
 	// Read - Models ---
 
-	public function getLinks( $menu );
-
-	public function getPageLinks( $menu, $associative = false );
-
-	public function getPageLinksForUpdate( $menu, $pages );
-
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -40,8 +34,6 @@ interface IMenuService extends IObjectService {
 	// Create -------------
 
 	// Update -------------
-
-	public function updateLinks( $menu, $links, $pageLinks );
 
 	// Delete -------------
 

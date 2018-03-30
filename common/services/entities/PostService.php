@@ -11,13 +11,11 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
-use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -61,8 +59,6 @@ class PostService extends ContentService implements IPostService {
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -87,116 +83,6 @@ class PostService extends ContentService implements IPostService {
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelClass			= static::$modelClass;
-		$modelTable			= static::$modelTable;
-		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
-
-		// Sorting ----------
-
-		$sort = new Sort([
-			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => ['visibility' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'visibility',
-				],
-				'status' => [
-					'asc' => [ 'status' => SORT_ASC ],
-					'desc' => ['status' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'status',
-				],
-				'template' => [
-					'asc' => [ 'template' => SORT_ASC ],
-					'desc' => ['template' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'template',
-				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'cdate',
-				],
-				'pdate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'pdate',
-				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate',
-				]
-			]
-		]);
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		// Query ------------
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'hasOne' ] = true;
-		}
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'query' ] = Post::queryWithAuthor();
-		}
-
-		// Filters ----------
-
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
-
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
-
-			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
-		}
-		// Searching --------
-
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $searchCol ) ) {
-
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'summary' => "$modelContentTable.summary", 'content' => "$modelContentTable.content" ];
-
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-
-		// Reporting --------
-
-		$config[ 'report-col' ]	= [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'summary' => "$modelContentTable.summary", 'content' => "$modelContentTable.content" ];
-
-		// Result -----------
-
-		$config[ 'conditions' ][ "$modelTable.type" ]	= CmsGlobal::TYPE_POST;
-
-		return parent::getPage( $config );
-
-	}
-
 	public function getPublicPage( $config = [] ) {
 
 		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'blog';
@@ -210,7 +96,9 @@ class PostService extends ContentService implements IPostService {
 
 	public function getFeatured() {
 
-		return Post::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
 	}
 
 	// Read - Lists ----
@@ -312,34 +200,11 @@ class PostService extends ContentService implements IPostService {
 
 	public function linkGallery( $model, $gallery ) {
 
-		$model->galleryId	= $gallery->id;
+		$model->galleryId = $gallery->id;
 
 		return parent::update( $model, [
 			'attributes' => [ 'galleryId' ]
 		]);
-	}
-
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
-
-		switch( $column ) {
-
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'delete': {
-
-						$this->delete( $model );
-
-						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-
-						break;
-					}
-				}
-
-				break;
-			}
-		}
 	}
 
 	// Delete -------------

@@ -10,11 +10,8 @@
 namespace cmsgears\cms\common\services\resources;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\core\common\services\traits\ResourceTrait;
-
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
 use cmsgears\core\common\services\base\ModelResourceService;
@@ -36,11 +33,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\ModelContent';
-
-	public static $modelTable	= CmsTables::TABLE_MODEL_CONTENT;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\cms\common\models\resources\ModelContent';
 
 	// Protected --------------
 
@@ -55,8 +48,6 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -80,24 +71,6 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 	// ModelContentService -------------------
 
 	// Data Provider ------
-
-	public function getPage( $config = [] ) {
-
-		$sort = new Sort([
-			'attributes' => [
-				'pDate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Published At'
-				]
-			]
-		]);
-
-		$config[ 'sort' ] = $sort;
-
-		return parent::findPage( $config );
-	}
 
 	// Read ---------------
 
