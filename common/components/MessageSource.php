@@ -1,14 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\components;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class MessageSource extends \yii\base\Component {
+use cmsgears\core\common\base\MessageSource as BaseMessageSource;
+
+/**
+ * MessageSource stores and provide the messages and message templates available in
+ * Cms Module.
+ *
+ * @since 1.0.0
+ */
+class MessageSource extends BaseMessageSource {
 
 	// Global -----------------
 
@@ -20,20 +32,21 @@ class MessageSource extends \yii\base\Component {
 		// Generic Fields
 		CmsGlobal::FIELD_ELEMENT => 'Element',
 		CmsGlobal::FIELD_BLOCK => 'Block',
-		CmsGlobal::FIELD_PAGE => 'Page',
+		CmsGlobal::FIELD_LINK => 'Link',
 		CmsGlobal::FIELD_MENU => 'Menu',
 		CmsGlobal::FIELD_WIDGET => 'Widget',
 		CmsGlobal::FIELD_SIDEBAR => 'Sidebar',
-		CmsGlobal::FIELD_URL_RELATIVE => 'Relative URL',
+		CmsGlobal::FIELD_PAGE => 'Page',
 		CmsGlobal::FIELD_KEYWORDS => 'Keywords',
 		// SEO
 		CmsGlobal::FIELD_SEO_NAME => 'SEO Name',
 		CmsGlobal::FIELD_SEO_DESCRIPTION => 'SEO Description',
 		CmsGlobal::FIELD_SEO_KEYWORDS => 'SEO Keywords',
 		CmsGlobal::FIELD_SEO_ROBOT => 'SEO Robot',
-		// Block Fields
-		CmsGlobal::FIELD_BACKGROUND => 'Background',
-		CmsGlobal::FIELD_TEXTURE => 'Texture'
+		// Link
+		CmsGlobal::FIELD_TARGET => 'Target',
+		CmsGlobal::FIELD_ABSOLUTE => 'Absolute',
+		CmsGlobal::FIELD_BLOG => 'Blog'
 	];
 
 	// Private ----------------
@@ -48,8 +61,4 @@ class MessageSource extends \yii\base\Component {
 
 	// MessageSource -------------------------
 
-	public function getMessage( $messageKey, $params = [], $language = null ) {
-
-		return $this->messageDb[ $messageKey ];
-	}
 }

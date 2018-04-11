@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\actions\content;
 
 // Yii Imports
@@ -9,12 +17,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateVideo can be used to update video of discovered model using corresponding model content.
+ * Banner action configures the banner of models using model content trait.
+ *
+ * @since 1.0.0
  */
-class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
+class Banner extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,7 +42,7 @@ class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName	= 'Video';
+	public $fileName = 'Banner';
 
 	// Protected --------------
 
@@ -50,7 +62,7 @@ class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// AssignTags ----------------------------
+	// Banner --------------------------------
 
 	public function run() {
 
@@ -59,11 +71,11 @@ class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
 			$content	= $this->model->modelContent;
-			$video		= File::loadFile( $content->video, $this->fileName );
+			$banner		= File::loadFile( $content->banner, $this->fileName );
 
-			if( $modelContentService->updateVideo( $content, $video ) ) {
+			if( $modelContentService->updateBanner( $content, $banner ) ) {
 
-				$response	= [ 'fileUrl' => $video->getFileUrl() ];
+				$response = [ 'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(), 'thumbUrl' => $banner->getThumbUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
@@ -76,4 +88,5 @@ class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

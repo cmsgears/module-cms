@@ -13,14 +13,14 @@ namespace cmsgears\cms\common\services\mappers;
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\mappers\IModelCategoryService;
 
-use cmsgears\core\common\services\mappers\ModelCategoryService;
+use cmsgears\core\common\services\mappers\ModelCategoryService as BaseModelCategoryService;
 
 /**
  * ModelCategoryService provide service methods of model category mapper.
  *
  * @since 1.0.0
  */
-class ModelCategoryService extends ModelCategoryService implements IModelCategoryService {
+class ModelCategoryService extends BaseModelCategoryService implements IModelCategoryService {
 
 	// Variables ---------------------------------------------------
 

@@ -25,7 +25,9 @@ interface IPageService extends IContentService {
 
 	// Read - Models ---
 
-	public function getMenuPages( $pages, $map = false );
+	public function getFeatured();
+
+	public function getMenuPages( $ids, $map = false );
 
 	// Read - Lists ----
 
@@ -34,6 +36,8 @@ interface IPageService extends IContentService {
 	// Read - Others ---
 
 	// Create -------------
+
+	public function register( $model, $config = [] );
 
 	// Update -------------
 

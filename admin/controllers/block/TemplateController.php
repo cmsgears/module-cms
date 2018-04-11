@@ -1,15 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\block;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
+use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
+
+/**
+ * TemplateController provide actions specific to block templates.
+ *
+ * @since 1.0.0
+ */
+class TemplateController extends BaseTemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -19,8 +33,6 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// Protected --------------
 
-	protected $activityService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -29,28 +41,26 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block-template' ];
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
-		// Services
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+		// Type
+		$this->type = CmsGlobal::TYPE_BLOCK;
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
-
-		$this->type				= CmsGlobal::TYPE_BLOCK;
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'block-template' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'templates' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/template/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/template/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs	= [
-			
-			'all' => [ [ 'label' => 'Block' ] ],
-			'create' => [ [ 'label' => 'Block', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Block', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Block', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		$this->breadcrumbs = [
+			'base' => [ [ 'label' => 'Pages', 'url' =>  [ '/cms/block/all' ] ] ],
+			'all' => [ [ 'label' => 'Templates' ] ],
+			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -70,52 +80,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// TemplateController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		Url::remember( [ 'block/template/all' ], 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
-	
-	public function afterAction( $action, $result ) {
 
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

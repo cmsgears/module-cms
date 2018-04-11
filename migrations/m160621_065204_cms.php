@@ -52,6 +52,9 @@ class m160621_065204_cms extends Migration {
 		$this->upPageMeta();
 		$this->upPageFollower();
 
+		// Link
+		$this->upLink();
+
 		// Resources
 		$this->upModelContent();
 
@@ -78,7 +81,8 @@ class m160621_065204_cms extends Migration {
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'visibility' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'order' => $this->smallInteger( 6 ),
+			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'comments' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -130,6 +134,34 @@ class m160621_065204_cms extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId' );
 	}
 
+	private function upLink() {
+
+		$this->createTable( $this->prefix . 'cms_link', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'pageId' => $this->bigInteger( 20 ),
+			'createdBy' => $this->bigInteger( 20 )->notNull(),
+			'modifiedBy' => $this->bigInteger( 20 ),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'url' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'target' => $this->boolean()->notNull()->defaultValue( false ),
+			'absolute' => $this->boolean()->notNull()->defaultValue( false ),
+			'blog' => $this->boolean()->notNull()->defaultValue( false ),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime(),
+			'data' => $this->mediumText()
+		], $this->options );
+
+		// Index for columns site, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'link_site', $this->prefix . 'cms_link', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'link_page', $this->prefix . 'cms_link', 'pageId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'link_creator', $this->prefix . 'cms_link', 'createdBy' );
+		$this->createIndex( 'idx_' . $this->prefix . 'link_modifier', $this->prefix . 'cms_link', 'modifiedBy' );
+	}
+
 	private function upModelContent() {
 
 		$this->createTable( $this->prefix . 'cms_model_content', [
@@ -146,13 +178,6 @@ class m160621_065204_cms extends Migration {
 			'seoDescription' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'seoKeywords' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'seoRobot' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'views' => $this->integer( 11 )->defaultValue( 0 ),
-			'referrals' => $this->integer( 11 )->defaultValue( 0 ),
-			'comments' => $this->integer( 11 )->defaultValue( 0 ),
-			'likes' => $this->integer( 11 )->defaultValue( 0 ),
-			'wish' => $this->integer( 11 )->defaultValue( 0 ),
-			'weight' => $this->integer( 11 )->defaultValue( 0 ),
-			'rank' => $this->integer( 11 )->defaultValue( 0 ),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText()
@@ -179,6 +204,12 @@ class m160621_065204_cms extends Migration {
         $this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
+		// Link
+		$this->addForeignKey( 'fk_' . $this->prefix . 'link_site', $this->prefix . 'cms_link', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'link_page', $this->prefix . 'cms_link', 'pageId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'link_creator', $this->prefix . 'cms_link', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'link_modifier', $this->prefix . 'cms_link', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
+
 		// Model Content
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -195,6 +226,8 @@ class m160621_065204_cms extends Migration {
 		$this->dropTable( $this->prefix . 'cms_page' );
 		$this->dropTable( $this->prefix . 'cms_page_meta' );
 		$this->dropTable( $this->prefix . 'cms_page_follower' );
+
+		$this->dropTable( $this->prefix . 'cms_link' );
 
 		$this->dropTable( $this->prefix . 'cms_model_content' );
 	}
@@ -213,6 +246,12 @@ class m160621_065204_cms extends Migration {
 		// Page Follower
         $this->dropForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower' );
+
+		// Link
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'link_site', $this->prefix . 'cms_link' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'link_page', $this->prefix . 'cms_link' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'link_creator', $this->prefix . 'cms_link' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'link_modifier', $this->prefix . 'cms_link' );
 
 		// Model Content
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content' );

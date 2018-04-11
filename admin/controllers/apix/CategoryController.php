@@ -1,10 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\apix;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryController {
+use cmsgears\core\admin\controllers\apix\CategoryController as BaseCategoryController;
+
+/**
+ * CategoryController provides actions specific to post categories.
+ *
+ * @since 1.0.0
+ */
+class CategoryController extends BaseCategoryController {
 
 	// Variables ---------------------------------------------------
 
@@ -22,8 +37,8 @@ class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryC
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------

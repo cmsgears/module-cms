@@ -22,6 +22,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IApproval;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
@@ -33,7 +34,6 @@ use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IFollower;
-use cmsgears\core\common\models\interfaces\mappers\IGallery;
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
@@ -46,6 +46,7 @@ use cmsgears\cms\common\models\mappers\PageFollower;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
@@ -57,7 +58,6 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\FollowerTrait;
-use cmsgears\core\common\models\traits\mappers\GalleryTrait;
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 use cmsgears\cms\common\models\traits\mappers\ElementTrait;
@@ -83,6 +83,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $status
  * @property integer $visibility
  * @property integer $order
+ * @property integer $pinned
  * @property integer $featured
  * @property integer $comments
  * @property date $createdAt
@@ -95,8 +96,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement,
-	IFile, IFollower, IGallery, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
+class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured,
+	IFile, IFollower, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -129,9 +130,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	use ContentTrait;
 	use DataTrait;
 	use ElementTrait;
+	use FeaturedTrait;
 	use FileTrait;
 	use FollowerTrait;
-	use GalleryTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
@@ -189,6 +190,8 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			// Unique
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -198,7 +201,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'featured', 'comments', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'comments', 'gridCacheValid' ], 'boolean' ],
 			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -234,6 +237,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENT ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -405,7 +409,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'site', 'creator', 'modifier' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
@@ -419,7 +423,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function queryWithAuthor( $config = [] ) {
 
-		$config[ 'relations' ][] = [ 'modelContent', 'creator' ];
+		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'creator' ];
 
 		$config[ 'relations' ][] = [ 'creator.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );

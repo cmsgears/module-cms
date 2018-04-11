@@ -12,8 +12,6 @@ namespace cmsgears\cms\common\services\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\mappers\ModelBlock;
-
 use cmsgears\cms\common\services\interfaces\entities\IBlockService;
 
 use cmsgears\core\common\services\entities\ObjectDataService;
@@ -77,45 +75,9 @@ class BlockService extends ObjectDataService implements IBlockService {
 
 	// Create -------------
 
-	public function create( $model, $config = [] ) {
-
-		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$texture	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
-		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'textureId' => $texture, 'videoId' => $video ] );
-
-		return parent::create( $model, $config );
-	}
-
 	// Update -------------
 
-	public function update( $model, $config = [] ) {
-
-		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$texture	= isset( $config[ 'texture' ] ) ? $config[ 'texture' ] : null;
-		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'textureId' => $texture, 'videoId' => $video ] );
-
-		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'bannerId', 'textureId', 'videoId', 'name', 'description', 'active', 'htmlOptions', 'title', 'icon', 'content', 'data' ]
-		]);
-	}
-
 	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete files
-		$this->fileService->deleteFiles( [ $model->banner, $model->texture, $model->video ] );
-
-		// Delete mappings
-		Yii::$app->get( 'modelBlockService' )->deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
 
 	// Bulk ---------------
 

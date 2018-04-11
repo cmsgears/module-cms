@@ -10,9 +10,13 @@
 namespace cmsgears\cms\common\services\interfaces\base;
 
 // CMG Imports
+use cmsgears\core\common\services\interfaces\base\IApproval;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
 
-interface IContentService extends IEntityService {
+interface IContentService extends IEntityService, IApproval, IMultiSite, INameType, ISlugType {
 
 	// Data Provider ------
 

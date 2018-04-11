@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\page;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
+use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
+
+/**
+ * TemplateController provide actions specific to Page templates.
+ *
+ * @since 1.0.0
+ */
+class TemplateController extends BaseTemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -17,8 +32,6 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 	// Public -----------------
 
 	// Protected --------------
-
-	protected $activityService;
 
 	// Private ----------------
 
@@ -29,23 +42,20 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Type
-		$this->type			= CmsGlobal::TYPE_PAGE;
-
-		// Services
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+		$this->type = CmsGlobal::TYPE_PAGE;
 
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ];
 
 		// Return Url
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/template/all' ], true );
+		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/template/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
+		$this->breadcrumbs = [
 			'base' => [ [ 'label' => 'Pages', 'url' =>  [ '/cms/page/all' ] ] ],
 			'all' => [ [ 'label' => 'Templates' ] ],
 			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
@@ -70,52 +80,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// TemplateController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
-	
-	public function afterAction( $action, $result ) {
 
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

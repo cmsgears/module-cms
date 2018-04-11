@@ -1,10 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\apix;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class TagController extends \cmsgears\core\admin\controllers\apix\TagController {
+use cmsgears\core\admin\controllers\apix\TagController as BaseTagController;
+
+/**
+ * TagController provides actions specific to post tags.
+ *
+ * @since 1.0.0
+ */
+class TagController extends BaseTagController {
 
 	// Variables ---------------------------------------------------
 
@@ -22,8 +37,8 @@ class TagController extends \cmsgears\core\admin\controllers\apix\TagController 
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------

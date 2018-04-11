@@ -1,25 +1,38 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\utilities;
 
 // Yii Imports
-use \Yii;
-use yii\helpers\Url;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\config\CoreProperties;
+use cmsgears\cms\common\config\CmsProperties;
+
 /**
- * This utility can be used to find page name and other details for both Core and CMS modules.
+ * ContentUtil generates the meta data for pages, posts and models. The generated data
+ * can be used for SEO purpose.
+ *
+ * @since 1.0.0
  */
 class ContentUtil {
 
 	/**
-	 * The method can be utilised by the Layouts for SEO purpose. It allows options to override default module and controller used for system pages.
-	 * @param $view - The current view being rendered by controller.
-	 * @param $module - The module to be considered for system pages.
-	 * @param $controller - The site controller provided by given module to be considered for system pages.
-	 * @return array having SEO related details.
+	 * Generates the meta data of Page or Post.
+	 *
+	 * @param \yii\web\View $view The current view being rendered by controller.
+	 * @param array $config
+	 * @return array having page meta data.
 	 */
 	public static function initPage( $view, $config = [] ) {
 
@@ -27,9 +40,10 @@ class ContentUtil {
 
 		if( isset( $page ) ) {
 
-			$coreProperties				= $view->context->getCoreProperties();
+			$coreProperties = CoreProperties::getInstance();
+			$cmsProperties	= CmsProperties::getInstance();
 
-			$content					= $page->modelContent;
+			$content = $page->modelContent;
 
 			// Page and Content
 			$view->params[ 'page' ]		= $page;
@@ -44,151 +58,173 @@ class ContentUtil {
 			$view->params[ 'robot' ]	= $content->seoRobot;
 
 			// SEO - Page Title
-			$siteTitle					= $coreProperties->getSiteTitle();
+			$siteTitle		= $coreProperties->getSiteTitle();
+			$titleSeparator	= $cmsProperties->getTitleSeparator();
+			$seoName		= !empty( $content->seoName ) ? $content->seoName : $page->name;
 
-			if( isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
+			if( $cmsProperties->isSiteTitle() ) {
 
-				$view->title		= $content->seoName . " | " . $siteTitle;
-			}
-			else if( isset( $page->name ) && strlen( $page->name ) > 0 ) {
+				if( $cmsProperties->isAppendTitle() ) {
 
-				$view->title		= $page->name . " | " . $siteTitle;
-			}
-			else {
+					$view->title = "$seoName $titleSeparator $siteTitle";
+				}
+				else {
 
-				$view->title		= $siteTitle;
-			}
-		}
-	}
-
-	public static function initFormPage( $view, $config = [] ) {
-
-		$controller		= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
-		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SITE;
-
-		$form			= null;
-
-		if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
-
-			$slug	= Yii::$app->request->queryParams[ 'slug' ];
-			$form	= Yii::$app->factory->get( 'formService' )->getBySlugType( $slug, $type );
-		}
-
-		if( isset( $form ) ) {
-
-			$coreProperties				= $view->context->getCoreProperties();
-
-			// Form
-			$view->params[ 'form' ]		= $form;
-
-			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= $form->description;
-
-			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= $form->description;
-
-			// SEO - Page Title
-			$siteTitle					= $coreProperties->getSiteTitle();
-
-			if( isset( $form->name ) && strlen( $form->name ) > 0 ) {
-
-				$view->title		= $form->name . " | " . $siteTitle;
+					$view->title = "$siteTitle $titleSeparator $seoName";
+				}
 			}
 			else {
 
-				$view->title		= $siteTitle;
+				$view->title = $content->seoName;
 			}
 		}
 	}
 
 	/**
-	 * The method can be utilised by the Layouts for SEO purpose. It can be used for models using content to render model pages apart from standard cms pages.
-	 * @param $view - The current view being rendered by controller.
-	 * @return array having SEO related details.
+	 * Generates the meta data of Model using SEO Data.
+	 *
+	 * @param \yii\web\View $view The current view being rendered by controller.
+	 * @param array $config
+	 * @return array having model meta data.
 	 */
-	public static function initModelPage( $view, $config = [] ) {
+	public static function initModel( $view, $config = [] ) {
 
-		$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
-		$service	= $config[ 'service' ];
-		$service	= Yii::$app->factory->get( $service );
-
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
-
-		$slug		= Yii::$app->request->queryParams[ 'slug' ];
-
-		$model		= null;
-
-		if( isset( $config[ 'model' ] ) ){
-			
-			$model = $config[ 'model' ];
-		}
-		else {
-		
-			if( $typed ) {
-
-				$model = $service->getBySlugType( $slug, $type );
-			}
-			else {
-
-				$model = $service->getBySlug( $slug );
-			}
-		}
+		$model = self::findModel( $config );
 
 		if( isset( $model ) ) {
 
-			$coreProperties				= $view->context->getCoreProperties();
+			$coreProperties = CoreProperties::getInstance();
+			$cmsProperties	= CmsProperties::getInstance();
+			$seoData		= $model->getDataMeta( CoreGlobal::DATA_SEO );
 
-			$content					= isset( $model->modelContent ) ? $model->modelContent : null;
-			$description				= isset( $model->description ) ? $model->description : null;
+			// Model
+			$view->params[ 'model' ]	= $model;
+			$view->params[ 'content' ]	= $seoData;
 
-			// Page and Content
+			// SEO H1 - Page Summary
+			$view->params[ 'summary' ]	= isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : $model->description;
+
+			// SEO Meta Tags - Description, Keywords, Robot Text
+			$view->params[ 'desc' ]		= isset( $seoData ) && !empty( $seoData->description ) ? $seoData->description : $model->description;
+			$view->params[ 'keywords' ]	= isset( $seoData ) && !empty( $seoData->keywords ) ? $seoData->keywords : null;
+			$view->params[ 'robot' ]	= isset( $seoData ) && !empty( $seoData->robot ) ? $seoData->robot : null;
+
+			// SEO - Page Title
+			$siteTitle		= $coreProperties->getSiteTitle();
+			$titleSeparator	= $cmsProperties->getTitleSeparator();
+			$seoName		= isset( $seoData ) && !empty( $seoData->name ) ? $seoData->name : $model->name;
+
+			if( $cmsProperties->isSiteTitle() ) {
+
+				if( $cmsProperties->isAppendTitle() ) {
+
+					$view->title = "$seoName $titleSeparator $siteTitle";
+				}
+				else {
+
+					$view->title = "$siteTitle $titleSeparator $seoName";
+				}
+			}
+			else {
+
+				$view->title = $model->seoName;
+			}
+		}
+	}
+
+	/**
+	 * Generates the meta data of Model using model content.
+	 *
+	 * @param \yii\web\View $view The current view being rendered by controller.
+	 * @param array $config
+	 * @return array having model meta data.
+	 */
+	public static function initModelPage( $view, $config = [] ) {
+
+		$model = self::findModel( $config );
+
+		if( isset( $model ) ) {
+
+			$coreProperties = CoreProperties::getInstance();
+			$cmsProperties	= CmsProperties::getInstance();
+			$seoData		= $model->getDataMeta( CoreGlobal::DATA_SEO );
+
+			$content = $model->modelContent;
+
+			// Model
 			$view->params[ 'model' ]	= $model;
 			$view->params[ 'content' ]	= $content;
 
 			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= isset( $content ) ? $content->summary : $description;
+			$view->params[ 'summary' ]	= $content->summary;
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= isset( $content ) ? $content->seoDescription : $description;
-			$view->params[ 'keywords' ]	= isset( $content ) ? $content->seoKeywords : null;
-			$view->params[ 'robot' ]	= isset( $content ) ? $content->seoRobot : null;
+			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $model->description;
+			$view->params[ 'keywords' ]	= $content->seoKeywords;
+			$view->params[ 'robot' ]	= $content->seoRobot;
 
 			// SEO - Page Title
-			$siteTitle					= $coreProperties->getSiteTitle();
+			$siteTitle		= $coreProperties->getSiteTitle();
+			$titleSeparator	= $cmsProperties->getTitleSeparator();
+			$seoName		= !empty( $content->seoName ) ? $content->seoName : $model->name;
 
-			if( isset( $content ) && isset( $content->seoName ) && strlen( $content->seoName ) > 0 ) {
+			if( $cmsProperties->isSiteTitle() ) {
 
-				$view->title		= $content->seoName . " | " . $siteTitle;
-			}
-			else if( isset( $model->name ) && strlen( $model->name ) > 0 ) {
+				if( $cmsProperties->isAppendTitle() ) {
 
-				$view->title		= $model->name . " | " . $siteTitle;
+					$view->title = "$seoName $titleSeparator $siteTitle";
+				}
+				else {
+
+					$view->title = "$siteTitle $titleSeparator $seoName";
+				}
 			}
 			else {
 
-				$view->title		= $siteTitle;
+				$view->title = $model->seoName;
 			}
 		}
 	}
 
 	/**
-	 * It returns page info to be used for system pages. We can decorate system pages using either this method or standard blocks using block widget.
-	 * @return array - page details including content, author and banner.
+	 * Find and return the view according to the configuration passed to it.
+	 *
+	 * @param \yii\web\View $view
+	 * @param array $config
+	 * @return \cmsgears\cms\common\models\entities\Content
 	 */
-	public static function getPageInfo( $view, $module = 'core', $controller = 'site' ) {
+	public static function findViewPage( $view, $config = [] ) {
 
-		$page = self::findViewPage( $view, $module, $controller );
+		$module			= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core'; // The module used for pages.
+		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'site'; // The controller used for pages.
 
-		if( isset( $page ) ) {
+		$moduleName		= $view->context->module->id;
+		$controllerName	= Yii::$app->controller->id;
+		$actionName		= Yii::$app->controller->action->id;
 
-			$info				= [];
-			$info[ 'page' ]		= $page;
-			$info[ 'content' ]	= $page->modelContent;
+		$page = null;
 
-			return $info;
+		// System/Public Pages - Landing, Login, Register, Confirm Account, Activate Account, Forgot Password, Reset Password
+		if( $moduleName == $module && $controllerName == $controller ) {
+
+			if( $actionName == 'index' ) {
+
+				$page = self::getPage( 'home' );
+			}
+			else {
+
+				$page = self::getPage( $actionName );
+			}
+		}
+		// Blog/CMS Pages
+		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
+
+			$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
+
+			$page = self::getPage( Yii::$app->request->queryParams[ 'slug' ], $type );
 		}
 
-		return null;
+		return $page;
 	}
 
 	/**
@@ -199,104 +235,32 @@ class ContentUtil {
 		return Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
 	}
 
-	/**
-	 * It returns page summary to be used in page blocks on other pages.
-	 * @return string - page summary
-	 */
-	public static function getPageSummary( $config = [] ) {
+	public static function findModel( $config ) {
 
-		if( isset( $config[ 'slug' ] ) ) {
+		$model = null;
 
-			$slug	= $config[ 'slug' ];
-			$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_PAGE;
-			$page	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
+		if( isset( $config[ 'model' ] ) ){
+
+			$model = $config[ 'model' ];
 		}
+		else {
 
-		if( isset( $config[ 'page' ] ) ) {
+			$service	= Yii::$app->factory->get( $config[ 'service' ] );
+			$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
+			$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
+			$slug		= Yii::$app->request->queryParams[ 'slug' ];
 
-			$page	= $config[ 'page' ];
-		}
+			if( $typed ) {
 
-		if( isset( $page ) ) {
-
-			$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : null;
-			$ellipsis		= isset( $config[ 'ellipsis' ] ) ? $config[ 'ellipsis' ] : true;
-
-			$coreProperties	= Yii::$app->controller->getCoreProperties();
-			$slugUrl		= Url::toRoute( "/$page->slug" );
-			$summary		= $page->modelContent->summary;
-
-			$summary		= isset( $limit ) && strlen( $summary ) > $limit ? substr( $summary, 0, $limit ) : $page->modelContent->summary;
-			$summary		= $ellipsis ? "$summary ..." : $summary;
-			$summary	    = "<div class='page-summary'>$summary</div>";
-			$summary	   .= "<div class='page-link'><a class='btn btn-medium' href='$slugUrl'>Read More</a></div>";
-
-			return $summary;
-		}
-
-		return '';
-	}
-
-	/**
-	 * It returns page full content to be used in page blocks on other pages.
-	 * @return string - page content
-	 */
-	public static function getPageContent( $config = [] ) {
-
-		if( isset( $config[ 'slug' ] ) ) {
-
-			$slug	= $config[ 'slug' ];
-			$type	= $config[ 'type' ];
-			$page	= Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
-		}
-
-		if( isset( $config[ 'page' ] ) ) {
-
-			$page	= $config[ 'page' ];
-		}
-
-		if( isset( $page ) ) {
-
-			$content	= $page->modelContent;
-			$content	= $content->content;
-			$content   .= "<div class='page-content'>$content</div>";
-
-			return $content;
-		}
-
-		return '';
-	}
-
-	public static function findViewPage( $view, $config = [] ) {
-
-		$module			= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core';
-		$controller		= isset( $config[ 'module' ] ) ? $config[ 'controller' ] : 'site';
-		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
-
-		$moduleName		= $view->context->module->id;
-		$controllerName	= Yii::$app->controller->id;
-		$actionName		= Yii::$app->controller->action->id;
-
-		$page			= null;
-
-		// System/Public Pages - Landing, Login, Register, Confirm Account, Activate Account, Forgot Password, Reset Password
-		if( strcmp( $moduleName, $module ) == 0 && strcmp( $controllerName, $controller ) == 0 ) {
-
-			if( strcmp( $actionName, 'index' ) == 0 ) {
-
-				$page	= self::getPage( 'home' );
+				$model = $service->getBySlugType( $slug, $type );
 			}
 			else {
 
-				$page	= self::getPage( $actionName );
+				$model = $service->getBySlug( $slug );
 			}
 		}
-		// Blog/CMS Pages
-		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
-			$page	= self::getPage( Yii::$app->request->queryParams[ 'slug' ], $type );
-		}
-
-		return $page;
+		return $model;
 	}
+
 }

@@ -25,13 +25,15 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-                                                <div class="col col2">
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' ) ?>
+						</div>
+						<div class="col col3">
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
-						
 					</div>
 					<div class="row">
 						<div class="col col2">
@@ -50,11 +52,22 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 					</div>
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
 						</div>
-                                                <div class="col col2">
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
 						</div>
 					</div>
 				</div>

@@ -3,41 +3,88 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\files\widgets\ImageUploader;
+use cmsgears\files\widgets\VideoUploader;
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Delete Sidebar | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Sidebar | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Delete Sidebar</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar' ] );?>
-
-		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
-		<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
-		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
-
-		<div class="box-content clearfix">
-			<div class="header">Link Widgets</div>
-			<?php foreach ( $sidebarWidgets as $key => $sidebarWidget ) { ?>
-				<span class="box-half">
-					<?= $form->field( $sidebarWidget, "[$key]widget" )->checkbox( [ 'label' => $sidebarWidget->name, 'disabled' => true ] ) ?>
-					<?= $form->field( $sidebarWidget, "[$key]widgetId" )->hiddenInput()->label( false ) ?>
-					<div class="frm-split-40-60 clearfix">
-						<?= $form->field( $sidebarWidget, "[$key]htmlOptions" )->textInput( [ 'placeholder' => 'html options', 'readonly' => true ] ) ?>
-						<?= $form->field( $sidebarWidget, "[$key]order" )->textInput( [ 'placeholder' => 'order', 'readonly' => true ] ) ?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col3">
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
 					</div>
-				</span>
-			<?php } ?>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<div class="clear filler-height"></div>
-
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Files</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+						<div class="col col12x4">
+							<label>Banner</label>
+							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+						</div>
+						<div class="col col12x4">
+							<label>Video</label>
+							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="align align-right">
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
-
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

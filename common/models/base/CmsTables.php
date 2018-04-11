@@ -32,6 +32,8 @@ class CmsTables extends DbTables {
 	// Page Followers
 	const TABLE_PAGE_FOLLOWER	= 'cmg_cms_page_follower';
 
+	const TABLE_LINK			= 'cmg_cms_link';
+
 	// Model Resources
 	const TABLE_MODEL_CONTENT	= 'cmg_cms_model_content';
 

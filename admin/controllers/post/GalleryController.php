@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
+use cmsgears\core\admin\controllers\base\GalleryController as BaseGalleryController;
+
+/**
+ * GalleryController provide actions specific to post gallery.
+ *
+ * @since 1.0.0
+ */
+class GalleryController extends BaseGalleryController {
 
 	// Variables ---------------------------------------------------
 
@@ -28,24 +43,28 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
+
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->parentUrl	= '/cms/post/all';
+		$this->modelContent	= true;
 
 		// Services
-		$this->parentService	= Yii::$app->factory->get( 'postService' );
+		$this->parentService = Yii::$app->factory->get( 'postService' );
 
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
 
 		// Return Url
-		$this->returnUrl	= Url::previous( 'posts' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all/' ], true );
+		$this->returnUrl = Url::previous( 'posts' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all/' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
-			'index' => [ [ 'label' => 'Gallery' ] ],
+			'base' => [ [ 'label' => 'Posts', 'url' =>  $this->returnUrl ] ],
+			'direct' => [ [ 'label' => 'Gallery' ] ],
 			'items' => [ [ 'label' => 'Gallery', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ],
 		];
 	}

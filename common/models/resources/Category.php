@@ -75,6 +75,31 @@ class Category extends BaseCategory implements IPageContent {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'modelContent', 'parent', 'root' ];
+
+		$config[ 'relations' ] = $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the model with content.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with content.
+	 */
+	public static function queryWithContent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template', 'parent', 'root' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
 	// Create -----------------

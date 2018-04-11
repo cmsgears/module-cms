@@ -21,8 +21,6 @@ interface ITagService extends IBaseTagService {
 
 	// Data Provider ------
 
-	public function getPageWithContent( $config = [] );
-
 	// Read ---------------
 
 	// Read - Models ---

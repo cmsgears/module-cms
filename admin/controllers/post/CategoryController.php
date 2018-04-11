@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
+use cmsgears\cms\admin\controllers\base\CategoryController as BaseCategoryController;
+
+/**
+ * CategoryController provides actions specific to post categories.
+ *
+ * @since 1.0.0
+ */
+class CategoryController extends BaseCategoryController {
 
 	// Variables ---------------------------------------------------
 
@@ -26,18 +41,19 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 		parent::init();
 
-		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Config
+		$this->type			= CmsGlobal::TYPE_POST;
+		$this->templateType	= CmsGlobal::TYPE_POST;
 
-		$this->type				= CmsGlobal::TYPE_POST;
-		$this->templateType		= CmsGlobal::TYPE_POST;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'categories' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
+		$this->returnUrl = Url::previous( 'categories' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
@@ -65,10 +81,11 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 
 	// CategoryController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'categories' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
+
 }

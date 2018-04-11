@@ -10,10 +10,14 @@
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\resources\Gallery;
+use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
@@ -57,7 +61,7 @@ class PageService extends ContentService implements IPageService {
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -80,19 +84,26 @@ class PageService extends ContentService implements IPageService {
 
 	// Read - Models ---
 
-	public function getMenuPages( $pages, $map = false ) {
+	public function getFeatured() {
 
-		if( count( $pages ) > 0 ) {
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+	}
+
+	public function getMenuPages( $ids, $map = false ) {
+
+		if( count( $ids ) > 0 ) {
 
 			$modelClass	= static::$modelClass;
 
 			if( $map ) {
 
-				$pages = $modelClass::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				$pages = $modelClass::find()->filterWhere( [ 'in', 'id', $ids ] )->all();
 
 				$pageMap = [];
 
-				foreach ( $pages as $page ) {
+				foreach( $pages as $page ) {
 
 					$pageMap[ $page->id ] = $page;
 				}
@@ -101,7 +112,7 @@ class PageService extends ContentService implements IPageService {
 			}
 			else {
 
-				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $ids ] )->all();
 			}
 		}
 
@@ -118,21 +129,86 @@ class PageService extends ContentService implements IPageService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->type = CmsGlobal::TYPE_PAGE;
+		if( !isset( $model->visibility ) ) {
+
+			$model->visibility = Page::VISIBILITY_PRIVATE;
+		}
 
 		return parent::create( $model, $config );
+	}
+
+	public function add( $model, $config = [] ) {
+
+		return $this->register( $model, $config );
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$content 	= $config[ 'content' ];
+
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : false;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$this->create( $model, $config );
+
+			// Refresh Model
+			$model->refresh();
+
+			// Create and attach gallery
+			if( $gallery ) {
+
+				$gallery = $galleryService->createByParams([
+					'type' => CmsGlobal::TYPE_PAGE, 'status' => Gallery::STATUS_ACTIVE,
+					'name' => $parent->name, 'title' => $parent->name,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => CmsGlobal::TYPE_PAGE,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$model->refresh();
+
+			$transaction->commit();
+
+			return $model;
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+		}
+
+		return false;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'icon', 'title' ];
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'parentId', 'name', 'slug', 'icon',
+			'title', 'description', 'visibility', 'content'
+		];
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
 		}
 
 		return parent::update( $model, [
@@ -141,6 +217,14 @@ class PageService extends ContentService implements IPageService {
 	}
 
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependent models
+		Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+
+		return parent::delete( $model, $config );
+	}
 
 	// Bulk ---------------
 

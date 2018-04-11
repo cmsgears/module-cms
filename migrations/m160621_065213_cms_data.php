@@ -190,10 +190,10 @@ class m160621_065213_cms_data extends Migration {
 			'name' => 'Config Blog', 'slug' => 'config-blog',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Blog configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -205,7 +205,10 @@ class m160621_065213_cms_data extends Migration {
 		$fields	= [
 			[ $config->id, 'page_comment','Page Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable comments on pages. It can also be set for individual pages from Edit Page."}' ],
 			[ $config->id, 'post_comment','Post Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable comments on posts. It can also be set for individual pages from Edit Post."}' ],
-			[ $config->id, 'post_limit','Post Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Number of posts displayed on a page.","placeholder":"Post limit"}' ]
+			[ $config->id, 'post_limit','Post Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Number of posts displayed on a page.","placeholder":"Post limit"}' ],
+			[ $config->id, 'title_site','Title Site', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable site name to generate the title."}' ],
+			[ $config->id, 'title_separator','Title Separator', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Title Separator used to generate the title.","placeholder":"Title Separator"}' ],
+			[ $config->id, 'append_title','Append Title', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Controls the position of site title."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -218,7 +221,10 @@ class m160621_065213_cms_data extends Migration {
 		$metas	= [
 			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 'flag', '0' ],
 			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 'flag', '1' ],
-			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 'text', ActiveRecordService::PAGE_LIMIT ]
+			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 'text', ActiveRecordService::PAGE_LIMIT ],
+			[ $this->site->id, 'title_site', 'Title Site', 'blog', 'flag', '1' ],
+			[ $this->site->id, 'title_separator', 'Title Separator', 'blog', 'text', '|' ],
+			[ $this->site->id, 'append_title', 'Append Title', 'blog', 'flag', '1' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
@@ -247,20 +253,20 @@ class m160621_065213_cms_data extends Migration {
 		$summary = "Lorem ipsum is a pseudo-Latin text used in web design, typography, layout, and printing in place of English to emphasise design elements over content. It\'s also called placeholder (or filler) text. It\'s a convenient tool for mock-ups. It helps to outline the visual elements of a document or presentation, eg typography, font, or layout. Lorem ipsum is mostly a part of a Latin text by the classical author and philosopher Cicero.";
 		$content = "Lorem ipsum is a pseudo-Latin text used in web design, typography, layout, and printing in place of English to emphasise design elements over content. It\'s also called placeholder (or filler) text. It\'s a convenient tool for mock-ups. It helps to outline the visual elements of a document or presentation, eg typography, font, or layout. Lorem ipsum is mostly a part of a Latin text by the classical author and philosopher Cicero.";
 
-		$columns = [ 'parentId', 'parentType', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'views', 'referrals', 'likes', 'wish', 'summary', 'content', 'publishedAt' ];
+		$columns = [ 'parentId', 'parentType', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'summary', 'content', 'publishedAt' ];
 
 		$pages	= [
-			[ Page::findBySlugType( 'home', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'login', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'register', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'confirm-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'activate-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'forgot-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'reset-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'about-us', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'terms', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'privacy', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, 0, 0, 0, 0, $summary, $content, DateUtil::getDateTime() ]
+			[ Page::findBySlugType( 'home', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'login', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'register', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'confirm-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'activate-account', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'forgot-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'reset-password', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'about-us', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'terms', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'privacy', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );

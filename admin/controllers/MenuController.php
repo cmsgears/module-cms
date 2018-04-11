@@ -1,21 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\forms\Link;
-use cmsgears\cms\common\models\forms\PageLink;
+use cmsgears\cms\admin\controllers\base\ObjectController;
 
-class MenuController extends \cmsgears\core\admin\controllers\base\CrudController {
+/**
+ * MenuController provides actions specific to menu model.
+ *
+ * @since 1.0.0
+ */
+class MenuController extends ObjectController {
 
 	// Variables ---------------------------------------------------
 
@@ -25,9 +33,6 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// Protected --------------
 
-	protected $pageService;
-	protected $activityService;
-	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -36,28 +41,26 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Config
+		$this->type			= CmsGlobal::TYPE_MENU;
+		$this->templateType = CmsGlobal::TYPE_MENU;
 
-		// Service
-		$this->modelService		= Yii::$app->factory->get( 'menuService' );
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
-		$this->pageService		= Yii::$app->factory->get( 'pageService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'menuService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'menu' ];
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'umenu' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'menus' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'menus' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/menu/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Menu' ] ],
-			'create' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Menu', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		$this->breadcrumbs = [
+			'all' => [ [ 'label' => 'Menus' ] ],
+			'create' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -77,182 +80,11 @@ class MenuController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// MenuController ------------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'menus' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
 
-	public function actionCreate() {
-
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->type	= CmsGlobal::TYPE_MENU;
-		$model->data	= "{ \"links\": {} }";
-		$pages			= $this->pageService->getIdNameList();
-
-		// Menu Pages
-		$pageLinks	= [];
-
-		for ( $i = 0, $j = count( $pages ); $i < $j; $i++ ) {
-
-			$pageLinks[] = new PageLink();
-		}
-
-		// Menu Links
-		$links	= [];
-
-		for ( $i = 0; $i < 6; $i++ ) {
-
-			$links[] = new Link();
-		}
-
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
-			$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
-
-			$this->modelService->create( $model );
-
-			$this->modelService->updateLinks( $model, $links, $pageLinks );
-
-			$model->refresh();
-			
-			$this->model = $model;
-			
-			return $this->redirect( "all" );
-		}
-
-		return $this->render( 'create', [
-			'model' => $model,
-			'pages' => $pages,
-			'links' => $links,
-			'pageLinks' => $pageLinks
-		]);
-	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$pages		= $this->pageService->getIdNameList();
-			$links		= $this->modelService->getLinks( $model );
-			$pageLinks	= $this->modelService->getPageLinksForUpdate( $model, $pages );
-
-			Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' );
-
-			if( count( $links ) < 5 ) {
-
-				for( $i = 0; $i < 4; $i++ ) {
-
-					$links[]	= new Link();
-				}
-			}
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
-				Link::loadMultiple( $links, Yii::$app->request->post(), 'Link' ) && PageLink::loadMultiple( $pageLinks, Yii::$app->request->post(), 'PageLink' ) &&
-				$model->validate() && Link::validateMultiple( $links ) && PageLink::validateMultiple( $pageLinks ) ) {
-
-				$this->modelService->update( $model );
-
-				$this->modelService->updateLinks( $model, $links, $pageLinks );
-
-				$model->refresh();
-			
-				$this->model = $model;
-				
-				return $this->redirect( "all" );
-			}
-
-			return $this->render( 'update', [
-				'model' => $model,
-				'pages' => $pages,
-				'links' => $links,
-				'pageLinks' => $pageLinks
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
-
-				$this->modelService->delete( $model );
-
-				$this->model = $model;
-				
-				return $this->redirect( $this->returnUrl );
-			}
-
-			$pages		= $this->pageService->getIdNameList();
-			$links		= $this->modelService->getLinks( $model );
-			$pageLinks	= $this->modelService->getPageLinksForUpdate( $model, $pages );
-
-			return $this->render( 'delete', [
-				'model' => $model,
-				'pages' => $pages,
-				'links' => $links,
-				'pageLinks' => $pageLinks
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-	
-	public function afterAction( $action, $result ) {
-
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

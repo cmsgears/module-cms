@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * SidebarController provides actions specific to sidebar model.
+ *
+ * @since 1.0.0
+ */
+class SidebarController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -18,8 +33,6 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// Protected --------------
 
-	protected $activityService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -28,13 +41,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'sidebarService' );
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
-
+		$this->modelService = Yii::$app->factory->get( 'sidebarService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,15 +62,13 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-				
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
-				
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -72,37 +81,11 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 	public function actions() {
 
 		return [
-			
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
 
-	public function beforeAction( $action ) {
-
-		$id	= Yii::$app->request->get( 'id' ) != null ? Yii::$app->request->get( 'id' ) : null;
-
-		if( isset( $id ) ) {
-
-			$model	= $this->modelService->getById( $id );
-		
-			$parentType = $this->modelService->getParentType();
-
-			switch( $action->id ) {
-
-				case 'delete': {
-
-					if( isset( $model ) ) {
-
-						$this->activityService->deleteActivity( $model, $parentType );
-					}
-
-					break;
-				}
-			}
-		}
-		return parent::beforeAction( $action);
-	}
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------

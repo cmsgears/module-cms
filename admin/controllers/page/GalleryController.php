@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\page;
 
 // Yii Imports
@@ -8,15 +16,20 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
+use cmsgears\core\admin\controllers\base\GalleryController as BaseGalleryController;
+
+/**
+ * GalleryController provide actions specific to page gallery.
+ *
+ * @since 1.0.0
+ */
+class GalleryController extends BaseGalleryController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
-
-	public $pageService;
 
 	// Protected --------------
 
@@ -28,15 +41,19 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
+
 		// Config
 		$this->type			= CmsGlobal::TYPE_PAGE;
 		$this->parentUrl	= '/cms/page/all';
+		$this->modelContent	= true;
 
 		// Services
-		$this->parentService	= Yii::$app->factory->get( 'pageService' );
+		$this->parentService = Yii::$app->factory->get( 'pageService' );
 
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		// Return Url
 		$this->returnUrl	= Url::previous( 'pages' );
@@ -44,8 +61,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Pages', 'url' =>  [ '/cms/page/all' ] ] ],
-			'index' => [ [ 'label' => 'Gallery' ] ],
+			'base' => [ [ 'label' => 'Pages', 'url' =>  $this->returnUrl ] ],
+			'direct' => [ [ 'label' => 'Gallery' ] ],
 			'items' => [ [ 'label' => 'Gallery', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ],
 		];
 	}

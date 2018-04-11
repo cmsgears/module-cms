@@ -16,6 +16,8 @@ use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
 use cmsgears\core\common\services\base\ModelResourceService;
 
+use cmsgears\core\common\services\traits\resources\VisualTrait;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -49,11 +51,13 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 
 	// Traits ------------------------------------------------------
 
+	use VisualTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -90,20 +94,27 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
-		// publish
-		if( $publish && !isset( $model->publishedAt ) ) {
+		// Publish
+		if( $publish && empty( $model->publishedAt ) ) {
 
 			$model->publishedAt	= DateUtil::getDateTime();
 		}
 
-		// parent
+		// Configure parent
 		$model->parentId	= $parent->id;
 		$model->parentType	= $config[ 'parentType' ];
 
+		// Save resources
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
-		return parent::create( $model, $config );
+		$model = parent::create( $model, $config );
+
+		// Link gallery
+		$this->linkModel( $model, 'galleryId', $gallery );
+
+		return $model;
 	}
 
 	// Update -------------
@@ -113,41 +124,37 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
-		// publish
-		if( $publish && !isset( $model->publishedAt ) ) {
+		// Publish
+		if( $publish && empty( $model->publishedAt ) ) {
 
 			$model->publishedAt	= DateUtil::getDateTime();
 		}
 
+		// Save resources
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
-		return parent::update( $model, [
-			'attributes' => [ 'bannerId', 'videoId', 'templateId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
-		]);
-	}
-
-	public function updateBanner( $model, $banner ) {
-
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner ] );
+		// Link gallery
+		$this->linkModel( $model, 'galleryId', $gallery );
 
 		return parent::update( $model, [
-			'attributes' => [ 'bannerId' ]
+			'attributes' => [ 'templateId', 'bannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
 		]);
-	}
-
-	public function updateViewCount( $model, $views ) {
-
-		$model->views   = $views;
-
-		$model->update();
 	}
 
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
 
+		// Delete resources
 		$this->fileService->deleteFiles( [ $model->banner, $model->video ] );
+
+		// Delete Gallery
+		if( isset( $model->gallery ) ) {
+
+			Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+		}
 
 		return parent::delete( $model, $config );
 	}

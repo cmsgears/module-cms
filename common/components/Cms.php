@@ -81,6 +81,8 @@ class Cms extends Component {
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IContentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IModelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
+
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ILinkService', 'cmsgears\cms\common\services\resources\LinkService' );
 	}
 
 	/**
@@ -111,7 +113,6 @@ class Cms extends Component {
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IElementService', 'cmsgears\cms\common\services\entities\ElementService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IBlockService', 'cmsgears\cms\common\services\entities\BlockService' );
 
-		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\ILinkService', 'cmsgears\cms\common\services\entities\LinkService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IMenuService', 'cmsgears\cms\common\services\entities\MenuService' );
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IWidgetService', 'cmsgears\cms\common\services\entities\WidgetService' );
@@ -133,6 +134,8 @@ class Cms extends Component {
 
 		$factory->set( 'contentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
 		$factory->set( 'modelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
+
+		$factory->set( 'linkService', 'cmsgears\cms\common\services\resources\LinkService' );
 	}
 
 	/**
@@ -163,7 +166,6 @@ class Cms extends Component {
 		$factory->set( 'elementService', 'cmsgears\cms\common\services\entities\ElementService' );
 		$factory->set( 'blockService', 'cmsgears\cms\common\services\entities\BlockService' );
 
-		$factory->set( 'linkService', 'cmsgears\cms\common\services\entities\LinkService' );
 		$factory->set( 'menuService', 'cmsgears\cms\common\services\entities\MenuService' );
 
 		$factory->set( 'widgetService', 'cmsgears\cms\common\services\entities\WidgetService' );

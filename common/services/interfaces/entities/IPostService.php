@@ -35,9 +35,9 @@ interface IPostService extends IContentService {
 
 	// Create -------------
 
-	// Update -------------
+	public function register( $model, $config = [] );
 
-	public function linkGallery( $model, $gallery );
+	// Update -------------
 
 	// Delete -------------
 

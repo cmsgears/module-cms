@@ -9,11 +9,12 @@
 
 namespace cmsgears\cms\common\services\resources;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+// Yii Imports
+use Yii;
+use yii\data\Sort;
 
+// CMG Imports
 use cmsgears\cms\common\models\resources\ModelContent;
-use cmsgears\cms\common\models\resources\Tag;
 
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
@@ -74,16 +75,98 @@ class TagService extends BaseTagService implements ITagService {
 
 	// Data Provider ------
 
-	public function getPageWithContent( $config = [] ) {
+	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'template' => [
+					'asc' => [ "$templateTable.name" => SORT_ASC ],
+					'desc' => [ "$templateTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Template'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'query' ] = $modelClass::queryWithContent();
+			$config[ 'hasOne' ] = $modelClass::queryWithContent();
 		}
 
-		return $this->getPage( $config );
+		// Filters ----------
+
+		// Searching --------
+
+		// Reporting --------
+
+		// Result -----------
+
+		return parent::findPage( $config );
 	}
 
 	// Read ---------------
@@ -140,7 +223,7 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function delete( $model, $config = [] ) {
 
-		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : ( isset( $model->modelContent ) ? $model->modelContent : null );
 
 		if( isset( $content ) ) {
 

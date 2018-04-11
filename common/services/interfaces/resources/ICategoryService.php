@@ -21,8 +21,6 @@ interface ICategoryService extends IBaseCategoryService {
 
 	// Data Provider ------
 
-	public function getPageWithContent( $config = [] );
-
 	// Read ---------------
 
 	// Read - Models ---

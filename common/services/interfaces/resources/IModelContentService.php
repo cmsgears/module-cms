@@ -11,13 +11,14 @@ namespace cmsgears\cms\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\resources\IVisual;
 
 /**
  * IModelContentService declares methods specific to model content.
  *
  * @since 1.0.0
  */
-interface IModelContentService extends IModelResourceService {
+interface IModelContentService extends IModelResourceService, IVisual {
 
 	// Data Provider ------
 
@@ -34,10 +35,6 @@ interface IModelContentService extends IModelResourceService {
 	// Create -------------
 
 	// Update -------------
-
-	public function updateBanner( $model, $banner );
-
-	public function updateViewCount( $model, $views );
 
 	// Delete -------------
 

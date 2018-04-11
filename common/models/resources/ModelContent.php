@@ -18,15 +18,14 @@ use yii\helpers\HtmlPurifier;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\interfaces\base\IModelResource;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\core\common\models\base\Resource;
+use cmsgears\core\common\models\base\ModelResource;
+use cmsgears\core\common\models\resources\Gallery;
 
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -48,18 +47,11 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
- * @property integer $views
- * @property integer $referrals
- * @property integer $comments
- * @property integer $likes
- * @property integer $wish
- * @property integer $weight
- * @property integer $rank
  * @property date $publishedAt
  * @property string $content
  * @property string $data
  */
-class ModelContent extends Resource implements IData, IModelResource, ITemplate, IVisual {
+class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -82,7 +74,6 @@ class ModelContent extends Resource implements IData, IModelResource, ITemplate,
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
-	use ModelResourceTrait;
 	use TemplateTrait;
 	use VisualTrait;
 
@@ -106,13 +97,12 @@ class ModelContent extends Resource implements IData, IModelResource, ITemplate,
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'parentId', 'parentType' ], 'required' ],
+			// [ [ 'parentId', 'parentType' ], 'required' ],
 			[ [ 'id', 'summary', 'content', 'data' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ [ 'views', 'referrals', 'comments', 'likes', 'wish', 'weight', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'bannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -143,15 +133,10 @@ class ModelContent extends Resource implements IData, IModelResource, ITemplate,
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
-			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'seoName' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
 			'seoDescription' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
 			'seoRobot' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
-			'views' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
-			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
-			'likes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
-			'wish' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
@@ -184,6 +169,16 @@ class ModelContent extends Resource implements IData, IModelResource, ITemplate,
 	// Validators ----------------------------
 
 	// ModelContent --------------------------
+
+	/**
+	 * Returns the gallery associated with model content.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Gallery
+	 */
+	public function getGallery() {
+
+		return $this->hasOne( Gallery::class, [ 'id' => 'galleryId' ] );
+	}
 
 	/**
 	 * Returns cut down part of [[$summary]].

@@ -1,10 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\apix;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CommentController extends \cmsgears\core\admin\controllers\apix\CommentController {
+use cmsgears\core\admin\controllers\apix\CommentController as BaseCommentController;
+
+/**
+ * CommentController provides actions specific to post comments.
+ *
+ * @since 1.0.0
+ */
+class CommentController extends BaseCommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +39,7 @@ class CommentController extends \cmsgears\core\admin\controllers\apix\CommentCon
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------

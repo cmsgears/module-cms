@@ -33,6 +33,27 @@ class CmsProperties extends Properties {
 	 */
 	const PROP_COMMENT_POST		= 'post_comment';
 
+	/**
+	 * The property to limit number of posts displayed on blog page. It can also be
+	 * used to limit the number of pages and posts on search pages.
+	 */
+	const PROP_POST_LIMIT		= 'post_limit';
+
+	/**
+	 * Check to add the application title while generating page title.
+	 */
+	const PROP_TITLE_SITE		= 'title_site';
+
+	/**
+	 * Separator used to separate the page title with site title.
+	 */
+	const PROP_TITLE_SEPARATOR	= 'title_separator';
+
+	/**
+	 * Check to append or prepend site title with page title.
+	 */
+	const PROP_TITLE_APPEND		= 'append_title';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -84,6 +105,38 @@ class CmsProperties extends Properties {
 	public function isPostComments() {
 
 		return $this->properties[ self::PROP_COMMENT_POST ];
+	}
+
+	/**
+	 * Returns the number of posts or pages displayed on search pages.
+	 */
+	public function getPostLimit() {
+
+		return $this->properties[ self::PROP_POST_LIMIT ];
+	}
+
+	/**
+	 * Checks whether site title needs to be displayed with page title.
+	 */
+	public function isSiteTitle() {
+
+		return $this->properties[ self::PROP_TITLE_SITE ];
+	}
+
+	/**
+	 * Returns the title separator used to separate page title with site title.
+	 */
+	public function getTitleSeparator() {
+
+		return $this->properties[ self::PROP_TITLE_SEPARATOR ];
+	}
+
+	/**
+	 * Checks whether site title needs to appended or prepended.
+	 */
+	public function isAppendTitle() {
+
+		return $this->properties[ self::PROP_TITLE_APPEND ];
 	}
 
 }

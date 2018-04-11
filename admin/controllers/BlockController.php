@@ -1,19 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\forms\BlockElement;
+use cmsgears\cms\admin\controllers\base\ObjectController;
 
-class BlockController extends \cmsgears\core\admin\controllers\base\CrudController {
+/**
+ * BlockController provides actions specific to block model.
+ *
+ * @since 1.0.0
+ */
+class BlockController extends ObjectController {
 
 	// Variables ---------------------------------------------------
 
@@ -23,10 +33,6 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	// Protected --------------
 
-	protected $templateService;
-	protected $elementService;
-	protected $activityService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -35,29 +41,26 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		parent::init();
 
-		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Config
+		$this->type			= CmsGlobal::TYPE_BLOCK;
+		$this->templateType = CmsGlobal::TYPE_BLOCK;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'blockService' );
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-		$this->elementService	= Yii::$app->factory->get( 'elementService' );
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+		$this->modelService = Yii::$app->factory->get( 'blockService' );
 
-		// Sidebar	
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'block' ];
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'ublock' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'blocks' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'blocks' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Blocks' ] ],
 			'create' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'delete' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -77,215 +80,11 @@ class BlockController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	// BlockController -----------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
 
-		$dataProvider = $this->modelService->getPage();
-
-		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
-		]);
+		return parent::actionAll( $config );
 	}
 
-	public function actionCreate() {
-
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->siteId	= Yii::$app->core->siteId;
-		$banner			= File::loadFile( $model->banner, 'Banner' );
-		$video			= File::loadFile( $model->video, 'Video' );
-		$texture		= File::loadFile( $model->texture, 'Texture' );
-		$elements		= $this->elementService->getIdNameList();
-
-		// Block Elements
-		$blockElements	= [];
-
-		for ( $i = 0, $j = count( $elements ); $i < $j; $i++ ) {
-
-			$blockElements[] = new BlockElement();
-		}
-
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
-
-			$create = true;
-
-			if( count( $blockElements ) > 0 ) {
-
-				if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
-
-					$create = true;
-				}
-				else {
-
-					$create = false;
-				}
-			}
-
-			if( $create ) {
-
-				$this->modelService->create( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
-
-				$this->modelService->updateElements( $model, $blockElements );
-				
-				$model->refresh();
-			
-				$this->model = $model;
-				
-				return $this->redirect( "all" );
-			}
-		}
-
-		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
-
-		return $this->render( 'create', [
-			'model' => $model,
-			'banner' => $banner,
-			'video' => $video,
-			'texture' => $texture,
-			'templatesMap' => $templatesMap,
-			'elements' => $elements,
-			'blockElements' => $blockElements
-		]);
-	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$banner			= File::loadFile( $model->banner, 'Banner' );
-			$video			= File::loadFile( $model->video, 'Video' );
-			$texture		= File::loadFile( $model->texture, 'Texture' );
-			$elements		= $this->elementService->getIdNameList();
-			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
-
-				$update = true;
-
-				if( count( $blockElements ) > 0 ) {
-
-					if( BlockElement::loadMultiple( $blockElements, Yii::$app->request->post(), 'BlockElement' ) && BlockElement::validateMultiple( $blockElements ) ) {
-
-						$update = true;
-					}
-					else {
-
-						$update = false;
-					}
-				}
-
-				if( $update ) {
-
-					$this->modelService->update( $model, [ 'banner' => $banner, 'video' => $video, 'texture' => $texture ] );
-
-					$this->modelService->updateElements( $model, $blockElements );
-
-					$model->refresh();
-			
-					$this->model = $model;
-					
-					return $this->redirect( "all" );
-				}
-			}
-
-			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
-
-			return $this->render( 'update', [
-				'model' => $model,
-				'banner' => $banner,
-				'video' => $video,
-				'texture' => $texture,
-				'templatesMap' => $templatesMap,
-				'elements' => $elements,
-				'blockElements' => $blockElements
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			$elements		= $this->elementService->getIdNameList();
-			$blockElements	= $this->modelService->getElementsForUpdate( $model, $elements );
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
-
-				$this->modelService->delete( $model );
-
-				$this->model = $model;
-				
-				return $this->redirect( $this->returnUrl );
-			}
-
-			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
-
-			return $this->render( 'delete', [
-				'model' => $model,
-				'banner' => $model->banner,
-				'video' => $model->video,
-				'texture' => $model->texture,
-				'templatesMap' => $templatesMap,
-				'elements' => $elements,
-				'blockElements' => $blockElements
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-	
-	public function afterAction( $action, $result ) {
-
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

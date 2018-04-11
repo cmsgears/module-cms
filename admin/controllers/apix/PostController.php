@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,16 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class PostController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
+/**
+ * PostController provides actions specific to post model.
+ *
+ * @since 1.0.0
+ */
+class PostController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -17,9 +34,9 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	// Public -----------------
 
 	// Protected --------------
-	
+
 	protected $activityService;
-	
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -64,7 +81,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'auto-search' => [ 'post' ],
 					'update-avatar' => [ 'post' ],
@@ -79,6 +96,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
@@ -103,32 +125,6 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		];
 	}
 
-	public function beforeAction( $action ) {
-
-		$id	= Yii::$app->request->get( 'id' ) != null ? Yii::$app->request->get( 'id' ) : null;
-
-		if( isset( $id ) ) {
-
-			$model	= $this->modelService->getById( $id );
-		
-			$parentType = $this->modelService->getParentType();
-
-			switch( $action->id ) {
-
-				case 'delete': {
-
-					if( isset( $model ) ) {
-
-						$this->activityService->deleteActivity( $model, $parentType );
-					}
-
-					break;
-				}
-			}
-		}
-		return parent::beforeAction( $action);
-	}
-	
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------

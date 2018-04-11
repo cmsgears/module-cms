@@ -16,14 +16,13 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 
 use cmsgears\cms\common\services\base\ContentService;
-
-use cmsgears\core\common\services\traits\ApprovalTrait;
 
 /**
  * PostService provide service methods of post model.
@@ -57,8 +56,6 @@ class PostService extends ContentService implements IPostService {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ApprovalTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -111,8 +108,6 @@ class PostService extends ContentService implements IPostService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->type = CmsGlobal::TYPE_POST;
-
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility	= Post::VISIBILITY_PRIVATE;
@@ -122,8 +117,6 @@ class PostService extends ContentService implements IPostService {
 	}
 
 	public function add( $model, $config = [] ) {
-
-		$config[ 'admin' ]	= true;
 
 		return $this->register( $model, $config );
 	}
@@ -145,24 +138,28 @@ class PostService extends ContentService implements IPostService {
 
 		try {
 
-			// Create post
+			// Create Model
 			$this->create( $model, $config );
 
+			// Refresh Model
 			$model->refresh();
 
 			// Create and attach gallery
 			if( $gallery ) {
 
-				$gallery 	= $galleryService->createByParams(
-									[ 'type' => CmsGlobal::TYPE_POST, 'active' => true, 'name' => $model->name, 'siteId' => Yii::$app->core->siteId ],
-									[ 'autoName' => true ]
-								);
-
-				$this->linkGallery( $model, $gallery );
+				$gallery = $galleryService->createByParams([
+					'type' => CmsGlobal::TYPE_POST, 'status' => Gallery::STATUS_ACTIVE,
+					'name' => $parent->name, 'title' => $parent->name,
+					'siteId' => Yii::$app->core->siteId
+				]);
 			}
 
 			// Create and attach model content
-			$modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $publish, 'banner' => $banner, 'video' => $video ] );
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
 
 			// Bind categories
 			$modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
@@ -185,12 +182,12 @@ class PostService extends ContentService implements IPostService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'title', 'data', 'content', 'widgetData' ];
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'slug', 'icon', 'title', 'description', 'visibility', 'content' ];
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
 		}
 
 		return parent::update( $model, [
@@ -198,16 +195,17 @@ class PostService extends ContentService implements IPostService {
 		]);
 	}
 
-	public function linkGallery( $model, $gallery ) {
-
-		$model->galleryId = $gallery->id;
-
-		return parent::update( $model, [
-			'attributes' => [ 'galleryId' ]
-		]);
-	}
-
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependent models
+		Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+		Yii::$app->factory->get( 'modelCategoryService' )->delete( $model->modelCategories );
+		Yii::$app->factory->get( 'modelTagService' )->delete( $model->modelTags );
+
+		return parent::delete( $model, $config );
+	}
 
 	// Bulk ---------------
 
