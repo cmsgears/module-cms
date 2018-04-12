@@ -31,6 +31,8 @@ class PageController extends Controller {
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $activityService;
@@ -43,11 +45,13 @@ class PageController extends Controller {
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->metaService		= Yii::$app->factory->get( 'contentMetaService' );
+
 		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 	}
 
@@ -65,6 +69,11 @@ class PageController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'update-avatar' => [ 'permission' => $this->crudPermission ],
+					'update-banner' => [ 'permission' => $this->crudPermission ],
+					'add-meta' => [ 'permission' => $this->crudPermission ],
+					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'delete-meta' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -72,7 +81,12 @@ class PageController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-
+					'auto-search' => [ 'post' ],
+					'update-avatar' => [ 'post' ],
+					'update-banner' => [ 'post' ],
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -90,6 +104,12 @@ class PageController extends Controller {
 	public function actions() {
 
 		return [
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
+			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

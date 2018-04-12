@@ -33,6 +33,8 @@ class PostController extends Controller {
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $activityService;
@@ -45,11 +47,13 @@ class PostController extends Controller {
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'postService' );
+		$this->metaService		= Yii::$app->factory->get( 'pageMetaService' );
+
 		$this->activityService	= Yii::$app->factory->get( 'activityService' );
 	}
 

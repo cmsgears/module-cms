@@ -81,10 +81,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content">
 				<div class="row padding padding-small-v">
 					<div class="col col12x4">
-						<label>Avatar</label>
-						<?= AvatarUploader::widget( [ 'model' => $avatar, 'disabled' => 'true' ] ) ?>
-					</div>
-					<div class="col col12x4">
 						<label>Banner</label>
 						<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => 'true' ] ) ?>
 					</div>
@@ -98,11 +94,22 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud">
 			<div class="box-header">
+				<div class="box-header-title">Summary</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $content, 'summary' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>
 			<div class="box-content-wysiwyg">
 				<div class="box-content">
-					<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+					<?= $form->field( $content, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 				</div>
 			</div>
 		</div>

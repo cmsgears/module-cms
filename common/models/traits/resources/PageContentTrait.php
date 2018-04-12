@@ -61,7 +61,7 @@ trait PageContentTrait {
 	 */
 	public static function queryWithContent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modelContent' ];
+		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template' ];
 
 		return parent::queryWithAll( $config );
 	}

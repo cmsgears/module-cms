@@ -12,6 +12,7 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
+use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -19,7 +20,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\core\admin\controllers\base\CrudController;
 
@@ -38,6 +38,10 @@ class PageController extends CrudController {
 
 	// Public -----------------
 
+	public $apixBase = 'cms/page';
+
+	public $metaService;
+
 	// Protected --------------
 
 	protected $templateService;
@@ -55,8 +59,9 @@ class PageController extends CrudController {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
-		$this->modelService			= Yii::$app->factory->get( 'pageService' );
-		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->metaService		= Yii::$app->factory->get( 'pageMetaService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
@@ -132,7 +137,7 @@ class PageController extends CrudController {
 		$model->type		= CmsGlobal::TYPE_PAGE;
 		$model->comments	= false;
 
-		$content = new ModelContent();
+		$content = $this->modelContentService->getModelObject();
 
 		$banner	= File::loadFile( null, 'Banner' );
 		$video	= File::loadFile( null, 'Video' );
@@ -214,11 +219,18 @@ class PageController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$this->model = $model;
+				try {
 
-				$this->modelService->delete( $model, [ 'admin' => true ] );
+					$this->model = $model;
 
-				return $this->redirect( $this->returnUrl );
+					$this->modelService->delete( $model, [ 'admin' => true ] );
+
+					return $this->redirect( $this->returnUrl );
+				}
+				catch( Exception $e ) {
+
+					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
 			}
 
 			$templatesMap = $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_PAGE, [ 'default' => true ] );

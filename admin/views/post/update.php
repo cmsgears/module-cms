@@ -17,6 +17,7 @@ use cmsgears\widgets\tag\TagMapper;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$apixBase		= $this->context->apixBase;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
@@ -172,8 +173,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'type' => CmsGlobal::TYPE_POST,
 						'model' => $model, 'app' => 'category',
-						'mapActionUrl' => "cms/post/assign-category?slug=$model->slug&type=$model->type",
-						'deleteActionUrl' => "cms/post/remove-category?slug=$model->slug&type=$model->type"
+						'mapActionUrl' => "$apixBase/assign-category?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-category?slug=$model->slug&type=$model->type"
 					]) ?>
 				</div>
 			</div>
@@ -187,8 +188,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
 						'loadAssets' => true,
 						'model' => $model, 'app' => 'category',
-						'mapActionUrl' => "cms/post/assign-tags?slug=$model->slug&type=$model->type",
-						'deleteActionUrl' => "cms/post/remove-tag?slug=$model->slug&type=$model->type"
+						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
 					])?>
 				</div>
 			</div>

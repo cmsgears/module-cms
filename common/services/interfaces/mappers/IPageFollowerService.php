@@ -7,26 +7,23 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\services\interfaces\entities;
+namespace cmsgears\cms\common\services\interfaces\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\IFeatured;
-use cmsgears\cms\common\services\interfaces\base\IContentService;
+use cmsgears\core\common\services\interfaces\base\IFollowerService;
 
 /**
- * IPageService declares methods specific to page model.
+ * IPageFollowerService declares methods specific to page and post followers.
  *
  * @since 1.0.0
  */
-interface IPageService extends IContentService, IFeatured {
+interface IPageFollowerService extends IFollowerService {
 
 	// Data Provider ------
 
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getMenuPages( $ids, $map = false );
 
 	// Read - Lists ----
 
@@ -35,8 +32,6 @@ interface IPageService extends IContentService, IFeatured {
 	// Read - Others ---
 
 	// Create -------------
-
-	public function register( $model, $config = [] );
 
 	// Update -------------
 

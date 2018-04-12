@@ -119,6 +119,8 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 	// Protected --------------
 
+	protected $followerTable;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -143,6 +145,13 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	use WidgetTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->followerTable = PageFollower::tableName();
+	}
 
 	// Instance methods --------------------------------------------
 

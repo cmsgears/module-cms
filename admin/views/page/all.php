@@ -16,7 +16,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'summary' => 'Summary', 'content' => 'Content' ],
 	'sortColumns' => [
-		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
+		'name' => 'Name', 'title' => 'Title', 'status' => 'Status', 'template' => 'Template',
 		'visibility' => 'Visibility', 'order' => 'Order', 'pinned' => 'Pinned', 'featured' => 'Featured',
 		'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
 	],

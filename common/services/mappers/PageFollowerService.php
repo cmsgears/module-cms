@@ -7,19 +7,19 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\services\resources;
+namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\services\interfaces\resources\IContentMetaService;
+use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
-use cmsgears\core\common\services\base\MetaService;
+use cmsgears\core\common\services\base\FollowerService;
 
 /**
- * ContentMetaService provide service methods of content meta.
+ * PageFollowerService provide service methods of page followers.
  *
  * @since 1.0.0
  */
-class ContentMetaService extends MetaService implements IContentMetaService {
+class PageFollowerService extends FollowerService implements IPageFollowerService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +29,7 @@ class ContentMetaService extends MetaService implements IContentMetaService {
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\cms\common\models\resources\ContentMeta';
+	public static $modelClass = '\cmsgears\cms\common\models\mappers\PageFollower';
 
 	// Protected --------------
 
@@ -55,7 +55,7 @@ class ContentMetaService extends MetaService implements IContentMetaService {
 
 	// CMG parent classes --------------------
 
-	// ContentMetaService --------------------
+	// PageFollowerService -------------------
 
 	// Data Provider ------
 
@@ -87,7 +87,7 @@ class ContentMetaService extends MetaService implements IContentMetaService {
 
 	// CMG parent classes --------------------
 
-	// ContentMetaService --------------------
+	// PageFollowerService -------------------
 
 	// Data Provider ------
 

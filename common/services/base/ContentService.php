@@ -23,6 +23,7 @@ use cmsgears\cms\common\services\interfaces\base\IContentService;
 use cmsgears\core\common\services\base\EntityService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -57,6 +58,7 @@ abstract class ContentService extends EntityService implements IContentService {
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -79,7 +81,6 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	public function getPage( $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -195,7 +196,7 @@ abstract class ContentService extends EntityService implements IContentService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = true;
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		// Filters ----------
@@ -271,19 +272,7 @@ abstract class ContentService extends EntityService implements IContentService {
 
 		// Result -----------
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
 		return parent::getPage( $config );
-	}
-
-	public function getPageForSimilar( $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		// Search Query - If hasOne config is passed, make sure that modelContent is listed in hasOne relationships
-		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find()->joinWith( 'modelContent' );
-
-		return parent::getPageForSimilar( $config );
 	}
 
 	// Read ---------------
@@ -339,6 +328,12 @@ abstract class ContentService extends EntityService implements IContentService {
 					case 'blocked': {
 
 						$this->block( $model );
+
+						break;
+					}
+					case 'terminated': {
+
+						$this->terminate( $model );
 
 						break;
 					}

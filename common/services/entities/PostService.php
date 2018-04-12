@@ -11,9 +11,11 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\Gallery;
@@ -21,8 +23,13 @@ use cmsgears\cms\common\models\entities\Post;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
+use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
 use cmsgears\cms\common\services\base\ContentService;
+
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
+use cmsgears\core\common\services\traits\base\SimilarTrait;
+use cmsgears\core\common\services\traits\mappers\CategoryTrait;
 
 /**
  * PostService provide service methods of post model.
@@ -52,16 +59,22 @@ class PostService extends ContentService implements IPostService {
 	// Protected --------------
 
 	protected $fileService;
+	protected $metaService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use CategoryTrait;
+	use FeaturedTrait;
+	use SimilarTrait;
+
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
 
 		$this->fileService	= $fileService;
+		$this->metaService 	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -80,6 +93,15 @@ class PostService extends ContentService implements IPostService {
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getPage( $config );
+	}
+
 	public function getPublicPage( $config = [] ) {
 
 		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'blog';
@@ -87,16 +109,19 @@ class PostService extends ContentService implements IPostService {
 		return parent::getPublicPage( $config );
 	}
 
-	// Read ---------------
-
-	// Read - Models ---
-
-	public function getFeatured() {
+	public function getPageForSimilar( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
+		$config[ 'query' ] = $this->generateSimilarQuery( $config );
+
+		return $this->getPublicPage( $config );
 	}
+
+	// Read ---------------
+
+	// Read - Models ---
 
 	// Read - Lists ----
 
@@ -123,9 +148,10 @@ class PostService extends ContentService implements IPostService {
 
 	public function register( $model, $config = [] ) {
 
+		$gallery	= null;
 		$content 	= $config[ 'content' ];
 
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : false;
+		$aGallery	= isset( $config[ 'attachGallery' ] ) ? $config[ 'attachGallery' ] : false;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
@@ -133,23 +159,21 @@ class PostService extends ContentService implements IPostService {
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
 
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
 
 			// Create Model
-			$this->create( $model, $config );
-
-			// Refresh Model
-			$model->refresh();
+			$model = $this->create( $model, $config );
 
 			// Create and attach gallery
-			if( $gallery ) {
+			if( $aGallery ) {
 
 				$gallery = $galleryService->createByParams([
 					'type' => CmsGlobal::TYPE_POST, 'status' => Gallery::STATUS_ACTIVE,
-					'name' => $parent->name, 'title' => $parent->name,
+					'name' => $model->name, 'title' => $model->name,
 					'siteId' => Yii::$app->core->siteId
 				]);
 			}
@@ -162,16 +186,17 @@ class PostService extends ContentService implements IPostService {
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+			$modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST, [ 'binder' => 'CategoryBinder' ] );
 
-			$model->refresh();
+			// Bind tags
+			$modelTagService->bindTags( $model->id, CmsGlobal::TYPE_POST, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 
 			return $model;
 		}
 		catch( Exception $e ) {
-
+			var_dump( $e );
 			$transaction->rollBack();
 		}
 
@@ -182,8 +207,12 @@ class PostService extends ContentService implements IPostService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'slug', 'icon', 'title', 'description', 'visibility', 'content' ];
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'parentId', 'name', 'slug', 'icon',
+			'title', 'description', 'visibility', 'content'
+		];
 
 		if( $admin ) {
 
@@ -199,12 +228,47 @@ class PostService extends ContentService implements IPostService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependent models
-		Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
-		Yii::$app->factory->get( 'modelCategoryService' )->delete( $model->modelCategories );
-		Yii::$app->factory->get( 'modelTagService' )->delete( $model->modelTags );
+		$transaction = Yii::$app->db->beginTransaction();
 
-		return parent::delete( $model, $config );
+		try {
+
+			// Delete metas
+			$this->metaService->deleteByModelId( $model->id );
+
+			// Delete files
+			$this->fileService->deleteFiles( $model->files );
+
+			// Delete Model Content
+			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+
+			// Delete Category Mappings
+			Yii::$app->factory->get( 'modelCategoryService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Tag Mappings
+			Yii::$app->factory->get( 'modelTagService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Option Mappings
+			Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Comments
+			Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Followers
+			Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+			$transaction->commit();
+
+			// Delete model
+			return parent::delete( $model, $config );
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+		}
+
+		return false;
 	}
 
 	// Bulk ---------------

@@ -13,11 +13,11 @@ namespace cmsgears\cms\common\services\interfaces\resources;
 use cmsgears\core\common\services\interfaces\base\IMetaService;
 
 /**
- * IContentMetaService declares methods specific to content meta model.
+ * IPageMetaService declares methods specific to content meta model.
  *
  * @since 1.0.0
  */
-interface IContentMetaService extends IMetaService {
+interface IPageMetaService extends IMetaService {
 
 	// Data Provider ------
 

@@ -12,14 +12,14 @@ namespace cmsgears\cms\admin\controllers\apix;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\CommentController as BaseCommentController;
+use cmsgears\core\admin\controllers\apix\GalleryController as BaseGalleryController;
 
 /**
- * CommentController provides actions specific to post comments.
+ * GalleryController provides actions specific to post galleries.
  *
  * @since 1.0.0
  */
-class CommentController extends BaseCommentController {
+class GalleryController extends BaseGalleryController {
 
 	// Variables ---------------------------------------------------
 
@@ -55,6 +55,6 @@ class CommentController extends BaseCommentController {
 
 	// CMG parent classes --------------------
 
-	// CommentController ---------------------
+	// GalleryController ---------------------
 
 }

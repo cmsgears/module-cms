@@ -79,7 +79,7 @@ class Cms extends Component {
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ICategoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ITagService', 'cmsgears\cms\common\services\resources\TagService' );
 
-		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IContentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IPageMetaService', 'cmsgears\cms\common\services\resources\PageMetaService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IModelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ILinkService', 'cmsgears\cms\common\services\resources\LinkService' );
@@ -94,6 +94,10 @@ class Cms extends Component {
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelCategoryService', 'cmsgears\cms\common\services\mappers\ModelCategoryService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelTagService', 'cmsgears\cms\common\services\mappers\ModelTagService' );
+
+		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService', 'cmsgears\cms\common\services\mappers\PageFollowerService' );
+
+		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelElementService', 'cmsgears\cms\common\services\mappers\ModelElementService' );
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelElementService', 'cmsgears\cms\common\services\mappers\ModelElementService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\mappers\IModelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );
@@ -132,7 +136,7 @@ class Cms extends Component {
 		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
 		$factory->set( 'tagService', 'cmsgears\cms\common\services\resources\TagService' );
 
-		$factory->set( 'contentMetaService', 'cmsgears\cms\common\services\resources\ContentMetaService' );
+		$factory->set( 'pageMetaService', 'cmsgears\cms\common\services\resources\PageMetaService' );
 		$factory->set( 'modelContentService', 'cmsgears\cms\common\services\resources\ModelContentService' );
 
 		$factory->set( 'linkService', 'cmsgears\cms\common\services\resources\LinkService' );
@@ -147,6 +151,8 @@ class Cms extends Component {
 
 		$factory->set( 'modelCategoryService', 'cmsgears\cms\common\services\mappers\ModelCategoryService' );
 		$factory->set( 'modelTagService', 'cmsgears\cms\common\services\mappers\ModelTagService' );
+
+		$factory->set( 'pageFollowerService', 'cmsgears\cms\common\services\mappers\PageFollowerService' );
 
 		$factory->set( 'modelElementService', 'cmsgears\cms\common\services\mappers\ModelElementService' );
 		$factory->set( 'modelBlockService', 'cmsgears\cms\common\services\mappers\ModelBlockService' );

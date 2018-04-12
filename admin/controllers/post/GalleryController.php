@@ -31,8 +31,6 @@ class GalleryController extends BaseGalleryController {
 
 	// Public -----------------
 
-	public $postService;
-
 	// Protected --------------
 
 	// Private ----------------

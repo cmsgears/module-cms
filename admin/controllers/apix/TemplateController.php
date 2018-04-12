@@ -12,14 +12,14 @@ namespace cmsgears\cms\admin\controllers\apix;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\CommentController as BaseCommentController;
+use cmsgears\core\admin\controllers\apix\TemplateController as BaseTemplateController;
 
 /**
- * CommentController provides actions specific to post comments.
+ * TemplateController provides actions specific to post templates.
  *
  * @since 1.0.0
  */
-class CommentController extends BaseCommentController {
+class TemplateController extends BaseTemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +37,7 @@ class CommentController extends BaseCommentController {
 
 		parent::init();
 
-		// Permission
+		// Permissions
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 	}
 
@@ -55,6 +55,6 @@ class CommentController extends BaseCommentController {
 
 	// CMG parent classes --------------------
 
-	// CommentController ---------------------
+	// TemplateController --------------------
 
 }

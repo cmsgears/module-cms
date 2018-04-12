@@ -14,6 +14,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\Gallery;
@@ -21,8 +22,11 @@ use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
+use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
 use cmsgears\cms\common\services\base\ContentService;
+
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 
 /**
  * PageService provide service methods of page model.
@@ -52,16 +56,20 @@ class PageService extends ContentService implements IPageService {
 	// Protected --------------
 
 	protected $fileService;
+	protected $metaService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use FeaturedTrait;
+
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
 
-		$this->fileService = $fileService;
+		$this->fileService	= $fileService;
+		$this->metaService 	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -80,16 +88,18 @@ class PageService extends ContentService implements IPageService {
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getFeatured() {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
-	}
 
 	public function getMenuPages( $ids, $map = false ) {
 
@@ -144,9 +154,10 @@ class PageService extends ContentService implements IPageService {
 
 	public function register( $model, $config = [] ) {
 
+		$gallery	= null;
 		$content 	= $config[ 'content' ];
 
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : false;
+		$aGallery	= isset( $config[ 'attachGallery' ] ) ? $config[ 'attachGallery' ] : false;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
@@ -159,17 +170,14 @@ class PageService extends ContentService implements IPageService {
 		try {
 
 			// Create Model
-			$this->create( $model, $config );
-
-			// Refresh Model
-			$model->refresh();
+			$model = $this->create( $model, $config );
 
 			// Create and attach gallery
-			if( $gallery ) {
+			if( $aGallery ) {
 
 				$gallery = $galleryService->createByParams([
 					'type' => CmsGlobal::TYPE_PAGE, 'status' => Gallery::STATUS_ACTIVE,
-					'name' => $parent->name, 'title' => $parent->name,
+					'name' => $model->name, 'title' => $model->name,
 					'siteId' => Yii::$app->core->siteId
 				]);
 			}
@@ -180,8 +188,6 @@ class PageService extends ContentService implements IPageService {
 				'publish' => $publish,
 				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
 			]);
-
-			$model->refresh();
 
 			$transaction->commit();
 
@@ -220,10 +226,41 @@ class PageService extends ContentService implements IPageService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependent models
-		Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+		$transaction = Yii::$app->db->beginTransaction();
 
-		return parent::delete( $model, $config );
+		try {
+
+			// Delete metas
+			$this->metaService->deleteByModelId( $model->id );
+
+			// Delete files
+			$this->fileService->deleteFiles( $model->files );
+
+			// Delete Model Content
+			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+
+			// Delete Option Mappings
+			Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Comments
+			Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+
+			// Delete Followers
+			Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+			$transaction->commit();
+
+			// Delete model
+			return parent::delete( $model, $config );
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+		}
+
+		return false;
 	}
 
 	// Bulk ---------------
