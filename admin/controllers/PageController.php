@@ -113,7 +113,7 @@ class PageController extends CrudController {
 
 		$modelClass = $this->modelService->getModelClass();
 
-		$dataProvider = $this->modelService->getPageByType();
+		$dataProvider = $this->modelService->getPage();
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
