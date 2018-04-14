@@ -200,15 +200,15 @@ class m160621_065213_cms_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-blog', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'page_comment','Page Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable comments on pages. It can also be set for individual pages from Edit Page."}' ],
-			[ $config->id, 'post_comment','Post Comment', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable comments on posts. It can also be set for individual pages from Edit Post."}' ],
-			[ $config->id, 'post_limit','Post Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Number of posts displayed on a page.","placeholder":"Post limit"}' ],
-			[ $config->id, 'title_site','Title Site', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable/disable site name to generate the title."}' ],
-			[ $config->id, 'title_separator','Title Separator', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Title Separator used to generate the title.","placeholder":"Title Separator"}' ],
-			[ $config->id, 'append_title','Append Title', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Controls the position of site title."}' ]
+			[ $config->id, 'page_comment','Page Comment', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable comments on pages. It can also be set for individual pages from Edit Page."}' ],
+			[ $config->id, 'post_comment','Post Comment', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable comments on posts. It can also be set for individual pages from Edit Post."}' ],
+			[ $config->id, 'post_limit','Post Limit', FormField::TYPE_TEXT, false, true, true, 'required,number', 0, NULL, '{"title":"Number of posts displayed on a page.","placeholder":"Post limit"}' ],
+			[ $config->id, 'title_site','Title Site', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable site name to generate the title."}' ],
+			[ $config->id, 'title_separator','Title Separator', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Title Separator used to generate the title.","placeholder":"Title Separator"}' ],
+			[ $config->id, 'append_title','Append Title', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Controls the position of site title."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
