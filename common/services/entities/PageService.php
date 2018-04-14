@@ -17,9 +17,6 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\resources\Gallery;
-use cmsgears\cms\common\models\entities\Page;
-
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
@@ -139,9 +136,11 @@ class PageService extends ContentService implements IPageService {
 
 	public function create( $model, $config = [] ) {
 
+		$modelClass = static::$modelClass;
+
 		if( !isset( $model->visibility ) ) {
 
-			$model->visibility = Page::VISIBILITY_PRIVATE;
+			$model->visibility	= $modelClass::VISIBILITY_PRIVATE;
 		}
 
 		return parent::create( $model, $config );
@@ -165,6 +164,8 @@ class PageService extends ContentService implements IPageService {
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
+		$galleryClass = $galleryService->getModelClass();
+
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
@@ -176,7 +177,7 @@ class PageService extends ContentService implements IPageService {
 			if( $aGallery ) {
 
 				$gallery = $galleryService->createByParams([
-					'type' => CmsGlobal::TYPE_PAGE, 'status' => Gallery::STATUS_ACTIVE,
+					'type' => CmsGlobal::TYPE_PAGE, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->name,
 					'siteId' => Yii::$app->core->siteId
 				]);

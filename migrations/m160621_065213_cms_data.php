@@ -216,15 +216,15 @@ class m160621_065213_cms_data extends Migration {
 
 	private function insertDefaultConfig() {
 
-		$columns = [ 'modelId', 'name', 'label', 'type', 'valueType', 'value' ];
+		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas	= [
-			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 'flag', '0' ],
-			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 'flag', '1' ],
-			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 'text', ActiveRecordService::PAGE_LIMIT ],
-			[ $this->site->id, 'title_site', 'Title Site', 'blog', 'flag', '1' ],
-			[ $this->site->id, 'title_separator', 'Title Separator', 'blog', 'text', '|' ],
-			[ $this->site->id, 'append_title', 'Append Title', 'blog', 'flag', '1' ]
+			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 1, 'flag', '0', NULL ],
+			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 1, 'text', ActiveRecordService::PAGE_LIMIT, NULL ],
+			[ $this->site->id, 'title_site', 'Title Site', 'blog', 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'title_separator', 'Title Separator', 'blog', 1, 'text', '|', NULL ],
+			[ $this->site->id, 'append_title', 'Append Title', 'blog', 1, 'flag', '1', NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

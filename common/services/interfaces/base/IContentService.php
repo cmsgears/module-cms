@@ -21,9 +21,13 @@ interface IContentService extends IEntityService, IApproval, IGridCacheable, IMu
 
 	// Data Provider ------
 
+	public function getPageByType( $type, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getWithContent( $id, $slug = null );
 
 	// Read - Lists ----
 

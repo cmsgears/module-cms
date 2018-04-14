@@ -44,7 +44,7 @@ class TemplateController extends BaseTemplateController {
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
-		// Type
+		// Config
 		$this->type = CmsGlobal::TYPE_PAGE;
 
 		// Sidebar

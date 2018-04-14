@@ -275,9 +275,31 @@ abstract class ContentService extends EntityService implements IContentService {
 		return parent::getPage( $config );
 	}
 
+	public function getPageByType( $type, $config = [] ) {
+
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getWithContent( $id, $slug = null ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		if( isset( $slug ) ) {
+
+			return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.slug" => $slug ] ] )->one();
+		}
+
+		return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.id" => $id ] ] )->one();
+	}
 
 	// Read - Lists ----
 

@@ -41,12 +41,12 @@ class CategoryController extends BaseCategoryController {
 
 		parent::init();
 
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
+
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
-
-		// Permission
-		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];

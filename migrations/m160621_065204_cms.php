@@ -109,8 +109,10 @@ class m160621_065204_cms extends Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
+			'active' => $this->boolean()->defaultValue( false ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
-			'value' => $this->text()
+			'value' => $this->text(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns site, parent, creator and modifier
@@ -126,7 +128,8 @@ class m160621_065204_cms extends Migration {
 			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime()
+			'modifiedAt' => $this->dateTime(),
+			'data' => $this->mediumText()
         ], $this->options );
 
         // Index for columns user and model

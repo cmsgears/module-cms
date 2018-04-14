@@ -9,8 +9,10 @@
 
 namespace cmsgears\cms\common\services\resources;
 
-// CMG Imports
+// Yii Imports
+use Yii;
 
+// CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
