@@ -45,7 +45,8 @@ class TagController extends BaseTagController {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
-		$this->type = CmsGlobal::TYPE_POST;
+		$this->type			= CmsGlobal::TYPE_POST;
+		$this->templateType	= CmsGlobal::TYPE_POST;
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];

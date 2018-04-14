@@ -24,6 +24,7 @@ use cmsgears\cms\common\models\entities\Content;
  * @property boolean $active
  * @property int $createdAt
  * @property int $modifiedAt
+ * @property string data
  *
  * @since 1.0.0
  */

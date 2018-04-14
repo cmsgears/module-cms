@@ -35,8 +35,6 @@ class PageController extends Controller {
 
 	// Protected --------------
 
-	protected $activityService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -49,10 +47,8 @@ class PageController extends Controller {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
-		$this->metaService		= Yii::$app->factory->get( 'contentMetaService' );
-
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
+		$this->modelService	= Yii::$app->factory->get( 'pageService' );
+		$this->metaService	= Yii::$app->factory->get( 'contentMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
