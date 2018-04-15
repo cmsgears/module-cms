@@ -13,8 +13,14 @@ namespace cmsgears\cms\common\components;
 use Yii;
 use yii\base\Component;
 
+// CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\Post;
+
 /**
- * Cms component register the services provided by Cms Module.
+ * Cms component initialize the module Cms and register the services provided by Cms Module.
  *
  * @since 1.0.0
  */
@@ -23,6 +29,8 @@ class Cms extends Component {
 	// Global -----------------
 
 	// Public -----------------
+
+	public $pageMap = [];
 
 	// Protected --------------
 
@@ -36,6 +44,9 @@ class Cms extends Component {
 	public function init() {
 
 		parent::init();
+
+		// Register page map
+		$this->registerPageMap();
 
 		// Register components and objects
 		$this->registerComponents();
@@ -52,6 +63,20 @@ class Cms extends Component {
 	// Properties ----------------
 
 	// Components and Objects ----
+
+	/**
+	 * Register page map
+	 */
+	public function registerPageMap() {
+
+		$this->pageMap[ CmsGlobal::TYPE_PAGE ] = Page::class;
+		$this->pageMap[ CmsGlobal::TYPE_POST ] = Post::class;
+	}
+
+	public function getPageClass( $type ) {
+
+		return $this->pageMap[ $type ];
+	}
 
 	/**
 	 * Register the services.
@@ -182,3 +207,4 @@ class Cms extends Component {
 	}
 
 }
+

@@ -7,27 +7,28 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers;
+namespace cmsgears\cms\admin\controllers\base;
 
 // Yii Imports
 use Yii;
-use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\cms\admin\controllers\base\ElementController as BaseElementController;
+use cmsgears\cms\common\config\CmsGlobal;
 
 /**
  * ElementController provides actions specific to element model.
  *
  * @since 1.0.0
  */
-class ElementController extends BaseElementController {
+class ElementController extends ObjectController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -39,20 +40,16 @@ class ElementController extends BaseElementController {
 
 		parent::init();
 
-		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'uelement' ];
+		// Views
+		$this->setViewPath( '@cmsgears/module-cms/admin/views/element' );
 
-		// Return Url
-		$this->returnUrl = Url::previous( 'elements' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
+		// Config
+		$this->type			= CmsGlobal::TYPE_ELEMENT;
+		$this->templateType = CmsGlobal::TYPE_ELEMENT;
+		$this->title		= 'Element';
 
-		// Breadcrumbs
-		$this->breadcrumbs = [
-			'all' => [ [ 'label' => 'Elements' ] ],
-			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
-		];
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'elementService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -70,12 +67,5 @@ class ElementController extends BaseElementController {
 	// CMG parent classes --------------------
 
 	// ElementController ---------------------
-
-	public function actionAll( $config = [] ) {
-
-		Url::remember( Yii::$app->request->getUrl(), 'elements' );
-
-		return parent::actionAll( $config );
-	}
 
 }

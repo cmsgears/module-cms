@@ -16,6 +16,8 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\core\admin\controllers\base\Controller;
+
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
@@ -48,7 +50,7 @@ class PageController extends Controller {
 
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'pageService' );
-		$this->metaService	= Yii::$app->factory->get( 'contentMetaService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 	}
 
 	// Instance methods --------------------------------------------

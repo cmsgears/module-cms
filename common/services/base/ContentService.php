@@ -23,10 +23,11 @@ use cmsgears\cms\common\services\interfaces\base\IContentService;
 use cmsgears\core\common\services\base\EntityService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
-use cmsgears\core\common\services\traits\cache\GridCacheTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 
 /**
  * ContentService is base service of page and post.
@@ -58,6 +59,7 @@ abstract class ContentService extends EntityService implements IContentService {
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
+	use DataTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;

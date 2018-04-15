@@ -18,7 +18,6 @@ use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IApproval;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
@@ -66,7 +65,7 @@ use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * The Content is base class of Page and Post.
+ * The Content is base class of Page, Post and similar models.
  *
  * @property integer $id
  * @property integer $siteId
@@ -106,10 +105,6 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	// Constants --------------
 
 	// Public -----------------
-
-	public static $pageClass	= 'cmsgears\cms\common\models\entities\Page';
-
-	public static $postClass	= 'cmsgears\cms\common\models\entities\Post';
 
 	// Protected --------------
 
@@ -295,17 +290,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public function getParent() {
 
-		switch( $row['type'] ) {
+		$pageClass = Yii::$app->cms->getPageClass( $this->type );
 
-			case self::TYPE_PAGE: {
-
-				return $this->hasOne( Page::class, [ 'id' => 'parentId' ] );
-			}
-			case self::TYPE_POST: {
-
-				return $this->hasOne( Post::class, [ 'id' => 'parentId' ] );
-			}
-		}
+		return $this->hasOne( $pageClass, [ 'id' => 'parentId' ] );
 	}
 
 	/**
@@ -329,39 +316,20 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	}
 
 	/**
-	 * Check whether content type is page.
-	 *
-	 * @return boolean
-	 */
-	public function isPage() {
-
-		return $this->type == CmsGlobal::TYPE_PAGE;
-	}
-
-	/**
-	 * Check whether content type is post.
-	 *
-	 * @return boolean
-	 */
-	public function isPost() {
-
-		return $this->type == CmsGlobal::TYPE_POST;
-	}
-
-	/**
 	 * Check whether content is published.
 	 *
 	 * @return boolean
 	 */
 	public function isPublished() {
 
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) && $this->createdBy == $user->id ) {
 
 			return true;
 		}
 
+		// Status & Visibility checks
 		return $this->isPublic() && $this->isVisibilityPublic();
 	}
 
@@ -386,25 +354,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function instantiate( $row ) {
 
-		switch( $row[ 'type' ] ) {
+		$pageClass = Yii::$app->cms->getPageClass( $row[ 'type' ] );
 
-			case CmsGlobal::TYPE_PAGE: {
-
-				$class = static::$pageClass;
-
-				break;
-			}
-			case CmsGlobal::TYPE_POST: {
-
-				$class = static::$postClass;
-
-				break;
-			}
-		}
-
-		$model = new $class( null );
-
-		return $model;
+		return new $pageClass;
 	}
 
 	// CMG parent classes --------------------
@@ -418,8 +370,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

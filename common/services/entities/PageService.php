@@ -85,15 +85,6 @@ class PageService extends ContentService implements IPageService {
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelTable	= $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
-		return parent::getPage( $config );
-	}
-
 	// Read ---------------
 
 	// Read - Models ---

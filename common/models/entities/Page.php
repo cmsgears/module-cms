@@ -12,8 +12,6 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
-
 /**
  * Page represents pages used for site page and articles.
  *
@@ -37,7 +35,7 @@ class Page extends Content {
 
 	// Protected --------------
 
-	protected $modelType	= CmsGlobal::TYPE_PAGE;
+	protected $modelType = CmsGlobal::TYPE_PAGE;
 
 	// Private ----------------
 
@@ -55,11 +53,34 @@ class Page extends Content {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		$rules = parent::rules();
+
+		$rules[] = [ 'parentId', 'validateParent' ];
+
+		return $rules;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
+
+	public function validateParent( $attribute, $param ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( isset( $this->parentId ) && isset( $this->id ) && $this->parentId == $this->id ) {
+
+				$this->addError( 'parentId', 'Page cannot be parent of same.' );
+			}
+		}
+	}
 
 	// Page ----------------------------------
 
@@ -68,16 +89,6 @@ class Page extends Content {
 	// Yii parent classes --------------------
 
 	// yii\db\ActiveRecord ----
-
-	/**
-	 * @inheritdoc
-	 */
-	public static function find() {
-
-		$pageTable = CmsTables::getTableName( CmsTables::TABLE_PAGE );
-
-		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
-	}
 
 	// CMG parent classes --------------------
 

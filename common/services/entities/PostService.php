@@ -90,28 +90,26 @@ class PostService extends ContentService implements IPostService {
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
+	public function getPublicPage( $config = [] ) {
 
 		$modelTable	= $this->getModelTable();
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
-		return parent::getPage( $config );
-	}
-
-	public function getPublicPage( $config = [] ) {
-
 		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'blog';
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
 
 		return parent::getPublicPage( $config );
 	}
 
 	public function getPageForSimilar( $config = [] ) {
 
+		$modelTable	= $this->getModelTable();
 		$modelClass	= static::$modelClass;
 
 		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
 		$config[ 'query' ] = $this->generateSimilarQuery( $config );
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
 
 		return $this->getPublicPage( $config );
 	}

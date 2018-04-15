@@ -11,6 +11,7 @@ namespace cmsgears\cms\admin\controllers\base;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -24,11 +25,11 @@ use cmsgears\core\admin\controllers\base\CrudController;
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
- * ObjectController provides actions specific to object model.
+ * PageController provides actions specific to page model.
  *
  * @since 1.0.0
  */
-abstract class ObjectController extends CrudController {
+abstract class PageController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -36,12 +37,18 @@ abstract class ObjectController extends CrudController {
 
 	// Public -----------------
 
+	public $apixBase = 'cms/page';
+
+	public $metaService;
+
 	// Protected --------------
 
 	protected $type;
 	protected $templateType;
+	protected $comments;
 
 	protected $templateService;
+	protected $modelContentService;
 
 	// Private ----------------
 
@@ -51,18 +58,23 @@ abstract class ObjectController extends CrudController {
 
 		parent::init();
 
-		// Config
-		$this->type			= CoreGlobal::TYPE_SITE;
-		$this->templateType = CoreGlobal::TYPE_SITE;
+		// Views
+		$this->setViewPath( '@cmsgears/module-cms/admin/views/page' );
 
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Config
+		$this->type			= CmsGlobal::TYPE_PAGE;
+		$this->templateType	= CmsGlobal::TYPE_PAGE;
+		$this->comments		= false;
+
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'objectService' );
+		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->metaService		= Yii::$app->factory->get( 'pageMetaService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
-		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
+		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -88,14 +100,13 @@ abstract class ObjectController extends CrudController {
 		return $behaviors;
 	}
 
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// ElementController ---------------------
+	// PageController ------------------------
 
 	public function actionAll( $config = [] ) {
 
@@ -116,16 +127,19 @@ abstract class ObjectController extends CrudController {
 
 		$model = new $modelClass;
 
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->type	= $this->type;
+		$model->siteId		= Yii::$app->core->siteId;
+		$model->type		= $this->type;
+		$model->comments	= $this->comments;
 
-		$avatar	= File::loadFile( null, 'Avatar' );
+		$content = $this->modelContentService->getModelObject();
+
 		$banner	= File::loadFile( null, 'Banner' );
 		$video	= File::loadFile( null, 'Video' );
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+			$model->validate() && $content->validate() ) {
 
-			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 			return $this->redirect( 'all' );
 		}
@@ -134,7 +148,7 @@ abstract class ObjectController extends CrudController {
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'avatar' => $avatar,
+			'content' => $content,
 			'banner' => $banner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap,
@@ -153,13 +167,17 @@ abstract class ObjectController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
-			$banner	= File::loadFile( $model->banner, 'Banner' );
-			$video	= File::loadFile( $model->video, 'Video' );
+			$content = $model->modelContent;
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+			$banner	= File::loadFile( $content->banner, 'Banner' );
+			$video	= File::loadFile( $content->video, 'Video' );
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+				$model->validate() && $content->validate() ) {
+
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+
+				$this->modelContentService->update( $content, [ 'publish' => $this->model->isActive(), 'banner' => $banner, 'video' => $video ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -168,7 +186,7 @@ abstract class ObjectController extends CrudController {
 
 			return $this->render( 'update', [
 				'model' => $model,
-				'avatar' => $avatar,
+				'content' => $content,
 				'banner' => $banner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap,
@@ -191,6 +209,8 @@ abstract class ObjectController extends CrudController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
+			$content = $model->modelContent;
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
 				try {
@@ -211,9 +231,9 @@ abstract class ObjectController extends CrudController {
 
 			return $this->render( 'delete', [
 				'model' => $model,
-				'avatar' => $model->avatar,
-				'banner' => $model->banner,
-				'video' => $model->video,
+				'content' => $content,
+				'banner' => $content->banner,
+				'video' => $content->video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
 				'templatesMap' => $templatesMap

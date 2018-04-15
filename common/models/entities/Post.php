@@ -16,8 +16,6 @@ use cmsgears\core\common\models\interfaces\base\ITab;
 use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\ITag;
 
-use cmsgears\cms\common\models\base\CmsTables;
-
 use cmsgears\core\common\models\traits\base\TabTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\TagTrait;
@@ -100,16 +98,6 @@ class Post extends Content implements ICategory, ITab, ITag {
 	// Yii parent classes --------------------
 
 	// yii\db\ActiveRecord ----
-
-	/**
-	 * @inheritdoc
-	 */
-	public static function find() {
-
-		$postTable = CmsTables::getTableName( CmsTables::TABLE_PAGE );
-
-		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
-	}
 
 	// CMG parent classes --------------------
 

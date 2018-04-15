@@ -48,12 +48,12 @@ $themeTemplates		= '@themes/admin/views/templates';
 			$icon = "<div class='align align-center'><i class=\"$model->icon\"></i></div>" ; return $icon;
 		}],
 		'name' => 'Name',
-		'title' => 'Title',
+		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) { return isset( $model->parent ) ? $model->parent->name : null; } ],
 		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->modelContent->getTemplateName(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
-		'publishedAt'=>[ 'title' => 'Published At', 'generate' => function( $model ) { return $model->modelContent->publishedAt; } ],
+		'publishedAt' => [ 'title' => 'Published At', 'generate' => function( $model ) { return $model->modelContent->publishedAt; } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

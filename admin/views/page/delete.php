@@ -13,6 +13,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
+$parentName = isset( $model->parent ) ? $model->parent->name : null;
+
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap row">
@@ -64,10 +66,15 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'readonly'=> 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'disabled' => true, 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'value' => $parentName, 'url' => 'cms/page/auto-search' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 				</div>
