@@ -111,12 +111,10 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		// Save resources
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
-		$model = parent::create( $model, $config );
-
 		// Link gallery
 		$this->linkModel( $model, 'galleryId', $gallery );
 
-		return $model;
+		return parent::create( $model, $config );
 	}
 
 	// Update -------------
@@ -138,7 +136,10 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
 		// Link gallery
-		$this->linkModel( $model, 'galleryId', $gallery );
+		if( empty( $model->galleryId ) ) {
+
+			$this->linkModel( $model, 'galleryId', $gallery );
+		}
 
 		return parent::update( $model, [
 			'attributes' => [ 'templateId', 'bannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]

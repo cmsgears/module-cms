@@ -129,9 +129,16 @@ class PageService extends ContentService implements IPageService {
 
 		$modelClass = static::$modelClass;
 
+		// Default Private
 		if( !isset( $model->visibility ) ) {
 
-			$model->visibility	= $modelClass::VISIBILITY_PRIVATE;
+			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
+		}
+
+		// Default New
+		if( !isset( $model->status ) ) {
+
+			$model->status = $modelClass::STATUS_NEW;
 		}
 
 		return parent::create( $model, $config );
@@ -144,13 +151,11 @@ class PageService extends ContentService implements IPageService {
 
 	public function register( $model, $config = [] ) {
 
-		$gallery	= null;
 		$content 	= $config[ 'content' ];
-
-		$aGallery	= isset( $config[ 'attachGallery' ] ) ? $config[ 'attachGallery' ] : false;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
@@ -164,14 +169,13 @@ class PageService extends ContentService implements IPageService {
 			// Create Model
 			$model = $this->create( $model, $config );
 
-			// Create and attach gallery
-			if( $aGallery ) {
+			// Create gallery
+			if( $gallery ) {
 
-				$gallery = $galleryService->createByParams([
-					'type' => CmsGlobal::TYPE_PAGE, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->name,
-					'siteId' => Yii::$app->core->siteId
-				]);
+				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+
+				$gallery = $galleryService->create( $gallery );
 			}
 
 			// Create and attach model content
@@ -197,17 +201,36 @@ class PageService extends ContentService implements IPageService {
 
 	public function update( $model, $config = [] ) {
 
+		$content 	= $config[ 'content' ];
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
+		}
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'parentId', 'name', 'slug', 'icon',
 			'title', 'description', 'visibility', 'content'
 		];
 
-		if( $admin ) {
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
 		}
+
+		// Update model content
+		$modelContentService->update( $content, [
+			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+		]);
 
 		return parent::update( $model, [
 			'attributes' => $attributes

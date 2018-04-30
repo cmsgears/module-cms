@@ -7,25 +7,28 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix;
+namespace cmsgears\cms\admin\controllers\base;
+
+// Yii Imports
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\admin\controllers\apix\TagController as BaseTagController;
+use cmsgears\cms\common\config\CmsGlobal;
 
 /**
- * TagController provides actions specific to post tags.
+ * BlockController provides actions specific to block model.
  *
  * @since 1.0.0
  */
-class TagController extends BaseTagController {
+class BlockController extends ObjectController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -37,8 +40,16 @@ class TagController extends BaseTagController {
 
 		parent::init();
 
-		// Permission
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		// Views
+		$this->setViewPath( '@cmsgears/module-cms/admin/views/block' );
+
+		// Config
+		$this->type			= CmsGlobal::TYPE_BLOCK;
+		$this->templateType = CmsGlobal::TYPE_BLOCK;
+		$this->title		= 'Block';
+
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'blockService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,6 +66,6 @@ class TagController extends BaseTagController {
 
 	// CMG parent classes --------------------
 
-	// TagController -------------------------
+	// BlockController -----------------------
 
 }

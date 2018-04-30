@@ -31,6 +31,7 @@ use cmsgears\core\common\models\interfaces\resources\IComment;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IFollower;
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
@@ -41,6 +42,7 @@ use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
 use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\models\resources\PageMeta;
 use cmsgears\cms\common\models\mappers\PageFollower;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
@@ -55,6 +57,7 @@ use cmsgears\core\common\models\traits\resources\CommentTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\FollowerTrait;
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
@@ -96,7 +99,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured,
-	IFile, IFollower, IGridCache, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
+	IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -114,7 +117,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 	// Protected --------------
 
-	protected $followerTable;
+	protected $followerClass;
+
+	protected $metaClass;
 
 	// Private ----------------
 
@@ -131,6 +136,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	use FileTrait;
 	use FollowerTrait;
 	use GridCacheTrait;
+	use MetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;
@@ -145,7 +151,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 		parent::init();
 
-		$this->followerTable = PageFollower::tableName();
+		$this->followerClass = PageFollower::class;
+
+		$this->metaClass = PageMeta::class;
 	}
 
 	// Instance methods --------------------------------------------
@@ -293,26 +301,6 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		$pageClass = Yii::$app->cms->getPageClass( $this->type );
 
 		return $this->hasOne( $pageClass, [ 'id' => 'parentId' ] );
-	}
-
-	/**
-	 * Returns page or post followers.
-	 *
-	 * @return \cmsgears\cms\common\models\mappers\PageFollower[]
-	 */
-	public function getPageFollowers() {
-
-		return $this->hasMany( PageFollower::class, [ 'modelId' => 'id' ] );
-	}
-
-	/**
-	 * Returns meta and attributes.
-	 *
-	 * @return \cmsgears\cms\common\models\resources\ContentMeta[]
-	 */
-	public function getMetas() {
-
-		return $this->hasMany( ContentMeta::class, [ 'pageId' => 'id' ] );
 	}
 
 	/**

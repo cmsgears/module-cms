@@ -19,7 +19,7 @@ use cmsgears\cms\common\models\entities\Content;
  *
  * @property int $id
  * @property int $modelId
- * @property int $followerId
+ * @property int $parentId
  * @property string $type
  * @property boolean $active
  * @property int $createdAt
@@ -75,9 +75,9 @@ class PageFollower extends Follower {
 	 *
 	 * @return \cmsgears\cms\common\models\entities\Content
 	 */
-	public function getModel() {
+	public function getParent() {
 
-		return $this->hasOne( Content::class, [ 'id' => 'modelId' ] );
+		return $this->hasOne( Content::class, [ 'id' => 'parentId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

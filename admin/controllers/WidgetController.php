@@ -44,6 +44,7 @@ class WidgetController extends ObjectController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;
+		$this->apixBase		= 'cms/widget';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'widgetService' );

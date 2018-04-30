@@ -10,7 +10,7 @@
 namespace cmsgears\cms\common\services\interfaces\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\IFollowerService;
+use cmsgears\core\common\services\interfaces\mappers\IFollowerService;
 
 /**
  * IPageFollowerService declares methods specific to page and post followers.

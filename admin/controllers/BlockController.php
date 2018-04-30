@@ -14,16 +14,14 @@ use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\cms\admin\controllers\base\ObjectController;
+use cmsgears\cms\admin\controllers\base\BlockController as BaseBlockController;
 
 /**
  * BlockController provides actions specific to block model.
  *
  * @since 1.0.0
  */
-class BlockController extends ObjectController {
+class BlockController extends BaseBlockController {
 
 	// Variables ---------------------------------------------------
 
@@ -42,11 +40,7 @@ class BlockController extends ObjectController {
 		parent::init();
 
 		// Config
-		$this->type			= CmsGlobal::TYPE_BLOCK;
-		$this->templateType = CmsGlobal::TYPE_BLOCK;
-
-		// Services
-		$this->modelService = Yii::$app->factory->get( 'blockService' );
+		$this->apixBase = 'cms/block';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'ublock' ];

@@ -46,7 +46,7 @@ class AttributeController extends BaseAttributeController {
 
 		// Config
 		$this->title	= 'Post Attribute';
-		$this->apixBase	= 'cms';
+		$this->apixBase	= 'cms/page/attribute';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'pageMetaService' );

@@ -44,6 +44,7 @@ class SidebarController extends ObjectController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
+		$this->apixBase		= 'cms/sidebar';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'sidebarService' );

@@ -7,19 +7,19 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix;
+namespace cmsgears\cms\admin\controllers\apix\page;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\TemplateController as BaseTemplateController;
+use cmsgears\core\admin\controllers\apix\GalleryController as BaseGalleryController;
 
 /**
- * TemplateController provides actions specific to post templates.
+ * GalleryController provides actions specific to post galleries.
  *
  * @since 1.0.0
  */
-class TemplateController extends BaseTemplateController {
+class GalleryController extends BaseGalleryController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +37,7 @@ class TemplateController extends BaseTemplateController {
 
 		parent::init();
 
-		// Permissions
+		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 	}
 
@@ -55,6 +55,6 @@ class TemplateController extends BaseTemplateController {
 
 	// CMG parent classes --------------------
 
-	// TemplateController --------------------
+	// GalleryController ---------------------
 
 }

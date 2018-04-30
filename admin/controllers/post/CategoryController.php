@@ -47,6 +47,7 @@ class CategoryController extends BaseCategoryController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
+		$this->apixBase		= 'cms/page/category';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];

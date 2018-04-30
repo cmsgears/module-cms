@@ -39,6 +39,9 @@ class ElementController extends BaseElementController {
 
 		parent::init();
 
+		// Config
+		$this->apixBase	= 'cms/element';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'uelement' ];
 

@@ -39,6 +39,9 @@ class PageController extends BasePageController {
 
 		parent::init();
 
+		// Config
+		$this->apixBase = 'cms/page';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 

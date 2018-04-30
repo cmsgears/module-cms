@@ -15,7 +15,7 @@ use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
- * ContentMeta stores meta and attributes specific to page and post.
+ * PageMeta stores meta and attributes specific to page and post.
  *
  * @property integer $id
  * @property integer $modelId
@@ -29,7 +29,7 @@ use cmsgears\cms\common\models\entities\Content;
  *
  * @since 1.0.0
  */
-class ContentMeta extends Meta {
+class PageMeta extends Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -69,7 +69,7 @@ class ContentMeta extends Meta {
 
 	// Validators ----------------------------
 
-	// ContentMeta ---------------------------
+	// PageMeta ------------------------------
 
 	/**
 	 * Return corresponding content.
@@ -97,7 +97,7 @@ class ContentMeta extends Meta {
 
 	// CMG parent classes --------------------
 
-	// ContentMeta ---------------------------
+	// PageMeta ------------------------------
 
 	// Read - Query -----------
 

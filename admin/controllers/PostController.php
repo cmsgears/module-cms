@@ -31,8 +31,6 @@ class PostController extends PageController {
 
 	// Public -----------------
 
-	public $apixBase = 'cms/post';
-
 	public $metaService;
 
 	// Protected --------------
@@ -56,8 +54,8 @@ class PostController extends PageController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
-		$this->comments		= true;
 		$this->apixBase		= 'cms/post';
+		$this->comments		= true;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );

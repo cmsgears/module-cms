@@ -29,7 +29,7 @@ class PageMetaService extends MetaService implements IPageMetaService {
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\cms\common\models\resources\ContentMeta';
+	public static $modelClass = '\cmsgears\cms\common\models\resources\PageMeta';
 
 	// Protected --------------
 

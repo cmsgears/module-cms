@@ -46,6 +46,7 @@ class GalleryController extends BaseGalleryController {
 
 		// Config
 		$this->type			= CmsGlobal::TYPE_PAGE;
+		$this->apixBase		= 'cms/page/gallery';
 		$this->parentUrl	= '/cms/page/all';
 		$this->modelContent	= true;
 

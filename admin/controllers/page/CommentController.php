@@ -49,6 +49,7 @@ class CommentController extends BaseCommentController {
 		// Config
 		$this->parentType	= CmsGlobal::TYPE_PAGE;
 		$this->commentType	= ModelComment::TYPE_COMMENT;
+		$this->apixBase		= 'cms/page/comment';
 		$this->parentUrl	= '/cms/page/update?id=';
 		$this->urlKey		= 'page-comments';
 

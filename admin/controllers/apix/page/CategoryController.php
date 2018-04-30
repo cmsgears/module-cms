@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix;
+namespace cmsgears\cms\admin\controllers\apix\page;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;

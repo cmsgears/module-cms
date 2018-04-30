@@ -44,7 +44,8 @@ class LinkController extends CrudController {
 		parent::init();
 
 		// Config
-		$this->type = CoreGlobal::TYPE_SITE;
+		$this->type		= CoreGlobal::TYPE_SITE;
+		$this->apixBase	= 'cms/link';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'linkService' );

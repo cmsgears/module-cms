@@ -47,6 +47,7 @@ class TagController extends BaseTagController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
+		$this->apixBase		= 'cms/page/tag';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];

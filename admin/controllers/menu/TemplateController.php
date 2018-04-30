@@ -45,7 +45,8 @@ class TemplateController extends BaseTemplateController {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Type
-		$this->type = CmsGlobal::TYPE_MENU;
+		$this->type		= CmsGlobal::TYPE_MENU;
+		$this->apixBase	= 'cms/page/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'menu-template' ];

@@ -37,8 +37,6 @@ abstract class PageController extends CrudController {
 
 	// Public -----------------
 
-	public $apixBase = 'cms/page';
-
 	public $metaService;
 
 	// Protected --------------
@@ -139,7 +137,10 @@ abstract class PageController extends CrudController {
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$this->model = $this->modelService->add( $model, [
+				'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
+				'banner' => $banner, 'video' => $video
+			]);
 
 			return $this->redirect( 'all' );
 		}
@@ -175,9 +176,10 @@ abstract class PageController extends CrudController {
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
-
-				$this->modelContentService->update( $content, [ 'publish' => $this->model->isActive(), 'banner' => $banner, 'video' => $video ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
+					'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}

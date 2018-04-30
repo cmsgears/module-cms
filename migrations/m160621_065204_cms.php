@@ -123,8 +123,8 @@ class m160621_065204_cms extends Migration {
 
         $this->createTable( $this->prefix . 'cms_page_follower', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'userId' => $this->bigInteger( 20 )->notNull(),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -133,8 +133,8 @@ class m160621_065204_cms extends Migration {
         ], $this->options );
 
         // Index for columns user and model
-		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'userId' );
-		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'modelId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'parentId' );
 	}
 
 	private function upLink() {
@@ -204,8 +204,8 @@ class m160621_065204_cms extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_meta_parent', $this->prefix . 'cms_page_meta', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
 		// Page Follower
-        $this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'modelId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
+        $this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_user', $this->prefix . 'cms_page_follower', 'modelId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_follower_parent', $this->prefix . 'cms_page_follower', 'parentId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 
 		// Link
 		$this->addForeignKey( 'fk_' . $this->prefix . 'link_site', $this->prefix . 'cms_link', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
