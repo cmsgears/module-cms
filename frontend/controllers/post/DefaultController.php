@@ -36,7 +36,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 	protected $modelContentService;
 	protected $modelCategoryService;
 
-	protected $contentMetaService;
+	protected $pageMetaService;
 
 	// Private ----------------
 
@@ -61,7 +61,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-		$this->contentMetaService	= Yii::$app->factory->get( 'contentMetaService' );
+		$this->pageMetaService		= Yii::$app->factory->get( 'pageMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -238,7 +238,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		if( $model ) {
 
 
-			//return var_dump($this->contentMetaService->getModelClass());
+			//return var_dump($this->pageMetaService->getModelClass());
 
 			$metasToLoad	= [];
 			$metas			= Yii::$app->request->post( 'ContentMeta' );
@@ -256,7 +256,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				}
 			} else {
 
-				$metasToLoad	= $this->contentMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
+				$metasToLoad	= $this->pageMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
 			}
 
 			if( count( $metasToLoad ) == 0 ) {
@@ -268,7 +268,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 					&& ContentMeta::validateMultiple( $metasToLoad ) ) {
 
 				// Update attributes
-				$this->contentMetaService->updateMultiple( $metasToLoad, [ 'parent' => $model ] );
+				$this->pageMetaService->updateMultiple( $metasToLoad, [ 'parent' => $model ] );
 				//return var_dump($model->status);
 
 				if( $model->status < Post::STATUS_ATTRIBUTES ) {
@@ -296,7 +296,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$metasToLoad	= [];
 
-			$metasToLoad	= $this->contentMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
+			$metasToLoad	= $this->pageMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
 
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
@@ -425,12 +425,12 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	protected function getUserMeta( $post, $meta = null ) {
 
-		$postMeta		=  $this->contentMetaService->getModelClass();
+		$postMeta		=  $this->pageMetaService->getModelClass();
 		$metaToLoad		= new $postMeta;
 
 		if( isset( $meta ) && isset( $meta[ 'id' ] ) && $meta[ 'id' ] > 0 ) {
 
-			$metaToLoad	= $this->contentMetaService->findByNameType( $post->id, $meta[ 'name' ], CoreGlobal::META_TYPE_USER );
+			$metaToLoad	= $this->pageMetaService->findByNameType( $post->id, $meta[ 'name' ], CoreGlobal::META_TYPE_USER );
 		}
 
 		$metaToLoad->modelId	= $post->id;
@@ -440,3 +440,4 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		return $metaToLoad;
 	}
 }
+
