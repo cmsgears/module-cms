@@ -9,14 +9,14 @@
 
 namespace cmsgears\cms\common\services\interfaces\mappers;
 
-use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
+use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
  * IModelLinkService declares methods specific to model link.
  *
  * @since 1.0.0
  */
-interface IModelLinkService extends IModelObjectService {
+interface IModelLinkService extends IModelMapperService {
 
 	// Data Provider ------
 

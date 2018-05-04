@@ -10,9 +10,7 @@
 namespace cmsgears\cms\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Link;
 use cmsgears\cms\common\models\mappers\ModelLink;
 
@@ -50,11 +48,11 @@ trait LinkTrait {
 	 */
 	public function getModelLinks() {
 
-		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
-		$mapperType			= CmsGlobal::TYPE_LINK;
+		$modelLinkTable	= CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK );
 
 		return $this->hasMany( ModelLink::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" );
+			->where( "$modelLinkTable.parentType='$this->modelType' AND $modelLinkTable.type='$mapperType'" )
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -62,11 +60,11 @@ trait LinkTrait {
 	 */
 	public function getActiveModelLinks() {
 
-		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
-		$mapperType			= CmsGlobal::TYPE_LINK;
+		$modelLinkTable	= CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK );
 
 		return $this->hasMany( ModelLink::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" );
+			->where( "$modelLinkTable.parentType='$this->modelType' AND $modelLinkTable.active=1" )
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -74,14 +72,12 @@ trait LinkTrait {
 	 */
 	public function getLinks() {
 
-		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
-		$mapperType			= CmsGlobal::TYPE_LINK;
+		$modelLinkTable	= CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK );
 
 		return $this->hasMany( Link::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelObjectTable, &$mapperType ) {
-
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] );
+			->viaTable( $modelLinkTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelLinkTable ) {
+					$query->onCondition( [ "$modelLinkTable.parentType" => $this->modelType ] );
 				}
 			);
 	}
@@ -91,14 +87,12 @@ trait LinkTrait {
 	 */
 	public function getActiveLinks() {
 
-		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
-		$mapperType			= CmsGlobal::TYPE_LINK;
+		$modelLinkTable	= CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK );
 
 		return $this->hasMany( Link::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelObjectTable, &$mapperType ) {
-
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] );
+			->viaTable( $modelLinkTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelLinkTable ) {
+					$query->onCondition( [ "$modelLinkTable.parentType" => $this->modelType, "$modelLinkTable.active" => true ] );
 				}
 			);
 	}

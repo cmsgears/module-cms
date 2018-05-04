@@ -20,6 +20,8 @@ use cmsgears\cms\common\services\interfaces\resources\ILinkService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
+use cmsgears\core\common\services\traits\base\NameTrait;
+
 /**
  * LinkService provide service methods of link model.
  *
@@ -50,6 +52,8 @@ class LinkService extends ResourceService implements ILinkService {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -96,6 +100,12 @@ class LinkService extends ResourceService implements ILinkService {
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
 				'url' => [
 					'asc' => [ "$modelTable.url" => SORT_ASC ],
 					'desc' => [ "$modelTable.url" => SORT_DESC ],
@@ -108,24 +118,18 @@ class LinkService extends ResourceService implements ILinkService {
 	                'default' => SORT_DESC,
 	                'label' => 'Type'
 	            ],
-	            'target' => [
-	                'asc' => [ "$modelTable.target" => SORT_ASC ],
-	                'desc' => [ "$modelTable.target" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Target'
-	            ],
 	            'absolute' => [
 	                'asc' => [ "$modelTable.absolute" => SORT_ASC ],
 	                'desc' => [ "$modelTable.absolute" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Absolute'
 	            ],
-				'blog' => [
-					'asc' => [ "$modelTable.blog" => SORT_ASC ],
-					'desc' => [ "$modelTable.blog" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Blog'
-				],
+	            'user' => [
+	                'asc' => [ "$modelTable.user" => SORT_ASC ],
+	                'desc' => [ "$modelTable.user" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'User'
+	            ],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -173,21 +177,9 @@ class LinkService extends ResourceService implements ILinkService {
 
 			switch( $filter ) {
 
-				case 'target': {
-
-					$config[ 'conditions' ][ "$modelTable.target" ] = true;
-
-					break;
-				}
 				case 'absolute': {
 
 					$config[ 'conditions' ][ "$modelTable.absolute" ] = true;
-
-					break;
-				}
-				case 'blog': {
-
-					$config[ 'conditions' ][ "$modelTable.blog" ] = true;
 
 					break;
 				}
@@ -202,6 +194,7 @@ class LinkService extends ResourceService implements ILinkService {
 
 			$search = [
 				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
 				'url' => "$modelTable.url"
 			];
 
@@ -212,10 +205,10 @@ class LinkService extends ResourceService implements ILinkService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
 			'url' => "$modelTable.url",
-			'target' => "$modelTable.target",
 			'absolute' => "$modelTable.absolute",
-			'blog' => "$modelTable.blog"
+			'user' => "$modelTable.user"
 		];
 
 		// Result -----------
@@ -246,7 +239,7 @@ class LinkService extends ResourceService implements ILinkService {
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'pageId', 'name', 'url', 'target', 'absolute', 'blog'
+			'pageId', 'name', 'title', 'url', 'icon', 'order', 'absolute', 'htmlOptions', 'urlOptions'
 		];
 
 		return parent::update( $model, [
@@ -275,25 +268,9 @@ class LinkService extends ResourceService implements ILinkService {
 
 				switch( $action ) {
 
-					case 'target': {
-
-						$model->target = true;
-
-						$model->update();
-
-						break;
-					}
 					case 'absolute': {
 
 						$model->absolute = true;
-
-						$model->update();
-
-						break;
-					}
-					case 'blog': {
-
-						$model->blog = true;
 
 						$model->update();
 

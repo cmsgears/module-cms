@@ -37,7 +37,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [
 								'placeholder' => 'Search Parent', 'icon' => 'cmti cmti-search', 'value' => $parent,
-								'url' => 'cms/category/auto-search', 'type' => $model->type
+								'url' => 'core/category/auto-search', 'type' => $model->type
 							]) ?>
 						</div>
 						<div class="col col2">

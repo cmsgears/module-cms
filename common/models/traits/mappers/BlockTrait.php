@@ -50,11 +50,12 @@ trait BlockTrait {
 	 */
 	public function getModelBlocks() {
 
-		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
 
 		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
-			->where( "$modelBlockTable.parentType='$this->modelType' AND $modelBlockTable.type='$mapperType'" );
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -62,11 +63,12 @@ trait BlockTrait {
 	 */
 	public function getActiveModelBlocks() {
 
-		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
 
 		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
-			->where( "$modelBlockTable.parentType='$this->modelType' AND $modelBlockTable.type='$mapperType' AND $modelBlockTable.active=1" );
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -74,14 +76,13 @@ trait BlockTrait {
 	 */
 	public function getBlocks() {
 
-		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
 
 		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelBlockTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelBlockTable, &$mapperType ) {
-
-					$query->onCondition( [ "$modelBlockTable.parentType" => $this->modelType, "$modelBlockTable.type" => $mapperType ] );
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable, &$mapperType ) {
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] );
 				}
 			);
 	}
@@ -91,14 +92,13 @@ trait BlockTrait {
 	 */
 	public function getActiveBlocks() {
 
-		$modelBlockTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
 
 		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelBlockTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelBlockTable, &$mapperType ) {
-
-					$query->onCondition( [ "$modelBlockTable.parentType" => $this->modelType, "$modelBlockTable.type" => $mapperType, "$modelBlockTable.active" => true ] );
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable, &$mapperType ) {
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] );
 				}
 			);
 	}

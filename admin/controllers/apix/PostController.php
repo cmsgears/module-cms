@@ -76,6 +76,12 @@ class PostController extends Controller {
 					'add-meta' => [ 'permission' => $this->crudPermission ],
 					'update-meta' => [ 'permission' => $this->crudPermission ],
 					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'assign-element' => [ 'permission' => $this->crudPermission ],
+					'remove-element' => [ 'permission' => $this->crudPermission ],
+					'assign-block' => [ 'permission' => $this->crudPermission ],
+					'remove-block' => [ 'permission' => $this->crudPermission ],
+					'assign-widget' => [ 'permission' => $this->crudPermission ],
+					'remove-widget' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -93,6 +99,12 @@ class PostController extends Controller {
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
+					'assign-element' => [ 'post' ],
+					'remove-element' => [ 'post' ],
+					'assign-block' => [ 'post' ],
+					'remove-block' => [ 'post' ],
+					'assign-widget' => [ 'post' ],
+					'remove-widget' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -120,6 +132,12 @@ class PostController extends Controller {
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

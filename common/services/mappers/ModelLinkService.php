@@ -12,14 +12,14 @@ namespace cmsgears\cms\common\services\mappers;
 // CMG Imports
 use cmsgears\cms\common\services\interfaces\mappers\IModelLinkService;
 
-use cmsgears\core\common\services\mappers\ModelObjectService;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
  * ModelLinkService provide service methods of model link mapper.
  *
  * @since 1.0.0
  */
-class ModelLinkService extends ModelObjectService implements IModelLinkService {
+class ModelLinkService extends ModelMapperService implements IModelLinkService {
 
 	// Variables ---------------------------------------------------
 

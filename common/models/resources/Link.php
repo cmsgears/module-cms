@@ -21,6 +21,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\IName;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\cms\common\models\base\CmsTables;
@@ -29,6 +30,7 @@ use cmsgears\cms\common\models\entities\Content;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -42,18 +44,20 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $title
  * @property string $url
  * @property string $type
  * @property string $icon
  * @property integer $order
- * @property boolean $target
  * @property boolean $absolute
- * @property boolean $blog
+ * @property boolean $user
  * @property date $createdAt
  * @property date $modifiedAt
+ * @property string $htmlOptions
+ * @property string $urlOptions
  * @property string $data
  */
-class Link extends Resource implements IAuthor, IData, IMultiSite {
+class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 
 	// Variables ---------------------------------------------------
 
@@ -80,6 +84,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 	use AuthorTrait;
 	use DataTrait;
 	use MultiSiteTrait;
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -119,15 +124,17 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'url' ], 'required' ],
-			[ [ 'id', 'data' ], 'safe' ],
+			[ 'name', 'required' ],
+			[ [ 'id', 'data', 'htmlOptions', 'urlOptions' ], 'safe' ],
+			// Unique
+			[ [ 'siteId', 'name' ], 'unique', 'targetAttribute' => 'name' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ 'url', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'url' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'target', 'absolute', 'blog' ], 'boolean' ],
+			[ [ 'absolute', 'user' ], 'boolean' ],
 			[ [ 'siteId', 'pageId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -135,7 +142,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'url' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'url' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -152,12 +159,15 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'pageId' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_PAGE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'target' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_TARGET ),
 			'absolute' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_ABSOLUTE ),
-			'blog' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_BLOG ),
+			'user' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'urlOptions' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_URL_OPTIONS ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
@@ -201,16 +211,6 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 	}
 
 	/**
-	 * Returns string representation of target flag.
-	 *
-	 * @return string
-	 */
-	public function getTargetStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->target );
-	}
-
-	/**
 	 * Returns string representation of absolute flag.
 	 *
 	 * @return string
@@ -221,13 +221,13 @@ class Link extends Resource implements IAuthor, IData, IMultiSite {
 	}
 
 	/**
-	 * Returns string representation of blog flag.
+	 * Returns string representation of user flag.
 	 *
 	 * @return string
 	 */
-	public function getBlogStr() {
+	public function getUserStr() {
 
-		return Yii::$app->formatter->asBoolean( $this->blog );
+		return Yii::$app->formatter->asBoolean( $this->user );
 	}
 
 	// Static Methods ----------------------------------------------

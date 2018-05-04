@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
+use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Sidebar | ' . $coreProperties->getSiteTitle();
@@ -83,6 +84,20 @@ $returnUrl		= $this->context->returnUrl;
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+		<div class="row max-cols-100">
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Widgets</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= WidgetAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model, 'disabled' => true
+					])?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
 	</div>
 	<div class="box-crud-wrap-sidebar colf colf3">
 

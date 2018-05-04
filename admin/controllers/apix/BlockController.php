@@ -63,6 +63,8 @@ class BlockController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'assign-element' => [ 'permission' => $this->crudPermission ],
+					'remove-element' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -70,6 +72,9 @@ class BlockController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'auto-search' => [ 'post' ],
+					'assign-element' => [ 'post' ],
+					'remove-element' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -82,6 +87,9 @@ class BlockController extends Controller {
 	public function actions() {
 
 		return [
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

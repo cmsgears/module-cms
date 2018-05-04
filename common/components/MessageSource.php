@@ -44,9 +44,8 @@ class MessageSource extends BaseMessageSource {
 		CmsGlobal::FIELD_SEO_KEYWORDS => 'SEO Keywords',
 		CmsGlobal::FIELD_SEO_ROBOT => 'SEO Robot',
 		// Link
-		CmsGlobal::FIELD_TARGET => 'Target',
 		CmsGlobal::FIELD_ABSOLUTE => 'Absolute',
-		CmsGlobal::FIELD_BLOG => 'Blog'
+		CmsGlobal::FIELD_URL_OPTIONS => 'Url Options'
 	];
 
 	// Private ----------------

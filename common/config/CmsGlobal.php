@@ -99,8 +99,7 @@ class CmsGlobal {
 	const FIELD_SEO_ROBOT			= 'seoRobotField';
 
 	// Link
-	const FIELD_TARGET		= 'targetField';
 	const FIELD_ABSOLUTE	= 'absoluteField';
-	const FIELD_BLOG		= 'blogField';
+	const FIELD_URL_OPTIONS	= 'urlOptionsField';
 
 }

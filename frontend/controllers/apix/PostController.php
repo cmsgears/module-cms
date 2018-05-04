@@ -3,10 +3,13 @@ namespace cmsgears\cms\frontend\controllers\apix;
 
 // Yii Imports
 use Yii;
-use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\resources\ModelComment;
+
+use cmsgears\core\common\filters\UserExistFilter;
 
 class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -47,6 +50,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function behaviors() {
 
 		return [
+			'userExists' => [
+				'class' => UserExistFilter::class,
+				'actions' => [ 'like' ]
+			],
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
@@ -74,7 +81,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
-					'submit-comment' => [ 'post' ]
+					'submit-comment' => [ 'post' ],
+					'like' => [ 'post' ]
 				]
 			]
 		];
@@ -95,7 +103,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
-			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ]
+			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment', 'scenario' => ModelComment::TYPE_COMMENT ],
+			'like' => [ 'class' => 'cmsgears\core\common\actions\follower\Like' ]
 		];
 	}
 

@@ -9,6 +9,9 @@ use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
+use cmsgears\widgets\elements\mappers\ElementAuto;
+use cmsgears\widgets\elements\mappers\BlockAuto;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Widget | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
@@ -108,6 +111,32 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+		<div class="row max-cols-100">
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Elements</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= ElementAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model, 'disabled' => true
+					])?>
+				</div>
+			</div>
+			<div class="box box-crud colf colf15"> </div>
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Blocks</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= BlockAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model, 'disabled' => true
+					])?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
 	</div>
 	<div class="box-crud-wrap-sidebar colf colf3">
 

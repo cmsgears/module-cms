@@ -13,6 +13,9 @@ use cmsgears\icons\widgets\IconChooser;
 
 use cmsgears\widgets\category\CategoryAuto;
 use cmsgears\widgets\tag\TagMapper;
+use cmsgears\widgets\elements\mappers\ElementAuto;
+use cmsgears\widgets\elements\mappers\BlockAuto;
+use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
@@ -152,17 +155,13 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Update" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-
 		<div class="row max-cols-100">
 			<div class="box box-crud colf colf15x7">
 				<div class="box-header">
@@ -171,8 +170,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content padding padding-small">
 					<?= CategoryAuto::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
-						'type' => CmsGlobal::TYPE_POST,
-						'model' => $model, 'app' => 'category',
+						'model' => $model, 'type' => CmsGlobal::TYPE_POST,
 						'mapActionUrl' => "$apixBase/assign-category?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-category?slug=$model->slug&type=$model->type"
 					]) ?>
@@ -186,10 +184,55 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
 						'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
-						'loadAssets' => true,
-						'model' => $model, 'app' => 'category',
+						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
+					])?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="row max-cols-100">
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Elements</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= ElementAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model,
+						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
+					])?>
+				</div>
+			</div>
+			<div class="box box-crud colf colf15"> </div>
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Blocks</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= BlockAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model,
+						'mapActionUrl' => "$apixBase/assign-block?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-block?slug=$model->slug&type=$model->type"
+					])?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="row max-cols-100">
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Widgets</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= WidgetAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model,
+						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"
 					])?>
 				</div>
 			</div>

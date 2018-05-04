@@ -54,7 +54,8 @@ trait ElementTrait {
 		$mapperType			= CmsGlobal::TYPE_ELEMENT;
 
 		return $this->hasMany( ModelElement::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" );
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -66,7 +67,8 @@ trait ElementTrait {
 		$mapperType			= CmsGlobal::TYPE_ELEMENT;
 
 		return $this->hasMany( ModelElement::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" );
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**

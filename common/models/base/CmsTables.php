@@ -39,4 +39,6 @@ class CmsTables extends DbTables {
 
 	// Mappers --------------
 
+	const TABLE_MODEL_LINK		= 'cmg_cms_model_link';
+
 }

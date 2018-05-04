@@ -11,13 +11,14 @@ namespace cmsgears\cms\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\base\IName;
 
 /**
  * ILinkService declares methods specific to link model.
  *
  * @since 1.0.0
  */
-interface ILinkService extends IResourceService {
+interface ILinkService extends IResourceService, IName {
 
 	// Data Provider ------
 

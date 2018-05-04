@@ -57,6 +57,7 @@ class m160621_065204_cms extends Migration {
 
 		// Resources
 		$this->upModelContent();
+		$this->upModelLink();
 
 		if( $this->fk ) {
 
@@ -145,16 +146,18 @@ class m160621_065204_cms extends Migration {
 			'pageId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'url' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'url' => $this->string( Yii::$app->core->xxxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'target' => $this->boolean()->notNull()->defaultValue( false ),
 			'absolute' => $this->boolean()->notNull()->defaultValue( false ),
-			'blog' => $this->boolean()->notNull()->defaultValue( false ),
+			'user' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			'htmlOptions' => $this->text(),
+			'urlOptions' => $this->text(),
 			'data' => $this->mediumText()
 		], $this->options );
 
@@ -192,6 +195,22 @@ class m160621_065204_cms extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId' );
 	}
 
+	private function upModelLink() {
+
+		$this->createTable( $this->prefix . 'cms_model_link', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText ),
+			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'active' => $this->boolean()->notNull()->defaultValue( true )
+		], $this->options );
+
+		// Index for columns user
+		$this->createIndex( 'idx_' . $this->prefix . 'model_link_parent', $this->prefix . 'cms_model_link', 'modelId' );
+	}
+
 	private function generateForeignKeys() {
 
 		// Page
@@ -209,7 +228,7 @@ class m160621_065204_cms extends Migration {
 
 		// Link
 		$this->addForeignKey( 'fk_' . $this->prefix . 'link_site', $this->prefix . 'cms_link', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'link_page', $this->prefix . 'cms_link', 'pageId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'link_page', $this->prefix . 'cms_link', 'pageId', $this->prefix . 'cms_page', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'link_creator', $this->prefix . 'cms_link', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'link_modifier', $this->prefix . 'cms_link', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -217,6 +236,9 @@ class m160621_065204_cms extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+
+		// Model Link
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_link_parent', $this->prefix . 'cms_model_link', 'modelId', $this->prefix . 'cms_link', 'id', 'CASCADE' );
 	}
 
 	public function down() {
@@ -233,6 +255,7 @@ class m160621_065204_cms extends Migration {
 		$this->dropTable( $this->prefix . 'cms_link' );
 
 		$this->dropTable( $this->prefix . 'cms_model_content' );
+		$this->dropTable( $this->prefix . 'cms_model_link' );
 	}
 
 	private function dropForeignKeys() {
@@ -260,6 +283,9 @@ class m160621_065204_cms extends Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content' );
+
+		// Model Link
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_link_parent', $this->prefix . 'cms_model_link', 'modelId' );
 	}
 
 }

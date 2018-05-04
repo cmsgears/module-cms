@@ -62,6 +62,8 @@ class MenuController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'assign-link' => [ 'permission' => $this->crudPermission ],
+					'remove-link' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -69,6 +71,8 @@ class MenuController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'assign-link' => [ 'post' ],
+					'remove-link' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -81,6 +85,8 @@ class MenuController extends Controller {
 	public function actions() {
 
 		return [
+			'assign-link' => [ 'class' => 'cmsgears\cms\common\actions\link\Assign' ],
+			'remove-link' => [ 'class' => 'cmsgears\cms\common\actions\link\Remove' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
