@@ -47,6 +47,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
 					</div>
 				</div>
 			</div>

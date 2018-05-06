@@ -8,7 +8,7 @@ use cmsgears\icons\widgets\IconChooser;
 use cmsgears\widgets\elements\mappers\LinkAuto;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Update Menu | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
 ?>
@@ -51,6 +51,9 @@ $apixBase		= $this->context->apixBase;
 					<div class="row">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
 				</div>

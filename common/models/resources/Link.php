@@ -127,7 +127,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 			[ 'name', 'required' ],
 			[ [ 'id', 'data', 'htmlOptions', 'urlOptions' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name' ], 'unique', 'targetAttribute' => 'name' ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],

@@ -203,7 +203,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => 'slug' ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

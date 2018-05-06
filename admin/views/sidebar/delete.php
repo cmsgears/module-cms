@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\files\widgets\ImageUploader;
+use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\widgets\elements\mappers\WidgetAuto;
@@ -24,13 +25,13 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row">
 						<div class="col col3">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -38,7 +39,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -53,6 +54,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -66,12 +70,16 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row padding padding-small-v">
 						<div class="col col12x4">
+							<label>Avatar</label>
+							<?= AvatarUploader::widget( [ 'model' => $avatar, 'disabled' => true ] ) ?>
+						</div>
+						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col12x4">
 							<label>Video</label>
-							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
+							<?= VideoUploader::widget( [ 'model' => $video, 'disabled' => true ] ) ?>
 						</div>
 					</div>
 				</div>

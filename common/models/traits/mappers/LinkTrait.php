@@ -11,7 +11,7 @@ namespace cmsgears\cms\common\models\traits\mappers;
 
 // CMG Imports
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\entities\Link;
+use cmsgears\cms\common\models\resources\Link;
 use cmsgears\cms\common\models\mappers\ModelLink;
 
 /**

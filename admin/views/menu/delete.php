@@ -22,13 +22,13 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row">
 						<div class="col col3">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -36,7 +36,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -50,6 +50,9 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="row">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 				</div>
