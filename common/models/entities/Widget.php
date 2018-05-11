@@ -12,14 +12,9 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\interfaces\mappers\IBlock;
-use cmsgears\cms\common\models\interfaces\mappers\IElement;
-
 use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\cms\common\models\traits\mappers\BlockTrait;
-use cmsgears\cms\common\models\traits\mappers\ElementTrait;
 
-class Widget extends ObjectData implements IBlock, IElement {
+class Widget extends ObjectData {
 
 	// Variables ---------------------------------------------------
 
@@ -42,9 +37,6 @@ class Widget extends ObjectData implements IBlock, IElement {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use BlockTrait;
-	use ElementTrait;
 
 	// Constructor and Initialisation ------------------------------
 

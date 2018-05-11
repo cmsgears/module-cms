@@ -59,7 +59,7 @@ class MenuService extends ObjectDataService implements IMenuService {
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// MenuService ---------------------------
 
 	// Data Provider ------
 
@@ -91,7 +91,7 @@ class MenuService extends ObjectDataService implements IMenuService {
 
 	// CMG parent classes --------------------
 
-	// ElementService ------------------------
+	// MenuService ---------------------------
 
 	// Data Provider ------
 

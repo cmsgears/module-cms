@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IMeta;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IFollower;
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
@@ -58,6 +59,7 @@ use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\FollowerTrait;
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
@@ -72,6 +74,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $avatarId
  * @property integer $parentId
  * @property integer $createdBy
  * @property integer $modifiedBy
@@ -99,7 +102,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured,
-	IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IWidget {
+	IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IVisual, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -143,6 +146,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	use PageContentTrait;
 	use SlugTypeTrait;
 	use VisibilityTrait;
+	use VisualTrait;
 	use WidgetTrait;
 
 	// Constructor and Initialisation ------------------------------

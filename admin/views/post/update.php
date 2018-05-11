@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
@@ -95,6 +96,10 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content">
 				<div class="box-content">
 					<div class="row padding padding-small-v">
+						<div class="col col12x4">
+							<label>Avatar</label>
+							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+						</div>
 						<div class="col col12x4">
 							<label>Banner</label>
 							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>

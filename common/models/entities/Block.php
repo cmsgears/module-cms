@@ -13,11 +13,13 @@ namespace cmsgears\cms\common\models\entities;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
+use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\traits\mappers\ElementTrait;
+use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 
-class Block extends ObjectData implements IElement {
+class Block extends ObjectData implements IElement, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -42,6 +44,7 @@ class Block extends ObjectData implements IElement {
 	// Traits ------------------------------------------------------
 
 	use ElementTrait;
+	use WidgetTrait;
 
 	// Constructor and Initialisation ------------------------------
 

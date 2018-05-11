@@ -8,10 +8,12 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+
 use cmsgears\icons\widgets\IconChooser;
+use cmsgears\icons\widgets\TextureChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Element | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
@@ -62,10 +64,13 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= TextureChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>

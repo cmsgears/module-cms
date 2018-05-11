@@ -16,6 +16,8 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\admin\models\forms\PageSettingsForm;
+
 use cmsgears\cms\admin\controllers\base\PageController;
 
 /**
@@ -57,6 +59,8 @@ class PostController extends PageController {
 		$this->apixBase		= 'cms/post';
 		$this->comments		= true;
 
+		$this->settingsClass = PageSettingsForm::class;
+
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
 
@@ -72,7 +76,8 @@ class PostController extends PageController {
 			'all' => [ [ 'label' => 'Posts' ] ],
 			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

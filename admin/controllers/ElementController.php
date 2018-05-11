@@ -54,7 +54,8 @@ class ElementController extends BaseElementController {
 			'all' => [ [ 'label' => 'Elements' ] ],
 			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

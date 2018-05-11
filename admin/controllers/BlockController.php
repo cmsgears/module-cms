@@ -54,7 +54,8 @@ class BlockController extends BaseBlockController {
 			'all' => [ [ 'label' => 'Blocks' ] ],
 			'create' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Blocks', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

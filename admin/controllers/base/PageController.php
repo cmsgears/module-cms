@@ -48,6 +48,8 @@ abstract class PageController extends CrudController {
 	protected $templateService;
 	protected $modelContentService;
 
+	protected $settingsClass;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -131,6 +133,7 @@ abstract class PageController extends CrudController {
 
 		$content = $this->modelContentService->getModelObject();
 
+		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );
 		$video	= File::loadFile( null, 'Video' );
 
@@ -139,7 +142,7 @@ abstract class PageController extends CrudController {
 
 			$this->model = $this->modelService->add( $model, [
 				'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-				'banner' => $banner, 'video' => $video
+				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 			]);
 
 			return $this->redirect( 'all' );
@@ -150,6 +153,7 @@ abstract class PageController extends CrudController {
 		return $this->render( 'create', [
 			'model' => $model,
 			'content' => $content,
+			'avatar' => $avatar,
 			'banner' => $banner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap,
@@ -170,6 +174,7 @@ abstract class PageController extends CrudController {
 
 			$content = $model->modelContent;
 
+			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
 			$banner	= File::loadFile( $content->banner, 'Banner' );
 			$video	= File::loadFile( $content->video, 'Video' );
 
@@ -178,7 +183,7 @@ abstract class PageController extends CrudController {
 
 				$this->model = $this->modelService->update( $model, [
 					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-					'banner' => $banner, 'video' => $video
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -189,11 +194,40 @@ abstract class PageController extends CrudController {
 			return $this->render( 'update', [
 				'model' => $model,
 				'content' => $content,
+				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
 				'templatesMap' => $templatesMap
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionSettings( $id ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$settingsClass	= $this->settingsClass;
+			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
+
+			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
+
+				$this->model = $this->modelService->updateDataMeta( $model, 'settings', $settings );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'settings', [
+				'model' => $model,
+				'settings' => $settings
 			]);
 		}
 
@@ -234,6 +268,7 @@ abstract class PageController extends CrudController {
 			return $this->render( 'delete', [
 				'model' => $model,
 				'content' => $content,
+				'avatar' => $model->avatar,
 				'banner' => $content->banner,
 				'video' => $content->video,
 				'visibilityMap' => $modelClass::$visibilityMap,

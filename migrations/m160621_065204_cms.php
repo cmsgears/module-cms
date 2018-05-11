@@ -70,6 +70,7 @@ class m160621_065204_cms extends Migration {
 		$this->createTable( $this->prefix . 'cms_page', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'avatarId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -97,6 +98,7 @@ class m160621_065204_cms extends Migration {
 
 		// Index for columns site, parent, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy' );
@@ -215,6 +217,7 @@ class m160621_065204_cms extends Migration {
 
 		// Page
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId', $this->prefix . 'cms_page', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -262,6 +265,7 @@ class m160621_065204_cms extends Migration {
 
 		// Page
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_modifier', $this->prefix . 'cms_page' );

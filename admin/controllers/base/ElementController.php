@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\admin\models\forms\ElementSettingsForm;
+
 /**
  * ElementController provides actions specific to element model.
  *
@@ -47,6 +49,8 @@ class ElementController extends ObjectController {
 		$this->type			= CmsGlobal::TYPE_ELEMENT;
 		$this->templateType = CmsGlobal::TYPE_ELEMENT;
 		$this->title		= 'Element';
+
+		$this->settingsClass = ElementSettingsForm::class;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'elementService' );

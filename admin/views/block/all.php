@@ -58,19 +58,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => "$themeTemplates/widget/grid",
-	//'dataView' => "$moduleTemplates/grid/data/element",
-	//'cardView' => "$moduleTemplates/grid/cards/element",
-	//'actionView' => "$moduleTemplates/grid/actions/element"
+	//'dataView' => "$moduleTemplates/grid/data/block",
+	//'cardView' => "$moduleTemplates/grid/cards/block",
+	'actionView' => "$moduleTemplates/grid/actions/block"
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Element', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+	'data' => [ 'model' => 'Block', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Delete Element', 'size' => 'medium',
+	'title' => 'Delete Block', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'Element', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+	'data' => [ 'model' => 'Block', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

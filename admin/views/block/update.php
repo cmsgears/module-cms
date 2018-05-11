@@ -8,8 +8,12 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+
 use cmsgears\icons\widgets\IconChooser;
+use cmsgears\icons\widgets\TextureChooser;
+
 use cmsgears\widgets\elements\mappers\ElementAuto;
+use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Element | ' . $coreProperties->getSiteTitle();
@@ -67,10 +71,13 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= TextureChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
@@ -143,6 +150,20 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
 					]) ?>
+				</div>
+			</div
+			<div class="box box-crud colf colf15"></div>
+			<div class="box box-crud colf colf15x7">
+				<div class="box-header">
+					<div class="box-header-title">Widgets</div>
+				</div>
+				<div class="box-content padding padding-small">
+					<?= WidgetAuto::widget([
+						'options' => [ 'class' => 'box-mapper-auto' ],
+						'model' => $model,
+						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
+						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"
+					])?>
 				</div>
 			</div>
 		</div>

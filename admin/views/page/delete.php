@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
@@ -91,6 +92,10 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			</div>
 			<div class="box-content">
 				<div class="row padding padding-small-v">
+						<div class="col col12x4">
+							<label>Avatar</label>
+							<?= AvatarUploader::widget( [ 'model' => $avatar, 'disabled' => 'true' ] ) ?>
+						</div>
 					<div class="col col12x4">
 						<label>Banner</label>
 						<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => 'true' ] ) ?>
