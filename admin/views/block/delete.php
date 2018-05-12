@@ -16,7 +16,7 @@ use cmsgears\widgets\elements\mappers\ElementAuto;
 use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Element | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );

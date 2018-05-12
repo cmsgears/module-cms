@@ -129,6 +129,8 @@ class PageService extends ContentService implements IPageService {
 
 		$modelClass = static::$modelClass;
 
+		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+
 		// Default Private
 		if( !isset( $model->visibility ) ) {
 
@@ -140,6 +142,8 @@ class PageService extends ContentService implements IPageService {
 
 			$model->status = $modelClass::STATUS_NEW;
 		}
+
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		return parent::create( $model, $config );
 	}
@@ -204,12 +208,13 @@ class PageService extends ContentService implements IPageService {
 		$content 	= $config[ 'content' ];
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'parentId', 'name', 'slug', 'icon',
+			'parentId', 'avatarId', 'name', 'slug', 'icon',
 			'title', 'description', 'visibility', 'content'
 		];
 
@@ -217,6 +222,8 @@ class PageService extends ContentService implements IPageService {
 
 			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
 		}
+
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );

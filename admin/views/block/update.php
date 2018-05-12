@@ -16,7 +16,7 @@ use cmsgears\widgets\elements\mappers\ElementAuto;
 use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Element | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Update Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
 
