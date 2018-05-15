@@ -84,6 +84,11 @@ class Page extends Content {
 
 	// Page ----------------------------------
 
+	public function getChildren() {
+
+		return $this->hasMany( self::class, [ 'parentId' => 'id' ] );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

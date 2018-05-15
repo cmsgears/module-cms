@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
@@ -12,9 +20,16 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\frontend\controllers\base\Controller;
+
 // TODO: Add options to allow user to configure template for search page. A default check in table might be the best option.
 
-class PageController extends \cmsgears\cms\frontend\controllers\base\Controller {
+/**
+ * PageController consist of actions specific to site pages.
+ *
+ * @since 1.0.0
+ */
+class PageController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -34,7 +49,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
-		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
+		$this->layout = WebGlobalCore::LAYOUT_PUBLIC;
 
 		$this->modelService		= Yii::$app->factory->get( 'pageService' );
 
@@ -59,7 +74,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'single' => [ 'get' ]
 				]
@@ -73,7 +88,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		if ( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = WebGlobalCore::LAYOUT_PRIVATE;
 		}
 
 		return [
@@ -97,7 +112,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	 */
 	public function actionSingle( $slug ) {
 
-		$page	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$page = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
 
 		if( isset( $page ) ) {
 
@@ -135,4 +150,5 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		// Error- Page not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

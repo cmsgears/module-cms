@@ -144,7 +144,7 @@ class PostService extends ContentService implements IPostService {
 			$model->status = $modelClass::STATUS_NEW;
 		}
 
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		return parent::create( $model, $config );
 	}
@@ -223,7 +223,7 @@ class PostService extends ContentService implements IPostService {
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'parentId', 'avatarId', 'name', 'slug', 'icon',
+			'parentId', 'avatarId', 'name', 'slug', 'icon', 'texture',
 			'title', 'description', 'visibility', 'content'
 		];
 

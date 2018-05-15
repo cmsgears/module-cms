@@ -57,7 +57,12 @@ class BlockSettingsForm extends DataModel {
 	public $headerIconUrl;
 
 	// Block Content
+	public $description;
+	public $summary;
 	public $content;
+	public $contentClass;
+	public $contentDataClass;
+	public $boxWrapClass;
 
 	// Block Footer
 	public $footer;
@@ -95,10 +100,11 @@ class BlockSettingsForm extends DataModel {
 		return [
 			[ [ 'maxCoverContent', 'footerContent' ], 'safe' ],
 			[ [ 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg' ], 'boolean' ],
-			[ [ 'texture', 'maxCover', 'header', 'content', 'footer', 'elements' ], 'boolean' ],
+			[ [ 'texture', 'maxCover', 'header', 'description', 'summary', 'content', 'footer', 'elements' ], 'boolean' ],
 			[ [ 'headerIcon', 'footerIcon' ], 'boolean' ],
 			[ 'elementType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'bkgClass', 'maxCoverClass', 'footerIconClass', 'footerTitle' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfo', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
 		];

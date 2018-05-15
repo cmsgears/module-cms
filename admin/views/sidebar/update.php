@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\VideoUploader;
@@ -14,6 +15,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
+
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -83,6 +86,28 @@ $apixBase		= $this->context->apixBase;
 							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Summary</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $model, 'summary' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Content</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 				</div>
 			</div>
 		</div>

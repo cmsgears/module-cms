@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\post;
+namespace cmsgears\cms\admin\controllers\block;
 
 // Yii Imports
 use Yii;
@@ -45,27 +45,27 @@ class AttributeController extends BaseAttributeController {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
-		$this->title	= 'Post Attribute';
-		$this->apixBase	= 'cms/page/attribute';
+		$this->title	= 'Block Attribute';
+		$this->apixBase	= 'cms/block/attribute';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageMetaService' );
-		$this->parentService	= Yii::$app->factory->get( 'postService' );
+		$this->modelService		= Yii::$app->factory->get( 'objectMetaService' );
+		$this->parentService	= Yii::$app->factory->get( 'blockService' );
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'ublock' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'attributes' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/attribute/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/attribute/all' ], true );
 
-		// Post Url
-		$postUrl = Url::previous( 'posts' );
-		$postUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+		// Page Url
+		$pageUrl = Url::previous( 'blocks' );
+		$pageUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Posts', 'url' =>  $postUrl ] ],
+			'base' => [ [ 'label' => 'Blocks', 'url' =>  $pageUrl ] ],
 			'all' => [ [ 'label' => 'Attributes' ] ],
 			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
 			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

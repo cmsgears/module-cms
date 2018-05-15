@@ -57,7 +57,14 @@ class PageSettingsForm extends DataModel {
 	public $headerIconUrl;
 
 	// Page Content
+	public $banner;
+	public $gallery;
+	public $description;
+	public $summary;
 	public $content;
+	public $contentClass;
+	public $contentDataClass;
+	public $boxWrapClass;
 
 	// Page Footer
 	public $footer;
@@ -67,6 +74,10 @@ class PageSettingsForm extends DataModel {
 	public $footerTitle;
 	public $footerInfo;
 	public $footerContent;
+
+	// Attributes
+	public $attributes;
+	public $attributeTypes;
 
 	// Elements
 	public $elements;
@@ -103,11 +114,13 @@ class PageSettingsForm extends DataModel {
 		return [
 			[ [ 'maxCoverContent', 'footerContent' ], 'safe' ],
 			[ [ 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg' ], 'boolean' ],
-			[ [ 'texture', 'maxCover', 'header', 'content', 'footer', 'elements', 'widgets', 'blocks' ], 'boolean' ],
-			[ [ 'headerIcon', 'footerIcon' ], 'boolean' ],
+			[ [ 'texture', 'maxCover', 'header', 'footer', 'elements', 'widgets', 'blocks' ], 'boolean' ],
+			[ [ 'banner', 'gallery', 'description', 'summary', 'content' ], 'boolean' ],
+			[ [ 'headerIcon', 'footerIcon', 'attributes' ], 'boolean' ],
 			[ [ 'elementType', 'widgetType', 'blockType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'bkgClass', 'maxCoverClass', 'footerIconClass', 'footerTitle' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ 'footerInfo', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'footerInfo', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
 		];
 	}

@@ -80,7 +80,34 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'banner', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'gallery', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'description', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'summary', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'content', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $settings, 'contentClass' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $settings, 'contentDataClass' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $settings, 'boxWrapClass' ) ?>
 						</div>
 					</div>
 				</div>
@@ -121,6 +148,24 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wysiwyg">
 				<div class="box-content">
 					<?= $form->field( $settings, 'footerContent' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Attributes</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'attributes', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $settings, 'attributeTypes' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

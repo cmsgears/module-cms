@@ -57,7 +57,7 @@ class AttributeController extends BaseAttributeController {
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'attributes' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/meta/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/attribute/all' ], true );
 
 		// Page Url
 		$pageUrl = Url::previous( 'pages' );

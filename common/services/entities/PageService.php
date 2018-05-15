@@ -214,7 +214,7 @@ class PageService extends ContentService implements IPageService {
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'parentId', 'avatarId', 'name', 'slug', 'icon',
+			'parentId', 'avatarId', 'name', 'slug', 'icon', 'texture',
 			'title', 'description', 'visibility', 'content'
 		];
 

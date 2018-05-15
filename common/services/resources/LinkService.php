@@ -239,7 +239,7 @@ class LinkService extends ResourceService implements ILinkService {
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'pageId', 'name', 'title', 'url', 'icon', 'order', 'absolute', 'htmlOptions', 'urlOptions'
+			'pageId', 'name', 'title', 'url', 'icon', 'order', 'absolute', 'user', 'htmlOptions', 'urlOptions'
 		];
 
 		return parent::update( $model, [

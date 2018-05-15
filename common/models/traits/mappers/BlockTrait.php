@@ -82,7 +82,8 @@ trait BlockTrait {
 		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable, &$mapperType ) {
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] );
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] )
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 				}
 			);
 	}
@@ -98,7 +99,8 @@ trait BlockTrait {
 		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable, &$mapperType ) {
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] );
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] )
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 				}
 			);
 	}

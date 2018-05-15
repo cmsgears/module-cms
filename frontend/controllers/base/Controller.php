@@ -1,13 +1,25 @@
 <?php
-namespace cmsgears\cms\frontend\controllers\base;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-// Yii Imports
-use \Yii;
+namespace cmsgears\cms\frontend\controllers\base;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsProperties;
 
-class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
+use cmsgears\core\frontend\controllers\base\Controller as BaseController;
+
+/**
+ * Base Controller of all frontend controllers of CMS module.
+ *
+ * @since 1.0.0
+ */
+abstract class Controller extends BaseController {
 
 	// Variables ---------------------------------------------------
 
@@ -41,9 +53,10 @@ class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
 
 		if( !isset( $this->cmsProperties ) ) {
 
-			$this->cmsProperties	= CmsProperties::getInstance();
+			$this->cmsProperties = CmsProperties::getInstance();
 		}
 
 		return $this->cmsProperties;
 	}
+
 }

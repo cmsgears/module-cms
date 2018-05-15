@@ -54,6 +54,8 @@ class ElementSettingsForm extends DataModel {
 	public $headerIconUrl;
 
 	// Block Content
+	public $description;
+	public $summary;
 	public $content;
 
 	// Block Footer
@@ -87,7 +89,7 @@ class ElementSettingsForm extends DataModel {
 
 		return [
 			[ [ 'maxCoverContent', 'footerContent' ], 'safe' ],
-			[ [ 'bkg', 'texture', 'maxCover', 'header', 'content', 'footer' ], 'boolean' ],
+			[ [ 'bkg', 'texture', 'maxCover', 'header', 'description', 'summary', 'content', 'footer' ], 'boolean' ],
 			[ [ 'headerIcon', 'footerIcon' ], 'boolean' ],
 			[ [ 'bkgClass', 'maxCoverClass', 'footerIconClass', 'footerTitle' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfo', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],

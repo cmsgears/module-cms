@@ -325,6 +325,11 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		return $this->isPublic() && $this->isVisibilityPublic();
 	}
 
+	public function getDisplayName() {
+
+		return !empty( $this->title ) ? $this->title : $this->name;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

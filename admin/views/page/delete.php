@@ -8,7 +8,9 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+
 use cmsgears\icons\widgets\IconChooser;
+use cmsgears\icons\widgets\TextureChooser;
 
 use cmsgears\widgets\elements\mappers\ElementAuto;
 use cmsgears\widgets\elements\mappers\BlockAuto;
@@ -80,6 +82,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= TextureChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 				</div>
