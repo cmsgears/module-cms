@@ -21,11 +21,11 @@ use cmsgears\cms\admin\models\forms\PageSettingsForm;
 use cmsgears\cms\admin\controllers\base\PageController;
 
 /**
- * PostController provides actions specific to post model.
+ * ArticleController provides actions specific to articles.
  *
  * @since 1.0.0
  */
-class PostController extends PageController {
+class ArticleController extends PageController {
 
 	// Variables ---------------------------------------------------
 
@@ -51,33 +51,33 @@ class PostController extends PageController {
 		parent::init();
 
 		// Views
-		$this->setViewPath( '@cmsgears/module-cms/admin/views/post' );
+		$this->setViewPath( '@cmsgears/module-cms/admin/views/article' );
 
 		// Config
-		$this->type			= CmsGlobal::TYPE_POST;
-		$this->templateType	= CmsGlobal::TYPE_POST;
-		$this->apixBase		= 'cms/post';
+		$this->type			= CmsGlobal::TYPE_ARTICLE;
+		$this->templateType	= CmsGlobal::TYPE_ARTICLE;
+		$this->apixBase		= 'cms/page';
 		$this->comments		= true;
 
 		$this->settingsClass = PageSettingsForm::class;
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'postService' );
+		$this->modelService = Yii::$app->factory->get( 'articleService' );
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'article' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'posts' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+		$this->returnUrl = Url::previous( 'articles' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/article/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'all' => [ [ 'label' => 'Posts' ] ],
-			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
+			'all' => [ [ 'label' => 'Articles' ] ],
+			'create' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -99,7 +99,7 @@ class PostController extends PageController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'posts' );
+		Url::remember( Yii::$app->request->getUrl(), 'articles' );
 
 		return parent::actionAll( $config );
 	}

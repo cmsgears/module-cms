@@ -20,16 +20,16 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\Article;
 
 use cmsgears\cms\frontend\controllers\base\Controller;
 
 /**
- * PageController consist of actions specific to site pages.
+ * ArticleController provides actions specific to article pages.
  *
  * @since 1.0.0
  */
-class PageController extends Controller {
+class ArticleController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -56,7 +56,7 @@ class PageController extends Controller {
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->modelService		= Yii::$app->factory->get( 'articleService' );
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 	}
@@ -110,18 +110,18 @@ class PageController extends Controller {
 
 	// CMG parent classes --------------------
 
-	// PageController ------------------------
+	// ArticleController ---------------------
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE	;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
 
 		$user			= Yii::$app->user->getIdentity();
 		$dataProvider 	= null;
 
 		if( isset( $status ) ) {
 
-			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [ 'status' => Page::$urlRevStatusMap[ $status ] ] );
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [ 'status' => Article::$urlRevStatusMap[ $status ] ] );
 		}
 		else {
 
@@ -136,15 +136,15 @@ class PageController extends Controller {
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE );
 
 			$dataProvider = $this->modelService->getPageForSearch([
-				'route' => 'page/search', 'searchContent' => true
+				'route' => 'article/search', 'searchContent' => true
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
@@ -156,20 +156,16 @@ class PageController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 	}
 
-	/* 1. It finds the associated page for the given slug.
-	 * 2. If page is found, the associated template will be used.
-	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
-	 */
 	public function actionSingle( $slug ) {
 
-		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $model ) ) {
 
 			if( !$model->isPublished() ) {
 
-				// Error- No access
-				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
+				// Error- Not allowed
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
 
 			// View Params
@@ -182,7 +178,7 @@ class PageController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
 			}
 
 			// Render Template
@@ -196,11 +192,11 @@ class PageController extends Controller {
 				], [ 'page' => true ] );
 			}
 
-			// Page without Template - Redirect to System Pages
-			return $this->redirect( 'site/' . $model->slug );
+			// Error - Template not defined
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Page not found
+		// Error- Post not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 

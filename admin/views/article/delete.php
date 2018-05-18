@@ -17,17 +17,14 @@ use cmsgears\widgets\elements\mappers\BlockAuto;
 use cmsgears\widgets\elements\mappers\WidgetAuto;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Page | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Article | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
-$apixBase		= $this->context->apixBase;
-
-$parentName = isset( $model->parent ) ? $model->parent->name : null;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-article', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
@@ -36,56 +33,53 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content">
 					<div class="row">
 						<div class="col col3">
-							<?= $form->field( $model, 'name' ) ?>
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'slug' ) ?>
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'title' ) ?>
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => 'cms/page/auto-search' ] ) ?>
+							<?= TextureChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
-						</div>
-						<div class="col col2">
-							<?= TextureChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 				</div>
@@ -97,20 +91,18 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-header-title">Files</div>
 			</div>
 			<div class="box-content">
-				<div class="box-content">
-					<div class="row padding padding-small-v">
+				<div class="row padding padding-small-v">
 						<div class="col col12x4">
 							<label>Avatar</label>
-							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+							<?= AvatarUploader::widget( [ 'model' => $avatar, 'disabled' => 'true' ] ) ?>
 						</div>
-						<div class="col col12x4">
-							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
-						</div>
-						<div class="col col12x4">
-							<label>Video</label>
-							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
-						</div>
+					<div class="col col12x4">
+						<label>Banner</label>
+						<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => 'true' ] ) ?>
+					</div>
+					<div class="col col12x4">
+						<label>Video</label>
+						<?= VideoUploader::widget( [ 'model' => $video, 'disabled' => 'true' ] ) ?>
 					</div>
 				</div>
 			</div>
@@ -138,35 +130,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			</div>
 		</div>
 		<div class="filler-height filler-height-medium"></div>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Page SEO</div>
-			</div>
-			<div class="box-content">
-				<div class="box-content">
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $content, 'seoName' ) ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $content, 'seoRobot' ) ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $content, 'seoDescription' )->textarea() ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
-			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Update" />
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
@@ -178,9 +144,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content padding padding-small">
 					<?= ElementAuto::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
-						'model' => $model,
-						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
-						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
+						'model' => $model, 'disabled' => true
 					])?>
 				</div>
 			</div>
@@ -192,9 +156,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content padding padding-small">
 					<?= BlockAuto::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
-						'model' => $model,
-						'mapActionUrl' => "$apixBase/assign-block?slug=$model->slug&type=$model->type",
-						'deleteActionUrl' => "$apixBase/remove-block?slug=$model->slug&type=$model->type"
+						'model' => $model, 'disabled' => true
 					])?>
 				</div>
 			</div>
@@ -208,9 +170,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content padding padding-small">
 					<?= WidgetAuto::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
-						'model' => $model,
-						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
-						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"
+						'model' => $model, 'disabled' => true
 					])?>
 				</div>
 			</div>

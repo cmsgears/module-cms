@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\frontend\controllers\apix;
 
 // Yii Imports
@@ -7,11 +15,11 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\ModelComment;
-
 use cmsgears\core\common\filters\UserExistFilter;
 
-class PostController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+class PostController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -32,11 +40,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'postService' );
-		$this->metaService		= Yii::$app->factory->get( 'contentMetaService' );
+		$this->modelService	= Yii::$app->factory->get( 'postService' );
+		$this->metaService	= Yii::$app->factory->get( 'contentMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -69,7 +77,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'auto-search' => [ 'post' ],
 					'update-avatar' => [ 'post' ],
@@ -103,7 +111,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
-			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment', 'scenario' => ModelComment::TYPE_COMMENT ],
+			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ],
 			'like' => [ 'class' => 'cmsgears\core\common\actions\follower\Like' ]
 		];
 	}

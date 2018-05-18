@@ -29,6 +29,11 @@ class CmsProperties extends Properties {
 	const PROP_COMMENT_PAGE		= 'page_comment';
 
 	/**
+	 * The property to find whether comments are enabled at article level.
+	 */
+	const PROP_COMMENT_ARTICLE	= 'article_comment';
+
+	/**
 	 * The property to find whether comments are enabled at post level.
 	 */
 	const PROP_COMMENT_POST		= 'post_comment';
@@ -97,6 +102,14 @@ class CmsProperties extends Properties {
 	public function isPageComments() {
 
 		return $this->properties[ self::PROP_COMMENT_PAGE ];
+	}
+
+	/**
+	 * Returns whether comments are required for articles.
+	 */
+	public function isArticleComments() {
+
+		return $this->properties[ self::PROP_COMMENT_ARTICLE ];
 	}
 
 	/**

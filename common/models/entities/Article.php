@@ -13,11 +13,11 @@ namespace cmsgears\cms\common\models\entities;
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**
- * Page represents pages used for site page.
+ * Article represents pages used for articles.
  *
  * @since 1.0.0
  */
-class Page extends Content {
+class Article extends Content {
 
 	// Variables ---------------------------------------------------
 
@@ -35,7 +35,7 @@ class Page extends Content {
 
 	// Protected --------------
 
-	protected $modelType = CmsGlobal::TYPE_PAGE;
+	protected $modelType = CmsGlobal::TYPE_ARTICLE;
 
 	// Private ----------------
 
@@ -53,41 +53,13 @@ class Page extends Content {
 
 	// yii\base\Model ---------
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules() {
-
-		$rules = parent::rules();
-
-		$rules[] = [ 'parentId', 'validateParent' ];
-
-		return $rules;
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
 
-	public function validateParent( $attribute, $param ) {
-
-		if( !$this->hasErrors() ) {
-
-			if( isset( $this->parentId ) && isset( $this->id ) && $this->parentId == $this->id ) {
-
-				$this->addError( 'parentId', 'Page cannot be parent of same.' );
-			}
-		}
-	}
-
-	// Page ----------------------------------
-
-	public function getChildren() {
-
-		return $this->hasMany( self::class, [ 'parentId' => 'id' ] );
-	}
+	// Article -------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -97,7 +69,7 @@ class Page extends Content {
 
 	// CMG parent classes --------------------
 
-	// Page ----------------------------------
+	// Article -------------------------------
 
 	// Read - Query -----------
 
@@ -110,7 +82,7 @@ class Page extends Content {
 
 		$table = static::tableName();
 
-		return parent::find()->where( [ "$table.type" => CmsGlobal::TYPE_PAGE ] );
+		return parent::find()->where( [ "$table.type" => CmsGlobal::TYPE_ARTICLE ] );
 	}
 
 	// Create -----------------

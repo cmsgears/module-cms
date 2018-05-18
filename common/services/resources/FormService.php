@@ -7,34 +7,26 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\services\base;
+namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
-use cmsgears\core\common\config\CacheProperties;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\cms\common\services\interfaces\resources\IFormService;
 
-use cmsgears\cms\common\services\interfaces\base\IContentService;
-
-use cmsgears\core\common\services\base\EntityService;
-
-use cmsgears\core\common\services\traits\base\ApprovalTrait;
-use cmsgears\core\common\services\traits\resources\DataTrait;
-use cmsgears\core\common\services\traits\base\MultiSiteTrait;
-use cmsgears\core\common\services\traits\base\NameTypeTrait;
-use cmsgears\core\common\services\traits\base\SlugTypeTrait;
-use cmsgears\core\common\services\traits\cache\GridCacheTrait;
+use cmsgears\forms\common\services\entities\FormService as BaseFormService;
 
 /**
- * ContentService is base service of page and post.
+ * FormService provide service methods of category model.
  *
  * @since 1.0.0
  */
-abstract class ContentService extends EntityService implements IContentService {
+class FormService extends BaseFormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -44,7 +36,7 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// Public -----------------
 
-	public static $typed = true;
+	public static $modelClass = '\cmsgears\cms\common\models\resources\Form';
 
 	// Protected --------------
 
@@ -58,13 +50,6 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// Traits ------------------------------------------------------
 
-	use ApprovalTrait;
-	use DataTrait;
-	use GridCacheTrait;
-	use MultiSiteTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -77,7 +62,7 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// CMG parent classes --------------------
 
-	// ContentService ------------------------
+	// CategoryService -----------------------
 
 	// Data Provider ------
 
@@ -99,12 +84,12 @@ abstract class ContentService extends EntityService implements IContentService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
-				'template' => [
-					'asc' => [ "$templateTable.name" => SORT_ASC ],
-					'desc' => [ "$templateTable.name" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Template',
-				],
+	            'template' => [
+	                'asc' => [ "$templateTable.name" => SORT_ASC ],
+	                'desc' => [ "$templateTable.name" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Template'
+	            ],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -135,11 +120,11 @@ abstract class ContentService extends EntityService implements IContentService {
 					'default' => SORT_DESC,
 					'label' => 'Title'
 				],
-				'status' => [
-					'asc' => [ "$modelTable.status" => SORT_ASC ],
-					'desc' => [ "$modelTable.status" => SORT_DESC ],
+				'captcha' => [
+					'asc' => [ "$modelTable.captcha" => SORT_ASC ],
+					'desc' => [ "$modelTable.captcha" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Status'
+					'label' => 'Captcha'
 				],
 				'visibility' => [
 					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
@@ -147,23 +132,35 @@ abstract class ContentService extends EntityService implements IContentService {
 					'default' => SORT_DESC,
 					'label' => 'Visibility'
 				],
-				'order' => [
-					'asc' => [ "$modelTable.order" => SORT_ASC ],
-					'desc' => [ "$modelTable.order" => SORT_DESC ],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Order'
+					'label' => 'Status'
 				],
-				'pinned' => [
-					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
-					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+				'umail' => [
+					'asc' => [ "$modelTable.userMail" => SORT_ASC ],
+					'desc' => [ "$modelTable.userMail" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Pinned'
+					'label' => 'User Mail'
 				],
-				'featured' => [
-					'asc' => [ "$modelTable.featured" => SORT_ASC ],
-					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+				'amail' => [
+					'asc' => [ "$modelTable.adminMail" => SORT_ASC ],
+					'desc' => [ "$modelTable.adminMail" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Featured'
+					'label' => 'Admin Mail'
+				],
+				'unsubmit' => [
+					'asc' => [ "$modelTable.uniqueSubmit" => SORT_ASC ],
+					'desc' => [ "$modelTable.uniqueSubmit" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Unique Submit'
+				],
+				'upsubmit' => [
+					'asc' => [ "$modelTable.updateSubmit" => SORT_ASC ],
+					'desc' => [ "$modelTable.updateSubmit" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Update Submit'
 				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
@@ -225,15 +222,33 @@ abstract class ContentService extends EntityService implements IContentService {
 
 			switch( $filter ) {
 
-				case 'pinned': {
+				case 'captcha': {
 
-					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+					$config[ 'conditions' ][ "$modelTable.captcha" ] = true;
 
 					break;
 				}
-				case 'featured': {
+				case 'umail': {
 
-					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+					$config[ 'conditions' ][ "$modelTable.userMail" ] = true;
+
+					break;
+				}
+				case 'amail': {
+
+					$config[ 'conditions' ][ "$modelTable.adminMail" ] = true;
+
+					break;
+				}
+				case 'unsubmit': {
+
+					$config[ 'conditions' ][ "$modelTable.uniqueSubmit" ] = true;
+
+					break;
+				}
+				case 'upsubmit': {
+
+					$config[ 'conditions' ][ "$modelTable.updateSubmit" ] = true;
 
 					break;
 				}
@@ -250,6 +265,8 @@ abstract class ContentService extends EntityService implements IContentService {
 				'name' => "$modelTable.name",
 				'title' => "$modelTable.title",
 				'desc' => "$modelTable.description",
+				'success' => "$modelTable.description",
+				'failure' => "$modelTable.description",
 				'summary' => "modelContent.summary",
 				'content' => "modelContent.content"
 			];
@@ -263,18 +280,22 @@ abstract class ContentService extends EntityService implements IContentService {
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'success' => "$modelTable.success",
+			'failure' => "$modelTable.failure",
 			'summary' => "modelContent.summary",
 			'content' => "modelContent.content",
+			'captcha' => "$modelTable.captcha",
 			'status' => "$modelTable.status",
 			'visibility' => "$modelTable.visibility",
-			'order' => "$modelTable.order",
-			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'umail' => "$modelTable.userMail",
+			'amail' => "$modelTable.adminMail",
+			'unsubmit' => "$modelTable.uniqueSubmit",
+			'upsubmit' => "$modelTable.updateSubmit"
 		];
 
 		// Result -----------
 
-		return parent::getPage( $config );
+		return parent::findPage( $config );
 	}
 
 	// Read ---------------
@@ -302,92 +323,153 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		// Default Private
+		if( !isset( $model->visibility ) ) {
+
+			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
+		}
+
+		// Default New
+		if( !isset( $model->status ) ) {
+
+			$model->status = $modelClass::STATUS_NEW;
+		}
+
+		return parent::create( $model, $config );
+	}
+
+	public function add( $model, $config = [] ) {
+
+		return $this->register( $model, $config );
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$content 	= $config[ 'content' ];
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create gallery
+			if( $gallery ) {
+
+				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => CoreGlobal::TYPE_FORM,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$transaction->commit();
+
+			return $model;
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+		}
+
+		return false;
+	}
+
 	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		$content 	= $config[ 'content' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'templateId', 'name', 'slug', 'icon', 'texture', 'title', 'description',
+			'success', 'failure', 'captcha', 'visibility', 'status',
+			'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit',
+			'htmlOptions', 'content'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status' ] );
+		}
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
+		}
+
+		// Update model content
+		$modelContentService->update( $content, [
+			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+		]);
+
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
 	// Delete -------------
 
-	// Bulk ---------------
+	public function delete( $model, $config = [] ) {
 
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+		$transaction = Yii::$app->db->beginTransaction();
 
-		switch( $column ) {
+		try {
 
-			case 'status': {
+			// Delete mappings
+			Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
 
-				switch( $action ) {
+			// Delete Fields
+			Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
 
-					case 'confirmed': {
+			// Delete Model Content
+			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-						$this->confirm( $model );
+			$transaction->commit();
 
-						break;
-					}
-					case 'rejected': {
-
-						$this->reject( $model );
-
-						break;
-					}
-					case 'active': {
-
-						$this->approve( $model );
-
-						break;
-					}
-					case 'frozen': {
-
-						$this->freeze( $model );
-
-						break;
-					}
-					case 'blocked': {
-
-						$this->block( $model );
-
-						break;
-					}
-					case 'terminated': {
-
-						$this->terminate( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
-			case 'model': {
-
-				switch( $action ) {
-
-					case 'pinned': {
-
-						$model->pinned = true;
-
-						$model->update();
-
-						break;
-					}
-					case 'featured': {
-
-						$model->featured = true;
-
-						$model->update();
-
-						break;
-					}
-					case 'delete': {
-
-						$this->delete( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
+			// Delete model
+			return parent::delete( $model, $config );
 		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+		}
+
+		return false;
 	}
+
+	// Bulk ---------------
 
 	// Notifications ------
 
@@ -399,26 +481,16 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	// CMG parent classes --------------------
 
-	// ContentService ------------------------
+	// CategoryService -----------------------
 
 	// Data Provider ------
 
-	/**
-	 * Generate search query using tag and category tables.
-	 */
 	public static function findPageForSearch( $config = [] ) {
 
 		// Search
 		$searchContent	= isset( $config[ 'searchContent' ] ) ? $config[ 'searchContent' ] : false;
 		$keywordsParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
 		$keywords 		= Yii::$app->request->getQueryParam( $keywordsParam );
-
-		// Sort
-		$ratingComment	= isset( $config[ 'ratingComment' ] ) ? $config[ 'ratingComment' ] : false;
-		$ratingReview	= isset( $config[ 'ratingReview' ] ) ? $config[ 'ratingReview' ] : false;
-
-		// Filters
-		$optionFilters	= isset( $config[ 'optionFilters' ] ) ? $config[ 'optionFilters' ] : [];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $modelClass::tableName();
@@ -445,73 +517,7 @@ abstract class ContentService extends EntityService implements IContentService {
 			}
 		}
 
-		// Sort
-		$sortParam	= Yii::$app->request->get( 'sort' );
-		$sortParam	= preg_replace( '/-/', '', $sortParam );
-
-		// Sort using ModelComment Table
-		if( ( $ratingComment || $ratingReview ) && strcmp( $sortParam, 'rating' ) == 0 ) {
-
-			$type	= '';
-			$query	= $config[ 'query' ];
-
-			// Sort by Rating using comments available in ModelComment table
-			if( $ratingComment ) {
-
-				$type = ModelComment::TYPE_COMMENT;
-			}
-			// Sort by Rating using reviews available in ModelComment table
-			else if( $ratingReview ) {
-
-				$type = ModelComment::TYPE_REVIEW;
-			}
-
-			$commentTable	= Yii::$app->factory->get( 'modelCommentService' )->getModelTable();
-			$approved		= ModelComment::STATUS_APPROVED;
-
-			$query->leftJoin( $commentTable,
-				"$commentTable.parentId=$modelTable.id AND $commentTable.parentType='$parentType' AND
-				$commentTable.type='$type' AND $commentTable.status=$approved" );
-		}
-
-		// Option Filters
-		if( count( $optionFilters ) > 0 ) {
-
-			$query			= $config[ 'query' ];
-			$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
-			$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
-
-			foreach( $optionFilters as $key => $option ) {
-
-				$optionList = static::getOptions( $option );
-
-				if( count( $optionList ) > 0 ) {
-
-					$query->leftJoin( "$mOptionTable AS MC$key", "$modelTable.id=MC$key.parentId AND MC$key.parentType='$parentType'" )
-						->leftJoin( "$optionTable AS O$key", "MC$key.modelId=O$key.id" )
-						->andWhere( "MC$key.active=1" );
-
-					$config[ 'filters' ][] = [ 'in', "O$key.id", $optionList ];
-				}
-			}
-		}
-
 		return parent::findPageForSearch( $config );
-	}
-
-	protected static function getOptions( $options ) {
-
-		if( isset( $options ) ) {
-
-			$options = preg_split( "/,/", $options );
-
-			if( count( $options ) > 0 ) {
-
-				return $options;
-			}
-		}
-
-		return [];
 	}
 
 	// Read ---------------

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
@@ -9,10 +17,19 @@ use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class PostController extends \cmsgears\cms\frontend\controllers\base\Controller {
+use cmsgears\cms\common\models\entities\Post;
+
+use cmsgears\cms\frontend\controllers\base\Controller;
+
+/**
+ * PostController consist of actions specific to blog posts.
+ *
+ * @since 1.0.0
+ */
+class PostController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -35,10 +52,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
+		// Config
+		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'postService' );
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
@@ -66,7 +86,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'all' => [ 'get' ],
 					'search' => [ 'get' ],
@@ -84,7 +104,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		if ( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 		}
 
 		return [
@@ -102,35 +122,40 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE	;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
 		$user			= Yii::$app->user->getIdentity();
 		$dataProvider 	= null;
 
-		if( isset( $user ) ) {
+
+		if( isset( $status ) ) {
+
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [ 'status' => Post::$urlRevStatusMap[ $status ] ] );
+		}
+		else {
 
 			$dataProvider = $this->modelService->getPageByOwnerId( $user->id );
-
-			// TODO: Get data provider for status using textual representation of status
-
-			return $this->render( 'all', [
-				 'dataProvider' => $dataProvider,
-				 'status' => $status
-			]);
 		}
+
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider,
+			'status' => $status
+		]);
 	}
 
 	public function actionSearch() {
 
-		$user			= Yii::$app->user->getIdentity();
-		$template		= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 
 		if( isset( $template ) ) {
 
-			$dataProvider	= $this->modelService->getPageForSearch([
-									'route' => 'blog/search', 'searchContent' => true,
-									'searchCategory' => true, 'searchTag' => true
-								]);
+			// View Params
+			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE );
+
+			$dataProvider = $this->modelService->getPageForSearch([
+				'route' => 'blog/search', 'searchContent' => true,
+				'searchCategory' => true, 'searchTag' => true
+			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
 				'dataProvider' => $dataProvider
@@ -143,13 +168,12 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionCategory( $slug ) {
 
-		$category	= $this->categoryService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$category = $this->categoryService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
 		if( isset( $category ) ) {
 
-			$user			= Yii::$app->user->getIdentity();
-			$content		= $category->modelContent;
-			$template		= $content->template;
+			$content	= $category->modelContent;
+			$template	= $content->template;
 
 			// Fallback to default template
 			if( empty( $template ) ) {
@@ -174,12 +198,11 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionTag( $slug ) {
 
-		$tag	= $this->tagService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$tag = $this->tagService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
 		if( isset( $tag ) ) {
 
-			$user		= Yii::$app->user->getIdentity();
-			$template	= null;
+			$template = null;
 
 			if( isset( $tag->modelContent ) ) {
 
@@ -190,7 +213,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template	= $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 			}
 
 			if( isset( $template ) ) {
@@ -210,32 +233,35 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionSingle( $slug ) {
 
-		$post	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
-		if( isset( $post ) ) {
+		if( isset( $model ) ) {
 
-			if( !$post->isPublished() ) {
+			if( !$model->isPublished() ) {
 
 				// Error- Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
 
-			// Find post template
-			$content	= $post->modelContent;
+			// View Params
+			$this->view->params[ 'model' ] = $model;
+
+			// Find Template
+			$content	= $model->modelContent;
 			$template	= $content->template;
 
-			// Fallback to default template for blog posts in case no post is assigned
+			// Fallback to default template
 			if( empty( $template ) ) {
 
 				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 			}
 
-			// Render post using template
+			// Render Template
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'page' => $post,
-					'author' => $post->createdBy,
+					'page' => $model,
+					'author' => $model->createdBy,
 					'content' => $content,
 					'banner' => $content->banner
 				], [ 'page' => true ] );
@@ -248,4 +274,5 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		// Error- Post not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

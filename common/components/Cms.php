@@ -17,6 +17,7 @@ use yii\base\Component;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Page;
+use cmsgears\cms\common\models\entities\Article;
 use cmsgears\cms\common\models\entities\Post;
 
 /**
@@ -69,8 +70,9 @@ class Cms extends Component {
 	 */
 	public function registerPageMap() {
 
-		$this->pageMap[ CmsGlobal::TYPE_PAGE ] = Page::class;
-		$this->pageMap[ CmsGlobal::TYPE_POST ] = Post::class;
+		$this->pageMap[ CmsGlobal::TYPE_PAGE ]		= Page::class;
+		$this->pageMap[ CmsGlobal::TYPE_ARTICLE ]	= Article::class;
+		$this->pageMap[ CmsGlobal::TYPE_POST ]		= Post::class;
 	}
 
 	public function getPageClass( $type ) {
@@ -101,6 +103,7 @@ class Cms extends Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\IFormService', 'cmsgears\cms\common\services\resources\FormService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ICategoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\resources\ITagService', 'cmsgears\cms\common\services\resources\TagService' );
 
@@ -148,6 +151,7 @@ class Cms extends Component {
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\ISidebarService', 'cmsgears\cms\common\services\entities\SidebarService' );
 
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IPageService', 'cmsgears\cms\common\services\entities\PageService' );
+		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IArticleService', 'cmsgears\cms\common\services\entities\ArticleService' );
 		$factory->set( 'cmsgears\cms\common\services\interfaces\entities\IPostService', 'cmsgears\cms\common\services\entities\PostService' );
 	}
 
@@ -158,6 +162,7 @@ class Cms extends Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'formService', 'cmsgears\cms\common\services\resources\FormService' );
 		$factory->set( 'categoryService', 'cmsgears\cms\common\services\resources\CategoryService' );
 		$factory->set( 'tagService', 'cmsgears\cms\common\services\resources\TagService' );
 
@@ -203,8 +208,8 @@ class Cms extends Component {
 		$factory->set( 'sidebarService', 'cmsgears\cms\common\services\entities\SidebarService' );
 
 		$factory->set( 'pageService', 'cmsgears\cms\common\services\entities\PageService' );
+		$factory->set( 'articleService', 'cmsgears\cms\common\services\entities\ArticleService' );
 		$factory->set( 'postService', 'cmsgears\cms\common\services\entities\PostService' );
 	}
 
 }
-

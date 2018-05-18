@@ -120,6 +120,8 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 	// Protected --------------
 
+	protected $modelType;
+
 	protected $followerClass;
 
 	protected $metaClass;
@@ -323,11 +325,6 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 		// Status & Visibility checks
 		return $this->isPublic() && $this->isVisibilityPublic();
-	}
-
-	public function getDisplayName() {
-
-		return !empty( $this->title ) ? $this->title : $this->name;
 	}
 
 	// Static Methods ----------------------------------------------

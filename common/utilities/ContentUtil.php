@@ -31,36 +31,36 @@ class ContentUtil {
 	 * Generates the meta data of Page or Post.
 	 *
 	 * @param \yii\web\View $view The current view being rendered by controller.
-	 * @param array $config
+	 * @param array $config - It can pass service, typed and type to detect the model. It can also pass basePath to form ogurl.
 	 * @return array having page meta data.
 	 */
 	public static function initPage( $view, $config = [] ) {
 
-		$page = self::findViewPage( $view, $config );
+		$model = isset( $view->params[ 'model' ] ) ? $view->params[ 'model' ] : self::findPage( $view, $config );
 
-		if( isset( $page ) ) {
+		if( isset( $model ) ) {
 
 			$coreProperties = CoreProperties::getInstance();
 			$cmsProperties	= CmsProperties::getInstance();
 
-			$content = $page->modelContent;
+			$content = $model->modelContent;
 
 			// Page and Content
-			$view->params[ 'page' ]		= $page;
-			$view->params[ 'content' ]	= $content;
+			$view->params[ 'model' ]	= $model;
+			$view->params[ 'seo' ]		= $content;
 
 			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= $content->summary;
+			$view->params[ 'summary' ]	= !empty( $content->summary ) ? $content->summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $page->description;
+			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $model->description;
 			$view->params[ 'keywords' ]	= $content->seoKeywords;
 			$view->params[ 'robot' ]	= $content->seoRobot;
 
 			// SEO - Page Title
 			$siteTitle		= $coreProperties->getSiteTitle();
 			$titleSeparator	= $cmsProperties->getTitleSeparator();
-			$seoName		= !empty( $content->seoName ) ? $content->seoName : $page->name;
+			$seoName		= !empty( $content->seoName ) ? $content->seoName : $model->name;
 
 			if( $cmsProperties->isSiteTitle() ) {
 
@@ -89,7 +89,7 @@ class ContentUtil {
 	 */
 	public static function initModel( $view, $config = [] ) {
 
-		$model = self::findModel( $config );
+		$model = isset( $view->params[ 'model' ] ) ? $view->params[ 'model' ] : self::findModel( $config );
 
 		if( isset( $model ) ) {
 
@@ -99,10 +99,10 @@ class ContentUtil {
 
 			// Model
 			$view->params[ 'model' ]	= $model;
-			$view->params[ 'content' ]	= $seoData;
+			$view->params[ 'seo' ]		= $seoData;
 
 			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : $model->description;
+			$view->params[ 'summary' ]	= isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
 			$view->params[ 'desc' ]		= isset( $seoData ) && !empty( $seoData->description ) ? $seoData->description : $model->description;
@@ -141,7 +141,7 @@ class ContentUtil {
 	 */
 	public static function initModelPage( $view, $config = [] ) {
 
-		$model = self::findModel( $config );
+		$model = isset( $view->params[ 'model' ] ) ? $view->params[ 'model' ] : self::findModel( $config );
 
 		if( isset( $model ) ) {
 
@@ -193,10 +193,7 @@ class ContentUtil {
 	 * @param array $config
 	 * @return \cmsgears\cms\common\models\entities\Content
 	 */
-	public static function findViewPage( $view, $config = [] ) {
-
-		$module			= isset( $config[ 'module' ] ) ? $config[ 'module' ] : 'core'; // The module used for pages.
-		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'site'; // The controller used for pages.
+	public static function findPage( $view, $config = [] ) {
 
 		$moduleName		= $view->context->module->id;
 		$controllerName	= Yii::$app->controller->id;
@@ -205,12 +202,14 @@ class ContentUtil {
 		$page = null;
 
 		// System/Public Pages - Landing, Login, Register, Confirm Account, Activate Account, Forgot Password, Reset Password
-		if( $moduleName == $module && $controllerName == $controller ) {
+		if( $moduleName == 'core' && $controllerName == 'site' ) {
 
+			// Landing Page
 			if( $actionName == 'index' ) {
 
 				$page = self::getPage( 'home' );
 			}
+			// System Page
 			else {
 
 				$page = self::getPage( $actionName );
@@ -219,7 +218,7 @@ class ContentUtil {
 		// Blog/CMS Pages
 		else if( isset( Yii::$app->request->queryParams[ 'slug' ] ) ) {
 
-			$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_POST;
+			$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CmsGlobal::TYPE_PAGE;
 
 			$page = self::getPage( Yii::$app->request->queryParams[ 'slug' ], $type );
 		}
@@ -232,35 +231,36 @@ class ContentUtil {
 	 */
 	public static function getPage( $slug, $type = CmsGlobal::TYPE_PAGE ) {
 
-		return Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
+		switch( $type ) {
+
+			case CmsGlobal::TYPE_PAGE: {
+
+				return Yii::$app->factory->get( 'pageService' )->getBySlugType( $slug, $type );
+			}
+			case CmsGlobal::TYPE_POST: {
+
+				return Yii::$app->factory->get( 'postService' )->getBySlugType( $slug, $type );
+			}
+		}
+
+		return null;
 	}
 
 	public static function findModel( $config ) {
 
-		$model = null;
+		$service	= Yii::$app->factory->get( $config[ 'service' ] );
+		$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
+		$slug		= Yii::$app->request->queryParams[ 'slug' ];
 
-		if( isset( $config[ 'model' ] ) ){
+		if( $typed ) {
 
-			$model = $config[ 'model' ];
+			return $service->getBySlugType( $slug, $type );
 		}
 		else {
 
-			$service	= Yii::$app->factory->get( $config[ 'service' ] );
-			$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
-			$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
-			$slug		= Yii::$app->request->queryParams[ 'slug' ];
-
-			if( $typed ) {
-
-				$model = $service->getBySlugType( $slug, $type );
-			}
-			else {
-
-				$model = $service->getBySlug( $slug );
-			}
+			return $service->getBySlug( $slug );
 		}
-
-		return $model;
 	}
 
 }

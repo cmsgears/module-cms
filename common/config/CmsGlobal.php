@@ -22,7 +22,9 @@ class CmsGlobal {
 
 	// System Pages ---------------------------------------------------
 
-	const PAGE_BLOG		= 'blog';
+	const PAGE_SEARCH_PAGES		= 'search-pages';
+	const PAGE_SEARCH_ARTICLES	= 'search-articles';
+	const PAGE_SEARCH_POSTS		= 'search-posts';
 
 	// Grouping by type ------------------------------------------------
 
@@ -36,12 +38,14 @@ class CmsGlobal {
 	const TYPE_WIDGET	= 'widget';
 
 	const TYPE_PAGE		= 'page';
+	const TYPE_ARTICLE	= 'article';
 	const TYPE_POST		= 'blog';
 
 	// Templates -------------------------------------------------------
 
-	const TEMPLATE_PAGE	= 'page';
-	const TEMPLATE_POST	= 'post';
+	const TEMPLATE_PAGE		= 'page';
+	const TEMPLATE_ARTICLE	= 'article';
+	const TEMPLATE_POST		= 'post';
 
 	// Config ----------------------------------------------------------
 
@@ -49,7 +53,7 @@ class CmsGlobal {
 
 	// Roles -----------------------------------------------------------
 
-	const ROLE_BLOG_ADMIN		= 'blog-admin';
+	const ROLE_BLOG_ADMIN = 'blog-admin';
 
 	// Permissions -----------------------------------------------------
 

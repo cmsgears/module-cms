@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
 
 $core	= Yii::$app->core;
 $user	= Yii::$app->user->getIdentity();
@@ -43,12 +44,31 @@ $user	= Yii::$app->user->getIdentity();
 			<ul>
 				<li class="page <?= $child == 'page' ? 'active' : null ?>"><?= Html::a( "Pages", ['/cms/page/all'] ) ?></li>
 				<li class="page-comments <?= $child == 'page-comments' ? 'active' : null ?>"><?= Html::a( "Page Comments", ['/cms/page/comment/all'] ) ?></li>
+				<li class="article <?= $child == 'article' ? 'active' : null ?>"><?= Html::a( "Articles", ['/cms/article/all'] ) ?></li>
+				<li class="article-comments <?= $child == 'article-comments' ? 'active' : null ?>"><?= Html::a( "Article Comments", ['/cms/article/comment/all'] ) ?></li>
 				<li class="post <?= $child == 'post' ? 'active' : null ?>"><?= Html::a( "Posts", ['/cms/post/all'] ) ?></li>
 				<li class="post-category <?= $child == 'post-category' ? 'active' : null ?>"><?= Html::a( "Post Categories", ['/cms/post/category/all'] ) ?></li>
 				<li class="post-tag <?= $child == 'post-tag' ? 'active' : null ?>"><?= Html::a( "Post Tags", ['/cms/post/tag/all'] ) ?></li>
 				<li class="post-comments <?= $child == 'post-comments' ? 'active' : null ?>"><?= Html::a( "Post Comments", ['/cms/post/comment/all'] ) ?></li>
 				<li class="page-template <?= $child == 'page-template' ? 'active' : null ?>"><?= Html::a( "Page Templates", ['/cms/page/template/all'] ) ?></li>
+				<li class="article-template <?= $child == 'article-template' ? 'active' : null ?>"><?= Html::a( "Article Templates", ['/cms/article/template/all'] ) ?></li>
 				<li class="post-template <?= $child == 'post-template' ? 'active' : null ?>"><?= Html::a( "Post Templates", ['/cms/post/template/all'] ) ?></li>
+			</ul>
+		</div>
+	</div>
+<?php } ?>
+
+<?php if( $core->hasModule( 'forms' ) && $user->isPermitted( FormsGlobal::PERM_FORM_ADMIN ) ) { ?>
+	<div id="sidebar-form" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-form' ) == 0 ) echo 'active';?>">
+		<div class="row tab-header">
+			<div class="tab-icon"><span class="cmti cmti-checkbox-b-active"></span></div>
+			<div class="tab-title">Forms</div>
+		</div>
+		<div class="tab-content clear <?php if( strcmp( $parent, 'sidebar-form' ) == 0 ) echo 'expanded visible';?>">
+			<ul>
+				<li class='form <?php if( strcmp( $child, 'form' ) == 0 ) echo 'active';?>'><?= Html::a( "Forms", ['/cms/form/all'] ) ?></li>
+				<li class='config <?php if( strcmp( $child, 'config' ) == 0 ) echo 'active';?>'><?= Html::a( "Configs", ['/forms/config/all'] ) ?></li>
+				<li class='template <?php if( strcmp( $child, 'template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", ['/forms/form/template/all'] ) ?></li>
 			</ul>
 		</div>
 	</div>

@@ -107,6 +107,16 @@ class Post extends Content implements ICategory, ITab, ITag {
 
 	// Read - Find ------------
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function find() {
+
+		$table = static::tableName();
+
+		return parent::find()->where( [ "$table.type" => CmsGlobal::TYPE_POST ] );
+	}
+
 	// Create -----------------
 
 	// Update -----------------
