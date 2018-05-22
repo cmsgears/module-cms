@@ -11,6 +11,7 @@ namespace cmsgears\cms\frontend\controllers\apix;
 
 // Yii Imports
 use Yii;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -44,7 +45,7 @@ class PostController extends Controller {
 
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'postService' );
-		$this->metaService	= Yii::$app->factory->get( 'contentMetaService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 	}
 
 	// Instance methods --------------------------------------------

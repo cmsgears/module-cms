@@ -175,6 +175,9 @@ class PostController extends Controller {
 			$content	= $category->modelContent;
 			$template	= $content->template;
 
+			// View Params
+			$this->view->params[ 'model' ] = $category;
+
 			// Fallback to default template
 			if( empty( $template ) ) {
 
@@ -202,13 +205,11 @@ class PostController extends Controller {
 
 		if( isset( $tag ) ) {
 
-			$template = null;
+			$content	= $tag->modelContent;
+			$template	= $content->template;
 
-			if( isset( $tag->modelContent ) ) {
-
-				$content	= $tag->modelContent;
-				$template	= $content->template;
-			}
+			// View Params
+			$this->view->params[ 'model' ] = $tag;
 
 			// Fallback to default template
 			if( empty( $template ) ) {
@@ -260,7 +261,7 @@ class PostController extends Controller {
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'page' => $model,
+					'model' => $model,
 					'author' => $model->createdBy,
 					'content' => $content,
 					'banner' => $content->banner

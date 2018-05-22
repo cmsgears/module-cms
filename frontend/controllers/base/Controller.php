@@ -10,6 +10,7 @@
 namespace cmsgears\cms\frontend\controllers\base;
 
 // CMG Imports
+use cmsgears\core\common\config\CommentProperties;
 use cmsgears\cms\common\config\CmsProperties;
 
 use cmsgears\core\frontend\controllers\base\Controller as BaseController;
@@ -30,6 +31,8 @@ abstract class Controller extends BaseController {
 	// Private ----------------
 
 	private $cmsProperties;
+
+	private $commentProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -57,6 +60,16 @@ abstract class Controller extends BaseController {
 		}
 
 		return $this->cmsProperties;
+	}
+
+	public function getCommentProperties() {
+
+		if( !isset( $this->commentProperties ) ) {
+
+			$this->commentProperties = CommentProperties::getInstance();
+		}
+
+		return $this->commentProperties;
 	}
 
 }
