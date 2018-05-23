@@ -51,10 +51,13 @@ class PageSettingsForm extends DataModel {
 	public $maxCoverContent;
 	public $maxCoverClass;
 
-	// Page Header
+	// Header
 	public $header;
-	public $headerIcon;
-	public $headerIconUrl;
+	public $headerIcon; // Show Header Icon using Model Avatar/Icon
+	public $headerTitle; // Show Header Title using Model Title
+	public $headerInfo; // Show Header Info using Model Description
+	public $headerContent; // Show Header Content using Model Summary
+	public $headerIconUrl; // Show Header Icon using Icon Url irrespective of Model Avatar/Icon
 
 	// Page Content
 	public $banner;

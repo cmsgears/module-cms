@@ -36,7 +36,11 @@ class BlockSettingsForm extends DataModel {
 
 	// Public -----------------
 
+	// Avatar
+	public $defaultAvatar;
+
 	// Background
+	public $defaultBanner;
 	public $bkg;
 	public $fixedBkg;
 	public $scrollBkg;
@@ -51,27 +55,36 @@ class BlockSettingsForm extends DataModel {
 	public $maxCoverContent;
 	public $maxCoverClass;
 
-	// Block Header
-	public $header;
-	public $headerIcon;
-	public $headerIconUrl;
+	// Header
+	public $header; // Show Header
+	public $headerIcon; // Show Header Icon using Model Avatar/Icon
+	public $headerTitle; // Show Header Title using Model Title
+	public $headerInfo; // Show Header Info using Model Description
+	public $headerContent; // Show Header Content using Model Summary
+	public $headerIconUrl; // Show Header Icon using Icon Url irrespective of Model Avatar/Icon
 
-	// Block Content
-	public $description;
-	public $summary;
-	public $content;
+	// Content
+	public $content; // Show content
+	public $contentTitle; // Show Model Title within content
+	public $contentInfo; // Show Model Description within content
+	public $contentSummary; // Show Model Summary within content
+	public $contentData; // Show Model Content within content
+
 	public $contentClass;
 	public $contentDataClass;
 	public $boxWrapClass;
 
-	// Block Footer
-	public $footer;
-	public $footerIcon;
-	public $footerIconClass;
-	public $footerIconUrl;
-	public $footerTitle;
-	public $footerInfo;
-	public $footerContent;
+	// Footer
+	public $footer; // Show Footer
+	public $footerIcon; // Show Footer Icon using Model Avatar/Icon
+	public $footerIconClass; // Show Footer Icon using css class irrespective of Model Avatar/Icon
+	public $footerIconUrl; // Show Footer Icon using Icon Url irrespective of Model Avatar/Icon
+	public $footerTitle; // Show Footer Title using Model Title
+	public $footerTitleData; // Show Footer Title using Title Data irrespective of Model Title
+	public $footerInfo; // Show Footer Info using Model Description
+	public $footerInfoData; // Show Footer Info using Info Data irrespective of Model Description
+	public $footerContent; // Show Footer Content using Model Summary
+	public $footerContentData; // Show Footer Content using Content Data irrespective of Model Summary
 
 	// Elements
 	public $elements;
@@ -98,14 +111,15 @@ class BlockSettingsForm extends DataModel {
 	public function rules() {
 
 		return [
-			[ [ 'maxCoverContent', 'footerContent' ], 'safe' ],
-			[ [ 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg' ], 'boolean' ],
-			[ [ 'texture', 'maxCover', 'header', 'description', 'summary', 'content', 'footer', 'elements' ], 'boolean' ],
-			[ [ 'headerIcon', 'footerIcon' ], 'boolean' ],
+			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
+			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover', 'elements' ], 'boolean' ],
+			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
+			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData' ], 'boolean' ],
+			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
 			[ 'elementType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'bkgClass', 'maxCoverClass', 'footerIconClass', 'footerTitle' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ 'footerInfo', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
 		];
 	}
