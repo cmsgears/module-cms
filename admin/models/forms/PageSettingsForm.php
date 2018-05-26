@@ -36,7 +36,11 @@ class PageSettingsForm extends DataModel {
 
 	// Public -----------------
 
+	// Avatar
+	public $defaultAvatar;
+
 	// Background
+	public $defaultBanner;
 	public $bkg;
 	public $fixedBkg;
 	public $scrollBkg;
@@ -52,7 +56,7 @@ class PageSettingsForm extends DataModel {
 	public $maxCoverClass;
 
 	// Header
-	public $header;
+	public $header; // Show Header
 	public $headerIcon; // Show Header Icon using Model Avatar/Icon
 	public $headerTitle; // Show Header Title using Model Title
 	public $headerInfo; // Show Header Info using Model Description
@@ -62,21 +66,28 @@ class PageSettingsForm extends DataModel {
 	// Page Content
 	public $banner;
 	public $gallery;
-	public $description;
-	public $summary;
-	public $content;
+
+	public $content; // Show content
+	public $contentTitle; // Show Model Title within content
+	public $contentInfo; // Show Model Description within content
+	public $contentSummary; // Show Model Summary within content
+	public $contentData; // Show Model Content within content
+
 	public $contentClass;
 	public $contentDataClass;
 	public $boxWrapClass;
 
-	// Page Footer
-	public $footer;
-	public $footerIcon;
-	public $footerIconClass;
-	public $footerIconUrl;
-	public $footerTitle;
-	public $footerInfo;
-	public $footerContent;
+	// Footer
+	public $footer; // Show Footer
+	public $footerIcon; // Show Footer Icon using Model Avatar/Icon
+	public $footerIconClass; // Show Footer Icon using css class irrespective of Model Avatar/Icon
+	public $footerIconUrl; // Show Footer Icon using Icon Url irrespective of Model Avatar/Icon
+	public $footerTitle; // Show Footer Title using Model Title
+	public $footerTitleData; // Show Footer Title using Title Data irrespective of Model Title
+	public $footerInfo; // Show Footer Info using Model Description
+	public $footerInfoData; // Show Footer Info using Info Data irrespective of Model Description
+	public $footerContent; // Show Footer Content using Model Summary
+	public $footerContentData; // Show Footer Content using Content Data irrespective of Model Summary
 
 	// Attributes
 	public $attributes;
@@ -115,15 +126,16 @@ class PageSettingsForm extends DataModel {
 	public function rules() {
 
 		return [
-			[ [ 'maxCoverContent', 'footerContent' ], 'safe' ],
-			[ [ 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg' ], 'boolean' ],
-			[ [ 'texture', 'maxCover', 'header', 'footer', 'elements', 'widgets', 'blocks' ], 'boolean' ],
-			[ [ 'banner', 'gallery', 'description', 'summary', 'content' ], 'boolean' ],
-			[ [ 'headerIcon', 'footerIcon', 'attributes' ], 'boolean' ],
+			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
+			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover' ], 'boolean' ],
+			[ [ 'elements', 'widgets', 'blocks' ], 'boolean' ],
+			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
+			[ [ 'banner', 'gallery', 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributes' ], 'boolean' ],
+			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
 			[ [ 'elementType', 'widgetType', 'blockType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'bkgClass', 'maxCoverClass', 'footerIconClass', 'footerTitle' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'footerInfo', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
 		];
 	}
@@ -134,6 +146,6 @@ class PageSettingsForm extends DataModel {
 
 	// Validators ----------------------------
 
-	// BlockSettingsForm ---------------------
+	// PageSettingsForm ----------------------
 
 }

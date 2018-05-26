@@ -86,9 +86,17 @@ class BlockSettingsForm extends DataModel {
 	public $footerContent; // Show Footer Content using Model Summary
 	public $footerContentData; // Show Footer Content using Content Data irrespective of Model Summary
 
+	// Attributes
+	public $attributes;
+	public $attributeTypes;
+
 	// Elements
 	public $elements;
 	public $elementType;
+
+	// Widgets
+	public $widgets;
+	public $widgetType;
 
 	// Protected --------------
 
@@ -112,12 +120,13 @@ class BlockSettingsForm extends DataModel {
 
 		return [
 			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
-			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover', 'elements' ], 'boolean' ],
+			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover' ], 'boolean' ],
+			[ [ 'elements', 'widgets' ], 'boolean' ],
 			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
-			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData' ], 'boolean' ],
+			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributes' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
-			[ 'elementType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'elementType', 'widgetType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
