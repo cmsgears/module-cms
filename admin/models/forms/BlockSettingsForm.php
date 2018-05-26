@@ -73,6 +73,8 @@ class BlockSettingsForm extends DataModel {
 	public $contentClass;
 	public $contentDataClass;
 	public $boxWrapClass;
+	public $boxWrapper;
+	public $boxClass;
 
 	// Footer
 	public $footer; // Show Footer
@@ -125,8 +127,8 @@ class BlockSettingsForm extends DataModel {
 			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
 			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributes' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
-			[ [ 'elementType', 'widgetType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'elementType', 'widgetType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]

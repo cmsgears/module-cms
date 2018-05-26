@@ -114,13 +114,10 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $settings, 'contentDataClass' ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $settings, 'boxWrapClass' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'contentSummary', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'contentSummary', null, 'cmti cmti-checkbox' ) ?>
-						</div>
 						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'contentData', null, 'cmti cmti-checkbox' ) ?>
 						</div>
@@ -207,6 +204,17 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 						<div class="col col3">
 							<?= $form->field( $settings, 'elementType' ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $settings, 'boxWrapClass' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col3">
+							<?= $form->field( $settings, 'boxWrapper' ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $settings, 'boxClass' ) ?>
 						</div>
 					</div>
 				</div>
