@@ -136,7 +136,7 @@ class PageController extends Controller {
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+		$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
 
 		if( isset( $template ) ) {
 
@@ -182,7 +182,7 @@ class PageController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
 			}
 
 			// Render Template

@@ -18,6 +18,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
@@ -135,6 +136,12 @@ class FormController extends BaseFormController {
 					// Refresh the Page
 		        	return $this->refresh();
 				}
+			}
+
+			// Fallback to default template
+			if( empty( $template ) ) {
+
+				$template = $this->templateService->getGlobalBySlugType( FormsGlobal::TEMPLATE_FORM, CoreGlobal::TYPE_FORM );
 			}
 
 			if( isset( $template ) ) {

@@ -136,7 +136,7 @@ class ArticleController extends Controller {
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
+		$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $template ) ) {
 
@@ -178,7 +178,7 @@ class ArticleController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
+				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
 			}
 
 			// Render Template

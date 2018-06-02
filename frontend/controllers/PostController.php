@@ -145,7 +145,7 @@ class PostController extends Controller {
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+		$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 
 		if( isset( $template ) ) {
 
@@ -181,7 +181,7 @@ class PostController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 			}
 
 			if( isset( $template ) ) {
@@ -214,7 +214,7 @@ class PostController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 			}
 
 			if( isset( $template ) ) {
@@ -254,7 +254,7 @@ class PostController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_POST, CmsGlobal::TYPE_POST );
 			}
 
 			// Render Template

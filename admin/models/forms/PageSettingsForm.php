@@ -36,16 +36,16 @@ class PageSettingsForm extends DataModel {
 
 	// Public -----------------
 
-	// Avatar
+	// Avatar & Banner
 	public $defaultAvatar;
-
-	// Background
 	public $defaultBanner;
-	public $bkg;
-	public $fixedBkg;
-	public $scrollBkg;
-	public $parallaxBkg;
-	public $bkgClass;
+
+	// Banner
+	public $fixedBanner;
+	public $scrollBanner;
+	public $parallaxBanner;
+	public $background;
+	public $backgroundClass;
 
 	// Texture
 	public $texture;
@@ -62,20 +62,28 @@ class PageSettingsForm extends DataModel {
 	public $headerInfo; // Show Header Info using Model Description
 	public $headerContent; // Show Header Content using Model Summary
 	public $headerIconUrl; // Show Header Icon using Icon Url irrespective of Model Avatar/Icon
+	public $headerBanner;
+	public $headerGallery;
 
-	// Page Content
-	public $banner;
-	public $gallery;
-
+	// Content
 	public $content; // Show content
 	public $contentTitle; // Show Model Title within content
 	public $contentInfo; // Show Model Description within content
 	public $contentSummary; // Show Model Summary within content
 	public $contentData; // Show Model Content within content
 
+	public $contentSocial;
+	public $contentLabels;
+
+	public $contentAvatar;
+	public $contentBanner;
+	public $contentGallery;
+
 	public $contentClass;
 	public $contentDataClass;
 	public $boxWrapClass;
+	public $boxWrapper;
+	public $boxClass;
 
 	// Footer
 	public $footer; // Show Footer
@@ -127,13 +135,14 @@ class PageSettingsForm extends DataModel {
 
 		return [
 			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
-			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover' ], 'boolean' ],
+			[ [ 'defaultAvatar', 'defaultBanner', 'fixedBanner', 'scrollBanner', 'parallaxBanner', 'background', 'texture', 'maxCover' ], 'boolean' ],
 			[ [ 'elements', 'widgets', 'blocks' ], 'boolean' ],
-			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
-			[ [ 'banner', 'gallery', 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributeData' ], 'boolean' ],
+			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent', 'headerBanner', 'headerGallery' ], 'boolean' ],
+			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'contentAvatar', 'contentBanner', 'contentGallery', 'attributeData' ], 'boolean' ],
+			[ [ 'contentSocial', 'contentLabels' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
-			[ [ 'elementType', 'widgetType', 'blockType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'elementType', 'widgetType', 'blockType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'backgroundClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]

@@ -151,7 +151,7 @@ class m160621_065204_cms extends Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'url' => $this->string( Yii::$app->core->xxxLargeText )->notNull(),
+			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),

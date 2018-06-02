@@ -47,6 +47,12 @@ class CmsGlobal {
 	const TEMPLATE_ARTICLE	= 'article';
 	const TEMPLATE_POST		= 'post';
 
+	const TEMPLATE_SEARCH	= 'search';
+	const TEMPLATE_ARCHIVE	= 'archive';
+
+	const TEMPLATE_SIDEBAR_VERTICAL		= 'vsidebar';
+	const TEMPLATE_SIDEBAR_HORIZONTAL	= 'hsidebar';
+
 	// Config ----------------------------------------------------------
 
 	const CONFIG_BLOG	= 'blog';
