@@ -47,11 +47,6 @@ class ElementSettingsForm extends DataModel {
 	// Texture
 	public $texture;
 
-	// Max cover on top of block content
-	public $maxCover;
-	public $maxCoverContent;
-	public $maxCoverClass;
-
 	// Header
 	public $header; // Show Header
 	public $headerIcon; // Show Header Icon using Model Avatar/Icon
@@ -66,6 +61,8 @@ class ElementSettingsForm extends DataModel {
 	public $contentInfo; // Show Model Description within content
 	public $contentSummary; // Show Model Summary within content
 	public $contentData; // Show Model Content within content
+
+	public $maxCover;
 
 	public $contentClass;
 	public $contentDataClass;
@@ -83,8 +80,10 @@ class ElementSettingsForm extends DataModel {
 	public $footerContentData; // Show Footer Content using Content Data irrespective of Model Summary
 
 	// Attributes
-	public $attributeData;
+	public $attributes;
 	public $attributeTypes;
+
+	public $metaWrapClass;
 
 	// Protected --------------
 
@@ -104,18 +103,33 @@ class ElementSettingsForm extends DataModel {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		return [
-			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
+			[ [ 'footerContentData' ], 'safe' ],
 			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'texture', 'maxCover' ], 'boolean' ],
 			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
-			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributeData' ], 'boolean' ],
+			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributes' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
-			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'bkgClass', 'contentClass', 'contentDataClass', 'metaWrapClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		return [
+			'bkg' => 'Background',
+			'bkgClass' => 'Background Class',
+			'metaWrapClass' => 'Attribute Wrap Class'
 		];
 	}
 

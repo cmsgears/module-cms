@@ -56,7 +56,7 @@ class ArticleController extends PageController {
 		// Config
 		$this->type			= CmsGlobal::TYPE_ARTICLE;
 		$this->templateType	= CmsGlobal::TYPE_ARTICLE;
-		$this->apixBase		= 'cms/page';
+		$this->apixBase		= 'cms/article';
 		$this->comments		= true;
 
 		$this->settingsClass = PageSettingsForm::class;

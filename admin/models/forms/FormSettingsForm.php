@@ -50,11 +50,6 @@ class FormSettingsForm extends DataModel {
 	// Texture
 	public $texture;
 
-	// Max cover on top of block content
-	public $maxCover;
-	public $maxCoverContent;
-	public $maxCoverClass;
-
 	// Header
 	public $header; // Show Header
 	public $headerIcon; // Show Header Icon using Model Avatar/Icon
@@ -64,6 +59,8 @@ class FormSettingsForm extends DataModel {
 	public $headerIconUrl; // Show Header Icon using Icon Url irrespective of Model Avatar/Icon
 	public $headerBanner;
 	public $headerGallery;
+	public $headerElements;
+	public $headerElementType;
 
 	// Content
 
@@ -73,15 +70,16 @@ class FormSettingsForm extends DataModel {
 	public $contentSummary; // Show Model Summary within content
 	public $contentData; // Show Model Content within content
 
+	public $maxCover;
+
 	public $contentAvatar;
 	public $contentBanner;
 	public $contentGallery;
 
 	public $contentClass;
 	public $contentDataClass;
-	public $boxWrapClass;
-	public $boxWrapper;
-	public $boxClass;
+
+	public $pageStyles;
 
 	// Footer
 	public $footer; // Show Footer
@@ -94,14 +92,22 @@ class FormSettingsForm extends DataModel {
 	public $footerInfoData; // Show Footer Info using Info Data irrespective of Model Description
 	public $footerContent; // Show Footer Content using Model Summary
 	public $footerContentData; // Show Footer Content using Content Data irrespective of Model Summary
+	public $footerElements;
+	public $footerElementType;
 
 	// Attributes
-	public $attributeData;
+	public $attributes;
 	public $attributeTypes;
+
+	public $metaWrapClass;
 
 	// Elements
 	public $elements;
 	public $elementType;
+
+	public $boxWrapClass;
+	public $boxWrapper;
+	public $boxClass;
 
 	// Widgets
 	public $widgets;
@@ -110,6 +116,16 @@ class FormSettingsForm extends DataModel {
 	// Blocks
 	public $blocks;
 	public $blockType;
+
+	// Sidebars
+	public $topSidebar;
+	public $topSidebarSlugs;
+	public $bottomSidebar;
+	public $bottomSidebarSlugs;
+	public $leftSidebar;
+	public $leftSidebarSlug;
+	public $rightSidebar;
+	public $rightSidebarSlug;
 
 	// Protected --------------
 
@@ -129,20 +145,35 @@ class FormSettingsForm extends DataModel {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		return [
-			[ [ 'maxCoverContent', 'footerContentData' ], 'safe' ],
+			[ [ 'footerContentData', 'pageStyles' ], 'safe' ],
 			[ [ 'defaultAvatar', 'defaultBanner', 'fixedBanner', 'scrollBanner', 'parallaxBanner', 'background', 'texture', 'maxCover' ], 'boolean' ],
 			[ [ 'elements', 'widgets', 'blocks' ], 'boolean' ],
-			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent', 'headerBanner', 'headerGallery' ], 'boolean' ],
-			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'contentAvatar', 'contentBanner', 'contentGallery', 'attributeData' ], 'boolean' ],
-			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent' ], 'boolean' ],
-			[ [ 'elementType', 'widgetType', 'blockType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent', 'headerBanner', 'headerGallery', 'headerElements' ], 'boolean' ],
+			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'contentAvatar', 'contentBanner', 'contentGallery', 'attributes' ], 'boolean' ],
+			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent', 'footerElements' ], 'boolean' ],
+			[ [ 'topSidebar', 'bottomSidebar', 'leftSidebar', 'rightSidebar' ], 'boolean' ],
+			[ [ 'elementType', 'headerElementType', 'footerElementType', 'widgetType', 'blockType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'backgroundClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'maxCoverClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'metaWrapClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'topSidebarSlugs', 'bottomSidebarSlugs', 'leftSidebarSlug', 'rightSidebarSlug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		return [
+			'metaWrapClass' => 'Attribute Wrap Class'
 		];
 	}
 

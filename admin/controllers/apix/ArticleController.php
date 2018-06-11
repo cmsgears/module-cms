@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix\page;
+namespace cmsgears\cms\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
@@ -16,20 +16,24 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\CategoryController as BaseCategoryController;
+use cmsgears\core\admin\controllers\base\Controller;
+
+use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
- * CategoryController provides actions specific to post categories.
+ * ArticleController provides actions specific to article model.
  *
  * @since 1.0.0
  */
-class CategoryController extends BaseCategoryController {
+class ArticleController extends Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -43,6 +47,10 @@ class CategoryController extends BaseCategoryController {
 
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
+
+		// Services
+		$this->modelService	= Yii::$app->factory->get( 'articleService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -59,7 +67,11 @@ class CategoryController extends BaseCategoryController {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'update-avatar' => [ 'permission' => $this->crudPermission ],
 					'update-banner' => [ 'permission' => $this->crudPermission ],
+					'add-meta' => [ 'permission' => $this->crudPermission ],
+					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'delete-meta' => [ 'permission' => $this->crudPermission ],
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
 					'assign-block' => [ 'permission' => $this->crudPermission ],
@@ -74,7 +86,11 @@ class CategoryController extends BaseCategoryController {
 				'class' => VerbFilter::class,
 				'actions' => [
 					'auto-search' => [ 'post' ],
+					'update-avatar' => [ 'post' ],
 					'update-banner' => [ 'post' ],
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
 					'assign-block' => [ 'post' ],
@@ -99,7 +115,11 @@ class CategoryController extends BaseCategoryController {
 
 		return [
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
 			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
 			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
@@ -115,6 +135,6 @@ class CategoryController extends BaseCategoryController {
 
 	// CMG parent classes --------------------
 
-	// CategoryController ---------------------
+	// ArticleController ---------------------
 
 }

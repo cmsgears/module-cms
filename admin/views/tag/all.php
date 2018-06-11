@@ -45,7 +45,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/tag",
 	//'cardView' => "$moduleTemplates/grid/cards/tag",
-	//'actionView' => "$moduleTemplates/grid/actions/tag"
+	'actionView' => "$moduleTemplates/grid/actions/tag"
 ]) ?>
 
 <?= Popup::widget([
