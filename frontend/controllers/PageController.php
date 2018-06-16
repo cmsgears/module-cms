@@ -136,7 +136,7 @@ class PageController extends Controller {
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_PAGE );
 
 		if( isset( $template ) ) {
 

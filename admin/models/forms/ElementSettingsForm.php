@@ -67,6 +67,8 @@ class ElementSettingsForm extends DataModel {
 	public $contentClass;
 	public $contentDataClass;
 
+	public $elementStyles;
+
 	// Footer
 	public $footer; // Show Footer
 	public $footerIcon; // Show Footer Icon using Model Avatar/Icon
@@ -109,7 +111,7 @@ class ElementSettingsForm extends DataModel {
 	public function rules() {
 
 		return [
-			[ [ 'footerContentData' ], 'safe' ],
+			[ [ 'footerContentData', 'elementStyles' ], 'safe' ],
 			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'texture', 'maxCover' ], 'boolean' ],
 			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],
 			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'attributes' ], 'boolean' ],

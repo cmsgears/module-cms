@@ -227,6 +227,12 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="col col3">
 				<div class="box-content-wysiwyg">
 					<div class="box-content">
+						<label>Block Styles</label>
+						<?= $form->field( $settings, 'blockStyles' )->textarea( [ 'rows' => '8' ] )->label( false ) ?>
+					</div>
+				</div>
+				<div class="box-content-wysiwyg">
+					<div class="box-content">
 						<label>Footer Content Data</label>
 						<?= $form->field( $settings, 'footerContentData' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 					</div>

@@ -70,6 +70,8 @@ class BlockSettingsForm extends DataModel {
 	public $contentClass;
 	public $contentDataClass;
 
+	public $blockStyles;
+
 	// Footer
 	public $footer; // Show Footer
 	public $footerIcon; // Show Footer Icon using Model Avatar/Icon
@@ -124,7 +126,7 @@ class BlockSettingsForm extends DataModel {
 	public function rules() {
 
 		return [
-			[ [ 'footerContentData' ], 'safe' ],
+			[ [ 'footerContentData', 'blockStyles' ], 'safe' ],
 			[ [ 'defaultAvatar', 'defaultBanner', 'bkg', 'fixedBkg', 'scrollBkg', 'parallaxBkg', 'texture', 'maxCover' ], 'boolean' ],
 			[ [ 'elements', 'widgets' ], 'boolean' ],
 			[ [ 'header', 'headerIcon', 'headerTitle', 'headerInfo', 'headerContent' ], 'boolean' ],

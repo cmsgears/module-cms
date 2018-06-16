@@ -9,7 +9,7 @@ $this->title	= 'Post Categories | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 
 // View Templates
-$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([

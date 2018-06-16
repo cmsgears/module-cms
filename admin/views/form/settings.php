@@ -207,27 +207,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="filler-height"></div>
 				<div class="box box-crud">
 					<div class="box-header">
-						<div class="box-header-title">Attributes</div>
-					</div>
-					<div class="box-content-wrap frm-split-40-60">
-						<div class="box-content">
-							<div class="row">
-								<div class="col col5">
-									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'attributes', null, 'cmti cmti-checkbox' ) ?>
-								</div>
-								<div class="col col5x2">
-									<?= $form->field( $settings, 'attributeTypes' ) ?>
-								</div>
-								<div class="col col5x2">
-									<?= $form->field( $settings, 'metaWrapClass' ) ?>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="filler-height"></div>
-				<div class="box box-crud">
-					<div class="box-header">
 						<div class="box-header-title">Elements</div>
 					</div>
 					<div class="box-content-wrap frm-split-40-60">
@@ -297,6 +276,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					</div>
 					<div class="box-content-wrap frm-split-40-60">
 						<div class="box-content">
+							<div class="row">
+								<div class="col col4">
+									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'sidebars', null, 'cmti cmti-checkbox' ) ?>
+								</div>
+								<div class="col col2">
+									<?= $form->field( $settings, 'sidebarType' ) ?>
+								</div>
+							</div>
 							<div class="row">
 								<div class="col col5">
 									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $settings, 'topSidebar', null, 'cmti cmti-checkbox' ) ?>
