@@ -18,7 +18,7 @@ class CmsGlobal {
 
 	// System Sites ---------------------------------------------------
 
-	const SITE_BLOG		= 'blog';
+	const SITE_BLOG = 'blog';
 
 	// System Pages ---------------------------------------------------
 

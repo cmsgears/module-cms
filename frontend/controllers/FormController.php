@@ -74,7 +74,11 @@ class FormController extends BaseFormController {
 
 		if( isset( $model ) ) {
 
-			$template	= $model->modelContent->template;
+			// Find Template
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			// Fields
 			$formFields	= $model->getFieldsMap();
 
 	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
@@ -149,6 +153,8 @@ class FormController extends BaseFormController {
 				return Yii::$app->templateManager->renderViewPublic( $template, [
 		        	'model' => $model,
 					'form' => $form,
+					'content' => $content,
+					'banner' => $content->banner
 		        ], [ 'page' => true ] );
 			}
 

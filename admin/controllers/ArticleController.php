@@ -77,7 +77,8 @@ class ArticleController extends PageController {
 			'create' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
+			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
+			'tdata' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
 		];
 	}
 

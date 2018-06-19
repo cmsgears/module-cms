@@ -39,6 +39,8 @@ class FormController extends CrudController {
 
 	// Public -----------------
 
+	public $settingsClass;
+
 	// Protected --------------
 
 	protected $type;
@@ -46,8 +48,6 @@ class FormController extends CrudController {
 
 	protected $templateService;
 	protected $modelContentService;
-
-	protected $settingsClass;
 
 	// Private ----------------
 
@@ -89,7 +89,8 @@ class FormController extends CrudController {
 			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
+			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
+			'tdata' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
 		];
 	}
 
@@ -117,6 +118,14 @@ class FormController extends CrudController {
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'settings' => [ 'class' => 'cmsgears\core\admin\actions\Settings' ],
+			'tdata' => [ 'class' => 'cmsgears\cms\admin\actions\TemplateData' ]
+		];
+	}
 
 	// CMG interfaces ------------------------
 
@@ -213,34 +222,6 @@ class FormController extends CrudController {
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
 				'templatesMap' => $templatesMap
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionSettings( $id ) {
-
-		// Find Model
-		$model = $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$settingsClass	= $this->settingsClass;
-			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
-
-			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
-
-				$this->model = $this->modelService->updateDataMeta( $model, 'settings', $settings );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-			return $this->render( 'settings', [
-				'model' => $model,
-				'settings' => $settings
 			]);
 		}
 

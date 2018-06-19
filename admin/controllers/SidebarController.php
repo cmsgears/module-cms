@@ -61,7 +61,9 @@ class SidebarController extends ObjectController {
 			'all' => [ [ 'label' => 'Sidebars' ] ],
 			'create' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'settings' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
+			'tdata' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
 		];
 	}
 

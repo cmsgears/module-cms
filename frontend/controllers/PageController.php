@@ -114,7 +114,7 @@ class PageController extends Controller {
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE	;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
 
 		$user			= Yii::$app->user->getIdentity();
 		$dataProvider 	= null;
