@@ -97,6 +97,8 @@ class FormSettingsForm extends DataModel {
 
 	// Elements
 	public $elements;
+	public $elementsWithContent;
+	public $elementsOrder;
 	public $elementType;
 
 	public $boxWrapClass;
@@ -105,10 +107,14 @@ class FormSettingsForm extends DataModel {
 
 	// Widgets
 	public $widgets;
+	public $widgetsWithContent;
+	public $widgetsOrder;
 	public $widgetType;
 
 	// Blocks
 	public $blocks;
+	public $blocksWithContent;
+	public $blocksOrder;
 	public $blockType;
 
 	// Sidebars
@@ -154,6 +160,7 @@ class FormSettingsForm extends DataModel {
 			[ [ 'content', 'contentTitle', 'contentInfo', 'contentSummary', 'contentData', 'contentAvatar', 'contentBanner', 'contentGallery' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent', 'footerElements' ], 'boolean' ],
 			[ [ 'sidebars', 'topSidebar', 'bottomSidebar', 'leftSidebar', 'rightSidebar' ], 'boolean' ],
+			[ [ 'elementsWithContent', 'widgetsWithContent', 'blocksWithContent' ], 'boolean' ],
 			[ [ 'elementType', 'headerElementType', 'footerElementType', 'widgetType', 'blockType', 'sidebarType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'backgroundClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],

@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\utilities;
 
 // Yii Imports
 use Yii;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -260,6 +261,37 @@ class ContentUtil {
 		else {
 
 			return $service->getBySlug( $slug );
+		}
+	}
+
+	public static function generateBreadcrumbs( $view ) {
+
+		$moduleName		= $view->context->module->id;
+		$controllerName	= Yii::$app->controller->id;
+		$actionName		= Yii::$app->controller->action->id;
+
+		$model			= isset( $view->params[ 'model' ] ) ? $view->params[ 'model' ] : null;
+		$breadcrumbs	= [];
+
+		if( isset( $model ) ) {
+
+			// Landing Page
+			if( $moduleName == 'core' && $controllerName == 'site' && $actionName == 'index' ) {
+
+				$breadcrumbs[ 'index' ] = [ [ 'label' => 'Home' ] ];
+			}
+			else {
+
+				$breadcrumbs[ 'base' ][]	= [ 'label' => 'Home', 'url' =>  Url::toRoute( [ '/' ], true ) ];
+				$breadcrumbs[ $actionName ] = [ [ 'label' => $model->displayName ] ];
+
+				if( !empty( $model->parent ) ) {
+
+					$breadcrumbs[ 'base' ][] = [ 'label' => $model->parent->displayName, 'url' =>  Url::toRoute( [ "/{$model->parent->slug}" ], true ) ];
+				}
+			}
+
+			Yii::$app->controller->breadcrumbs = $breadcrumbs;
 		}
 	}
 

@@ -46,6 +46,7 @@ abstract class PageController extends CrudController {
 	protected $type;
 	protected $templateType;
 	protected $comments;
+	protected $parentModel;
 
 	protected $templateService;
 	protected $modelContentService;
@@ -144,6 +145,11 @@ abstract class PageController extends CrudController {
 		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );
 		$video	= File::loadFile( null, 'Video' );
+
+		if( isset( $this->parentModel ) ) {
+
+			$model->parentId = $this->parentModel->id;
+		}
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {

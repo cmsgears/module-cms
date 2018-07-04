@@ -99,12 +99,16 @@ class PageSettingsForm extends DataModel {
 
 	// Attributes
 	public $attributes;
-	public $attributeTypes;
+	public $attributesWithContent;
+	public $attributesOrder;
+	public $attributeType;
 
 	public $metaWrapClass;
 
 	// Elements
 	public $elements;
+	public $elementsWithContent;
+	public $elementsOrder;
 	public $elementType;
 
 	public $boxWrapClass;
@@ -113,10 +117,14 @@ class PageSettingsForm extends DataModel {
 
 	// Widgets
 	public $widgets;
+	public $widgetsWithContent;
+	public $widgetsOrder;
 	public $widgetType;
 
 	// Blocks
 	public $blocks;
+	public $blocksWithContent;
+	public $blocksOrder;
 	public $blockType;
 
 	// Sidebars
@@ -163,11 +171,13 @@ class PageSettingsForm extends DataModel {
 			[ [ 'contentSocial', 'contentLabels' ], 'boolean' ],
 			[ [ 'footer', 'footerIcon', 'footerTitle', 'footerInfo', 'footerContent', 'footerElements' ], 'boolean' ],
 			[ [ 'sidebars', 'topSidebar', 'bottomSidebar', 'leftSidebar', 'rightSidebar' ], 'boolean' ],
+			[ [ 'attributesWithContent', 'elementsWithContent', 'widgetsWithContent', 'blocksWithContent' ], 'boolean' ],
 			[ [ 'elementType', 'headerElementType', 'footerElementType', 'widgetType', 'blockType', 'sidebarType', 'boxWrapper' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'backgroundClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass', 'attributeTypes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'backgroundClass', 'contentClass', 'contentDataClass', 'boxWrapClass', 'boxClass', 'attributeType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'metaWrapClass', 'footerIconClass', 'footerTitleData' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ [ 'topSidebarSlugs', 'bottomSidebarSlugs', 'leftSidebarSlug', 'rightSidebarSlug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'footerInfoData' , 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'attributesOrder', 'elementsOrder', 'widgetsOrder', 'blocksOrder' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'headerIconUrl', 'footerIconUrl' ], 'url' ]
 		];
 	}
