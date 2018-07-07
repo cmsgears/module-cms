@@ -53,6 +53,9 @@ class CmsGlobal {
 	const TEMPLATE_SIDEBAR_VERTICAL		= 'vsidebar';
 	const TEMPLATE_SIDEBAR_HORIZONTAL	= 'hsidebar';
 
+	const TEMPLATE_MENU_VERTICAL	= 'vmenu';
+	const TEMPLATE_MENU_HORIZONTAL	= 'hmenu';
+
 	// Config ----------------------------------------------------------
 
 	const CONFIG_BLOG	= 'blog';
