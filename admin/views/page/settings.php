@@ -229,7 +229,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							</div>
 							<div class="row">
 								<div class="col col4x2">
-									<?= $form->field( $settings, 'attributeTypes' ) ?>
+									<?= $form->field( $settings, 'attributeType' ) ?>
 								</div>
 								<div class="col col4x2">
 									<?= $form->field( $settings, 'metaWrapClass' ) ?>

@@ -249,6 +249,11 @@ class ContentUtil {
 
 	public static function findModel( $config ) {
 
+		if( empty( Yii::$app->request->queryParams[ 'slug' ] ) ) {
+
+			return null;
+		}
+
 		$service	= Yii::$app->factory->get( $config[ 'service' ] );
 		$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;
 		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $service->getParentType();
