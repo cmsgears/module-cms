@@ -112,7 +112,10 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
 		// Link gallery
-		$this->linkModel( $model, 'galleryId', $gallery );
+		if( isset( $gallery ) && $gallery->id > 0 ) {
+
+			$model->galleryId = $gallery->id;
+		}
 
 		return parent::create( $model, $config );
 	}
