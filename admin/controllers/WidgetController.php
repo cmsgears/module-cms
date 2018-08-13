@@ -63,7 +63,8 @@ class WidgetController extends ObjectController {
 			'update' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'tdata' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
+			'config' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'data' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
 		];
 	}
 

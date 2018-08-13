@@ -16,8 +16,6 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\models\forms\PageSettingsForm;
-
 use cmsgears\cms\admin\controllers\base\PageController;
 
 /**
@@ -59,8 +57,6 @@ class ArticleController extends PageController {
 		$this->apixBase		= 'cms/article';
 		$this->comments		= true;
 
-		$this->settingsClass = PageSettingsForm::class;
-
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'articleService' );
 
@@ -78,7 +74,7 @@ class ArticleController extends PageController {
 			'update' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'tdata' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
+			'data' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
 		];
 	}
 

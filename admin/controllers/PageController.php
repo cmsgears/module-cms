@@ -14,8 +14,6 @@ use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\cms\admin\models\forms\PageSettingsForm;
-
 use cmsgears\cms\admin\controllers\base\PageController as BasePageController;
 
 /**
@@ -44,8 +42,6 @@ class PageController extends BasePageController {
 		// Config
 		$this->apixBase = 'cms/page';
 
-		$this->settingsClass = PageSettingsForm::class;
-
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
@@ -60,7 +56,7 @@ class PageController extends BasePageController {
 			'update' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'settings' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'tdata' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
+			'data' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
 		];
 	}
 

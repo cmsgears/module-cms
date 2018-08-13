@@ -63,7 +63,7 @@ class MenuController extends ObjectController {
 			'update' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'settings' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'tdata' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
+			'data' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
 		];
 	}
 

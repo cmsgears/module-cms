@@ -47,6 +47,8 @@ class CmsGlobal {
 	const TEMPLATE_ARTICLE	= 'article';
 	const TEMPLATE_POST		= 'post';
 
+	const TEMPLATE_SOCIAL	= 'social';
+	const TEMPLATE_ADDRESS	= 'address';
 	const TEMPLATE_SEARCH	= 'search';
 	const TEMPLATE_ARCHIVE	= 'archive';
 

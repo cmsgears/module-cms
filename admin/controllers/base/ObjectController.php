@@ -36,8 +36,6 @@ abstract class ObjectController extends CrudController {
 
 	// Public -----------------
 
-	public $settingsClass;
-
 	// Protected --------------
 
 	protected $type;
@@ -79,6 +77,12 @@ abstract class ObjectController extends CrudController {
 
 		$behaviors = parent::behaviors();
 
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
 			'admin' => true,
@@ -90,14 +94,14 @@ abstract class ObjectController extends CrudController {
 		return $behaviors;
 	}
 
-
 	// yii\base\Controller ----
 
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\core\admin\actions\Settings' ],
-			'tdata' => [ 'class' => 'cmsgears\core\admin\actions\TemplateData' ]
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\data\Settings' ],
+			'config' => [ 'class' => 'cmsgears\core\common\actions\data\Config' ],
+			'data' => [ 'class' => 'cmsgears\core\common\actions\data\Data' ]
 		];
 	}
 

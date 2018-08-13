@@ -184,9 +184,9 @@ class m160621_065204_cms extends Migration {
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'summary' => $this->text(),
 			'seoName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'seoDescription' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'seoKeywords' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'seoRobot' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'seoDescription' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'seoKeywords' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'seoRobot' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText()

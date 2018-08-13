@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\models\forms\BlockSettingsForm;
-
 /**
  * BlockController provides actions specific to block model.
  *
@@ -49,8 +47,6 @@ class BlockController extends ObjectController {
 		$this->type			= CmsGlobal::TYPE_BLOCK;
 		$this->templateType = CmsGlobal::TYPE_BLOCK;
 		$this->title		= 'Block';
-
-		$this->settingsClass = BlockSettingsForm::class;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'blockService' );

@@ -39,8 +39,6 @@ abstract class PageController extends CrudController {
 
 	public $metaService;
 
-	public $settingsClass;
-
 	// Protected --------------
 
 	protected $type;
@@ -75,7 +73,7 @@ abstract class PageController extends CrudController {
 		$this->metaService		= Yii::$app->factory->get( 'pageMetaService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
-		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$this->modelContentService = Yii::$app->factory->get( 'modelContentService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -89,6 +87,12 @@ abstract class PageController extends CrudController {
 	public function behaviors() {
 
 		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
 
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
@@ -106,8 +110,8 @@ abstract class PageController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\core\admin\actions\Settings' ],
-			'tdata' => [ 'class' => 'cmsgears\cms\admin\actions\TemplateData' ]
+			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\Settings' ],
+			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\Data' ]
 		];
 	}
 

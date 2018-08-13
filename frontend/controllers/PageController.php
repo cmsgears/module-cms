@@ -160,7 +160,7 @@ class PageController extends Controller {
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
-	public function actionSingle( $slug ) {
+	public function actionSingle( $slug = 'home' ) {
 
 		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
 

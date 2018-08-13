@@ -20,7 +20,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\admin\models\forms\FormSettingsForm;
 
 use cmsgears\core\admin\controllers\base\CrudController;
 
@@ -38,8 +37,6 @@ class FormController extends CrudController {
 	// Globals ----------------
 
 	// Public -----------------
-
-	public $settingsClass;
 
 	// Protected --------------
 
@@ -68,8 +65,6 @@ class FormController extends CrudController {
 		$this->templateType	= CoreGlobal::TYPE_FORM;
 		$this->apixBase		= 'cms/form';
 
-		$this->settingsClass = FormSettingsForm::class;
-
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
@@ -90,7 +85,7 @@ class FormController extends CrudController {
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'tdata' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Template Data' ] ]
+			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
 		];
 	}
 
@@ -105,6 +100,12 @@ class FormController extends CrudController {
 	public function behaviors() {
 
 		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
 
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
@@ -122,8 +123,8 @@ class FormController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\core\admin\actions\Settings' ],
-			'tdata' => [ 'class' => 'cmsgears\cms\admin\actions\TemplateData' ]
+			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\Settings' ],
+			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\Data' ]
 		];
 	}
 
