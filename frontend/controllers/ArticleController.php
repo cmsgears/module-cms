@@ -178,7 +178,7 @@ class ArticleController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_ARTICLE, CmsGlobal::TYPE_ARTICLE );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_ARTICLE );
 			}
 
 			// Render Template

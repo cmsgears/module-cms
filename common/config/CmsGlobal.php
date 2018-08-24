@@ -44,8 +44,8 @@ class CmsGlobal {
 	// Templates -------------------------------------------------------
 
 	const TEMPLATE_PAGE		= 'page';
-	const TEMPLATE_ARTICLE	= 'article';
 	const TEMPLATE_POST		= 'post';
+	const TEMPLATE_ARTICLE	= 'article';
 
 	const TEMPLATE_SOCIAL	= 'social';
 	const TEMPLATE_CONTACT	= 'contact';

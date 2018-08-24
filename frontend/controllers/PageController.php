@@ -182,7 +182,7 @@ class PageController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_PAGE );
 			}
 
 			// Render Template
