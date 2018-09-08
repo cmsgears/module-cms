@@ -67,21 +67,34 @@ class PostController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'update-avatar' => [ 'permission' => $this->crudPermission ],
-					'update-banner' => [ 'permission' => $this->crudPermission ],
+					// Avatar
+					'avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Banner
+					'banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Categories
 					'assign-category' => [ 'permission' => $this->crudPermission ],
 					'remove-category' => [ 'permission' => $this->crudPermission ],
+					'toggle-category' => [ 'permission' => $this->crudPermission ],
+					// Tags
 					'assign-tags' => [ 'permission' => $this->crudPermission ],
 					'remove-tag' => [ 'permission' => $this->crudPermission ],
+					// Metas
 					'add-meta' => [ 'permission' => $this->crudPermission ],
 					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission ],
 					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
+					// Blocks
 					'assign-block' => [ 'permission' => $this->crudPermission ],
 					'remove-block' => [ 'permission' => $this->crudPermission ],
+					// Widgets
 					'assign-widget' => [ 'permission' => $this->crudPermission ],
 					'remove-widget' => [ 'permission' => $this->crudPermission ],
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -89,22 +102,36 @@ class PostController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'post' ],
-					'update-avatar' => [ 'post' ],
-					'update-banner' => [ 'post' ],
+					// Avatar
+					'avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					// Banner
+					'banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Categories
 					'assign-category' => [ 'post' ],
 					'remove-category' => [ 'post' ],
+					'toggle-category' => [ 'post' ],
+					// Tags
 					'assign-tags' => [ 'post' ],
 					'remove-tag' => [ 'post' ],
+					// Metas
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
+					'toggle-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
+					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
+					// Blocks
 					'assign-block' => [ 'post' ],
 					'remove-block' => [ 'post' ],
+					// Widgets
 					'assign-widget' => [ 'post' ],
 					'remove-widget' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -122,22 +149,36 @@ class PostController extends Controller {
 	public function actions() {
 
 		return [
+			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
-			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			// Avatar
+			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\ClearAvatar' ],
+			// Banner
+			'banner' => [ 'class' => 'cmsgears\cms\common\actions\content\Banner' ],
+			'clear-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\ClearBanner' ],
+			// Categories
 			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
 			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
+			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\Toggle' ],
+			// Tags
 			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
 			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
+			// Metas
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Blocks
 			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Widgets
 			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

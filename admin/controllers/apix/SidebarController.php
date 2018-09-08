@@ -62,8 +62,10 @@ class SidebarController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Widgets
 					'assign-widget' => [ 'permission' => $this->crudPermission ],
 					'remove-widget' => [ 'permission' => $this->crudPermission ],
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -71,8 +73,10 @@ class SidebarController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Widgets
 					'assign-widget' => [ 'post' ],
 					'remove-widget' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -85,8 +89,10 @@ class SidebarController extends Controller {
 	public function actions() {
 
 		return [
+			// Widgets
 			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

@@ -123,8 +123,8 @@ class FormController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\Settings' ],
-			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\Data' ]
+			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ],
+			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ]
 		];
 	}
 

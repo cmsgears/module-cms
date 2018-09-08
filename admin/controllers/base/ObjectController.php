@@ -99,9 +99,9 @@ abstract class ObjectController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\core\common\actions\data\Settings' ],
-			'config' => [ 'class' => 'cmsgears\core\common\actions\data\Config' ],
-			'data' => [ 'class' => 'cmsgears\core\common\actions\data\Data' ]
+			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ],
+			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
+			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ]
 		];
 	}
 

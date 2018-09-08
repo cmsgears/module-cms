@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\data;
+namespace cmsgears\cms\common\actions\data\setting;
 
 // Yii Imports
 use Yii;
@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Settings action save model settings using Settings Data Form to the data column.
+ * The Form action save model settings using Settings Data Form to the data column.
  */
-class Settings extends Action {
+class Form extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Settings extends Action {
 
 	// CMG parent classes --------------------
 
-	// Settings ------------------------------
+	// Form ----------------------------------
 
 	public function run( $id ) {
 

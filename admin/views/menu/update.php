@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\icons\widgets\IconChooser;
-use cmsgears\widgets\elements\mappers\LinkAuto;
+use cmsgears\widgets\elements\mappers\LinkSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Menu | ' . $coreProperties->getSiteTitle();
@@ -72,12 +72,11 @@ $apixBase		= $this->context->apixBase;
 					<div class="box-header-title">Links</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= LinkAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= LinkSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-link?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-link?slug=$model->slug&type=$model->type"
-					]) ?>
+					])?>
 				</div>
 			</div>
 		</div>

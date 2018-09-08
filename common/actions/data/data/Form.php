@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\data;
+namespace cmsgears\cms\common\actions\data\data;
 
 // Yii Imports
 use Yii;
@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Data action save model data using Data Form to the data column.
+ * The Form action save model data using Data Form to the data column.
  */
-class Data extends Action {
+class Form extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Data extends Action {
 
 	// CMG parent classes --------------------
 
-	// Data ----------------------------------
+	// Form ----------------------------------
 
 	public function run( $id ) {
 

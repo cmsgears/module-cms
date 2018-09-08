@@ -62,6 +62,7 @@ class LinkController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -69,7 +70,9 @@ class LinkController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -82,7 +85,9 @@ class LinkController extends Controller {
 	public function actions() {
 
 		return [
+			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

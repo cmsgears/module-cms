@@ -9,7 +9,7 @@ use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
-use cmsgears\widgets\elements\mappers\WidgetAuto;
+use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Sidebar | ' . $coreProperties->getSiteTitle();
@@ -124,8 +124,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Widgets</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= WidgetAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= WidgetSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"

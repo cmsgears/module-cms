@@ -4,8 +4,6 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
-
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
@@ -14,11 +12,11 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\icons\widgets\TextureChooser;
 
-use cmsgears\widgets\category\CategoryAuto;
+use cmsgears\widgets\category\CategorySuggest;
 use cmsgears\widgets\tag\TagMapper;
-use cmsgears\widgets\elements\mappers\ElementAuto;
-use cmsgears\widgets\elements\mappers\BlockAuto;
-use cmsgears\widgets\elements\mappers\WidgetAuto;
+use cmsgears\widgets\elements\mappers\ElementSuggest;
+use cmsgears\widgets\elements\mappers\BlockSuggest;
+use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Post | ' . $coreProperties->getSiteTitle();
@@ -179,11 +177,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Categories</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= CategoryAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
-						'type' => CmsGlobal::TYPE_POST,
+					<?= CategorySuggest::widget([
 						'model' => $model, 'disabled' => true
-					]) ?>
+					])?>
 				</div>
 			</div>
 			<div class="colf colf15"></div>
@@ -193,7 +189,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
-						'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
 						'model' => $model, 'disabled' => true
 					])?>
 				</div>
@@ -206,8 +201,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Elements</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= ElementAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= ElementSuggest::widget([
 						'model' => $model, 'disabled' => true
 					])?>
 				</div>
@@ -218,8 +212,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Blocks</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= BlockAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= BlockSuggest::widget([
 						'model' => $model, 'disabled' => true
 					])?>
 				</div>
@@ -232,8 +225,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Widgets</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= WidgetAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= WidgetSuggest::widget([
 						'model' => $model, 'disabled' => true
 					])?>
 				</div>

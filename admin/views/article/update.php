@@ -12,9 +12,9 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\icons\widgets\TextureChooser;
 
-use cmsgears\widgets\elements\mappers\ElementAuto;
-use cmsgears\widgets\elements\mappers\BlockAuto;
-use cmsgears\widgets\elements\mappers\WidgetAuto;
+use cmsgears\widgets\elements\mappers\ElementSuggest;
+use cmsgears\widgets\elements\mappers\BlockSuggest;
+use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Article | ' . $coreProperties->getSiteTitle();
@@ -174,8 +174,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Elements</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= ElementAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= ElementSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
@@ -188,8 +187,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Blocks</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= BlockAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= BlockSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-block?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-block?slug=$model->slug&type=$model->type"
@@ -204,8 +202,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Widgets</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= WidgetAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= WidgetSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"

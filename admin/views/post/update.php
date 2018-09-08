@@ -14,11 +14,11 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\icons\widgets\TextureChooser;
 
-use cmsgears\widgets\category\CategoryAuto;
+use cmsgears\widgets\category\CategorySuggest;
 use cmsgears\widgets\tag\TagMapper;
-use cmsgears\widgets\elements\mappers\ElementAuto;
-use cmsgears\widgets\elements\mappers\BlockAuto;
-use cmsgears\widgets\elements\mappers\WidgetAuto;
+use cmsgears\widgets\elements\mappers\ElementSuggest;
+use cmsgears\widgets\elements\mappers\BlockSuggest;
+use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
@@ -178,12 +178,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Categories</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= CategoryAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= CategorySuggest::widget([
 						'model' => $model, 'type' => CmsGlobal::TYPE_POST,
 						'mapActionUrl' => "$apixBase/assign-category?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-category?slug=$model->slug&type=$model->type"
-					]) ?>
+					])?>
 				</div>
 			</div>
 			<div class="colf colf15"></div>
@@ -193,7 +192,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
-						'options' => [ 'id' => 'box-tag-mapper', 'class' => 'box-tag-mapper' ],
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
@@ -208,8 +206,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Elements</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= ElementAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= ElementSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
@@ -222,8 +219,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Blocks</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= BlockAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= BlockSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-block?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-block?slug=$model->slug&type=$model->type"
@@ -238,8 +234,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Widgets</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= WidgetAuto::widget([
-						'options' => [ 'class' => 'box-mapper-auto' ],
+					<?= WidgetSuggest::widget([
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-widget?slug=$model->slug&type=$model->type"
