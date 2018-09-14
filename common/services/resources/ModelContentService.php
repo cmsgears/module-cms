@@ -154,7 +154,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 	public function delete( $model, $config = [] ) {
 
 		// Delete resources
-		$this->fileService->deleteFiles( [ $model->banner, $model->video ] );
+		$this->fileService->deleteMultiple( [ $model->banner, $model->video ] );
 
 		// Delete Gallery
 		if( isset( $model->gallery ) ) {
