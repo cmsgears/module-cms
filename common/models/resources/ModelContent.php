@@ -216,6 +216,16 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		return HtmlPurifier::process( $content );
 	}
 
+	public function getDisplaySummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+
+		if( empty( $this->summary ) ) {
+
+			return $this->getLimitedContent( $limit );
+		}
+
+		return $this->getLimitedSummary( $limit );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
