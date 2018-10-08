@@ -11,9 +11,9 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\icons\widgets\TextureChooser;
 
-use cmsgears\widgets\elements\mappers\ElementAuto;
-use cmsgears\widgets\elements\mappers\BlockAuto;
-use cmsgears\widgets\elements\mappers\WidgetAuto;
+use cmsgears\widgets\elements\mappers\ElementSuggest;
+use cmsgears\widgets\elements\mappers\BlockSuggest;
+use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
@@ -167,7 +167,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Elements</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= ElementAuto::widget([
+					<?= ElementSuggest::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-element?slug=$model->slug&type=$model->type",
@@ -181,7 +181,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Blocks</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= BlockAuto::widget([
+					<?= BlockSuggest::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-block?slug=$model->slug&type=$model->type",
@@ -197,7 +197,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="box-header-title">Widgets</div>
 				</div>
 				<div class="box-content padding padding-small">
-					<?= WidgetAuto::widget([
+					<?= WidgetSuggest::widget([
 						'options' => [ 'class' => 'box-mapper-auto' ],
 						'model' => $model,
 						'mapActionUrl' => "$apixBase/assign-widget?slug=$model->slug&type=$model->type",
