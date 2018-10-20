@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\content;
+namespace cmsgears\cms\common\actions\content\video;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\File;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * ClearBanner action clear the banner of model having banner.
+ * Assign action configures the video of models using model content trait.
  *
  * @since 1.0.0
  */
-class ClearBanner extends ModelAction {
+class Assign extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -39,6 +41,8 @@ class ClearBanner extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $fileName = 'Video';
 
 	// Protected --------------
 
@@ -58,7 +62,7 @@ class ClearBanner extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Avatar --------------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
@@ -66,12 +70,15 @@ class ClearBanner extends ModelAction {
 
 			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
-			$content = $this->model->modelContent;
+			$content	= $this->model->modelContent;
+			$video		= File::loadFile( $content->video, $this->fileName );
 
-			if( $modelContentService->clearBanner( $content ) ) {
+			if( $modelContentService->updateVideo( $content, $video ) ) {
+
+				$response = [ 'fileUrl' => $video->getFileUrl() ];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
 			// Trigger Ajax Failure

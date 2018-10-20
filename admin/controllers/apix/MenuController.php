@@ -67,6 +67,7 @@ class MenuController extends Controller {
 					'remove-link' => [ 'permission' => $this->crudPermission ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -78,6 +79,7 @@ class MenuController extends Controller {
 					'remove-link' => [ 'post' ],
 					// Model
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -94,6 +96,7 @@ class MenuController extends Controller {
 			'remove-link' => [ 'class' => 'cmsgears\cms\common\actions\link\Remove' ],
 			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

@@ -9,6 +9,7 @@ use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
+
 use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();

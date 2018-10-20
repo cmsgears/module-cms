@@ -66,31 +66,88 @@ class PostController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'update-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'update-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Avatar
+					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Banner
+					'assign-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'clear-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Video
+					'assign-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'clear-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Files
+					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Categories
 					'assign-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'remove-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'toggle-category' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Tags
 					'assign-tags' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'remove-tag' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Metas
 					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Elements
+					'assign-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Widgets
+					'assign-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Sidebars
+					'assign-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Blocks
+					'assign-block' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'remove-block' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'post' ],
-					'update-avatar' => [ 'post' ],
-					'update-banner' => [ 'post' ],
+					// Avatar
+					'assign-avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					// Banner
+					'assign-banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Video
+					'assign-video' => [ 'post' ],
+					'clear-video' => [ 'post' ],
+					// Files
+					'assign-file' => [ 'post' ],
+					'clear-file' => [ 'post' ],
+					// Categories
 					'assign-category' => [ 'post' ],
 					'remove-category' => [ 'post' ],
+					'toggle-category' => [ 'post' ],
+					// Tags
 					'assign-tags' => [ 'post' ],
 					'remove-tag' => [ 'post' ],
+					// Metas
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
+					'toggle-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
+					// Elements
+					'assign-element' => [ 'post' ],
+					'remove-element' => [ 'post' ],
+					// Widgets
+					'assign-widget' => [ 'post' ],
+					'remove-widget' => [ 'post' ],
+					// Sidebars
+					'assign-sidebar' => [ 'post' ],
+					'remove-sidebar' => [ 'post' ],
+					// Blocks
+					'assign-block' => [ 'post' ],
+					'remove-block' => [ 'post' ],
+					// Comments
 					'submit-comment' => [ 'post' ],
+					// Community
 					'like' => [ 'post' ]
 				]
 			]
@@ -102,17 +159,47 @@ class PostController extends Controller {
 	public function actions() {
 
 		return [
+			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			'update-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
-			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			// Avatar
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
+			// Banner
+			'assign-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Assign' ],
+			'clear-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Clear' ],
+			// Video
+			'assign-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Assign' ],
+			'clear-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Clear' ],
+			// Files
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			// Categories
 			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
 			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
+			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\Toggle' ],
+			// Tags
 			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
 			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
+			// Metas
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			// Elements
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Widgets
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Sidebars
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Blocks
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Comments
 			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ],
+			// Community
 			'like' => [ 'class' => 'cmsgears\core\common\actions\follower\Like' ]
 		];
 	}

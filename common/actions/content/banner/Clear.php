@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\content;
+namespace cmsgears\cms\common\actions\content\banner;
 
 // Yii Imports
 use Yii;
@@ -15,18 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Banner action configures the banner of models using model content trait.
+ * Clear action clear the banner of model having banner.
  *
  * @since 1.0.0
  */
-class Banner extends ModelAction {
+class Clear extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -41,8 +39,6 @@ class Banner extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $fileName = 'Banner';
 
 	// Protected --------------
 
@@ -62,7 +58,7 @@ class Banner extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Banner --------------------------------
+	// Clear ---------------------------------
 
 	public function run() {
 
@@ -70,15 +66,12 @@ class Banner extends ModelAction {
 
 			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
-			$content	= $this->model->modelContent;
-			$banner		= File::loadFile( $content->banner, $this->fileName );
+			$content = $this->model->modelContent;
 
-			if( $modelContentService->updateBanner( $content, $banner ) ) {
-
-				$response = [ 'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(), 'thumbUrl' => $banner->getThumbUrl() ];
+			if( $modelContentService->clearBanner( $content ) ) {
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 
 			// Trigger Ajax Failure

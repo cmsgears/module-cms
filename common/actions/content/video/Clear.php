@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\content;
+namespace cmsgears\cms\common\actions\content\video;
 
 // Yii Imports
 use Yii;
@@ -20,11 +20,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * ClearVideo action clear the video of model having video.
+ * Clear action clear the video of model having video.
  *
  * @since 1.0.0
  */
-class ClearVideo extends ModelAction {
+class Clear extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -58,7 +58,7 @@ class ClearVideo extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Avatar --------------------------------
+	// Clear ---------------------------------
 
 	public function run() {
 

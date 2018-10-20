@@ -64,6 +64,7 @@ class LinkController extends Controller {
 				'actions' => [
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -74,6 +75,7 @@ class LinkController extends Controller {
 					'auto-search' => [ 'post' ],
 					// Model
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -89,6 +91,7 @@ class LinkController extends Controller {
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

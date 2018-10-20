@@ -62,14 +62,9 @@ class WidgetController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// Elements
-					'assign-element' => [ 'permission' => $this->crudPermission ],
-					'remove-element' => [ 'permission' => $this->crudPermission ],
-					// Blocks
-					'assign-block' => [ 'permission' => $this->crudPermission ],
-					'remove-block' => [ 'permission' => $this->crudPermission ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -78,17 +73,26 @@ class WidgetController extends Controller {
 				'actions' => [
 					// Searching
 					'auto-search' => [ 'post' ],
-					// Elements
-					'assign-element' => [ 'post' ],
-					'remove-element' => [ 'post' ],
-					// Blocks
-					'assign-block' => [ 'post' ],
-					'remove-block' => [ 'post' ],
 					// Model
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
+		];
+	}
+
+	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			// Searching
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			// Model
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
 
@@ -97,22 +101,5 @@ class WidgetController extends Controller {
 	// CMG parent classes --------------------
 
 	// WidgetController ----------------------
-
-	public function actions() {
-
-		return [
-			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			// Elements
-			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
-			// Blocks
-			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
-			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
-			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
-		];
-	}
 
 }

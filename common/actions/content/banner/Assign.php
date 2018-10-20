@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\common\actions\content;
+namespace cmsgears\cms\common\actions\content\banner;
 
 // Yii Imports
 use Yii;
@@ -22,11 +22,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Video action configures the video of models using model content trait.
+ * Assign action configures the banner of models using model content trait.
  *
  * @since 1.0.0
  */
-class Video extends ModelAction {
+class Assign extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -42,7 +42,7 @@ class Video extends ModelAction {
 
 	// Public -----------------
 
-	public $fileName = 'Video';
+	public $fileName = 'Banner';
 
 	// Protected --------------
 
@@ -62,7 +62,7 @@ class Video extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Video ---------------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
@@ -71,11 +71,11 @@ class Video extends ModelAction {
 			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
 			$content	= $this->model->modelContent;
-			$video		= File::loadFile( $content->video, $this->fileName );
+			$banner		= File::loadFile( $content->banner, $this->fileName );
 
-			if( $modelContentService->updateVideo( $content, $video ) ) {
+			if( $modelContentService->updateBanner( $content, $banner ) ) {
 
-				$response = [ 'fileUrl' => $video->getFileUrl() ];
+				$response = [ 'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(), 'thumbUrl' => $banner->getThumbUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

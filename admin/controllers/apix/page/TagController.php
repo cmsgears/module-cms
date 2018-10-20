@@ -59,29 +59,52 @@ class TagController extends BaseTagController {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'update-banner' => [ 'permission' => $this->crudPermission ],
+					// Banner
+					'assign-banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
-					'assign-block' => [ 'permission' => $this->crudPermission ],
-					'remove-block' => [ 'permission' => $this->crudPermission ],
+					// Widgets
 					'assign-widget' => [ 'permission' => $this->crudPermission ],
 					'remove-widget' => [ 'permission' => $this->crudPermission ],
+					// Sidebars
+					'assign-sidebar' => [ 'permission' => $this->crudPermission ],
+					'remove-sidebar' => [ 'permission' => $this->crudPermission ],
+					// Blocks
+					'assign-block' => [ 'permission' => $this->crudPermission ],
+					'remove-block' => [ 'permission' => $this->crudPermission ],
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'auto-search' => [ 'post' ],
-					'update-banner' => [ 'post' ],
+					// Banner
+					'assign-banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
-					'assign-block' => [ 'post' ],
-					'remove-block' => [ 'post' ],
+					// Widgets
 					'assign-widget' => [ 'post' ],
 					'remove-widget' => [ 'post' ],
+					// Sidebars
+					'assign-sidebar' => [ 'post' ],
+					'remove-sidebar' => [ 'post' ],
+					// Blocks
+					'assign-block' => [ 'post' ],
+					'remove-block' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
+					'create' => [ 'post' ],
+					'update' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			],
@@ -98,15 +121,26 @@ class TagController extends BaseTagController {
 	public function actions() {
 
 		return [
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			'update-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\UpdateContentBanner' ],
+			// Banner
+			'assign-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Assign' ],
+			'clear-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Clear' ],
+			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
-			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Widgets
 			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Sidebars
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Blocks
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
+			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
