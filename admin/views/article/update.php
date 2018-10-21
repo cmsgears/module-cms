@@ -210,7 +210,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
+		<div class="frm-filler-height filler-height-medium"></div>
 	</div>
 	<div class="box-crud-wrap-sidebar colf colf3">
 
