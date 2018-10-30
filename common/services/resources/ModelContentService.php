@@ -19,6 +19,7 @@ use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\core\common\services\base\ModelResourceService;
 
 use cmsgears\core\common\services\traits\resources\VisualTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -54,6 +55,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 	// Traits ------------------------------------------------------
 
 	use VisualTrait;
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
