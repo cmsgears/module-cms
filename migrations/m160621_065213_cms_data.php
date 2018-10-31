@@ -254,6 +254,8 @@ class m160621_065213_cms_data extends Migration {
 			[ $this->site->id, $this->master->id, $this->master->id, 'Testimonial', 'testimonial', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'Help', 'help', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'FAQ', 'faq', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			// Blog Page
+			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', 'blog', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			// Hidden Search Pages
 			[ $this->site->id, $this->master->id, $this->master->id, 'Search Pages', 'search-pages', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'Search Articles', 'search-articles', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
@@ -285,6 +287,8 @@ class m160621_065213_cms_data extends Migration {
 			[ Page::findBySlugType( 'testimonial', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'help', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'faq', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			// Blog Page
+			[ Page::findBySlugType( 'blog', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			// Hidden Search Pages
 			[ Page::findBySlugType( 'search-pages', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'search-articles', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
