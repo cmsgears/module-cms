@@ -88,11 +88,15 @@ abstract class PageController extends CrudController {
 
 		$behaviors = parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
-		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
@@ -110,8 +114,10 @@ abstract class PageController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ],
-			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ]
+			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ],
+			'attributes' => [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ],
+			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
+			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ]
 		];
 	}
 
