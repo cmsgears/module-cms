@@ -56,9 +56,9 @@ class PageController extends Controller {
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		$this->modelService = Yii::$app->factory->get( 'pageService' );
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -166,7 +166,14 @@ class PageController extends Controller {
 
 		if( isset( $model ) ) {
 
-			if( !$model->isPublished() ) {
+			// No user & Protected
+			if( empty( $user ) && $model->isVisibilityProtected() ) {
+
+				// Error- Not allowed
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+			// Published
+			else if( !$model->isPublished() ) {
 
 				// Error- No access
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );

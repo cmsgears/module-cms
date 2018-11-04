@@ -59,9 +59,9 @@ class PostController extends Controller {
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'postService' );
+		$this->modelService = Yii::$app->factory->get( 'postService' );
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 		$this->tagService		= Yii::$app->factory->get( 'tagService' );
@@ -237,10 +237,17 @@ class PostController extends Controller {
 
 		if( isset( $model ) ) {
 
-			if( !$model->isPublished() ) {
+			// No user & Protected
+			if( empty( $user ) && $model->isVisibilityProtected() ) {
 
 				// Error- Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+			// Published
+			else if( !$model->isPublished() ) {
+
+				// Error- No access
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
 			// View Params

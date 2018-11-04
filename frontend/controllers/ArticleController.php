@@ -56,9 +56,9 @@ class ArticleController extends Controller {
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'articleService' );
+		$this->modelService = Yii::$app->factory->get( 'articleService' );
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -158,14 +158,22 @@ class ArticleController extends Controller {
 
 	public function actionSingle( $slug ) {
 
-		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
+		$user	= Yii::$app->core->getUser();
+		$model	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $model ) ) {
 
-			if( !$model->isPublished() ) {
+			// No user & Protected
+			if( empty( $user ) && $model->isVisibilityProtected() ) {
 
 				// Error- Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+			// Published
+			else if( !$model->isPublished() ) {
+
+				// Error- No access
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
 			// View Params
