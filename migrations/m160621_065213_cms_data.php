@@ -159,24 +159,24 @@ class m160621_065213_cms_data extends Migration {
 		$hierarchy = [
 			// Post Manager - Organization, Approver
 			[ null, null, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
-			[ $postManagerPerm->id, $vPostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
-			[ $postManagerPerm->id, $aPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],
-			[ $postManagerPerm->id, $uPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 15 ],
-			[ $postManagerPerm->id, $dPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 14 ],
-			[ $postManagerPerm->id, $apPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 13 ],
-			[ $postManagerPerm->id, $pPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 12 ],
-			[ $postManagerPerm->id, $iPostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 11 ],
-			[ $postManagerPerm->id, $ePostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 9, 10 ],
+			[ $postManagerPerm->id, $vPostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $postManagerPerm->id, $aPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $postManagerPerm->id, $uPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $postManagerPerm->id, $dPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $postManagerPerm->id, $apPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $postManagerPerm->id, $pPostPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $postManagerPerm->id, $iPostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ],
+			[ $postManagerPerm->id, $ePostsPerm->id, $postManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 16, 17 ],
 
 			// Post Author- Individual
 			[ null, null, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 16 ],
-			[ $postAuthorPerm->id, $vPostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 15 ],
-			[ $postAuthorPerm->id, $aPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 14 ],
-			[ $postAuthorPerm->id, $uPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 13 ],
-			[ $postAuthorPerm->id, $dPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 12 ],
-			[ $postAuthorPerm->id, $pPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 11 ],
-			[ $postAuthorPerm->id, $iPostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 10 ],
-			[ $postAuthorPerm->id, $ePostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ]
+			[ $postAuthorPerm->id, $vPostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $postAuthorPerm->id, $aPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $postAuthorPerm->id, $uPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $postAuthorPerm->id, $dPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $postAuthorPerm->id, $pPostPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $postAuthorPerm->id, $iPostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $postAuthorPerm->id, $ePostsPerm->id, $postAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
