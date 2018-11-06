@@ -12,14 +12,12 @@ namespace cmsgears\cms\admin\controllers\apix\page;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\TemplateController as BaseTemplateController;
-
 /**
  * TemplateController provides actions specific to post templates.
  *
  * @since 1.0.0
  */
-class TemplateController extends BaseTemplateController {
+class TemplateController extends \cmsgears\core\admin\controllers\apix\TemplateController {
 
 	// Variables ---------------------------------------------------
 

@@ -12,14 +12,12 @@ namespace cmsgears\cms\admin\controllers\apix\page;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\CommentController as BaseCommentController;
-
 /**
  * CommentController provides actions specific to post comments.
  *
  * @since 1.0.0
  */
-class CommentController extends BaseCommentController {
+class CommentController extends \cmsgears\core\admin\controllers\apix\CommentController {
 
 	// Variables ---------------------------------------------------
 

@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\AttributeController as BaseAttributeController;
-
 /**
  * AttributeController provides actions specific to product attributes.
  *
  * @since 1.0.0
  */
-class AttributeController extends BaseAttributeController {
+class AttributeController extends \cmsgears\core\admin\controllers\apix\AttributeController {
 
 	// Variables ---------------------------------------------------
 

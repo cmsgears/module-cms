@@ -16,14 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\apix\TagController as BaseTagController;
+use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
  * TagController provides actions specific to post tags.
  *
  * @since 1.0.0
  */
-class TagController extends BaseTagController {
+class TagController extends \cmsgears\core\admin\controllers\apix\TagController {
 
 	// Variables ---------------------------------------------------
 

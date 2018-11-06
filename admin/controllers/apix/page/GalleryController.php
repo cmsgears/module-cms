@@ -12,14 +12,12 @@ namespace cmsgears\cms\admin\controllers\apix\page;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\GalleryController as BaseGalleryController;
-
 /**
  * GalleryController provides actions specific to post galleries.
  *
  * @since 1.0.0
  */
-class GalleryController extends BaseGalleryController {
+class GalleryController extends \cmsgears\core\admin\controllers\apix\GalleryController {
 
 	// Variables ---------------------------------------------------
 

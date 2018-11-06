@@ -14,16 +14,17 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\apix\CategoryController as BaseCategoryController;
+use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
  * CategoryController provides actions specific to post categories.
  *
  * @since 1.0.0
  */
-class CategoryController extends BaseCategoryController {
+class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryController {
 
 	// Variables ---------------------------------------------------
 
