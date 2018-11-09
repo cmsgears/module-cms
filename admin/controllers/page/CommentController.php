@@ -63,17 +63,20 @@ class CommentController extends BaseCommentController {
 		$this->returnUrl = Url::previous( $this->urlKey );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/comment/all' ], true );
 
-		// Page Url
-		$pageUrl = Url::previous( 'pages' );
-		$pageUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'pages' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/cms/page/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs = [
-			'base' => [ [ 'label' => 'Pages', 'url' =>  $pageUrl ] ],
-			'all' => [ [ 'label' => 'Comments' ] ],
-			'create' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Pages', 'url' =>  $allUrl ]
+			],
+			'all' => [ [ 'label' => 'Page Comments' ] ],
+			'create' => [ [ 'label' => 'Page Comments', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Page Comments', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Page Comments', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

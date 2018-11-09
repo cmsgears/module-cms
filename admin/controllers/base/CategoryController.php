@@ -20,14 +20,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\cms\common\models\resources\ModelContent;
 
-use cmsgears\core\admin\controllers\base\CategoryController as BaseCategoryController;
-
 /**
  * CategoryController is base controller for actions specific to category model.
  *
  * @since 1.0.0
  */
-abstract class CategoryController extends BaseCategoryController {
+abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
 	// Variables ---------------------------------------------------
 
@@ -72,7 +70,27 @@ abstract class CategoryController extends BaseCategoryController {
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
+
+		return $behaviors;
+	}
+
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		$actions = parent::actions();
+
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
+
+		return $actions;
+	}
 
 	// CMG interfaces ------------------------
 

@@ -20,8 +20,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
@@ -29,7 +27,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-abstract class PageController extends CrudController {
+abstract class PageController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -88,11 +86,13 @@ abstract class PageController extends CrudController {
 
 		$behaviors = parent::behaviors();
 
+		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
+		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
@@ -114,6 +114,7 @@ abstract class PageController extends CrudController {
 	public function actions() {
 
 		return [
+			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ],
 			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ],
 			'attributes' => [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ],
 			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],

@@ -74,6 +74,12 @@ class ElementController extends Controller {
 					// Files
 					'assign-file' => [ 'permission' => $this->crudPermission ],
 					'clear-file' => [ 'permission' => $this->crudPermission ],
+					// Gallery
+					'update-gallery' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					// Metas
 					'add-meta' => [ 'permission' => $this->crudPermission ],
 					'update-meta' => [ 'permission' => $this->crudPermission ],
@@ -102,6 +108,12 @@ class ElementController extends Controller {
 					// Files
 					'assign-file' => [ 'post' ],
 					'clear-file' => [ 'post' ],
+					// Gallery
+					'update-gallery' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
 					// Metas
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
@@ -135,6 +147,12 @@ class ElementController extends Controller {
 			// Files
 			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
 			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			// Gallery
+			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update' ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read' ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create' ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],

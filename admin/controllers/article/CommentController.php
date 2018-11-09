@@ -63,13 +63,16 @@ class CommentController extends BaseCommentController {
 		$this->returnUrl = Url::previous( $this->urlKey );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/article/comment/all' ], true );
 
-		// Article Url
-		$articleUrl = Url::previous( 'articles' );
-		$articleUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/article/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'articles' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/cms/article/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs = [
-			'base' => [ [ 'label' => 'Articles', 'url' =>  $articleUrl ] ],
+		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Articles', 'url' =>  $allUrl ]
+			],
 			'all' => [ [ 'label' => 'Comments' ] ],
 			'create' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

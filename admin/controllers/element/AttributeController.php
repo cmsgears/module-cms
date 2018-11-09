@@ -59,13 +59,16 @@ class AttributeController extends BaseAttributeController {
 		$this->returnUrl = Url::previous( 'attributes' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/attribute/all' ], true );
 
-		// Page Url
-		$pageUrl = Url::previous( 'elements' );
-		$pageUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'elements' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/cms/element/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Elements', 'url' =>  $pageUrl ] ],
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Elements', 'url' =>  $allUrl ]
+			],
 			'all' => [ [ 'label' => 'Attributes' ] ],
 			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
 			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

@@ -70,6 +70,12 @@ class FormController extends Controller {
 					// Video
 					'assign-video' => [ 'permission' => $this->crudPermission ],
 					'clear-video' => [ 'permission' => $this->crudPermission ],
+					// Gallery
+					'update-gallery' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
@@ -99,6 +105,12 @@ class FormController extends Controller {
 					// Video
 					'assign-video' => [ 'post' ],
 					'clear-video' => [ 'post' ],
+					// Gallery
+					'update-gallery' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
 					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
@@ -138,6 +150,12 @@ class FormController extends Controller {
 			// Video
 			'assign-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Clear' ],
+			// Gallery
+			'update-gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Update' ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Read' ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Create' ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],

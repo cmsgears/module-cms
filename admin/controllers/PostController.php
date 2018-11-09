@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\PageController;
-
 /**
  * PostController provides actions specific to post model.
  *
  * @since 1.0.0
  */
-class PostController extends PageController {
+class PostController extends \cmsgears\cms\admin\controllers\base\PageController {
 
 	// Variables ---------------------------------------------------
 
@@ -31,14 +29,7 @@ class PostController extends PageController {
 
 	// Public -----------------
 
-	public $metaService;
-
 	// Protected --------------
-
-	protected $templateService;
-
-	protected $modelContentService;
-	protected $modelCategoryService;
 
 	// Private ----------------
 
@@ -69,12 +60,17 @@ class PostController extends PageController {
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Posts' ] ],
 			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'gallery' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

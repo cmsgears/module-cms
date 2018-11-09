@@ -59,8 +59,9 @@ abstract class ObjectController extends CrudController {
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'objectService' );
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->modelService = Yii::$app->factory->get( 'objectService' );
+
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
 	}
@@ -77,11 +78,17 @@ abstract class ObjectController extends CrudController {
 
 		$behaviors = parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
-		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
@@ -99,9 +106,11 @@ abstract class ObjectController extends CrudController {
 	public function actions() {
 
 		return [
-			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ],
-			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
-			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ]
+			'gallery' => [ 'class' => 'cmsgears\core\common\actions\regular\gallery\Browse' ],
+			'data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Form' ],
+			'attributes' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Form' ],
+			'config' => [ 'class' => 'cmsgears\core\common\actions\data\config\Form' ],
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Form' ]
 		];
 	}
 

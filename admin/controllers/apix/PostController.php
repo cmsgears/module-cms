@@ -79,6 +79,12 @@ class PostController extends Controller {
 					// Files
 					'assign-file' => [ 'permission' => $this->crudPermission ],
 					'clear-file' => [ 'permission' => $this->crudPermission ],
+					// Gallery
+					'update-gallery' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					// Categories
 					'assign-category' => [ 'permission' => $this->crudPermission ],
 					'remove-category' => [ 'permission' => $this->crudPermission ],
@@ -126,6 +132,12 @@ class PostController extends Controller {
 					// Files
 					'assign-file' => [ 'post' ],
 					'clear-file' => [ 'post' ],
+					// Gallery
+					'update-gallery' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
 					// Categories
 					'assign-category' => [ 'post' ],
 					'remove-category' => [ 'post' ],
@@ -183,6 +195,12 @@ class PostController extends Controller {
 			// Files
 			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
 			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			// Gallery
+			'update-gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Update' ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Read' ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Create' ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Categories
 			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
 			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],

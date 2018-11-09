@@ -13,15 +13,12 @@ namespace cmsgears\cms\admin\controllers;
 use Yii;
 use yii\helpers\Url;
 
-// CMG Imports
-use cmsgears\cms\admin\controllers\base\PageController as BasePageController;
-
 /**
  * PageController provides actions specific to page model.
  *
  * @since 1.0.0
  */
-class PageController extends BasePageController {
+class PageController extends \cmsgears\cms\admin\controllers\base\PageController {
 
 	// Variables ---------------------------------------------------
 
@@ -51,12 +48,17 @@ class PageController extends BasePageController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Pages' ] ],
 			'create' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'gallery' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

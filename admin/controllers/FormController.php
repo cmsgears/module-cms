@@ -80,12 +80,17 @@ class FormController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Forms' ] ],
 			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'gallery' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -101,11 +106,15 @@ class FormController extends CrudController {
 
 		$behaviors = parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
-		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		$behaviors[ 'activity' ] = [
 			'class' => ActivityBehavior::class,
@@ -120,12 +129,18 @@ class FormController extends CrudController {
 
 	// yii\base\Controller ----
 
+	// yii\base\Controller ----
+
 	public function actions() {
 
-		return [
-			'settings' => [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ],
-			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ]
-		];
+		$actions = parent::actions();
+
+		$actions[ 'gallery' ]	= [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
+		$actions[ 'data' ]		= [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
+		$actions[ 'config' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
+		$actions[ 'settings' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
+
+		return $actions;
 	}
 
 	// CMG interfaces ------------------------

@@ -59,6 +59,9 @@ class LinkController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Links' ] ],
 			'create' => [ [ 'label' => 'Links', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Links', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

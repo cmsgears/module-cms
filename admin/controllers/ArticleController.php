@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\PageController;
-
 /**
  * ArticleController provides actions specific to articles.
  *
  * @since 1.0.0
  */
-class ArticleController extends PageController {
+class ArticleController extends \cmsgears\cms\admin\controllers\base\PageController {
 
 	// Variables ---------------------------------------------------
 
@@ -31,14 +29,7 @@ class ArticleController extends PageController {
 
 	// Public -----------------
 
-	public $metaService;
-
 	// Protected --------------
-
-	protected $templateService;
-
-	protected $modelContentService;
-	protected $modelCategoryService;
 
 	// Private ----------------
 
@@ -69,12 +60,17 @@ class ArticleController extends PageController {
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Articles' ] ],
 			'create' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'gallery' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

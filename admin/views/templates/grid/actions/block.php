@@ -5,6 +5,7 @@ $template = $model->template;
 ?>
 
 <span title="Attributes"><?= Html::a( "", [ "block/attribute/all?pid=$model->id" ], [ 'class' => 'cmti cmti-tag' ] ) ?></span>
+<span title="Gallery"><?= Html::a( "", [ "block/gallery?id=$model->id" ], [ 'class' => 'cmti cmti-image' ] ) ?></span>
 <span title="Update"><?= Html::a( "", [ "update?id=$model->id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 
 <?php if( isset( $template ) ) { ?>
@@ -19,4 +20,4 @@ $template = $model->template;
 	<?php } ?>
 <?php } ?>
 
-<span class="action action-pop action-delete cmti cmti-close-c" title="Delete" target="<?= $model->id ?>" popup="popup-grid-delete"></span>
+<span class="action action-pop action-delete cmti cmti-bin" title="Delete" target="<?= $model->id ?>" popup="popup-grid-delete"></span>
