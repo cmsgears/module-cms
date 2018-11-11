@@ -65,7 +65,10 @@ class CategoryController extends BaseCategoryController {
 			'create' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'gallery' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ]
+			'gallery' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

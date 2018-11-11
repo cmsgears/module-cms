@@ -65,7 +65,10 @@ class TagController extends BaseTagController {
 			'create' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'gallery' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ]
+			'gallery' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
