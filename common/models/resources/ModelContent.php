@@ -218,7 +218,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 
 	public function getDisplaySummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
 
-		if( empty( $this->summary ) ) {
+		if( empty( $this->summary ) || strlen( $this->summary ) < 10 ) {
 
 			return $this->getLimitedContent( $limit );
 		}
