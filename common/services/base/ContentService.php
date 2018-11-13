@@ -83,6 +83,8 @@ abstract class ContentService extends EntityService implements IContentService {
 
 	public function getPage( $config = [] ) {
 
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -184,9 +186,7 @@ abstract class ContentService extends EntityService implements IContentService {
 					'label' => 'Published At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
