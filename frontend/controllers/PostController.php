@@ -92,6 +92,7 @@ class PostController extends Controller {
 					'search' => [ 'get' ],
 					'category' => [ 'get' ],
 					'tag' => [ 'get' ],
+					'author' => [ 'get' ],
 					'single' => [ 'get' ]
 				]
 			]
@@ -122,10 +123,11 @@ class PostController extends Controller {
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
-		$user			= Yii::$app->user->getIdentity();
-		$dataProvider 	= null;
+		$user = Yii::$app->core->getUser();
+
+		$dataProvider = null;
 
 		if( isset( $status ) ) {
 
@@ -220,6 +222,32 @@ class PostController extends Controller {
 
 				return Yii::$app->templateManager->renderViewTag( $template, [
 					'tag' => $tag
+				]);
+			}
+
+			// Error - Template not defined
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+		}
+
+		// Error- Post not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionAuthor( $username ) {
+
+		$author = Yii::$app->factory->get( 'userService' )->getByUsername( $username );
+
+		if( isset( $author ) ) {
+
+			// View Params
+			$this->view->params[ 'model' ] = $author;
+
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_POST );
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'author' => $author
 				]);
 			}
 
