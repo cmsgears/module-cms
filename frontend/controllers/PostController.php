@@ -233,9 +233,9 @@ class PostController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionAuthor( $username ) {
+	public function actionAuthor( $slug ) {
 
-		$author = Yii::$app->factory->get( 'userService' )->getByUsername( $username );
+		$author = Yii::$app->factory->get( 'userService' )->getByUsername( $slug );
 
 		if( isset( $author ) ) {
 
