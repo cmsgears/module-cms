@@ -20,8 +20,6 @@ use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\cms\common\services\interfaces\base\IContentService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
@@ -34,7 +32,7 @@ use cmsgears\core\common\services\traits\cache\GridCacheTrait;
  *
  * @since 1.0.0
  */
-abstract class ContentService extends EntityService implements IContentService {
+abstract class ContentService extends \cmsgears\core\common\services\base\EntityService implements IContentService {
 
 	// Variables ---------------------------------------------------
 

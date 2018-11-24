@@ -324,7 +324,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		}
 
 		// Status & Visibility(Protected OR Public)
-		return $this->isPublic() && $this->isVisibilityProtected( false );
+		return $this->isPublic() && ( $this->isVisibilityProtected() || $this->isVisibilityPublic() );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -257,47 +257,53 @@ class PostService extends ContentService implements IPostService {
 
 	public function delete( $model, $config = [] ) {
 
-		$transaction = Yii::$app->db->beginTransaction();
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		try {
+		if( $config[ 'hard' ] ) {
 
-			// Delete metas
-			$this->metaService->deleteByModelId( $model->id );
+			$transaction = Yii::$app->db->beginTransaction();
 
-			// Delete files
-			$this->fileService->deleteFiles( $model->files );
+			try {
 
-			// Delete Model Content
-			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+				// Delete metas
+				$this->metaService->deleteByModelId( $model->id );
 
-			// Delete Category Mappings
-			Yii::$app->factory->get( 'modelCategoryService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete files
+				$this->fileService->deleteFiles( $model->files );
 
-			// Delete Tag Mappings
-			Yii::$app->factory->get( 'modelTagService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-			// Delete Option Mappings
-			Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete Category Mappings
+				Yii::$app->factory->get( 'modelCategoryService' )->deleteByParent( $model->id, static::$parentType );
 
-			// Delete Comments
-			Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete Tag Mappings
+				Yii::$app->factory->get( 'modelTagService' )->deleteByParent( $model->id, static::$parentType );
 
-			// Delete Followers
-			Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
 
-			$transaction->commit();
+				// Delete Comments
+				Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
 
-			// Delete model
-			return parent::delete( $model, $config );
+				// Delete Followers
+				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
 		}
-		catch( Exception $e ) {
 
-			$transaction->rollBack();
-
-			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-		}
-
-		return false;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
 	// Bulk ---------------

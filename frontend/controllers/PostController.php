@@ -265,8 +265,10 @@ class PostController extends Controller {
 
 		if( isset( $model ) ) {
 
-			// No user & Protected
-			if( empty( $user ) && $model->isVisibilityProtected() ) {
+			$user = Yii::$app->core->getUser();
+
+			// No user & Protected/Private
+			if( empty( $user ) && $model->isVisibilityProtected( false ) ) {
 
 				// Error- Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
