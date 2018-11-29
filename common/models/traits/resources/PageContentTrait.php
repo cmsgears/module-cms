@@ -43,6 +43,23 @@ trait PageContentTrait {
 		return $template->viewPath;
 	}
 
+	/**
+	 * Check whether content is published.
+	 *
+	 * @return boolean
+	 */
+	public function isPublished() {
+
+		$user = Yii::$app->user->getIdentity();
+
+		if( isset( $user ) && $this->createdBy == $user->id ) {
+
+			return true;
+		}
+
+		// Status & Visibility(Protected OR Public)
+		return $this->isPublic() && ( $this->isVisibilityProtected() || $this->isVisibilityPublic() );
+	}
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

@@ -309,24 +309,6 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		return $this->hasOne( $pageClass, [ 'id' => 'parentId' ] );
 	}
 
-	/**
-	 * Check whether content is published.
-	 *
-	 * @return boolean
-	 */
-	public function isPublished() {
-
-		$user = Yii::$app->user->getIdentity();
-
-		if( isset( $user ) && $this->createdBy == $user->id ) {
-
-			return true;
-		}
-
-		// Status & Visibility(Protected OR Public)
-		return $this->isPublic() && ( $this->isVisibilityProtected() || $this->isVisibilityPublic() );
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
