@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\cms\common\models\traits\resources;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\ModelContent;
@@ -29,10 +32,11 @@ trait PageContentTrait {
 	 */
 	public function getModelContent() {
 
-		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
+		$modelContentTable = CmsTables::TABLE_MODEL_CONTENT;
 
-		return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )->from( "$modelContentTable as modelContent" )
-					->where( "modelContent.parentType='$this->modelType'" );
+		return $this->hasOne( ModelContent::className(), [ 'parentId' => 'id' ] )
+			->from( "$modelContentTable as modelContent" )
+			->where( "modelContent.parentType='$this->modelType'" );
 	}
 
 	public function getTemplateViewPath() {
@@ -50,7 +54,7 @@ trait PageContentTrait {
 	 */
 	public function isPublished() {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) && $this->createdBy == $user->id ) {
 
@@ -60,6 +64,7 @@ trait PageContentTrait {
 		// Status & Visibility(Protected OR Public)
 		return $this->isPublic() && ( $this->isVisibilityProtected() || $this->isVisibilityPublic() );
 	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------
