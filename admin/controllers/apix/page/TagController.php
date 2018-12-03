@@ -14,7 +14,7 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
@@ -42,7 +42,7 @@ class TagController extends \cmsgears\core\admin\controllers\apix\TagController 
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------

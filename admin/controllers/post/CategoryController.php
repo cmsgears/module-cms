@@ -53,7 +53,7 @@ class CategoryController extends BaseCategoryController {
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'categories' );
+		$this->returnUrl = Url::previous( 'post-categories' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/all' ], true );
 
 		// Breadcrumbs
@@ -90,7 +90,7 @@ class CategoryController extends BaseCategoryController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'categories' );
+		Url::remember( Yii::$app->request->getUrl(), 'post-categories' );
 
 		return parent::actionAll( $config );
 	}

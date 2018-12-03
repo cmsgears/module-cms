@@ -53,7 +53,7 @@ class TagController extends BaseTagController {
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'tags' );
+		$this->returnUrl = Url::previous( 'post-tags' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/all' ], true );
 
 		// Breadcrumbs
@@ -90,7 +90,7 @@ class TagController extends BaseTagController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'tags' );
+		Url::remember( Yii::$app->request->getUrl(), 'post-tags' );
 
 		return parent::actionAll( $config );
 	}

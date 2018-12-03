@@ -52,7 +52,7 @@ class TemplateController extends BaseTemplateController {
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page-template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'page-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/template/all' ], true );
 
 		// Breadcrumbs
@@ -85,7 +85,7 @@ class TemplateController extends BaseTemplateController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'page-templates' );
 
 		return parent::actionAll( $config );
 	}

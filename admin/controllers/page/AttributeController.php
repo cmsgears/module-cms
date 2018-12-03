@@ -56,7 +56,7 @@ class AttributeController extends BaseAttributeController {
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'attributes' );
+		$this->returnUrl = Url::previous( 'page-attributes' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/attribute/all' ], true );
 
 		// All Url
@@ -94,7 +94,7 @@ class AttributeController extends BaseAttributeController {
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'attributes' );
+		Url::remember( Yii::$app->request->getUrl(), 'page-attributes' );
 
 		return parent::actionAll( $pid );
 	}
