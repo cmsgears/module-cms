@@ -235,7 +235,7 @@ class PostController extends Controller {
 
 	public function actionAuthor( $slug ) {
 
-		$author = Yii::$app->factory->get( 'userService' )->getByUsername( $slug );
+		$author = Yii::$app->factory->get( 'userService' )->getBySlug( $slug );
 
 		if( isset( $author ) ) {
 
