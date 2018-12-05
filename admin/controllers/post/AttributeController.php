@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\AttributeController as BaseAttributeController;
-
 /**
  * AttributeController provides actions specific to post attributes.
  *
  * @since 1.0.0
  */
-class AttributeController extends BaseAttributeController {
+class AttributeController extends \cmsgears\core\admin\controllers\base\AttributeController {
 
 	// Variables ---------------------------------------------------
 

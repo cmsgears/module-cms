@@ -150,7 +150,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					])?>
 				</div>
 			</div>
-			<div class="box box-crud colf colf15"> </div>
+			<div class="colf colf15"> </div>
 			<div class="box box-crud colf colf15x7">
 				<div class="box-header">
 					<div class="box-header-title">Blocks</div>
@@ -183,7 +183,5 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
-	</div>
+	<div class="box-crud-wrap-sidebar colf colf3"></div>
 </div>

@@ -131,7 +131,5 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
-	</div>
+	<div class="box-crud-wrap-sidebar colf colf3"></div>
 </div>
