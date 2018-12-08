@@ -44,16 +44,26 @@ class CmsGlobal {
 	// Templates -------------------------------------------------------
 
 	const TEMPLATE_PAGE		= 'page';
+	const TEMPLATE_LANDING	= 'landing';
+	const TEMPLATE_SYSTEM	= 'system';
+	const TEMPLATE_BLOG		= 'blog';
+	const TEMPLATE_QNA		= 'qna';
+
 	const TEMPLATE_POST		= 'post';
+
 	const TEMPLATE_ARTICLE	= 'article';
 
 	const TEMPLATE_SOCIAL	= 'social';
 	const TEMPLATE_CONTACT	= 'contact';
 	const TEMPLATE_EDITOR	= 'editor';
 	const TEMPLATE_SEARCH	= 'search';
+	const TEMPLATE_CATEGORY	= 'category';
+	const TEMPLATE_TAG		= 'tag';
+
 	const TEMPLATE_AUTHOR	= 'author';
-	const TEMPLATE_TAGS		= 'tags';
 	const TEMPLATE_ARCHIVE	= 'archive';
+
+	const TEMPLATE_TAG_CLOUD = 'tag-cloud';
 
 	const TEMPLATE_SIDEBAR_VERTICAL		= 'vsidebar';
 	const TEMPLATE_SIDEBAR_HORIZONTAL	= 'hsidebar';
