@@ -49,6 +49,7 @@ class CmsGlobal {
 
 	const TEMPLATE_SOCIAL	= 'social';
 	const TEMPLATE_CONTACT	= 'contact';
+	const TEMPLATE_EDITOR	= 'editor';
 	const TEMPLATE_SEARCH	= 'search';
 	const TEMPLATE_AUTHOR	= 'author';
 	const TEMPLATE_TAGS		= 'tags';
