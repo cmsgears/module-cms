@@ -31,7 +31,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160621_065213_cms_data extends Migration {
+class m160623_065213_cms_data extends Migration {
 
 	// Public Variables
 
@@ -300,7 +300,7 @@ class m160621_065213_cms_data extends Migration {
 
 	public function down() {
 
-		echo "m160621_065213_cms_data will be deleted with m160621_014408_core and m160621_065204_cms.\n";
+		echo "m160623_065213_cms_data will be deleted with m160623_014408_core and m160623_065204_cms.\n";
 
 		return true;
 	}

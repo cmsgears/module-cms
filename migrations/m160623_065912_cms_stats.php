@@ -19,7 +19,7 @@ use cmsgears\cms\common\models\base\CmsTables;
  *
  * @since 1.0.0
  */
-class m160621_065912_cms_stats extends Migration {
+class m160623_065912_cms_stats extends Migration {
 
 	// Public Variables
 
