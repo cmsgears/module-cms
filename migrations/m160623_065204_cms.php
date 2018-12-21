@@ -8,8 +8,6 @@
  */
 
 // CMG Imports
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\base\Meta;
 
 /**
@@ -18,7 +16,7 @@ use cmsgears\core\common\models\base\Meta;
  *
  * @since 1.0.0
  */
-class m160623_065204_cms extends Migration {
+class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -32,11 +30,11 @@ class m160623_065204_cms extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
-		$this->fk			= Yii::$app->migration->isFk();
-		$this->options		= Yii::$app->migration->getTableOptions();
+		$this->fk		= Yii::$app->migration->isFk();
+		$this->options	= Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -109,9 +107,10 @@ class m160623_065204_cms extends Migration {
 		$this->createTable( $this->prefix . 'cms_page_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'type' => $this->string( Yii::$app->core->mediumText ),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'active' => $this->boolean()->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
