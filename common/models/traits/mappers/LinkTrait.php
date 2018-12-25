@@ -52,7 +52,7 @@ trait LinkTrait {
 
 		return $this->hasMany( ModelLink::class, [ 'parentId' => 'id' ] )
 			->where( "$modelLinkTable.parentType='$this->modelType'" )
-			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait LinkTrait {
 
 		return $this->hasMany( ModelLink::class, [ 'parentId' => 'id' ] )
 			->where( "$modelLinkTable.parentType='$this->modelType' AND $modelLinkTable.active=1" )
-			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -87,7 +87,7 @@ trait LinkTrait {
 		return Link::find()
 			->leftJoin( $modelLinkTable, "$modelLinkTable.modelId=$linkTable.id" )
 			->where( "$modelLinkTable.parentId=$this->id AND $modelLinkTable.parentType='$this->modelType'" )
-			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_DESC ] )
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] )
 			->all();
 	}
 
@@ -111,7 +111,7 @@ trait LinkTrait {
 		return Link::find()
 			->leftJoin( $modelLinkTable, "$modelLinkTable.modelId=$linkTable.id" )
 			->where( "$modelLinkTable.parentId=$this->id AND $modelLinkTable.parentType='$this->modelType' AND $modelLinkTable.active=1" )
-			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_DESC ] )
+			->orderBy( [ "$modelLinkTable.order" => SORT_DESC, "$modelLinkTable.id" => SORT_ASC ] )
 			->all();
 	}
 

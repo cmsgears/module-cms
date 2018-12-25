@@ -55,7 +55,7 @@ trait WidgetTrait {
 
 		return $this->hasMany( ModelWidget::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -68,7 +68,7 @@ trait WidgetTrait {
 
 		return $this->hasMany( ModelWidget::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -85,7 +85,7 @@ trait WidgetTrait {
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable, &$mapperType ) {
 					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] )
-						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 				}
 			);
 		*/
@@ -93,7 +93,7 @@ trait WidgetTrait {
 		return Widget::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
 			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
 			->all();
 	}
 
@@ -111,7 +111,7 @@ trait WidgetTrait {
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable, &$mapperType ) {
 					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] )
-						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 				}
 			);
 		*/
@@ -119,7 +119,7 @@ trait WidgetTrait {
 		return Widget::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
 			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
 			->all();
 	}
 
