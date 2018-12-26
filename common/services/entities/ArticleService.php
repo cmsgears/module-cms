@@ -228,7 +228,7 @@ class ArticleService extends ContentService implements IArticleService {
 			$this->metaService->deleteByModelId( $model->id );
 
 			// Delete files
-			$this->fileService->deleteFiles( $model->files );
+			$this->fileService->deleteMultiple( $model->files );
 
 			// Delete Model Content
 			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
