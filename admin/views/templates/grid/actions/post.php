@@ -5,6 +5,7 @@ $modelContent	= $model->modelContent;
 $template		= $modelContent->template;
 ?>
 <span title="Comments"><?= Html::a( "", [ "post/comment/all?pid=$model->id" ], [ 'class' => 'cmti cmti-comment' ] ) ?></span>
+<span title="Files"><?= Html::a( "", [ "post/file/all?pid=$model->id" ], [ 'class' => 'cmti cmti-file' ] ) ?></span>
 <span title="Attributes"><?= Html::a( "", [ "post/attribute/all?pid=$model->id" ], [ 'class' => 'cmti cmti-tag' ] ) ?></span>
 <span title="Gallery"><?= Html::a( "", [ "post/gallery?id=$model->id" ], [ 'class' => 'cmti cmti-image' ] ) ?></span>
 <span title="Update"><?= Html::a( "", [ "update?id=$model->id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

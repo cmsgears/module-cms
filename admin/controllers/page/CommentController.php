@@ -18,14 +18,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\core\admin\controllers\base\CommentController as BaseCommentController;
-
 /**
  * CommentController provides actions specific to page comments.
  *
  * @since 1.0.0
  */
-class CommentController extends BaseCommentController {
+class CommentController extends \cmsgears\core\admin\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 

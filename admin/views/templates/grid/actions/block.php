@@ -4,6 +4,7 @@ use yii\helpers\Html;
 $template = $model->template;
 ?>
 
+<span title="Files"><?= Html::a( "", [ "block/file/all?pid=$model->id" ], [ 'class' => 'cmti cmti-file' ] ) ?></span>
 <span title="Attributes"><?= Html::a( "", [ "block/attribute/all?pid=$model->id" ], [ 'class' => 'cmti cmti-tag' ] ) ?></span>
 <span title="Gallery"><?= Html::a( "", [ "block/gallery?id=$model->id" ], [ 'class' => 'cmti cmti-image' ] ) ?></span>
 <span title="Update"><?= Html::a( "", [ "update?id=$model->id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

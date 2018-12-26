@@ -33,6 +33,8 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// Public -----------------
 
+	public $parentPath;
+
 	// Protected --------------
 
 	protected $templateType;

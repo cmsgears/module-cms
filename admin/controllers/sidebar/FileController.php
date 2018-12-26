@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\page;
+namespace cmsgears\cms\admin\controllers\sidebar;
 
 // Yii Imports
 use Yii;
@@ -17,11 +17,11 @@ use yii\helpers\Url;
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**
- * AttributeController provides actions specific to post attributes.
+ * FileController provides actions specific to sidebar files.
  *
  * @since 1.0.0
  */
-class AttributeController extends \cmsgears\core\admin\controllers\base\AttributeController {
+class FileController extends \cmsgears\core\admin\controllers\base\FileController {
 
 	// Variables ---------------------------------------------------
 
@@ -43,34 +43,33 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
-		$this->title	= 'Page Attribute';
-		$this->apixBase	= 'cms/page/attribute';
+		$this->title	= 'Sidebar File';
+		$this->apixBase	= 'cms/object/file';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageMetaService' );
-		$this->parentService	= Yii::$app->factory->get( 'pageService' );
+		$this->parentService = Yii::$app->factory->get( 'sidebarService' );
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'usidebar' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'page-attributes' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/attribute/all' ], true );
+		$this->returnUrl = Url::previous( 'sidebar-files' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/sidebar/file/all' ], true );
 
 		// All Url
-		$allUrl = Url::previous( 'pages' );
-		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/cms/page/all' ], true );
+		$allUrl = Url::previous( 'sidebars' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/cms/sidebar/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
 			'base' => [
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
-				[ 'label' => 'Pages', 'url' =>  $allUrl ]
+				[ 'label' => 'Sidebars', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Attributes' ] ],
-			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
-			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Files' ] ],
+			'create' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
+			'update' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -88,11 +87,11 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 
 	// CMG parent classes --------------------
 
-	// AttributeController -------------------
+	// FileController ------------------------
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'page-attributes' );
+		Url::remember( Yii::$app->request->getUrl(), 'sidebar-files' );
 
 		return parent::actionAll( $pid );
 	}

@@ -17,11 +17,11 @@ use yii\helpers\Url;
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**
- * AttributeController provides actions specific to post attributes.
+ * FileController provides actions specific to post files.
  *
  * @since 1.0.0
  */
-class AttributeController extends \cmsgears\core\admin\controllers\base\AttributeController {
+class FileController extends \cmsgears\core\admin\controllers\base\FileController {
 
 	// Variables ---------------------------------------------------
 
@@ -43,19 +43,18 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
-		$this->title	= 'Page Attribute';
-		$this->apixBase	= 'cms/page/attribute';
+		$this->title	= 'Page File';
+		$this->apixBase	= 'cms/page/file';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'pageMetaService' );
-		$this->parentService	= Yii::$app->factory->get( 'pageService' );
+		$this->parentService = Yii::$app->factory->get( 'pageService' );
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'page' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'page-attributes' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/attribute/all' ], true );
+		$this->returnUrl = Url::previous( 'page-files' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/page/file/all' ], true );
 
 		// All Url
 		$allUrl = Url::previous( 'pages' );
@@ -67,10 +66,10 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Pages', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Attributes' ] ],
-			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
-			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Files' ] ],
+			'create' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
+			'update' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -88,11 +87,11 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 
 	// CMG parent classes --------------------
 
-	// AttributeController -------------------
+	// FileController ------------------------
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'page-attributes' );
+		Url::remember( Yii::$app->request->getUrl(), 'page-files' );
 
 		return parent::actionAll( $pid );
 	}

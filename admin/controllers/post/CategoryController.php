@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\CategoryController as BaseCategoryController;
-
 /**
  * CategoryController provides actions specific to post categories.
  *
  * @since 1.0.0
  */
-class CategoryController extends BaseCategoryController {
+class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryController {
 
 	// Variables ---------------------------------------------------
 
@@ -48,6 +46,7 @@ class CategoryController extends BaseCategoryController {
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
 		$this->apixBase		= 'cms/page/category';
+		$this->parentPath	= '/cms/post/category';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];

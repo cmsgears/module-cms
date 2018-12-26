@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\TagController as BaseTagController;
-
 /**
  * TagController provides actions specific to post tags.
  *
  * @since 1.0.0
  */
-class TagController extends BaseTagController {
+class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 
 	// Variables ---------------------------------------------------
 
@@ -48,6 +46,7 @@ class TagController extends BaseTagController {
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
 		$this->apixBase		= 'cms/page/tag';
+		$this->parentPath	= '/cms/post/tag';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];

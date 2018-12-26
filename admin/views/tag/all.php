@@ -7,13 +7,14 @@ use cmsgears\widgets\grid\DataGrid;
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Post Tags | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$parentPath		= $this->context->parentPath;
 
 // View Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'parentPath' => $parentPath ],
 	'title' => 'Tags', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
 	'sortColumns' => [

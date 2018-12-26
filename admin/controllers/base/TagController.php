@@ -33,6 +33,8 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 	// Public -----------------
 
+	public $parentPath;
+
 	// Protected --------------
 
 	protected $templateType;
