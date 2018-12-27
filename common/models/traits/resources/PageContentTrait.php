@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\traits\resources;
 
 // Yii Imports
@@ -9,7 +17,11 @@ use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\ModelContent;
 
 /**
- * PageContentTrait can be used to add seo optimised content to relevant models to form public pages.
+ * PageContentTrait can be used to add seo optimised content to relevant models to
+ * form public pages. The models using this trait must also use Visibility and Approval
+ * traits in order to check the published status.
+ *
+ * @since 1.0.0
  */
 trait PageContentTrait {
 
@@ -44,11 +56,12 @@ trait PageContentTrait {
 		$content	= $this->content;
 		$template	= $content->template;
 
-		return $template->viewPath;
+		return isset( $template ) ? $template->viewPath : null;
 	}
 
 	/**
-	 * Check whether content is published.
+	 * Check whether content is published. To consider a model as published, it must
+	 * be publicly visible in either active or frozen status.
 	 *
 	 * @return boolean
 	 */
@@ -56,13 +69,25 @@ trait PageContentTrait {
 
 		$user = Yii::$app->core->getUser();
 
-		if( isset( $user ) && $this->createdBy == $user->id ) {
+		if( isset( $user ) ) {
 
-			return true;
+			// Always published for owner
+			if( $this->createdBy == $user->id ) {
+
+				return true;
+			}
+
+			// TODO: Add code for secured visibility with password match
+
+			// Visible to logged in users in strictly protected mode
+			if( $this->isPublic() && $this->isVisibilityProtected() ) {
+
+				return true;
+			}
 		}
 
-		// Status & Visibility(Protected OR Public)
-		return $this->isPublic() && ( $this->isVisibilityProtected() || $this->isVisibilityPublic() );
+		// Status(Active or Frozen) with public visibility
+		return $this->isPublic() && $this->isVisibilityPublic( false );
 	}
 
 	// Static Methods ----------------------------------------------
