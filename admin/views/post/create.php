@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
@@ -15,8 +15,9 @@ use cmsgears\icons\widgets\TextureChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Post | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$apixBase		= $this->context->apixBase;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -88,15 +89,15 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row padding padding-small-v">
 						<div class="col col12x4">
 							<label>Avatar</label>
-							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+							<?= AvatarUploader::widget( [ 'model' => $avatar, 'clearAction' => true ] ) ?>
 						</div>
 						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget( [ 'model' => $banner, 'clearAction' => true ] ) ?>
 						</div>
 						<div class="col col12x4">
 							<label>Video</label>
-							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
+							<?= VideoUploader::widget( [ 'model' => $video, 'clearAction' => true ] ) ?>
 						</div>
 					</div>
 				</div>

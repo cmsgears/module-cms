@@ -37,7 +37,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x2', 'x2', 'x2', 'x2', null, null, null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x2', 'x2', 'x2', null, null, null, 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {

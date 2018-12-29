@@ -65,6 +65,9 @@ class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryC
 					// Banner
 					'assign-banner' => [ 'permission' => $this->crudPermission ],
 					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Video
+					'assign-video' => [ 'permission' => $this->crudPermission ],
+					'clear-video' => [ 'permission' => $this->crudPermission ],
 					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
@@ -93,6 +96,9 @@ class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryC
 					// Banner
 					'assign-banner' => [ 'post' ],
 					'clear-banner' => [ 'post' ],
+					// Video
+					'assign-video' => [ 'post' ],
+					'clear-video' => [ 'post' ],
 					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
@@ -131,6 +137,9 @@ class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryC
 			// Banner
 			'assign-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Assign' ],
 			'clear-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Clear' ],
+			// Video
+			'assign-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Assign' ],
+			'clear-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Clear' ],
 			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],

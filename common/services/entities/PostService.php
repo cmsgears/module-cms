@@ -43,9 +43,9 @@ class PostService extends ContentService implements IPostService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Post';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Post';
 
-	public static $parentType	= CmsGlobal::TYPE_POST;
+	public static $parentType = CmsGlobal::TYPE_POST;
 
 	// Protected --------------
 

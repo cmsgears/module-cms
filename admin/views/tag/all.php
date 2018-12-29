@@ -31,7 +31,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', 'x6', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', 'x2', 'x3', 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
@@ -39,6 +39,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		}],
 		'name' => 'Name',
 		'title' => 'Title',
+		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->modelContent->getTemplateName(); } ],
 		'description' => 'Description',
 		'actions'	=> 'Actions'
 	],
