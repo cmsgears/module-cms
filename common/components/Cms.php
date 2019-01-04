@@ -16,14 +16,12 @@ use cmsgears\cms\common\models\entities\Page;
 use cmsgears\cms\common\models\entities\Article;
 use cmsgears\cms\common\models\entities\Post;
 
-use cmsgears\core\common\base\Component;
-
 /**
  * Cms component initialize the module Cms and it's properties.
  *
  * @since 1.0.0
  */
-class Cms extends Component {
+class Cms extends \cmsgears\core\common\base\Component {
 
 	// Global -----------------
 
@@ -52,8 +50,6 @@ class Cms extends Component {
 	// CMG parent classes --------------------
 
 	// Cms -----------------------------------
-
-	// Properties ----------------
 
 	/**
 	 * Register page map

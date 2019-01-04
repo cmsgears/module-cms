@@ -12,15 +12,12 @@ namespace cmsgears\cms\common\components;
 // Yii Imports
 use Yii;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
  * The Cms Factory component initialise the services available in Cms Module.
  *
  * @since 1.0.0
  */
-class Factory extends Component {
+class Factory extends \cmsgears\core\common\base\Component {
 
 	// Global -----------------
 
