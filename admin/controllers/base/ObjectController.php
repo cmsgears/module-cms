@@ -19,8 +19,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
@@ -28,7 +26,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-abstract class ObjectController extends CrudController {
+abstract class ObjectController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 

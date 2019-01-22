@@ -66,10 +66,10 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Pages', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Files' ] ],
-			'create' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
-			'update' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Page Files' ] ],
+			'create' => [ [ 'label' => 'Page Files', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
+			'update' => [ [ 'label' => 'Page Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Page Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

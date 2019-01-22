@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\ObjectController;
-
 /**
  * MenuController provides actions specific to menu model.
  *
  * @since 1.0.0
  */
-class MenuController extends ObjectController {
+class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectController {
 
 	// Variables ---------------------------------------------------
 

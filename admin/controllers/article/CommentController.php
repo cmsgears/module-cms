@@ -18,14 +18,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\core\admin\controllers\base\CommentController as BaseCommentController;
-
 /**
  * CommentController provides actions specific to article comments.
  *
  * @since 1.0.0
  */
-class CommentController extends BaseCommentController {
+class CommentController extends \cmsgears\core\admin\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -73,10 +71,10 @@ class CommentController extends BaseCommentController {
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Articles', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Comments' ] ],
-			'create' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Comments', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Article Comments' ] ],
+			'create' => [ [ 'label' => 'Article Comments', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Article Comments', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Article Comments', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

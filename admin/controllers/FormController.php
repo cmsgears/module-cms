@@ -21,8 +21,6 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
@@ -30,7 +28,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-class FormController extends CrudController {
+class FormController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 

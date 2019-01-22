@@ -13,15 +13,12 @@ namespace cmsgears\cms\admin\controllers;
 use Yii;
 use yii\helpers\Url;
 
-// CMG Imports
-use cmsgears\cms\admin\controllers\base\ElementController as BaseElementController;
-
 /**
  * ElementController provides actions specific to element model.
  *
  * @since 1.0.0
  */
-class ElementController extends BaseElementController {
+class ElementController extends \cmsgears\cms\admin\controllers\base\ElementController {
 
 	// Variables ---------------------------------------------------
 

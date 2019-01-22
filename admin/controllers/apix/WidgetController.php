@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * WidgetController provides actions specific to widget model.
  *
  * @since 1.0.0
  */
-class WidgetController extends Controller {
+class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

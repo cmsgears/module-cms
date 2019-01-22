@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
-
 /**
  * TemplateController provide actions specific to sidebar templates.
  *
  * @since 1.0.0
  */
-class TemplateController extends BaseTemplateController {
+class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +50,7 @@ class TemplateController extends BaseTemplateController {
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'sidebar-template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'sidebar-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/sidebar/template/all' ], true );
 
 		// Breadcrumbs
@@ -85,7 +83,7 @@ class TemplateController extends BaseTemplateController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'sidebar-templates' );
 
 		return parent::actionAll( $config );
 	}

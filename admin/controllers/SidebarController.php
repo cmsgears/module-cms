@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\ObjectController;
-
 /**
  * SidebarController provides actions specific to sidebar model.
  *
  * @since 1.0.0
  */
-class SidebarController extends ObjectController {
+class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectController {
 
 	// Variables ---------------------------------------------------
 

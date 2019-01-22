@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * SidebarController provides actions specific to sidebar model.
  *
  * @since 1.0.0
  */
-class SidebarController extends Controller {
+class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

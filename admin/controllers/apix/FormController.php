@@ -16,8 +16,6 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
@@ -25,7 +23,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-class FormController extends Controller {
+class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

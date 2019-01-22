@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * LinkController provides actions specific to link model.
  *
  * @since 1.0.0
  */
-class LinkController extends Controller {
+class LinkController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

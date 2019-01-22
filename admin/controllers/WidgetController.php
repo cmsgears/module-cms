@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\admin\controllers\base\ObjectController;
-
 /**
  * WidgetController provides actions specific to widget model.
  *
  * @since 1.0.0
  */
-class WidgetController extends ObjectController {
+class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectController {
 
 	// Variables ---------------------------------------------------
 

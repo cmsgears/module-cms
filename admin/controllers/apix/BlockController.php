@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * BlockController provides actions specific to block model.
  *
  * @since 1.0.0
  */
-class BlockController extends Controller {
+class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

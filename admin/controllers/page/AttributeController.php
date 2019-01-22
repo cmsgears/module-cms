@@ -67,10 +67,10 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Pages', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Attributes' ] ],
-			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
-			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Page Attributes' ] ],
+			'create' => [ [ 'label' => 'Page Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
+			'update' => [ [ 'label' => 'Page Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Page Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

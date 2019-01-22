@@ -13,15 +13,12 @@ namespace cmsgears\cms\admin\controllers;
 use Yii;
 use yii\helpers\Url;
 
-// CMG Imports
-use cmsgears\cms\admin\controllers\base\BlockController as BaseBlockController;
-
 /**
  * BlockController provides actions specific to block model.
  *
  * @since 1.0.0
  */
-class BlockController extends BaseBlockController {
+class BlockController extends \cmsgears\cms\admin\controllers\base\BlockController {
 
 	// Variables ---------------------------------------------------
 

@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\admin\controllers\base\AttributeController as BaseAttributeController;
-
 /**
  * AttributeController provides actions specific to article attributes.
  *
  * @since 1.0.0
  */
-class AttributeController extends BaseAttributeController {
+class AttributeController extends \cmsgears\core\admin\controllers\base\AttributeController {
 
 	// Variables ---------------------------------------------------
 
@@ -56,7 +54,7 @@ class AttributeController extends BaseAttributeController {
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'article' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'attributes' );
+		$this->returnUrl = Url::previous( 'article-attributes' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/article/attribute/all' ], true );
 
 		// All Url
@@ -69,10 +67,10 @@ class AttributeController extends BaseAttributeController {
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Articles', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Attributes' ] ],
-			'create' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
-			'update' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Article Attributes' ] ],
+			'create' => [ [ 'label' => 'Article Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Create' ] ],
+			'update' => [ [ 'label' => 'Article Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Article Attributes', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -94,7 +92,7 @@ class AttributeController extends BaseAttributeController {
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'attributes' );
+		Url::remember( Yii::$app->request->getUrl(), 'article-attributes' );
 
 		return parent::actionAll( $pid );
 	}
