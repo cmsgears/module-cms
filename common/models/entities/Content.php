@@ -101,8 +101,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured,
-	IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility, IVisual, IWidget {
+class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData,
+	IElement, IFeatured, IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent,
+	ISlugType, IVisibility, IVisual, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -153,13 +154,13 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 	// Constructor and Initialisation ------------------------------
 
-	public function init() {
-
-		parent::init();
+	public function __construct( $config = [] ) {
 
 		$this->followerClass = PageFollower::class;
 
 		$this->metaClass = PageMeta::class;
+
+		parent::__construct();
 	}
 
 	// Instance methods --------------------------------------------

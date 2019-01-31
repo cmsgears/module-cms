@@ -5,7 +5,7 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Post Categories | ' . $coreProperties->getSiteTitle();
+$this->title	= ucfirst( $this->context->type ) . ' Categories | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 $parentPath		= $this->context->parentPath;
 

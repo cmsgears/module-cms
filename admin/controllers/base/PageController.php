@@ -170,7 +170,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 			]);
 
-			return $this->redirect( 'all' );
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

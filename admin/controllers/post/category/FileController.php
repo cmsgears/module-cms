@@ -53,7 +53,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'category-files' );
+		$this->returnUrl = Url::previous( 'post-category-files' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/category/file/all' ], true );
 
 		// All Url
@@ -91,7 +91,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'category-files' );
+		Url::remember( Yii::$app->request->getUrl(), 'post-category-files' );
 
 		return parent::actionAll( $pid );
 	}

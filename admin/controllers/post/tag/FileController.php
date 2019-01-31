@@ -53,7 +53,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'tag-files' );
+		$this->returnUrl = Url::previous( 'post-tag-files' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/tag/file/all' ], true );
 
 		// All Url
@@ -91,7 +91,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 	public function actionAll( $pid ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'tag-files' );
+		Url::remember( Yii::$app->request->getUrl(), 'post-tag-files' );
 
 		return parent::actionAll( $pid );
 	}

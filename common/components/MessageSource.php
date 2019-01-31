@@ -12,15 +12,13 @@ namespace cmsgears\cms\common\components;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\base\MessageSource as BaseMessageSource;
-
 /**
  * MessageSource stores and provide the messages and message templates available in
  * Cms Module.
  *
  * @since 1.0.0
  */
-class MessageSource extends BaseMessageSource {
+class MessageSource extends \cmsgears\core\common\base\MessageSource {
 
 	// Global -----------------
 

@@ -3,8 +3,9 @@
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\widgets\ActiveForm;
 
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\AvatarUploader;

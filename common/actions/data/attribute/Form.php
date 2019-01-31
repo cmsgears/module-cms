@@ -63,7 +63,7 @@ class Form extends Action {
 
 		// Find Model & Template
 		$model		= $modelService->getById( $id );
-		$template	= isset( $model->modelContent->template ) ? $model->modelContent->template : $model->template;
+		$template	= isset( $model->modelContent->template ) ? $model->modelContent->template : ( isset( $model->template ) ? $model->template : null );
 		$template	= isset( $template ) ? $template : Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
 
 		// Update/Render if exist

@@ -71,6 +71,12 @@ class CmsGlobal {
 	const TEMPLATE_MENU_VERTICAL	= 'vmenu';
 	const TEMPLATE_MENU_HORIZONTAL	= 'hmenu';
 
+	const TEMPLATE_NOTIFY_POST_REGISTER = 'post-register';
+
+	const TEMPLATE_NOTIFY_PAGE_REGISTER = 'page-register';
+
+	const TEMPLATE_NOTIFY_ARTICLE_REGISTER = 'article-register';
+
 	// Config ----------------------------------------------------------
 
 	const CONFIG_BLOG	= 'blog';

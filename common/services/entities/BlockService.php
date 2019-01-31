@@ -31,9 +31,9 @@ class BlockService extends ObjectDataService implements IBlockService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Block';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Block';
 
-	public static $parentType	= CmsGlobal::TYPE_BLOCK;
+	public static $parentType = CmsGlobal::TYPE_BLOCK;
 
 	// Protected --------------
 

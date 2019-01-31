@@ -321,6 +321,12 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 						break;
 					}
+					case 'approved': {
+
+						$this->approve( $model );
+
+						break;
+					}
 					case 'rejected': {
 
 						$this->reject( $model );
@@ -329,7 +335,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					}
 					case 'active': {
 
-						$this->approve( $model );
+						$this->activate( $model );
 
 						break;
 					}

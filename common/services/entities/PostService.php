@@ -18,6 +18,8 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
+use cmsgears\cms\common\models\resources\ModelContent;
+
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
@@ -128,35 +130,30 @@ class PostService extends ContentService implements IPostService {
 
 	public function create( $model, $config = [] ) {
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+
 		$modelClass = static::$modelClass;
 
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-
-		// Default Private
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
-
-		// Default New
-		if( !isset( $model->status ) ) {
-
-			$model->status = $modelClass::STATUS_NEW;
-		}
-
+		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
+		// Default Private
+		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
+
+		// Default New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
+
+		// Create Model
 		return parent::create( $model, $config );
 	}
 
 	public function add( $model, $config = [] ) {
 
-		return $this->register( $model, $config );
-	}
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-	public function register( $model, $config = [] ) {
+		$modelClass = static::$modelClass;
 
-		$content 	= $config[ 'content' ];
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
@@ -176,46 +173,145 @@ class PostService extends ContentService implements IPostService {
 			// Create Model
 			$model = $this->create( $model, $config );
 
-			// Create gallery
-			if( $gallery ) {
+			// Create Gallery
+			if( isset( $gallery ) ) {
 
-				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
 			}
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST,
+				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
 				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
-			$modelTagService->bindTags( $model->id, CmsGlobal::TYPE_POST, [ 'binder' => 'TagBinder' ] );
+			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/post/review';
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		$registered	= false;
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			// Bind categories
+			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+
+			// Bind tags
+			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 
-			return $model;
+			$registered	= true;
 		}
 		catch( Exception $e ) {
-			var_dump( $e );
+
 			$transaction->rollBack();
+
+			return false;
 		}
 
-		return false;
+		if( $registered ) {
+
+			// Notify Site Admin
+			if( $notify ) {
+
+				// Trigger Notification
+				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_POST_REGISTER,
+					[ 'model' => $model, 'service' => $this, 'user' => $user ],
+					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$content 	= $config[ 'content' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
@@ -229,13 +325,18 @@ class PostService extends ContentService implements IPostService {
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'comments'
+			]);
 		}
-
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		// Create/Update gallery
 		if( isset( $gallery ) ) {
@@ -244,9 +345,18 @@ class PostService extends ContentService implements IPostService {
 		}
 
 		// Update model content
-		$modelContentService->update( $content, [
-			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
-		]);
+		if( isset( $content ) ) {
+
+			$modelContentService->update( $content, [
+				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+		}
+
+		// Bind categories
+		$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+
+		// Bind tags
+		$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes

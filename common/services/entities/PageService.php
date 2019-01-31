@@ -40,9 +40,9 @@ class PageService extends ContentService implements IPageService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Page';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Page';
 
-	public static $parentType	= CmsGlobal::TYPE_PAGE;
+	public static $parentType = CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
 
@@ -127,35 +127,30 @@ class PageService extends ContentService implements IPageService {
 
 	public function create( $model, $config = [] ) {
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+
 		$modelClass = static::$modelClass;
 
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-
-		// Default Private
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
-
-		// Default New
-		if( !isset( $model->status ) ) {
-
-			$model->status = $modelClass::STATUS_NEW;
-		}
-
+		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
+		// Default Private
+		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
+
+		// Default New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
+
+		// Create Model
 		return parent::create( $model, $config );
 	}
 
 	public function add( $model, $config = [] ) {
 
-		return $this->register( $model, $config );
-	}
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-	public function register( $model, $config = [] ) {
+		$modelClass = static::$modelClass;
 
-		$content 	= $config[ 'content' ];
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
@@ -173,40 +168,131 @@ class PageService extends ContentService implements IPageService {
 			// Create Model
 			$model = $this->create( $model, $config );
 
-			// Create gallery
-			if( $gallery ) {
+			// Create Gallery
+			if( isset( $gallery ) ) {
 
-				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
 			}
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => CmsGlobal::TYPE_PAGE,
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/page/review';
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		$registered	= false;
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
 				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			$transaction->commit();
 
-			return $model;
+			$registered	= true;
 		}
 		catch( Exception $e ) {
 
 			$transaction->rollBack();
+
+			return false;
 		}
 
-		return false;
+		if( $registered ) {
+
+			// Notify Site Admin
+			if( $notify ) {
+
+				// Trigger Notification
+				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_PAGE_REGISTER,
+					[ 'model' => $model, 'service' => $this, 'user' => $user ],
+					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$content 	= $config[ 'content' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
@@ -220,13 +306,16 @@ class PageService extends ContentService implements IPageService {
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'comments'
+			]);
 		}
-
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		// Create/Update gallery
 		if( isset( $gallery ) ) {
@@ -235,9 +324,12 @@ class PageService extends ContentService implements IPageService {
 		}
 
 		// Update model content
-		$modelContentService->update( $content, [
-			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
-		]);
+		if( isset( $content ) ) {
+
+			$modelContentService->update( $content, [
+				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes

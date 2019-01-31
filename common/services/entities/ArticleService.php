@@ -40,9 +40,9 @@ class ArticleService extends ContentService implements IArticleService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Article';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Article';
 
-	public static $parentType	= CmsGlobal::TYPE_ARTICLE;
+	public static $parentType = CmsGlobal::TYPE_ARTICLE;
 
 	// Protected --------------
 
@@ -99,35 +99,30 @@ class ArticleService extends ContentService implements IArticleService {
 
 	public function create( $model, $config = [] ) {
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+
 		$modelClass = static::$modelClass;
 
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-
-		// Default Private
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
-
-		// Default New
-		if( !isset( $model->status ) ) {
-
-			$model->status = $modelClass::STATUS_NEW;
-		}
-
+		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
+		// Default Private
+		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
+
+		// Default New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
+
+		// Create Model
 		return parent::create( $model, $config );
 	}
 
 	public function add( $model, $config = [] ) {
 
-		return $this->register( $model, $config );
-	}
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-	public function register( $model, $config = [] ) {
+		$modelClass = static::$modelClass;
 
-		$content 	= $config[ 'content' ];
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
@@ -145,40 +140,131 @@ class ArticleService extends ContentService implements IArticleService {
 			// Create Model
 			$model = $this->create( $model, $config );
 
-			// Create gallery
-			if( $gallery ) {
+			// Create Gallery
+			if( isset( $gallery ) ) {
 
-				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
 			}
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => CmsGlobal::TYPE_ARTICLE,
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/article/review';
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		$registered	= false;
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
 				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			$transaction->commit();
 
-			return $model;
+			$registered	= true;
 		}
 		catch( Exception $e ) {
 
 			$transaction->rollBack();
+
+			return false;
 		}
 
-		return false;
+		if( $registered ) {
+
+			// Notify Site Admin
+			if( $notify ) {
+
+				// Trigger Notification
+				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_ARTICLE_REGISTER,
+					[ 'model' => $model, 'service' => $this, 'user' => $user ],
+					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$content 	= $config[ 'content' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
@@ -192,13 +278,16 @@ class ArticleService extends ContentService implements IArticleService {
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'comments' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'comments'
+			]);
 		}
-
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		// Create/Update gallery
 		if( isset( $gallery ) ) {
@@ -207,9 +296,12 @@ class ArticleService extends ContentService implements IArticleService {
 		}
 
 		// Update model content
-		$modelContentService->update( $content, [
-			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
-		]);
+		if( isset( $content ) ) {
+
+			$modelContentService->update( $content, [
+				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -220,41 +312,47 @@ class ArticleService extends ContentService implements IArticleService {
 
 	public function delete( $model, $config = [] ) {
 
-		$transaction = Yii::$app->db->beginTransaction();
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		try {
+		if( $config[ 'hard' ] ) {
 
-			// Delete metas
-			$this->metaService->deleteByModelId( $model->id );
+			$transaction = Yii::$app->db->beginTransaction();
 
-			// Delete files
-			$this->fileService->deleteMultiple( $model->files );
+			try {
 
-			// Delete Model Content
-			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+				// Delete metas
+				$this->metaService->deleteByModelId( $model->id );
 
-			// Delete Option Mappings
-			Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete files
+				$this->fileService->deleteFiles( $model->files );
 
-			// Delete Comments
-			Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-			// Delete Followers
-			Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
 
-			$transaction->commit();
+				// Delete Comments
+				Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
 
-			// Delete model
-			return parent::delete( $model, $config );
+				// Delete Followers
+				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
 		}
-		catch( Exception $e ) {
 
-			$transaction->rollBack();
-
-			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-		}
-
-		return false;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
 	// Bulk ---------------

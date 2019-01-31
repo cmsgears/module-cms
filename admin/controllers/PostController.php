@@ -59,7 +59,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
+		$this->breadcrumbs = [
 			'base' => [
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
 			],
@@ -69,6 +69,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
