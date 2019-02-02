@@ -35,13 +35,15 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 	// Public -----------------
 
+	public $title;
+	public $comments;
+
 	public $metaService;
 
 	// Protected --------------
 
 	protected $type;
 	protected $templateType;
-	protected $comments;
 	protected $parentModel;
 
 	protected $templateService;

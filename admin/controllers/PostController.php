@@ -45,6 +45,8 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 		// Config
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
+		$this->title		= 'Post';
+		$this->baseUrl		= 'post';
 		$this->apixBase		= 'cms/post';
 		$this->comments		= true;
 

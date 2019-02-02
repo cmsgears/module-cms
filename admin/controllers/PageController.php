@@ -37,6 +37,8 @@ class PageController extends \cmsgears\cms\admin\controllers\base\PageController
 		parent::init();
 
 		// Config
+		$this->title	= 'Page';
+		$this->baseUrl	= 'page';
 		$this->apixBase = 'cms/page';
 
 		// Sidebar
