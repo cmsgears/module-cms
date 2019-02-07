@@ -7,9 +7,8 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 $core	= Yii::$app->core;
-$user	= Yii::$app->user->getIdentity();
+$user	= Yii::$app->core->getUser();
 ?>
-
 <?php if( $core->hasModule( 'cms' ) && $user->isPermitted( CmsGlobal::PERM_BLOG_ADMIN ) ) { ?>
 	<div id="sidebar-ui" class="collapsible-tab has-children <?= $parent == 'sidebar-ui' ? 'active' : null ?>">
 		<div class="row tab-header">
