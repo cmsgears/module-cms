@@ -43,6 +43,7 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
+		$this->title		= 'Post';
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
 		$this->apixBase		= 'cms/page/category';

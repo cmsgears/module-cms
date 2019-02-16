@@ -12,14 +12,17 @@ namespace cmsgears\cms\common\services\interfaces\base;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IApproval;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\IFeatured;
 use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\base\IVisibility;
 use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 use cmsgears\core\common\services\interfaces\resources\IVisual;
 
-interface IContentService extends IEntityService, IApproval, IData, IGridCacheable, IMultiSite, INameType, ISlugType, IVisual {
+interface IContentService extends IEntityService, IApproval, IData, IFeatured, IGridCacheable,
+	IMultiSite, INameType, ISlugType, IVisibility, IVisual {
 
 	// Data Provider ------
 

@@ -10,7 +10,6 @@
 namespace cmsgears\cms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\IFeatured;
 use cmsgears\cms\common\services\interfaces\base\IContentService;
 
 /**
@@ -18,7 +17,7 @@ use cmsgears\cms\common\services\interfaces\base\IContentService;
  *
  * @since 1.0.0
  */
-interface IArticleService extends IContentService, IFeatured {
+interface IArticleService extends IContentService {
 
 	// Data Provider ------
 

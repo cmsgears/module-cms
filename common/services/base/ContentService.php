@@ -21,9 +21,11 @@ use cmsgears\core\common\models\resources\ModelComment;
 use cmsgears\cms\common\services\interfaces\base\IContentService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
@@ -58,10 +60,12 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	use ApprovalTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use VisibilityTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -208,13 +212,13 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Status
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}
@@ -226,13 +230,19 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 				case 'pinned': {
 
-					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+					if( empty( $config[ 'conditions' ][ "$modelTable.pinned" ] ) ) {
+
+						$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+					}
 
 					break;
 				}
 				case 'featured': {
 
-					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+					if( empty( $config[ 'conditions' ][ "$modelTable.pinned" ] ) ) {
+
+						$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+					}
 
 					break;
 				}
@@ -243,7 +253,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
-		if( isset( $searchCol ) ) {
+		if( isset( $searchCol ) && empty( $config[ 'search-col' ] ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
@@ -258,18 +268,21 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name",
-			'title' => "$modelTable.title",
-			'desc' => "$modelTable.description",
-			'summary' => "modelContent.summary",
-			'content' => "modelContent.content",
-			'status' => "$modelTable.status",
-			'visibility' => "$modelTable.visibility",
-			'order' => "$modelTable.order",
-			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
-		];
+		if( empty( $config[ 'report-col' ] ) ) {
+
+			$config[ 'report-col' ]	= [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'summary' => "modelContent.summary",
+				'content' => "modelContent.content",
+				'status' => "$modelTable.status",
+				'visibility' => "$modelTable.visibility",
+				'order' => "$modelTable.order",
+				'pinned' => "$modelTable.pinned",
+				'featured' => "$modelTable.featured"
+			];
+		}
 
 		// Result -----------
 
@@ -416,7 +429,8 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		// Search
 		$searchContent	= isset( $config[ 'searchContent' ] ) ? $config[ 'searchContent' ] : false;
 		$keywordsParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
-		$keywords 		= Yii::$app->request->getQueryParam( $keywordsParam );
+
+		$keywords = Yii::$app->request->getQueryParam( $keywordsParam );
 
 		// Sort
 		$ratingComment	= isset( $config[ 'ratingComment' ] ) ? $config[ 'ratingComment' ] : false;
@@ -455,7 +469,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$sortParam	= preg_replace( '/-/', '', $sortParam );
 
 		// Sort using ModelComment Table
-		if( ( $ratingComment || $ratingReview ) && strcmp( $sortParam, 'rating' ) == 0 ) {
+		if( ( $ratingComment || $ratingReview ) && $sortParam == 'rating' ) {
 
 			$type	= '';
 			$query	= $config[ 'query' ];
@@ -482,7 +496,8 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		// Option Filters
 		if( count( $optionFilters ) > 0 ) {
 
-			$query			= $config[ 'query' ];
+			$query = $config[ 'query' ];
+
 			$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
 			$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
 
