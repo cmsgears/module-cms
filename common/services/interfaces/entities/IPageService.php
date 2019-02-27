@@ -1,13 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\services\interfaces\base\IContentService;
 
-interface IPageService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+/**
+ * IPageService declares methods specific to page model.
+ *
+ * @since 1.0.0
+ */
+interface IPageService extends IContentService {
 
 	// Data Provider ------
 
@@ -15,16 +25,28 @@ interface IPageService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Read - Models ---
 
-	public function getMenuPages( $pages, $map = false );
+	public function getMenuPages( $ids, $map = false );
 
 	// Read - Lists ----
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
+
+	public function register( $model, $config = [] );
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

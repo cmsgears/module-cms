@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\post;
 
 // Yii Imports
@@ -8,6 +16,11 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
+/**
+ * TemplateController provide actions specific to Post templates.
+ *
+ * @since 1.0.0
+ */
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
 	// Variables ---------------------------------------------------
@@ -18,8 +31,6 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// Protected --------------
 
-	protected $activityService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -29,28 +40,28 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
-		// Type
-		$this->type			= CmsGlobal::TYPE_POST;
+		// Config
+		$this->type		= CmsGlobal::TYPE_POST;
+		$this->apixBase	= 'cms/page/template';
 
-		// Services
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
-		
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
+		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-template' ];
 
 		// Return Url
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/template/all' ], true );
+		$this->returnUrl = Url::previous( 'post-templates' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/template/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Posts', 'url' =>  [ '/cms/post/all' ] ] ],
-			'all' => [ [ 'label' => 'Templates' ] ],
-			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
+			'all' => [ [ 'label' => 'Post Templates' ] ],
+			'create' => [ [ 'label' => 'Post Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Post Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Post Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -70,52 +81,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// TemplateController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'post-templates' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
-	
-	public function afterAction( $action, $result ) {
 
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

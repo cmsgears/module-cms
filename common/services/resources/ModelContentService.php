@@ -1,17 +1,34 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\resources;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
-
 use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\core\common\services\traits\ResourceTrait;
-
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
+
+use cmsgears\core\common\services\base\ModelResourceService;
+
+use cmsgears\core\common\services\traits\resources\VisualTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class ModelContentService extends \cmsgears\core\common\services\base\EntityService implements IModelContentService {
+/**
+ * ModelContentService provide service methods of model content.
+ *
+ * @since 1.0.0
+ */
+class ModelContentService extends ModelResourceService implements IModelContentService {
 
 	// Variables ---------------------------------------------------
 
@@ -21,11 +38,7 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\ModelContent';
-
-	public static $modelTable	= CmsTables::TABLE_MODEL_CONTENT;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\cms\common\models\resources\ModelContent';
 
 	// Protected --------------
 
@@ -41,13 +54,14 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use VisualTrait;
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -65,24 +79,6 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 	// ModelContentService -------------------
 
 	// Data Provider ------
-
-	public function getPage( $config = [] ) {
-
-		$sort = new Sort([
-			'attributes' => [
-				'pDate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Published At'
-				]
-			]
-		]);
-
-		$config[ 'sort' ] = $sort;
-
-		return parent::findPage( $config );
-	}
 
 	// Read ---------------
 
@@ -102,18 +98,26 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
-		// publish
-		if( $publish && !isset( $model->publishedAt ) ) {
+		// Publish
+		if( $publish && empty( $model->publishedAt ) ) {
 
 			$model->publishedAt	= DateUtil::getDateTime();
 		}
 
-		// parent
+		// Configure parent
 		$model->parentId	= $parent->id;
 		$model->parentType	= $config[ 'parentType' ];
 
+		// Save resources
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
+
+		// Link gallery
+		if( isset( $gallery ) && $gallery->id > 0 ) {
+
+			$model->galleryId = $gallery->id;
+		}
 
 		return parent::create( $model, $config );
 	}
@@ -125,44 +129,51 @@ class ModelContentService extends \cmsgears\core\common\services\base\EntityServ
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
-		// publish
-		if( $publish && !isset( $model->publishedAt ) ) {
+		// Publish
+		if( $publish && empty( $model->publishedAt ) ) {
 
 			$model->publishedAt	= DateUtil::getDateTime();
 		}
 
+		// Save resources
 		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
-		return parent::update( $model, [
-			'attributes' => [ 'bannerId', 'videoId', 'templateId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
-		]);
-	}
+		// Link gallery
+		if( empty( $model->galleryId ) ) {
 
-	public function updateBanner( $model, $banner ) {
-
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner ] );
+			$this->linkModel( $model, 'galleryId', $gallery );
+		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'bannerId' ]
+			'attributes' => [ 'templateId', 'bannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
 		]);
-	}
-
-	public function updateViewCount( $model, $views ) {
-
-		$model->views   = $views;
-
-		$model->update();
 	}
 
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
 
-		$this->fileService->deleteFiles( [ $model->banner, $model->video ] );
+		// Delete resources
+		$this->fileService->deleteMultiple( [ $model->banner, $model->video ] );
+
+		// Delete Gallery
+		if( isset( $model->gallery ) ) {
+
+			Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+		}
 
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

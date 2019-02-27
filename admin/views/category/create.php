@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
@@ -14,7 +14,7 @@ $this->title 	= 'Add Category | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parentId ) ? $model->parent->name : null;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -30,16 +30,23 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [
-								'placeholder' => 'Search Parent', 'icon' => 'cmti cmti-search', 'value' => $parent,
-								'url' => 'cms/category/auto-search', 'type' => $model->type
-							]) ?>
-							<?php //$form->field( $model, 'parentId' )->dropDownList( $categoryMap, [ 'class' => 'cmt-select' ] ); ?>
+							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [
+								'placeholder' => 'Search Parent', 'icon' => 'cmti cmti-search', 'value' => $parent,
+								'url' => 'core/category/auto-search', 'type' => $model->type
+							]) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'order' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
@@ -50,14 +57,15 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
 				</div>
@@ -73,11 +81,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row  padding padding-small-v">
 						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget( [ 'model' => $banner, 'clearAction' => true ] ) ?>
 						</div>
 						<div class="col col12x4">
 							<label>Video</label>
-							<?= VideoUploader::widget( [  'model' => $video ] ) ?>
+							<?= VideoUploader::widget( [ 'model' => $video, 'clearAction' => true ] ) ?>
 						</div>
 					</div>
 				</div>
@@ -131,14 +139,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Create" />
+			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>

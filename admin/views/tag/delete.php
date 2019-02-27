@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
@@ -13,7 +13,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Tag | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -25,11 +25,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
-						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -38,6 +41,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
 				</div>
@@ -114,7 +122,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Delete" />
+			<input class="frm-element-medium" type="submit" value="Delete" />
 		</div>
 
 		<div class="filler-height filler-height-medium"></div>

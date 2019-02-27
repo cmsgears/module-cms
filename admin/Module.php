@@ -1,14 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-class Module extends \cmsgears\core\common\base\Module {
+use cmsgears\core\common\base\Module as BaseModule;
+
+/**
+ * The Admin Module of CMS Module.
+ *
+ * @since 1.0.0
+ */
+class Module extends BaseModule {
 
 	// Variables ---------------------------------------------------
 
@@ -18,7 +32,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	public $controllerNamespace = 'cmsgears\cms\admin\controllers';
 
-	public $config				= [ CmsGlobal::CONFIG_BLOG ];
+	public $config = [ CmsGlobal::CONFIG_BLOG ];
 
 	// Protected --------------
 
@@ -49,8 +63,9 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	public function getSidebarHtml() {
 
-		$path	= Yii::getAlias( '@cmsgears' ) . '/module-cms/admin/views/sidebar.php';
+		$path = Yii::getAlias( '@cmsgears' ) . '/module-cms/admin/views/sidebar.php';
 
 		return $path;
 	}
+
 }

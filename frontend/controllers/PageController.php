@@ -1,20 +1,35 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\cms\common\config\CmsGlobal;
 
-// TODO: Add options to allow user to configure template for search page. A default check in table might be the best option.
+use cmsgears\cms\common\models\entities\Page;
 
-class PageController extends \cmsgears\cms\frontend\controllers\base\Controller {
+use cmsgears\cms\frontend\controllers\base\Controller;
+
+/**
+ * PageController consist of actions specific to site pages.
+ *
+ * @since 1.0.0
+ */
+class PageController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -34,11 +49,16 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		parent::init();
 
-		$this->layout			= WebGlobalCore::LAYOUT_PUBLIC;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->modelService		= Yii::$app->factory->get( 'pageService' );
+		// Config
+		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'pageService' );
+
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -56,11 +76,14 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// secure actions
+					'all' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
+					'all' => [ 'get' ],
+					'search' => [ 'get' ],
 					'single' => [ 'get' ]
 				]
 			]
@@ -73,7 +96,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		if ( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 		}
 
 		return [
@@ -89,50 +112,103 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// PageController ------------------------
 
-	// Site Pages -------------
+	public function actionAll( $status = null ) {
+
+		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+
+		$user			= Yii::$app->user->getIdentity();
+		$dataProvider 	= null;
+
+		if( isset( $status ) ) {
+
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [ 'status' => Page::$urlRevStatusMap[ $status ] ] );
+		}
+		else {
+
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id );
+		}
+
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider,
+			'status' => $status
+		]);
+	}
+
+	public function actionSearch() {
+
+		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_PAGE );
+
+		if( isset( $template ) ) {
+
+			// View Params
+			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+
+			$dataProvider = $this->modelService->getPageForSearch([
+				'route' => 'page/search', 'searchContent' => true
+			]);
+
+			return Yii::$app->templateManager->renderViewSearch( $template, [
+				'dataProvider' => $dataProvider
+			]);
+		}
+
+		// Error - Template not defined
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+	}
 
 	/* 1. It finds the associated page for the given slug.
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
-	public function actionSingle( $slug ) {
+	public function actionSingle( $slug = 'home' ) {
 
-		$page	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
 
-		if( isset( $page ) ) {
+		if( isset( $model ) ) {
 
-			if( !$page->isPublished() ) {
+			// No user & Protected
+			if( empty( $user ) && $model->isVisibilityProtected() ) {
+
+				// Error- Not allowed
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+			// Published
+			else if( !$model->isPublished() ) {
 
 				// Error- No access
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
+			// View Params
+			$this->view->params[ 'model' ] = $model;
+
 			// Find Template
-			$content	= $page->modelContent;
+			$content	= $model->modelContent;
 			$template	= $content->template;
 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_PAGE, CmsGlobal::TYPE_PAGE );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_PAGE );
 			}
 
-			// Page using Template
+			// Render Template
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'page' => $page,
-					'author' => $page->createdBy,
+					'model' => $model,
+					'author' => $model->createdBy,
 					'content' => $content,
 					'banner' => $content->banner
 				], [ 'page' => true ] );
 			}
 
 			// Page without Template - Redirect to System Pages
-			return $this->redirect( 'site/' . $page->slug );
+			return $this->redirect( 'site/' . $model->slug );
 		}
 
 		// Error- Page not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

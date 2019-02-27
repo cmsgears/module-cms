@@ -1,14 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\mappers;
 
 // CMG Imports
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\mappers\IModelCategoryService;
 
+use cmsgears\core\common\services\mappers\ModelCategoryService as BaseModelCategoryService;
+
 /**
- * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
+ * ModelCategoryService provide service methods of model category mapper.
+ *
+ * @since 1.0.0
  */
-class ModelCategoryService extends \cmsgears\core\common\services\mappers\ModelCategoryService implements IModelCategoryService {
+class ModelCategoryService extends BaseModelCategoryService implements IModelCategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -66,6 +78,14 @@ class ModelCategoryService extends \cmsgears\core\common\services\mappers\ModelC
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

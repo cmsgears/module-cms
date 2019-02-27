@@ -1,14 +1,35 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\cms\common\models\entities\Block;
 use cmsgears\cms\common\models\mappers\ModelBlock;
 
 /**
- * BlockTrait can be used to form page using blocks.
+ * BlockTrait can be used to map blocks to other models.
  */
 trait BlockTrait {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Instance methods --------------------------------------------
 
@@ -25,28 +46,82 @@ trait BlockTrait {
 	// BlockTrait ----------------------------
 
 	/**
-	 * @return array - ModelBlock associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelBlocks() {
 
-		return $this->hasMany( ModelBlock::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+
+		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
-	 * @return array - Block associated with parent
+	 * @inheritdoc
+	 */
+	public function getActiveModelBlocks() {
+
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+
+		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getBlocks() {
 
-		return $this->hasMany( Block::className(), [ 'id' => 'blockId' ] )
-					->viaTable( CmsTables::TABLE_MODEL_BLOCK, [ 'parentId' => 'id' ], function( $query ) {
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
-						$modelCategory	= CoreTables::TABLE_MODEL_BLOCK;
+		/*
+		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable, &$mapperType ) {
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType ] )
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+				}
+			);
+		*/
 
-						$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
-					});
+		return Block::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveBlocks() {
+
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
+
+		/*
+		return $this->hasMany( Block::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable, &$mapperType ) {
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $mapperType, "$modelObjectTable.active" => true ] )
+						->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+				}
+			);
+		*/
+
+		return Block::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -65,4 +140,5 @@ trait BlockTrait {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

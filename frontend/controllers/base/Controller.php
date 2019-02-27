@@ -1,13 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\frontend\controllers\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
+use cmsgears\core\common\config\CommentProperties;
 use cmsgears\cms\common\config\CmsProperties;
 
-class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
+use cmsgears\core\frontend\controllers\base\Controller as BaseController;
+
+/**
+ * Base Controller of all frontend controllers specific to CMS module.
+ *
+ * @since 1.0.0
+ */
+abstract class Controller extends BaseController {
 
 	// Variables ---------------------------------------------------
 
@@ -18,6 +31,8 @@ class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
 	// Private ----------------
 
 	private $cmsProperties;
+
+	private $commentProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -41,9 +56,20 @@ class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
 
 		if( !isset( $this->cmsProperties ) ) {
 
-			$this->cmsProperties	= CmsProperties::getInstance();
+			$this->cmsProperties = CmsProperties::getInstance();
 		}
 
 		return $this->cmsProperties;
 	}
+
+	public function getCommentProperties() {
+
+		if( !isset( $this->commentProperties ) ) {
+
+			$this->commentProperties = CommentProperties::getInstance();
+		}
+
+		return $this->commentProperties;
+	}
+
 }

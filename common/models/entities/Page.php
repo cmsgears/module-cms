@@ -1,16 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
-
-use cmsgears\core\common\models\traits\resources\CommentTrait;
-use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\cms\common\models\traits\resources\ContentTrait;
-use cmsgears\cms\common\models\traits\mappers\BlockTrait;
-
+/**
+ * Page represents pages used for site page.
+ *
+ * @since 1.0.0
+ */
 class Page extends Content {
 
 	// Variables ---------------------------------------------------
@@ -27,18 +33,13 @@ class Page extends Content {
 
 	// Public -----------------
 
-	public $modelType	= CmsGlobal::TYPE_PAGE;
-
 	// Protected --------------
+
+	protected $modelType = CmsGlobal::TYPE_PAGE;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use FileTrait;
-	use CommentTrait;
-	use ContentTrait;
-	use BlockTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -52,29 +53,47 @@ class Page extends Content {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		$rules = parent::rules();
+
+		$rules[] = [ 'parentId', 'validateParent' ];
+
+		return $rules;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
 
+	public function validateParent( $attribute, $param ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( isset( $this->parentId ) && isset( $this->id ) && $this->parentId == $this->id ) {
+
+				$this->addError( 'parentId', 'Page cannot be parent of same.' );
+			}
+		}
+	}
+
 	// Page ----------------------------------
+
+	public function getChildren() {
+
+		return $this->hasMany( self::class, [ 'parentId' => 'id' ] );
+	}
 
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
 
 	// yii\db\ActiveRecord ----
-
-	/**
-	 * @inheritdoc
-	 */
-	public static function find() {
-
-		$pageTable = CmsTables::TABLE_PAGE;
-
-		return parent::find()->where( [ "$pageTable.type" => CmsGlobal::TYPE_PAGE ] );
-	}
 
 	// CMG parent classes --------------------
 
@@ -84,9 +103,20 @@ class Page extends Content {
 
 	// Read - Find ------------
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function find() {
+
+		$table = static::tableName();
+
+		return parent::find()->where( [ "$table.type" => CmsGlobal::TYPE_PAGE ] );
+	}
+
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
+
 }

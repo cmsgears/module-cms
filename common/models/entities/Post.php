@@ -1,20 +1,31 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\models\entities;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
+use cmsgears\core\common\models\interfaces\base\ITab;
+use cmsgears\core\common\models\interfaces\mappers\ICategory;
+use cmsgears\core\common\models\interfaces\mappers\ITag;
 
-use cmsgears\core\common\models\traits\TabTrait;
-use cmsgears\core\common\models\traits\resources\CommentTrait;
+use cmsgears\core\common\models\traits\base\TabTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
-use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\TagTrait;
-use cmsgears\cms\common\models\traits\resources\ContentTrait;
-use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 
-class Post extends Content {
+/**
+ * Post represents pages used for blog posts.
+ *
+ * @since 1.0.0
+ */
+class Post extends Content implements ICategory, ITab, ITag {
 
 	// Variables ---------------------------------------------------
 
@@ -37,21 +48,15 @@ class Post extends Content {
 
 	// Public -----------------
 
-	public $modelType		= CmsGlobal::TYPE_POST;
-
-	public $categoryType	= CmsGlobal::TYPE_POST;
-
 	// Protected --------------
+
+	protected $modelType = CmsGlobal::TYPE_POST;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use BlockTrait;
-	use CommentTrait;
-	use ContentTrait;
 	use CategoryTrait;
-	use FileTrait;
 	use TabTrait;
 	use TagTrait;
 
@@ -94,16 +99,6 @@ class Post extends Content {
 
 	// yii\db\ActiveRecord ----
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function find() {
-
-		$postTable = CmsTables::TABLE_PAGE;
-
-		return parent::find()->where( [ "$postTable.type" => CmsGlobal::TYPE_POST ] );
-	}
-
 	// CMG parent classes --------------------
 
 	// Post ----------------------------------
@@ -111,6 +106,16 @@ class Post extends Content {
 	// Read - Query -----------
 
 	// Read - Find ------------
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function find() {
+
+		$table = static::tableName();
+
+		return parent::find()->where( [ "$table.type" => CmsGlobal::TYPE_POST ] );
+	}
 
 	// Create -----------------
 
@@ -120,8 +125,8 @@ class Post extends Content {
 
 }
 
-Post::$statusMap[ Post::STATUS_BASIC ]		= 'Reg - Basic';
-Post::$statusMap[ Post::STATUS_MEDIA ]		= 'Reg - Media';
-Post::$statusMap[ Post::STATUS_ATTRIBUTES ]	= 'Reg - Attributes';
-Post::$statusMap[ Post::STATUS_SETTINGS ]	= 'Reg - Settings';
-Post::$statusMap[ Post::STATUS_REVIEW ]		= 'Reg - Review';
+Post::$statusMap[ Post::STATUS_BASIC ]		= 'Basic';
+Post::$statusMap[ Post::STATUS_MEDIA ]		= 'Media';
+Post::$statusMap[ Post::STATUS_ATTRIBUTES ]	= 'Attributes';
+Post::$statusMap[ Post::STATUS_SETTINGS ]	= 'Settings';
+Post::$statusMap[ Post::STATUS_REVIEW ]		= 'Review';

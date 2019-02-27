@@ -1,16 +1,32 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\resources;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+// Yii Imports
+use Yii;
+use yii\data\Sort;
 
+// CMG Imports
 use cmsgears\cms\common\models\resources\ModelContent;
-use cmsgears\cms\common\models\resources\Tag;
 
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
 
-class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
+use cmsgears\core\common\services\resources\TagService as BaseTagService;
+
+/**
+ * TagService provide service methods of tag model.
+ *
+ * @since 1.0.0
+ */
+class TagService extends BaseTagService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -20,7 +36,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\Tag';
+	public static $modelClass = '\cmsgears\cms\common\models\resources\Tag';
 
 	// Protected --------------
 
@@ -59,14 +75,98 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	// Data Provider ------
 
-	public function getPageWithContent( $config = [] ) {
+	public function getPage( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'template' => [
+					'asc' => [ "$templateTable.name" => SORT_ASC ],
+					'desc' => [ "$templateTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Template'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'query' ] = Tag::queryWithContent();
+			$config[ 'hasOne' ] = $modelClass::queryWithContent();
 		}
 
-		return $this->getPage( $config );
+		// Filters ----------
+
+		// Searching --------
+
+		// Reporting --------
+
+		// Result -----------
+
+		return parent::findPage( $config );
 	}
 
 	// Read ---------------
@@ -83,9 +183,9 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function create( $model, $config = [] ) {
 
-		$model		= parent::create( $model, $config );
+		$model = parent::create( $model, $config );
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		// Model content is required for all the tags to form tag page
 		if( !isset( $content ) ) {
@@ -93,8 +193,8 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 			$content = new ModelContent();
 		}
 
-		$config[ 'parent' ]			= $model;
-		$config[ 'parentType' ]		= CoreGlobal::TYPE_TAG;
+		$config[ 'parent' ]		= $model;
+		$config[ 'parentType' ]	= self::$parentType;
 
 		$this->modelContentService->create( $content, $config );
 
@@ -105,13 +205,13 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function update( $model, $config = [] ) {
 
-		$model		= parent::update( $model, $config );
+		$model = parent::update( $model, $config );
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ]	= true;
+			$config[ 'publish' ] = true;
 
 			$this->modelContentService->update( $content, $config );
 		}
@@ -123,7 +223,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function delete( $model, $config = [] ) {
 
-		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : ( isset( $model->modelContent ) ? $model->modelContent : null );
 
 		if( isset( $content ) ) {
 
@@ -132,6 +232,14 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

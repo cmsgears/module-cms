@@ -1,21 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\core\common\models\entities\ObjectData;
-use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\admin\models\forms\ElementForm;
-
-class ElementController extends \cmsgears\core\admin\controllers\base\CrudController {
+/**
+ * ElementController provides actions specific to element model.
+ *
+ * @since 1.0.0
+ */
+class ElementController extends \cmsgears\cms\admin\controllers\base\ElementController {
 
 	// Variables ---------------------------------------------------
 
@@ -25,9 +28,6 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	// Protected --------------
 
-	protected $templateService;
-	protected $activityService;
-	
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -36,28 +36,29 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CmsGlobal::PERM_BLOG_ADMIN;
+		// Config
+		$this->apixBase	= 'cms/element';
 
-		// Services
-		$this->modelService		= Yii::$app->factory->get( 'elementService' );
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-		$this->activityService	= Yii::$app->factory->get( 'activityService' );
-
-		// Sidebar	
-		$this->sidebar			= [ 'parent' => 'sidebar-cms', 'child' => 'element' ];
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'uelement' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'elements' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'elements' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Elements' ] ],
 			'create' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'gallery' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'data' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'config' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -77,152 +78,11 @@ class ElementController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	// ElementController ---------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		Url::remember( [ 'element/all' ], 'elements' );
+		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
 
-	public function actionCreate() {
-
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->type	= CmsGlobal::TYPE_ELEMENT;
-		$banner			= File::loadFile( null, 'Banner' );
-		$meta			= new ElementForm();
-
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
-
-			$this->modelService->create( $model, [ 'data' => $meta, 'banner' => $banner ] );
-
-			$model->refresh();
-			
-			$this->model = $model;
-			
-			return $this->redirect( "all" );
-		}
-
-		$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
-
-		return $this->render( 'create', [
-			'model' => $model,
-			'banner' => $banner,
-			'meta' => $meta,
-			'templatesMap' => $templatesMap
-		]);
-	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$banner	= File::loadFile( $model->banner, 'Banner' );
-			$meta	= new ElementForm( $model->data );
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $meta->load( Yii::$app->request->post(), 'ElementForm' ) && $model->validate() ) {
-
-				$this->modelService->update( $model, [ 'data' => $meta, 'banner' => $banner ] );
-				
-				$model->refresh();
-			
-				$this->model = $model;
-				
-				return $this->redirect( "all" );
-			}
-
-			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
-
-			return $this->render( 'update', [
-				'model' => $model,
-				'banner' => $banner,
-				'meta' => $meta,
-				'templatesMap' => $templatesMap
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			$banner		= $model->banner;
-			$meta		= new ElementForm( $model->data );
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
-
-				$this->modelService->delete( $model, [ 'banner' => $banner ] );
-
-				$this->model = $model;
-				
-				return $this->redirect( $this->returnUrl );
-			}
-
-			$templatesMap	= $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
-
-			return $this->render( 'delete', [
-				'model' => $model,
-				'banner' => $banner,
-				'meta' => $meta,
-				'templatesMap' => $templatesMap
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-	
-	public function afterAction( $action, $result ) {
-
-		$parentType = $this->modelService->getParentType();
-		
-		switch( $action->id ) {
-
-			case 'create':
-			case 'update': {
-
-				if( isset( $this->model ) ) {
-
-					// Refresh Listing
-					$this->model->refresh();
-
-					// Activity
-					if( $action->id == 'create' ) { 
-					
-						$this->activityService->createActivity( $this->model, $parentType );
-					}
-					
-					if( $action->id == 'update' ) {
-					
-						$this->activityService->updateActivity( $this->model, $parentType );
-					}
-				}
-
-				break;
-			}
-			case 'delete': {
-
-				if( isset( $this->model ) ) {
-
-					$this->activityService->deleteActivity( $this->model, $parentType );
-				}
-
-				break;
-			}
-		}
-
-		return parent::afterAction( $action, $result );
-	}
 }

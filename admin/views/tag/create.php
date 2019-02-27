@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
@@ -13,7 +13,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Tag | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
@@ -29,7 +29,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -38,6 +38,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
 				</div>
@@ -53,11 +58,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row  padding padding-small-v">
 						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget( [ 'model' => $banner, 'clearAction' => true ] ) ?>
 						</div>
 						<div class="col col12x4">
 							<label>Video</label>
-							<?= VideoUploader::widget( [  'model' => $video ] ) ?>
+							<?= VideoUploader::widget( [ 'model' => $video, 'clearAction' => true ] ) ?>
 						</div>
 					</div>
 				</div>
@@ -111,14 +116,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Create" />
+			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>

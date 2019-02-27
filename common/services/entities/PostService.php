@@ -1,25 +1,41 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
-use yii\data\Sort;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\entities\Post;
+use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
+use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\core\common\services\traits\ApprovalTrait;
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\cms\common\services\base\ContentService;
 
-class PostService extends \cmsgears\cms\common\services\base\ContentService implements IPostService {
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
+use cmsgears\core\common\services\traits\base\SimilarTrait;
+use cmsgears\core\common\services\traits\mappers\CategoryTrait;
+
+/**
+ * PostService provide service methods of post model.
+ *
+ * @since 1.0.0
+ */
+class PostService extends ContentService implements IPostService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,13 +45,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Post';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Post';
 
-	public static $modelTable	= CmsTables::TABLE_PAGE;
-
-	public static $typed		= true;
-
-	public static $parentType	= CmsGlobal::TYPE_POST;
+	public static $parentType = CmsGlobal::TYPE_POST;
 
 	// Protected --------------
 
@@ -46,20 +58,22 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Protected --------------
 
 	protected $fileService;
+	protected $metaService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use ApprovalTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
+	use CategoryTrait;
+	use FeaturedTrait;
+	use SimilarTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
 
 		$this->fileService	= $fileService;
+		$this->metaService 	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -78,131 +92,33 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelClass			= static::$modelClass;
-		$modelTable			= static::$modelTable;
-		$modelContentTable	= CmsTables::TABLE_MODEL_CONTENT;
-
-		// Sorting ----------
-
-		$sort = new Sort([
-			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => ['visibility' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'visibility',
-				],
-				'status' => [
-					'asc' => [ 'status' => SORT_ASC ],
-					'desc' => ['status' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'status',
-				],
-				'template' => [
-					'asc' => [ 'template' => SORT_ASC ],
-					'desc' => ['template' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'template',
-				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'cdate',
-				],
-				'pdate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'pdate',
-				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate',
-				]
-			]
-		]);
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		// Query ------------
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'hasOne' ] = true;
-		}
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'query' ] = Post::queryWithAuthor();
-		}
-
-		// Filters ----------
-
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
-
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
-
-			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
-		}
-		// Searching --------
-
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $searchCol ) ) {
-
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'summary' => "$modelContentTable.summary", 'content' => "$modelContentTable.content" ];
-
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-
-		// Reporting --------
-
-		$config[ 'report-col' ]	= [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'summary' => "$modelContentTable.summary", 'content' => "$modelContentTable.content" ];
-
-		// Result -----------
-
-		$config[ 'conditions' ][ "$modelTable.type" ]	= CmsGlobal::TYPE_POST;
-
-		return parent::getPage( $config );
-
-	}
-
 	public function getPublicPage( $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
 
 		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'blog';
 
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
 		return parent::getPublicPage( $config );
+	}
+
+	public function getPageForSimilar( $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+		$modelClass	= static::$modelClass;
+
+		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
+		$config[ 'query' ] = $this->generateSimilarQuery( $config );
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return $this->getPublicPage( $config );
 	}
 
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getFeatured() {
-
-		return Post::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
-	}
 
 	// Read - Lists ----
 
@@ -214,126 +130,299 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function create( $model, $config = [] ) {
 
-		$model->type = CmsGlobal::TYPE_POST;
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
-		if( !isset( $model->visibility ) ) {
+		$modelClass = static::$modelClass;
 
-			$model->visibility	= Post::VISIBILITY_PRIVATE;
-		}
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
+		// Default Private
+		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
+
+		// Default New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
+
+		// Create Model
 		return parent::create( $model, $config );
 	}
 
 	public function add( $model, $config = [] ) {
 
-		$config[ 'admin' ]	= true;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		return $this->register( $model, $config );
-	}
+		$modelClass = static::$modelClass;
 
-	public function register( $model, $config = [] ) {
-
-		$content 	= $config[ 'content' ];
-
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : false;
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
+
+		$galleryClass = $galleryService->getModelClass();
 
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
 
-			// Create post
-			$this->create( $model, $config );
+			// Create Model
+			$model = $this->create( $model, $config );
 
-			$model->refresh();
+			// Create Gallery
+			if( isset( $gallery ) ) {
 
-			// Create and attach gallery
-			if( $gallery ) {
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
 
-				$gallery 	= $galleryService->createByParams(
-									[ 'type' => CmsGlobal::TYPE_POST, 'active' => true, 'name' => $model->name, 'siteId' => Yii::$app->core->siteId ],
-									[ 'autoName' => true ]
-								);
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
 
-				$this->linkGallery( $model, $gallery );
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
 			}
 
 			// Create and attach model content
-			$modelContentService->create( $content, [ 'parent' => $model, 'parentType' => CmsGlobal::TYPE_POST, 'publish' => $publish, 'banner' => $banner, 'video' => $video ] );
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
-			$model->refresh();
+			// Bind tags
+			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
-
-			return $model;
 		}
 		catch( Exception $e ) {
 
 			$transaction->rollBack();
+
+			return false;
 		}
 
-		return false;
+		return $model;
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/post/review';
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		$registered	= false;
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			// Bind categories
+			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+
+			// Bind tags
+			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+
+			$transaction->commit();
+
+			$registered	= true;
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		if( $registered ) {
+
+			// Notify Site Admin
+			if( $notify ) {
+
+				// Trigger Notification
+				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_POST_REGISTER,
+					[ 'model' => $model, 'service' => $this, 'user' => $user ],
+					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'title', 'data', 'content', 'widgetData' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'parentId', 'avatarId', 'name', 'slug', 'icon', 'texture',
+			'title', 'description', 'visibility', 'content'
+		];
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'comments'
+			]);
 		}
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$modelTagService		= Yii::$app->factory->get( 'modelTagService' );
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
+		}
+
+		// Update model content
+		if( isset( $content ) ) {
+
+			$modelContentService->update( $content, [
+				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+		}
+
+		// Bind categories
+		$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+
+		// Bind tags
+		$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
 
-	public function linkGallery( $model, $gallery ) {
+	// Delete -------------
 
-		$model->galleryId	= $gallery->id;
+	public function delete( $model, $config = [] ) {
 
-		return parent::update( $model, [
-			'attributes' => [ 'galleryId' ]
-		]);
-	}
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+		if( $config[ 'hard' ] ) {
 
-		switch( $column ) {
+			$transaction = Yii::$app->db->beginTransaction();
 
-			case 'model': {
+			try {
 
-				switch( $action ) {
+				// Delete metas
+				$this->metaService->deleteByModelId( $model->id );
 
-					case 'delete': {
+				// Delete files
+				$this->fileService->deleteFiles( $model->files );
 
-						$this->delete( $model );
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
-						break;
-					}
-				}
+				// Delete Category Mappings
+				Yii::$app->factory->get( 'modelCategoryService' )->deleteByParent( $model->id, static::$parentType );
 
-				break;
+				// Delete Tag Mappings
+				Yii::$app->factory->get( 'modelTagService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Comments
+				Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Followers
+				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 			}
 		}
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	// Delete -------------
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

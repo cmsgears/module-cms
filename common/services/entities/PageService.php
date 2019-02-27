@@ -1,25 +1,36 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
-use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
-
-use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
+use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
-use cmsgears\core\common\services\traits\MultiSiteTrait;
+use cmsgears\cms\common\services\base\ContentService;
 
-class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
+
+/**
+ * PageService provide service methods of page model.
+ *
+ * @since 1.0.0
+ */
+class PageService extends ContentService implements IPageService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,13 +40,9 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Page';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Page';
 
-	public static $modelTable	= CmsTables::TABLE_PAGE;
-
-	public static $typed		= true;
-
-	public static $parentType	= CmsGlobal::TYPE_PAGE;
+	public static $parentType = CmsGlobal::TYPE_PAGE;
 
 	// Protected --------------
 
@@ -46,20 +53,20 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Protected --------------
 
 	protected $fileService;
+	protected $metaService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use NameTypeTrait;
-	use SlugTypeTrait;
-	use MultiSiteTrait;
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
 
 		$this->fileService	= $fileService;
+		$this->metaService 	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -78,118 +85,23 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
-
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-
-		// Sorting ----------
-
-		$sort = new Sort([
-			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => ['visibility' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'visibility',
-				],
-				'status' => [
-					'asc' => [ 'status' => SORT_ASC ],
-					'desc' => ['status' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'status',
-				],
-				'template' => [
-					'asc' => [ 'template' => SORT_ASC ],
-					'desc' => ['template' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'template',
-				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'cdate',
-				],
-				'pdate' => [
-					'asc' => [ 'publishedAt' => SORT_ASC ],
-					'desc' => ['publishedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'pdate',
-				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate',
-				]
-			]
-		]);
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		// Query ------------
-
-		if( !isset( $config[ 'query' ] ) ) {
-
-			$config[ 'hasOne' ] = true;
-		}
-
-		// Filters ----------
-
-		// Searching --------
-
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
-
-		if( isset( $searchCol ) ) {
-
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
-
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-
-		// Reporting --------
-
-		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template"
-		];
-
-		// Result -----------
-
-		//$config[ 'conditions' ][ 'type' ]	= CmsGlobal::TYPE_PAGE;
-
-		return parent::findPage( $config );
-	}
-
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getMenuPages( $pages, $map = false ) {
+	public function getMenuPages( $ids, $map = false ) {
 
-		if( count( $pages ) > 0 ) {
+		if( count( $ids ) > 0 ) {
+
+			$modelClass	= static::$modelClass;
 
 			if( $map ) {
 
-				$pages		= Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
-				$pageMap	= [];
+				$pages = $modelClass::find()->filterWhere( [ 'in', 'id', $ids ] )->all();
 
-				foreach ( $pages as $page ) {
+				$pageMap = [];
+
+				foreach( $pages as $page ) {
 
 					$pageMap[ $page->id ] = $page;
 				}
@@ -198,7 +110,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			}
 			else {
 
-				return Page::find()->andFilterWhere( [ 'in', 'id', $pages ] )->all();
+				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $ids ] )->all();
 			}
 		}
 
@@ -215,21 +127,208 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function create( $model, $config = [] ) {
 
-		$model->type = CmsGlobal::TYPE_PAGE;
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
+		$modelClass = static::$modelClass;
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+
+		// Default Private
+		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
+
+		// Default New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
+
+		// Create Model
 		return parent::create( $model, $config );
+	}
+
+	public function add( $model, $config = [] ) {
+
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$modelClass = static::$modelClass;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/page/review';
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		$registered	= false;
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => static::$parentType,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
+
+			$transaction->commit();
+
+			$registered	= true;
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		if( $registered ) {
+
+			// Notify Site Admin
+			if( $notify ) {
+
+				// Trigger Notification
+				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_PAGE_REGISTER,
+					[ 'model' => $model, 'service' => $this, 'user' => $user ],
+					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'parentId', 'name', 'description', 'visibility', 'icon', 'title' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'parentId', 'avatarId', 'name', 'slug', 'icon', 'texture',
+			'title', 'description', 'visibility', 'content'
+		];
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'featured', 'comments', 'showGallery' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'comments'
+			]);
+		}
+
+		$galleryService			= Yii::$app->factory->get( 'galleryService' );
+		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
+		}
+
+		// Update model content
+		if( isset( $content ) ) {
+
+			$modelContentService->update( $content, [
+				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
 		}
 
 		return parent::update( $model, [
@@ -237,30 +336,60 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		]);
 	}
 
-	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+	// Delete -------------
 
-		switch( $column ) {
+	public function delete( $model, $config = [] ) {
 
-			case 'model': {
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-				switch( $action ) {
+		if( $config[ 'hard' ] ) {
 
-					case 'delete': {
+			$transaction = Yii::$app->db->beginTransaction();
 
-						$this->delete( $model );
+			try {
 
-						Yii::$app->factory->get( 'activityService' )->deleteActivity( $model, self::$parentType );
-						
-						break;
-					}
-				}
+				// Delete metas
+				$this->metaService->deleteByModelId( $model->id );
 
-				break;
+				// Delete files
+				$this->fileService->deleteFiles( $model->files );
+
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Comments
+				Yii::$app->factory->get( 'modelCommentService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Followers
+				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
+
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 			}
 		}
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	// Delete -------------
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -285,4 +414,5 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Update -------------
 
 	// Delete -------------
+
 }

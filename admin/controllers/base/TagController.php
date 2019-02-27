@@ -1,10 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -12,9 +18,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\resources\Tag;
 use cmsgears\cms\common\models\resources\ModelContent;
 
+/**
+ * TagController provides actions specific to tag model.
+ *
+ * @since 1.0.0
+ */
 abstract class TagController extends \cmsgears\core\admin\controllers\base\TagController {
 
 	// Variables ---------------------------------------------------
@@ -22,6 +32,8 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $parentPath;
 
 	// Protected --------------
 
@@ -37,13 +49,16 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 		parent::init();
 
-		$this->viewPath				= '@cmsgears/module-cms/admin/views/tag/';
+		// Views
+		$this->viewPath = '@cmsgears/module-cms/admin/views/tag/';
 
-		$this->crudPermission		= CmsGlobal::PERM_BLOG_ADMIN;
+		// Config
+		$this->templateType = CoreGlobal::TYPE_TAG;
 
-		$this->templateType			= CoreGlobal::TYPE_TAG;
+		// Permission
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
-		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
 	}
@@ -56,44 +71,66 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+
+		return $behaviors;
+	}
+
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		$actions = parent::actions();
+
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
+
+		return $actions;
+	}
 
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// CategoryController --------------------
+	// TagController -------------------------
 
-	public function actionAll() {
+	public function actionCreate( $config = [] ) {
 
-		$modelTable		= $this->modelService->getModelTable();
-		$dataProvider	= $this->modelService->getPageWithContent( [ 'conditions' => [ "$modelTable.type" => $this->type ] ] );
+		$model = $this->modelService->getModelObject();
 
-		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
-		]);
-	}
-
-	public function actionCreate() {
-
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
 		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= $this->type;
 
-		$content		= new ModelContent();
-		$banner			= File::loadFile( null, 'Banner' );
-		$video			= File::loadFile( null, 'Video' );
+		$content	= new ModelContent();
+		$banner		= File::loadFile( null, 'Banner' );
+		$video		= File::loadFile( null, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
-			
-			$this->modelService->create( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-			return $this->redirect( "update?id=$model->id" );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+
+			return $this->redirect( 'all' );
 		}
 
-		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 		return $this->render( 'create', [
 			'model' => $model,
@@ -104,7 +141,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 		]);
 	}
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
 		$model	= $this->modelService->getById( $id );
@@ -115,16 +152,16 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 			$content	= $model->modelContent;
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$video		= File::loadFile( $content->video, 'Video' );
-			
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->modelService->update( $model, [ 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
 
-				return $this->redirect( "update?id=$model->id" );
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 			return $this->render( 'update', [
 				'model' => $model,
@@ -139,7 +176,7 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id ) {
+	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
 		$model	= $this->modelService->getById( $id );
@@ -151,12 +188,14 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$this->modelService->delete( $model, [ 'content' => $content ] );
+				$this->model = $model;
+
+				$this->modelService->delete( $model, [ 'admin' => true, 'content' => $content ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 			return $this->render( 'delete', [
 				'model' => $model,
@@ -170,4 +209,5 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\TagCo
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

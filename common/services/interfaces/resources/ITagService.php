@@ -1,11 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\cms\common\services\interfaces\resources;
 
-interface ITagService extends \cmsgears\core\common\services\interfaces\resources\ITagService {
+// CMG Imports
+use cmsgears\core\common\services\interfaces\resources\ITagService as IBaseTagService;
+
+/**
+ * ITagService declares methods specific to tag model.
+ *
+ * @since 1.0.0
+ */
+interface ITagService extends IBaseTagService {
 
 	// Data Provider ------
-
-	public function getPageWithContent( $config = [] );
 
 	// Read ---------------
 
@@ -15,10 +29,20 @@ interface ITagService extends \cmsgears\core\common\services\interfaces\resource
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }
