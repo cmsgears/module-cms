@@ -60,6 +60,7 @@ class m160623_065815_cms_index extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type', $this->prefix . 'cms_model_content', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type_p', $this->prefix . 'cms_model_content', 'parentType' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_content_piptt', $this->prefix . 'cms_model_content', [ 'parentId', 'parentType', 'type' ] );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'cms_model_content' . ' ADD INDEX ' . '`idx_' . $this->prefix . 'model_content_pub` ' . '(`publishedAt` DESC)' );
 	}
 
 	public function down() {
