@@ -95,6 +95,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'update-meta' => [ 'permission' => $this->crudPermission ],
 					'toggle-meta' => [ 'permission' => $this->crudPermission ],
 					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'settings' => [ 'permission' => $this->crudPermission ],
 					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission ],
 					'remove-element' => [ 'permission' => $this->crudPermission ],
@@ -148,6 +149,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'update-meta' => [ 'post' ],
 					'toggle-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
+					'settings' => [ 'post' ],
 					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
