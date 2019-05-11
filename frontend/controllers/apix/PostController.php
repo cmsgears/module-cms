@@ -18,9 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\filters\UserExistFilter;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
-class PostController extends Controller {
+class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

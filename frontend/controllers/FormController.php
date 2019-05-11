@@ -22,14 +22,12 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\forms\frontend\controllers\FormController as BaseFormController;
-
 /**
  * FormController provides actions specific to form model.
  *
  * @since 1.0.0
  */
-class FormController extends BaseFormController {
+class FormController extends \cmsgears\forms\frontend\controllers\FormController {
 
 	// Variables ---------------------------------------------------
 
@@ -82,7 +80,7 @@ class FormController extends BaseFormController {
 			$formFields	= $model->getFieldsMap();
 
 	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
-			$user	= Yii::$app->user->getIdentity();
+			$user	= Yii::$app->core->getUser();
 
 			$form->captchaAction = '/cms/form/captcha';
 
@@ -114,22 +112,10 @@ class FormController extends BaseFormController {
 				$form->setScenario( 'captcha' );
 			}
 
-			if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
+			if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 				// Save Model
 				if( $this->formService->processForm( $model, $form ) ) {
-
-					// Trigger User Mail
-					if( $model->userMail ) {
-
-						Yii::$app->formsMailer->sendUserMail( $model, $form );
-					}
-
-					// Trigger Admin Mail
-					if( $model->adminMail ) {
-
-						Yii::$app->formsMailer->sendAdminMail( $model, $form );
-					}
 
 					// Set success message
 					if( isset( $model->success ) ) {
