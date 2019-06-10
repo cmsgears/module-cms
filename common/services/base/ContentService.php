@@ -322,51 +322,60 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
+
 		switch( $column ) {
 
 			case 'status': {
 
 				switch( $action ) {
 
+					case 'accepted': {
+
+						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
 					case 'confirmed': {
 
-						$this->confirm( $model );
+						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'approved': {
 
-						$this->approve( $model );
+						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'rejected': {
 
-						$this->reject( $model );
+						$this->reject( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'active': {
 
-						$this->activate( $model );
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'frozen': {
 
-						$this->freeze( $model );
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'blocked': {
 
-						$this->block( $model );
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'terminated': {
 
-						$this->terminate( $model );
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
