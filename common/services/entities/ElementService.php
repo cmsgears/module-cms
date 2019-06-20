@@ -14,14 +14,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\entities\IElementService;
 
-use cmsgears\core\common\services\entities\ObjectDataService;
-
 /**
  * ElementService provide service methods of element model.
  *
  * @since 1.0.0
  */
-class ElementService extends ObjectDataService implements IElementService {
+class ElementService extends \cmsgears\core\common\services\entities\ObjectDataService implements IElementService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,9 +29,9 @@ class ElementService extends ObjectDataService implements IElementService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Element';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Element';
 
-	public static $parentType	= CmsGlobal::TYPE_ELEMENT;
+	public static $parentType = CmsGlobal::TYPE_ELEMENT;
 
 	// Protected --------------
 

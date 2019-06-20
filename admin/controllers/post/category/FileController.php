@@ -43,7 +43,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Config
-		$this->title	= 'category File';
+		$this->title	= 'Category File';
 		$this->apixBase	= 'cms/category/file';
 
 		// Services

@@ -14,14 +14,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\entities\IMenuService;
 
-use cmsgears\core\common\services\entities\ObjectDataService;
-
 /**
  * MenuService provide service methods of menu model.
  *
  * @since 1.0.0
  */
-class MenuService extends ObjectDataService implements IMenuService {
+class MenuService extends \cmsgears\core\common\services\entities\ObjectDataService implements IMenuService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,9 +29,9 @@ class MenuService extends ObjectDataService implements IMenuService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Menu';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Menu';
 
-	public static $parentType	= CmsGlobal::TYPE_MENU;
+	public static $parentType = CmsGlobal::TYPE_MENU;
 
 	// Protected --------------
 

@@ -46,6 +46,7 @@ class ArticleController extends \cmsgears\cms\admin\controllers\base\PageControl
 		$this->type			= CmsGlobal::TYPE_ARTICLE;
 		$this->templateType	= CmsGlobal::TYPE_ARTICLE;
 		$this->apixBase		= 'cms/article';
+		$this->title		= 'Article';
 		$this->comments		= true;
 
 		// Services

@@ -331,49 +331,49 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 				switch( $action ) {
 
-					case 'accepted': {
+					case 'accept': {
 
 						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'confirmed': {
+					case 'confirm': {
 
 						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'approved': {
+					case 'approve': {
 
 						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'rejected': {
+					case 'reject': {
 
 						$this->reject( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'active': {
+					case 'activate': {
 
 						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'frozen': {
+					case 'freeze': {
 
 						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'blocked': {
+					case 'block': {
 
 						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'terminated': {
+					case 'terminate': {
 
 						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 

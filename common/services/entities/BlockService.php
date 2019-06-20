@@ -14,14 +14,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\entities\IBlockService;
 
-use cmsgears\core\common\services\entities\ObjectDataService;
-
 /**
  * BlockService provide service methods of block model.
  *
  * @since 1.0.0
  */
-class BlockService extends ObjectDataService implements IBlockService {
+class BlockService extends \cmsgears\core\common\services\entities\ObjectDataService implements IBlockService {
 
 	// Variables ---------------------------------------------------
 

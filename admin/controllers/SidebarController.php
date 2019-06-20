@@ -29,6 +29,8 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -43,6 +45,7 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
 		$this->apixBase		= 'cms/sidebar';
+		$this->title		= 'Sidebar';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'sidebarService' );

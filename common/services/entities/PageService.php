@@ -23,8 +23,6 @@ use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
 use cmsgears\cms\common\services\base\ContentService;
 
-use cmsgears\core\common\services\traits\base\FeaturedTrait;
-
 /**
  * PageService provide service methods of page model.
  *
@@ -58,8 +56,6 @@ class PageService extends ContentService implements IPageService {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 

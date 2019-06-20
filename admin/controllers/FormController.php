@@ -36,6 +36,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	protected $type;
@@ -62,6 +64,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->type			= CoreGlobal::TYPE_FORM;
 		$this->templateType	= CoreGlobal::TYPE_FORM;
 		$this->apixBase		= 'cms/form';
+		$this->title		= 'Form';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );

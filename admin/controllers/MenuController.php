@@ -29,6 +29,8 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -43,6 +45,7 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;
 		$this->apixBase		= 'cms/menu';
+		$this->title		= 'Menu';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'menuService' );

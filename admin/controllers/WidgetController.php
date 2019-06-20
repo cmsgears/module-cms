@@ -29,6 +29,8 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -43,6 +45,7 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;
 		$this->apixBase		= 'cms/widget';
+		$this->title		= 'Widget';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'widgetService' );

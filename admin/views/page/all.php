@@ -6,9 +6,9 @@ use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
 $title			= $this->context->title;
-$this->title	= $title . 's | ' . $coreProperties->getSiteTitle();
-$baseUrl		= $this->context->baseUrl;
+$this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$baseUrl		= $this->context->baseUrl;
 $comments		= $this->context->comments;
 
 // View Templates
@@ -41,7 +41,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'confirmed' => 'Confirm', 'rejected' => 'Reject', 'active' => 'Activate', 'frozen' => 'Freeze', 'blocked' => 'Block' ],
+		'status' => [ 'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject', 'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block' ],
 		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
