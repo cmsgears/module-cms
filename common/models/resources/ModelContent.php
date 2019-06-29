@@ -186,9 +186,9 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 	 * @param integer $limit
 	 * @return string
 	 */
-	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getLimitedSummary( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
-		$summary = $this->summary;
+		$summary = strip_tags( $this->summary );
 
 		if( strlen( $summary ) > $limit ) {
 
@@ -204,9 +204,9 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 	 * @param integer $limit
 	 * @return string
 	 */
-	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getLimitedContent( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
-		$content = $this->content;
+		$content = strip_tags( $this->content );
 
 		if( strlen( $content ) > $limit ) {
 
@@ -216,7 +216,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		return HtmlPurifier::process( $content );
 	}
 
-	public function getDisplaySummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getDisplaySummary( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
 		if( empty( $this->summary ) || strlen( $this->summary ) < 10 ) {
 
