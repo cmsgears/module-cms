@@ -7,10 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix\object;
-
-// Yii Imports
-use Yii;
+namespace cmsgears\cms\admin\controllers\apix\odata;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
@@ -20,7 +17,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class FileController extends \cmsgears\core\admin\controllers\apix\base\FileController {
+class FileController extends \cmsgears\core\admin\controllers\apix\odata\FileController {
 
 	// Variables ---------------------------------------------------
 
@@ -40,9 +37,6 @@ class FileController extends \cmsgears\core\admin\controllers\apix\base\FileCont
 
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
-
-		// Services
-		$this->parentService = Yii::$app->factory->get( 'objectService' );
 	}
 
 	// Instance methods --------------------------------------------

@@ -44,7 +44,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 		// Config
 		$this->title	= 'Block File';
-		$this->apixBase	= 'cms/object/file';
+		$this->apixBase	= 'cms/odata/file';
 
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'blockService' );
