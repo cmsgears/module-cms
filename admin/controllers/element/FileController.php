@@ -44,7 +44,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 		// Config
 		$this->title	= 'Element File';
-		$this->apixBase	= 'cms/odata/file';
+		$this->apixBase	= 'cms/element/file';
 
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'elementService' );

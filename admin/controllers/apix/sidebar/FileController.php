@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix\odata;
+namespace cmsgears\cms\admin\controllers\apix\sidebar;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
@@ -17,7 +17,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class FileController extends \cmsgears\core\admin\controllers\apix\odata\FileController {
+class FileController extends \cmsgears\core\admin\controllers\apix\block\FileController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,6 +37,9 @@ class FileController extends \cmsgears\core\admin\controllers\apix\odata\FileCon
 
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
+
+		// Services
+		$this->parentService = Yii::$app->factory->get( 'sidebarService' );
 	}
 
 	// Instance methods --------------------------------------------

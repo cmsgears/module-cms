@@ -44,7 +44,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 		// Config
 		$this->title	= 'Widget File';
-		$this->apixBase	= 'cms/odata/file';
+		$this->apixBase	= 'cms/widget/file';
 
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'widgetService' );

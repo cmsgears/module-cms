@@ -44,7 +44,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\FileControlle
 
 		// Config
 		$this->title	= 'Sidebar File';
-		$this->apixBase	= 'cms/odata/file';
+		$this->apixBase	= 'cms/sidebar/file';
 
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'sidebarService' );
