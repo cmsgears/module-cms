@@ -12,6 +12,7 @@ namespace cmsgears\cms\frontend\controllers;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 
@@ -22,14 +23,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Post;
 
-use cmsgears\cms\frontend\controllers\base\Controller;
-
 /**
  * PostController consist of actions specific to blog posts.
  *
  * @since 1.0.0
  */
-class PostController extends Controller {
+class PostController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -56,7 +55,9 @@ class PostController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->baseUrl	= '/cms/post';
+		$this->apixBase	= 'cms/post';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -65,6 +66,10 @@ class PostController extends Controller {
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 		$this->tagService		= Yii::$app->factory->get( 'tagService' );
+
+		// Return Url
+		$this->returnUrl = Url::previous( 'posts' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -82,13 +87,16 @@ class PostController extends Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// secure actions
-					'all' => [ 'permission' => $this->crudPermission ]
+					'all' => [ 'permission' => $this->crudPermission ],
+					'add' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'home' => [ 'get' ],
 					'all' => [ 'get' ],
+					'add' => [ 'get' ],
 					'search' => [ 'get' ],
 					'category' => [ 'get' ],
 					'tag' => [ 'get' ],
@@ -121,6 +129,32 @@ class PostController extends Controller {
 
 	// PostController ------------------------
 
+	/**
+	 * Redirects user to appropriate page according to the status.
+	 */
+	public function actionHome( $slug ) {
+
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
+
+		$user	= Yii::$app->core->getUser();
+		$model	= $this->modelService->getFirstBySlug( $slug );
+
+		if( isset( $model ) && $model->isOwner( $user ) ) {
+
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			if( isset( $template ) ) {
+
+				return $this->redirect( [ "/cms/post/$template->slug/home?slug=$slug" ] );
+			}
+
+			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
+		}
+
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
 	public function actionAll( $status = null ) {
 
 		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
@@ -140,7 +174,17 @@ class PostController extends Controller {
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
+			'statusMap' => Post::$statusMap,
 			'status' => $status
+		]);
+	}
+
+	public function actionAdd() {
+
+		$templatesMap = $this->templateService->getSlugModelMapByType( CmsGlobal::TYPE_POST );
+
+		return $this->render( 'add', [
+			'templatesMap' => $templatesMap
 		]);
 	}
 

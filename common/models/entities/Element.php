@@ -12,9 +12,7 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ObjectData;
-
-class Element extends ObjectData {
+class Element extends \cmsgears\core\common\models\entities\ObjectData {
 
 	// Variables ---------------------------------------------------
 
@@ -33,6 +31,8 @@ class Element extends ObjectData {
 	// Protected --------------
 
 	protected $modelType = CmsGlobal::TYPE_ELEMENT;
+
+	protected $testOwner = true;
 
 	// Private ----------------
 

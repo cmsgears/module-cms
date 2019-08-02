@@ -22,11 +22,11 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * BlockController consist of actions specific to page blocks.
+ * ElementController consist of actions specific to page elements.
  *
  * @since 1.0.0
  */
-class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller {
+class ElementController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -38,7 +38,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 
 	protected $templateService;
 
-	protected $modelBlockService;
+	protected $modelElementService;
 
 	// Private ----------------
 
@@ -52,18 +52,18 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->apixBase	= 'cms/block';
+		$this->apixBase	= 'cms/element';
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'blockService' );
+		$this->modelService = Yii::$app->factory->get( 'elementService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
-		$this->modelBlockService = Yii::$app->factory->get( 'modelBlockService' );
+		$this->modelElementService = Yii::$app->factory->get( 'modelElementService' );
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'blocks' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
+		$this->returnUrl = Url::previous( 'elements' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/element/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -104,11 +104,11 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 
 	// CMG parent classes --------------------
 
-	// BlockController -----------------------
+	// ElementController -----------------------
 
 	public function actionAll( $status = null ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
+		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
 		$modelClass = $this->modelService->getModelClass();
 
@@ -134,18 +134,18 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 
     public function actionAdd( $pid = null, $ptype = null, $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_BLOCK, [ 'ignoreSite' => true ] );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
 		$modelClass	= $this->modelService->getModelClass();
 
 		if( isset( $template ) ) {
 
 			$model = new $modelClass;
 
-			// Block
+			// Element
 			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
-			$model->type		= CmsGlobal::TYPE_BLOCK;
+			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
 
 			// Files

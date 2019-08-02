@@ -12,25 +12,21 @@ namespace cmsgears\cms\frontend\controllers\post;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\cms\common\models\entities\Post;
-use cmsgears\cms\common\models\resources\ModelContent;
-use cmsgears\cms\common\models\resources\ContentMeta;
-
-use cmsgears\cms\frontend\controllers\base\Controller;
 
 /**
  * DefaultController provide actions specific to blog post management.
  *
  * @since 1.0.0
  */
-class DefaultController extends Controller {
+class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -40,17 +36,16 @@ class DefaultController extends Controller {
 
 	public $basePath;
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $templateService;
 
-	protected $categoryService;
-	protected $tagService;
-
 	protected $modelContentService;
-	protected $modelCategoryService;
 
-	protected $pageMetaService;
+	protected $elementService;
+	protected $blockService;
 
 	// Private ----------------
 
@@ -60,22 +55,26 @@ class DefaultController extends Controller {
 
 		parent::init();
 
-		$this->basePath	 		= 'post/default';
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->layout			= CoreGlobalWeb::LAYOUT_PUBLIC;
+		// Config
+		$this->apixBase	= 'cms/post';
+		$this->basePath	= 'post/default';
 
-		$this->modelService			= Yii::$app->factory->get( 'postService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'postService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
-		$this->templateService		= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
-		$this->categoryService		= Yii::$app->factory->get( 'categoryService' );
-		$this->tagService			= Yii::$app->factory->get( 'tagService' );
+		$this->modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
-		$this->modelContentService	= Yii::$app->factory->get( 'modelContentService' );
-		$this->modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+		$this->elementService	= Yii::$app->factory->get( 'elementService' );
+		$this->blockService		= Yii::$app->factory->get( 'blockService' );
 
-		$this->pageMetaService		= Yii::$app->factory->get( 'pageMetaService' );
+		// Return Url
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/default/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -92,24 +91,31 @@ class DefaultController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// secure actions
+					'index' => [ 'permission' => $this->crudPermission ],
+					'home' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'add' => [ 'permission' => $this->crudPermission ],
-					'basic' => [ 'permission' => $this->crudPermission ],
-					'media' => [ 'permission' => $this->crudPermission ],
-					'settings' => [ 'permission' => $this->crudPermission ],
-					'attribute' => [ 'permission' => $this->crudPermission ],
-					'review' => [ 'permission' => $this->crudPermission ],
+					'basic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'media' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'elements' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'blocks' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'attributes' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'settings' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'review' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'basic' => [ 'get','post' ],
-					'info' => [ 'get','post' ],
-					'media' => [ 'get','post' ],
-					'settings' => [ 'get','post' ],
-					'attribute' => [ 'get','post' ],
-					'review' => [ 'get', 'post' ],
+					'index' => [ 'get' ],
+					'home' => [ 'get' ],
+					'add' => [ 'get', 'post' ],
+					'basic' => [ 'get', 'post' ],
+					'media' => [ 'get', 'post' ],
+					'elements' => [ 'get' ],
+					'blocks' => [ 'get' ],
+					'attributes' => [ 'get' ],
+					'settings' => [ 'get', 'post' ],
+					'review' => [ 'get', 'post' ]
 				]
 			]
 		];
@@ -117,341 +123,414 @@ class DefaultController extends Controller {
 
 	// yii\base\Controller ----
 
-	public function actions() {
-
-		if ( !Yii::$app->user->isGuest ) {
-
-			$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
-		}
-
-		return [
-			'error' => [
-				'class' => 'yii\web\ErrorAction'
-			]
-		];
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// PostController ------------------------
+	// DefaultController ---------------------
 
-	public function actionAdd() {
+	public function actionHome( $slug ) {
 
-		$model				= new Post();
-		$model->siteId		= Yii::$app->core->siteId;
-		$model->comments	= false;
+		$model = $this->model;
 
-		$content			= new ModelContent();
-
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() && $content->load(Yii::$app->request->post(),'ModelContent' ) && $content->getClassName() ) {
-
-			$model->status	= Post::STATUS_BASIC;
-
-			$this->modelService->register( $model, [ 'publish' => $model->isActive(), 'content' => $content ] );
-
-			return $this->checkRefresh( $model );
-		}
-
-		$visibilityMap	= Post::$visibilityMap;
-
-		return $this->render( 'reg/basic', [
-			'model' => $model, 'content' => $content,
-			'visibilityMap' => $visibilityMap
-		]);
+		return $this->checkStatus( $model );
 	}
 
-	public function actionBasic( $slug ) {
+	public function actionAdd( $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-		$model	= $this->modelService->getBySlug( $slug, true );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_POST, [ 'ignoreSite' => true ] );
+		$modelClass	= $this->modelService->getModelClass();
 
-		if( $model ) {
+		if( isset( $template ) ) {
 
-			$content		= $model->modelContent;
-			$visibilityMap	= Post::$visibilityMap;
-            $banner         = File::loadFile( null, 'banner' );
-            $video          = File::loadFile( null, 'video' );
+			$model = new $modelClass;
+
+			// Post
+			$model->siteId		= Yii::$app->core->siteId;
+			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
+			$model->status		= $modelClass::STATUS_NEW;
+			$model->type		= CmsGlobal::TYPE_POST;
+			$model->comments	= false;
+
+			// Content
+			$content = $this->modelContentService->getModelObject();
+
+			$content->templateId = $template->id;
+
+			// Files
+			$avatar	= File::loadFile( null, 'Avatar' );
+			$banner	= File::loadFile( null, 'Banner' );
+			$video	= File::loadFile( null, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->modelService->update( $model, [ 'admin' => true ] );
+				// Register Model
+				$model = $this->modelService->register( $model, [
+					'content' => $content,
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
-				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
+				// Refresh Model
+				$model->refresh();
+
+				// Set model in action to cache
+				$this->model = $model;
+
+				return $this->updateStatus( $model, $modelClass::STATUS_BASIC );
 			}
 
-			return $this->render( 'reg/basic', [
-	    		'model' => $model,
+			return $this->render( 'add', [
+				'model' => $model,
 				'content' => $content,
-				'visibilityMap' => $visibilityMap,
-	    	]);
+				'avatar' => $avatar,
+				'banner' => $banner,
+				'video' => $video,
+				'visibilityMap' => $modelClass::$visibilityMap
+			]);
 		}
+
+		// Template not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+	}
+
+	public function actionBasic( $slug ) {
+
+		$modelClass = $this->modelService->getModelClass();
+
+		// Model
+		$model = $this->model;
+
+		$this->checkEditable( $model );
+
+		// Content
+		$content = $model->modelContent;
+
+		// Files
+		$avatar	= File::loadFile( null, 'Avatar' );
+		$banner	= File::loadFile( null, 'Banner' );
+		$video	= File::loadFile( null, 'Video' );
+
+		$oldSlug = $model->slug;
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
+			$model->validate() && $content->validate() ) {
+
+			// Register Model
+			$model = $this->modelService->update( $model, [
+				'content' => $content,
+				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+			]);
+
+			// Refresh Model
+			$model->refresh();
+
+			// Set model in action to cache
+			$this->model = $model;
+
+			if( $oldSlug == $model->slug ) {
+
+				return $this->refresh();
+			}
+			else {
+
+				return $this->redirect( [ 'basic?slug=' . $model->slug ] );
+			}
+		}
+
+		return $this->render( 'basic', [
+			'model' => $model,
+			'content' => $content,
+			'avatar' => $avatar,
+			'banner' => $banner,
+			'video' => $video,
+			'visibilityMap' => $modelClass::$visibilityMap
+		]);
 	}
 
 	public function actionMedia( $slug ) {
 
-		$model	= $this->modelService->getBySlug( $slug, true );
+		$modelClass = $this->modelService->getModelClass();
 
-		if( $model ) {
+		$model = $this->model;
 
-			$content	= $model->modelContent;
-			$banner		= File::loadFile( $content->banner, 'Banner' );
-			$video		= File::loadFile( $content->video, 'Video' );
+		$this->checkEditable( $model );
 
-			if(   $content->validate() ) {
+		$content = $model->modelContent;
 
-				if( $model->status <= Post::STATUS_MEDIA ) {
+		$avatar	 = File::loadFile( $model->avatar, 'Avatar' );
+		$banner	 = File::loadFile( $content->banner, 'Banner' );
+		$video	 = File::loadFile( $content->video, 'Video' );
 
-					$this->modelService->updateStatus( $model, Post::STATUS_MEDIA );
-				}
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+			$this->model = $this->modelService->update( $model, [
+				'content' => $content, 'avatar' => $avatar,
+				'banner' => $banner, 'video' => $video
+			]);
 
-				$this->modelContentService->update( $content, [ 'publish' => $model->isActive(), 'banner' => $banner, 'video' => $video ] );
+			$this->model->refresh();
 
-				//$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
+			if( $this->model->status >= $modelClass::STATUS_MEDIA ) {
 
-				//return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
+			else {
 
-			return $this->render( 'reg/media', [
-	    		'model' => $model,
-				'content' => $content,
-				'banner' => $banner,
-				'video' => $video,
-	    	]);
+				return $this->updateStatus( $model, $modelClass::STATUS_MEDIA );
+			}
 		}
 
+		return $this->render( 'media', [
+			'model' => $model,
+			'content' => $content,
+			'avatar' => $avatar,
+			'banner' => $banner,
+			'video' => $video,
+			'gallery' => $content->gallery
+		]);
 	}
 
-	public function actionSettings( $slug ) {
+	public function actionElements( $slug ) {
 
-		$model	= $this->modelService->getBySlug( $slug, true );
-		if( $model ) {
+		$modelClass = $this->modelService->getModelClass();
 
-			$content	= $model->modelContent;
-			if( $content->load( Yii::$app->request->post(), $content->getClassName()) && $content->validate()  ) {
+		$model = $this->model;
 
-				$this->modelContentService->update( $content, [ 'publish' => $model->isActive()] );
+		$this->checkEditable( $model );
 
-				$this->modelCategoryService->bindCategories( $model->id, CmsGlobal::TYPE_POST );
-			}
-			return $this->render( 'reg/settings', [
-	    		'model' => $model,
-				'content' => $content,
-	    	]);
+		$elements = $model->modelElements;
+
+		if( $model->status < $modelClass::STATUS_ELEMENTS ) {
+
+			$this->modelService->updateStatus( $model, $modelClass::STATUS_ELEMENTS );
 		}
 
+		return $this->render( 'elements', [
+			'model' => $model,
+			'elements' => $elements
+		]);
+	}
+
+	public function actionBlocks( $slug ) {
+
+		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
+
+		$modelClass = $this->modelService->getModelClass();
+
+		$model		= $this->model;
+		$parentType	= $this->modelService->getParentType();
+
+		$this->checkEditable( $model );
+
+		$dataProvider = $this->blockService->getPageByTypeParent( CmsGlobal::TYPE_BLOCK, $model->id, $parentType );
+
+		if( $model->status < $modelClass::STATUS_BLOCKS ) {
+
+			$this->modelService->updateStatus( $model, $modelClass::STATUS_BLOCKS );
+		}
+
+		return $this->render( 'blocks', [
+			'model' => $model,
+			'parentType' => $parentType,
+			'dataProvider' => $dataProvider
+		]);
 	}
 
 	public function actionAttributes( $slug ) {
 
-		$model	= $this->modelService->getBySlug( $slug, true );
+		$modelClass = $this->modelService->getModelClass();
 
-		if( $model ) {
+		$model = $this->model;
 
+		$this->checkEditable( $model );
 
-			//return var_dump($this->pageMetaService->getModelClass());
+		$metas = $this->metaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
 
-			$metasToLoad	= [];
-			$metas			= Yii::$app->request->post( 'ContentMeta' );
-			$count 			= count( $metas );
+		if( $model->status < $modelClass::STATUS_ATTRIBUTES ) {
 
-			// Create models if form submitted
-
-			if( $count > 0 ) {
-
-				$metas	= array_values( $metas );
-
-				foreach ( $metas as $meta ) {
-
-					$metasToLoad[]	= $this->getUserMeta( $model, $meta );
-				}
-			} else {
-
-				$metasToLoad	= $this->pageMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
-			}
-
-			if( count( $metasToLoad ) == 0 ) {
-
-				$metasToLoad[]	= $this->getUserMeta( $model );
-			}
-			//return var_dump(Yii::$app->request->post('ContentMeta'));
-			if( $count > 0 && ContentMeta::loadMultiple( $metasToLoad, Yii::$app->request->post(), 'ContentMeta' )
-					&& ContentMeta::validateMultiple( $metasToLoad ) ) {
-
-				// Update attributes
-				$this->pageMetaService->updateMultiple( $metasToLoad, [ 'parent' => $model ] );
-				//return var_dump($model->status);
-
-				if( $model->status < Post::STATUS_ATTRIBUTES ) {
-
-					return $this->updateStatus( $model, Post::STATUS_ATTRIBUTES );
-				}
-			}
-
-			//return var_dump($modelMeta);
-			return $this->render( 'reg/attributes', [
-	    		'model' => $model,
-				'metas' => $metasToLoad,
-	    	]);
+			$this->modelService->updateStatus( $model, $modelClass::STATUS_ATTRIBUTES );
 		}
 
+		return $this->render( 'attributes', [
+			'model' => $model,
+			'attributes' => $metas
+		]);
+	}
+
+	public function actionSettings( $slug ) {
+
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = $this->model;
+
+		$parentType	= $this->modelService->getParentType();
+
+		$this->checkEditable( $model );
+
+		if( $model->status < $modelClass::STATUS_SETTINGS ) {
+
+			$this->modelService->updateStatus( $model, $modelClass::STATUS_SETTINGS );
+		}
+
+		return $this->render( 'settings', [
+			'model' => $model,
+			'parentType' => $parentType
+		]);
 	}
 
 	public function actionReview( $slug ) {
 
-		$model	= $this->modelService->getBySlug( $slug, true );
+		$model = $this->model;
 
-		if( $model ) {
+		$modelClass = $this->modelService->getModelClass();
 
-			$content	= $post->modelContent;
+		if( isset( $model ) ) {
 
-			$metasToLoad	= [];
+			if( $model->status < $modelClass::STATUS_REVIEW ) {
 
-			$metasToLoad	= $this->pageMetaService->getByType( $model->id, CoreGlobal::META_TYPE_USER );
-
+				$this->modelService->updateStatus( $model, $modelClass::STATUS_REVIEW );
+			}
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				// Update Post Status
-				if( $model->status < Post::STATUS_SUBMITTED ) {
+				// Submit
+				if( $model->status < $modelClass::STATUS_SUBMITTED ) {
 
-					$this->modelService->updateStatus( $model, Post::STATUS_SUBMITTED );
-
-					// Send admin notification for new Post.
-
-					$model->refresh();
-
-					//$dataCache =  $this->modelService->cacheDb( $model, [ 'controller' => $this, 'process' => true ] );
+					$this->modelService->submit( $model, [
+						'adminLink' => "/cms/post/review?id={$model->id}"
+					]);
 				}
+				// Re-Submit
 				else if( $model->isRejected() ) {
 
-					$this->modelService->updateStatus( $model, Post::STATUS_RE_SUBMIT );
-
-					// Send admin notification for re-submit post.
+					$this->modelService->reSubmit( $model, [
+						'adminLink' => "/cms/post//review?id={$model->id}"
+					]);
 				}
+				// Activation Request
 				else if( $model->isFrojen() || $model->isBlocked() ) {
 
-					Yii::$app->cmsMailer->sendActivationRequestMail( $model );
+					//Yii::$app->orgMailer->sendActivationRequestMail( $model );
 
 					if( $model->isFrojen() ) {
 
-						$this->modelService->updateStatus( $model, Post::STATUS_UPLIFT_FREEZE );
-
-						// Send admin notification for uplift freeze.
-						//$this->modelService->sendUpliftFreezeNotification( $model );
+						$this->modelService->upliftFreeze( $model, [
+							'adminLink' => "/cms/post//review?id={$model->id}"
+						]);
 					}
 
 					if( $model->isBlocked() ) {
 
-						$this->modelService->updateStatus( $model, Post::STATUS_UPLIFT_BLOCK );
-
-						// Send admin notification for uplift block.
-						//$this->modelService->sendUpliftBlockNotification( $model );
+						$this->modelService->upliftBlock( $model, [
+							'adminLink' => "/cms/post//review?id={$model->id}"
+						]);
 					}
 				}
 
 				return $this->refresh();
 			}
 
-			return $this->render( 'reg/review', [
-	    		'model' => $model,
-				'content' => $content,
-				'metas' => $metasToLoad,
+			$content	= $model->modelContent;
+			$template	= $content->template;
 
-	    	]);
+			if( isset( $template ) ) {
+
+				$this->view->params[ 'model' ] = $model;
+
+				return Yii::$app->templateManager->renderViewAdmin( $template, [
+					'model' => $model,
+					'metaService' => $this->metaService,
+					'content' => $content,
+					'userReview' => true,
+					'adminReview' => false,
+					'frontend' => true
+				]);
+			}
+
+			// Template not found
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	// State Handling ---------
 
-	protected function checkStatus( $post ) {
+	protected function checkStatus( $model ) {
 
-		$slug	= $post->slug;
+		$modelClass = $this->modelService->getModelClass();
 
-		switch( $post->status ) {
+		switch( $model->status ) {
 
-			case Post::STATUS_BASIC: {
+			case $modelClass::STATUS_NEW: {
 
-				return $this->redirect( [ "$this->basePath/info?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/basic?slug=$model->slug" ] );
 			}
+			case $modelClass::STATUS_BASIC: {
 
-			case Post::STATUS_SETTINGS: {
-
-				return $this->redirect( [ "$this->basePath/attributes?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/media?slug=$model->slug" ] );
 			}
-			case Post::STATUS_ATTRIBUTES: {
+			case $modelClass::STATUS_MEDIA: {
 
-				return $this->redirect( [ "$this->basePath/review?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/attributes?slug=$model->slug" ] );
 			}
-			case Post::STATUS_REJECTED: {
+			case $modelClass::STATUS_ATTRIBUTES: {
 
-				return $this->redirect( [ "$this->basePath/review?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/settings?slug=$model->slug" ] );
 			}
-			case Post::STATUS_RE_SUBMIT: {
+			case $modelClass::STATUS_SETTINGS: {
 
-				return $this->redirect( [ "$this->basePath/basic?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
+			}
+			case $modelClass::STATUS_REJECTED: {
+
+				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
+			}
+			case $modelClass::STATUS_RE_SUBMIT: {
+
+				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
 			}
 			default: {
 
-				return $this->redirect( [ "$this->basePath/info?slug=$slug" ] );
+				return $this->redirect( [ "$this->basePath/basic?slug=$model->slug" ] );
 			}
 		}
 	}
 
 	/**
-	 * Check whether post is under review. It will disable the registration tabs if status is new.
+	 * Check whether model is under review. It will disable the registration tabs if status is new.
 	 */
-	protected function checkEditable( $post ) {
+	protected function checkEditable( $model ) {
 
-		if( !$post->isEditable() ) {
+		if( !$model->isEditable() ) {
 
-			Yii::$app->getResponse()->redirect( [ "$this->basePath/review?slug=$post->slug" ] )->send();
+			Yii::$app->getResponse()->redirect( [ "$this->basePath/review?slug=$model->slug" ] )->send();
 		}
 	}
 
 	/**
-	 * Check whether post is being registered and redirect user to the last step filled by user.
+	 * Check whether item is being registered and redirect user to the last step filled by user.
 	 */
-	protected function checkRefresh( $post ) {
+	protected function checkRefresh( $model ) {
 
-		if( $post->isRegistration() ) {
+		if( $model->isRegistration() ) {
 
-			return $this->checkStatus( $post );
+			return $this->checkStatus( $model );
 		}
 
 		return $this->refresh();
 	}
 
 	/**
-	 * Update post status and redirect to the last step filled by user.
+	 * Update item status and redirect to the last step filled by user.
 	 */
-	protected function updateStatus( $post, $status ) {
+	protected function updateStatus( $model, $status ) {
 
-		// Update Post Status
-		$this->modelService->updateStatus( $post, $status );
+		// Update Item Status
+		$this->modelService->updateStatus( $model, $status );
 
-		return $this->checkStatus( $post );
-	}
-
-	protected function getUserMeta( $post, $meta = null ) {
-
-		$postMeta		=  $this->pageMetaService->getModelClass();
-		$metaToLoad		= new $postMeta;
-
-		if( isset( $meta ) && isset( $meta[ 'id' ] ) && $meta[ 'id' ] > 0 ) {
-
-			$metaToLoad	= $this->pageMetaService->findByNameType( $post->id, $meta[ 'name' ], CoreGlobal::META_TYPE_USER );
-		}
-
-		$metaToLoad->modelId	= $post->id;
-		$metaToLoad->type		= CoreGlobal::META_TYPE_USER;
-		$metaToLoad->valueType	= $postMeta::VALUE_TYPE_TEXT;
-
-		return $metaToLoad;
+		return $this->checkStatus( $model );
 	}
 
 }

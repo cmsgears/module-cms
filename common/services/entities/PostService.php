@@ -124,6 +124,11 @@ class PostService extends ContentService implements IPostService {
 
 	// Read - Others ---
 
+	public function getEmail( $model ) {
+
+		return $model->creator->email;
+	}
+
 	// Create -------------
 
 	public function create( $model, $config = [] ) {

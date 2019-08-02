@@ -15,11 +15,10 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\traits\mappers\ElementTrait;
 use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 
-class Block extends ObjectData implements IElement, IWidget {
+class Block extends \cmsgears\core\common\models\entities\ObjectData implements IElement, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +37,8 @@ class Block extends ObjectData implements IElement, IWidget {
 	// Protected --------------
 
 	protected $modelType = CmsGlobal::TYPE_BLOCK;
+
+	protected $testOwner = true;
 
 	// Private ----------------
 

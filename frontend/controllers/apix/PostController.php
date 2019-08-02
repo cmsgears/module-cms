@@ -77,6 +77,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					// Gallery Items
+					'update-gallery' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'get-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'add-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'update-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
@@ -93,6 +94,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'settings' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					// Elements
 					'assign-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					'remove-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
@@ -104,7 +106,11 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'remove-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
 					// Blocks
 					'assign-block' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
-					'remove-block' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
+					'remove-block' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					// Model
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
 				]
 			],
 			'verbs' => [
@@ -124,7 +130,8 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					// Files
 					'assign-file' => [ 'post' ],
 					'clear-file' => [ 'post' ],
-					// Gallery Items
+					// Gallery
+					'update-gallery' => [ 'post' ],
 					'get-gallery-item' => [ 'post' ],
 					'add-gallery-item' => [ 'post' ],
 					'update-gallery-item' => [ 'post' ],
@@ -141,6 +148,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'update-meta' => [ 'post' ],
 					'toggle-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
+					'settings' => [ 'post' ],
 					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
@@ -153,6 +161,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					// Blocks
 					'assign-block' => [ 'post' ],
 					'remove-block' => [ 'post' ],
+					// Model
+					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
+					'delete' => [ 'post' ],
 					// Comments
 					'submit-comment' => [ 'post' ],
 					// Community
@@ -181,11 +193,12 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			// Files
 			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
 			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
-			// Gallery Items
-			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\ReadItem' ],
-			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
-			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ],
+			// Gallery
+			'update-gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Update' ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Read' ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Create' ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Categories
 			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
 			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
@@ -194,10 +207,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
 			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
 			// Metas
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
@@ -210,6 +223,10 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			// Blocks
 			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Model
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			// Comments
 			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ],
 			// Community

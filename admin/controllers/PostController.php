@@ -12,6 +12,7 @@ namespace cmsgears\cms\admin\controllers;
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
@@ -31,6 +32,8 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 
 	// Protected --------------
 
+	protected $prettyReview;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -49,6 +52,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 		$this->baseUrl		= 'post';
 		$this->apixBase		= 'cms/post';
 		$this->comments		= true;
+		$this->prettyReview	= false;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -69,6 +73,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'review' => [ [ 'label' => 'Events', 'url' => $this->returnUrl ], [ 'label' => 'Review' ] ],
 			'gallery' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
 			'attributes' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
@@ -85,6 +90,17 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'review' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'review' ] = [ 'get', 'post' ];
+
+		return $behaviors;
+	}
+
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -98,6 +114,111 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 		Url::remember( Yii::$app->request->getUrl(), 'posts' );
 
 		return parent::actionAll( $config );
+	}
+
+	public function actionReview( $id ) {
+
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = $this->modelService->getById( $id );
+
+		// Render if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+
+				$status		= Yii::$app->request->post( 'status' );
+				$email		= $this->modelService->getEmail( $model );
+				$message	= Yii::$app->request->post( 'message' );
+
+				switch( $status ) {
+
+					case $modelClass::STATUS_SUBMITTED: {
+
+						$this->modelService->approve( $model, [ 'notify' => false ] );
+
+						Yii::$app->coreMailer->sendApproveMail( $model, $email, $message );
+
+						break;
+					}
+					case $modelClass::STATUS_REJECTED: {
+
+						$model->setRejectMessage( $message );
+						$model->refresh();
+
+						$this->modelService->reject( $model, [ 'notify' => false ] );
+
+						Yii::$app->coreMailer->sendRejectMail( $model, $email, $message );
+
+						break;
+					}
+					case $modelClass::STATUS_FROJEN: {
+
+						$model->setRejectMessage( $message );
+						$model->refresh();
+
+						$this->modelService->freeze( $model, [ 'notify' => false ] );
+
+						Yii::$app->coreMailer->sendFreezeMail( $model, $email, $message );
+
+						break;
+					}
+					case $modelClass::STATUS_BLOCKED: {
+
+						$model->setRejectMessage( $message );
+						$model->refresh();
+
+						$this->modelService->block( $model, [ 'notify' => false ] );
+
+						Yii::$app->coreMailer->sendBlockMail( $model, $email, $message );
+
+						break;
+					}
+					case $modelClass::STATUS_ACTIVE: {
+
+						$this->modelService->activate( $model, [ 'notify' => false ] );
+
+						$model->updateDataMeta( CoreGlobal::DATA_APPROVAL_REQUEST, false );
+
+						Yii::$app->coreMailer->sendActivateMail( $model, $email );
+					}
+				}
+
+				$this->redirect( $this->returnUrl );
+			}
+
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			if( $this->prettyReview && isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewAdmin( $template, [
+					'model' => $model,
+					'content' => $content,
+					'userReview' => false
+				], [ 'layout' => false ] );
+			}
+			else {
+
+				$templatesMap = $this->templateService->getIdNameMapByType( CmsGlobal::TYPE_POST, [ 'default' => true ] );
+
+				return $this->render( 'review', [
+					'modelService' => $this->modelService,
+					'metaService' => $this->metaService,
+					'model' => $model,
+					'content' => $content,
+					'avatar' => $model->avatar,
+					'banner' => $content->banner,
+					'video' => $content->video,
+					'visibilityMap' => $modelClass::$visibilityMap,
+					'statusMap' => $modelClass::$statusMap,
+					'templatesMap' => $templatesMap
+				]);
+			}
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 }

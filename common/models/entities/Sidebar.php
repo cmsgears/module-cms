@@ -14,10 +14,9 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 
-class Sidebar extends ObjectData implements IWidget {
+class Sidebar extends \cmsgears\core\common\models\entities\ObjectData implements IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -36,6 +35,8 @@ class Sidebar extends ObjectData implements IWidget {
 	// Protected --------------
 
 	protected $modelType = CmsGlobal::TYPE_SIDEBAR;
+
+	protected $testOwner = true;
 
 	// Private ----------------
 

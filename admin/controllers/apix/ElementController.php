@@ -14,7 +14,7 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
 /**
  * ElementController provides actions specific to element model.
@@ -40,7 +40,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'elementService' );
@@ -61,32 +61,32 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// Avatar
-					'assign-avatar' => [ 'permission' => $this->crudPermission ],
-					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Banner
-					'assign-banner' => [ 'permission' => $this->crudPermission ],
-					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					'assign-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Video
-					'assign-video' => [ 'permission' => $this->crudPermission ],
-					'clear-video' => [ 'permission' => $this->crudPermission ],
+					'assign-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Files
-					'assign-file' => [ 'permission' => $this->crudPermission ],
-					'clear-file' => [ 'permission' => $this->crudPermission ],
+					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Gallery
-					'update-gallery' => [ 'permission' => $this->crudPermission ],
-					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Metas
-					'add-meta' => [ 'permission' => $this->crudPermission ],
-					'update-meta' => [ 'permission' => $this->crudPermission ],
-					'toggle-meta' => [ 'permission' => $this->crudPermission ],
-					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
-					'generic' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
+					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
 				]
 			],
 			'verbs' => [
@@ -152,10 +152,10 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ],
 			// Metas
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],

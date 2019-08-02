@@ -54,6 +54,12 @@ class CmsGlobal {
 	const TEMPLATE_ARTICLE	= 'article';
 
 	const TEMPLATE_SOCIAL	= 'social';
+	const TEMPLATE_GALLERY	= 'gallery';
+	const TEMPLATE_SLIDER	= 'slider';
+
+	const TEMPLATE_ATTRIBUTES_SLIDER	= 'attributes-slider';
+	const TEMPLATE_ATTRIBUTES_ACCORDIAN = 'attributes-accordian';
+
 	const TEMPLATE_CONTACT	= 'contact';
 	const TEMPLATE_EDITOR	= 'editor';
 	const TEMPLATE_SEARCH	= 'search';
