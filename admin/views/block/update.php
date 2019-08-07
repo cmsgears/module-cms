@@ -159,7 +159,7 @@ Editor::widget();
 						'deleteActionUrl' => "$apixBase/remove-element?slug=$model->slug&type=$model->type"
 					])?>
 				</div>
-			</div
+			</div>
 			<div class="colf colf15"></div>
 			<div class="box box-crud colf colf15x7">
 				<div class="box-header">
