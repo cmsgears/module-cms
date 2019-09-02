@@ -155,9 +155,10 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		$content = $this->modelContentService->getModelObject();
 
-		$avatar	= File::loadFile( null, 'Avatar' );
-		$banner	= File::loadFile( null, 'Banner' );
-		$video	= File::loadFile( null, 'Video' );
+		$avatar		= File::loadFile( null, 'Avatar' );
+		$banner		= File::loadFile( null, 'Banner' );
+		$mbanner	= File::loadFile( null, 'MobileBanner' );
+		$video		= File::loadFile( null, 'Video' );
 
 		if( isset( $this->parentModel ) ) {
 
@@ -169,7 +170,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$this->model = $this->modelService->add( $model, [
 				'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
 			]);
 
 			return $this->redirect( $this->returnUrl );
@@ -182,6 +183,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			'content' => $content,
 			'avatar' => $avatar,
 			'banner' => $banner,
+			'mbanner' => $mbanner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap,
 			'statusMap' => $modelClass::$statusMap,
@@ -201,16 +203,17 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$content = $model->modelContent;
 
-			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
-			$banner	= File::loadFile( $content->banner, 'Banner' );
-			$video	= File::loadFile( $content->video, 'Video' );
+			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$mbanner	= File::loadFile( $content->mobileBanner, 'MobileBanner' );
+			$video		= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
 					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -223,6 +226,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'content' => $content,
 				'avatar' => $avatar,
 				'banner' => $banner,
+				'mbanner' => $mbanner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
@@ -269,6 +273,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'content' => $content,
 				'avatar' => $model->avatar,
 				'banner' => $content->banner,
+				'mbanner' => $content->mobileBanner,
 				'video' => $content->video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,

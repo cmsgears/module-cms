@@ -71,6 +71,9 @@ class ArticleController extends \cmsgears\core\admin\controllers\base\Controller
 					// Banner
 					'assign-banner' => [ 'permission' => $this->crudPermission ],
 					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Mobile Banner
+					'assign-mbanner' => [ 'permission' => $this->crudPermission ],
+					'clear-mbanner' => [ 'permission' => $this->crudPermission ],
 					// Video
 					'assign-video' => [ 'permission' => $this->crudPermission ],
 					'clear-video' => [ 'permission' => $this->crudPermission ],
@@ -117,6 +120,9 @@ class ArticleController extends \cmsgears\core\admin\controllers\base\Controller
 					// Banner
 					'assign-banner' => [ 'post' ],
 					'clear-banner' => [ 'post' ],
+					// Mobile Banner
+					'assign-mbanner' => [ 'post' ],
+					'clear-mbanner' => [ 'post' ],
 					// Video
 					'assign-video' => [ 'post' ],
 					'clear-video' => [ 'post' ],
@@ -173,6 +179,9 @@ class ArticleController extends \cmsgears\core\admin\controllers\base\Controller
 			// Banner
 			'assign-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Assign' ],
 			'clear-banner' => [ 'class' => 'cmsgears\cms\common\actions\content\banner\Clear' ],
+			// Mobile Banner
+			'assign-mbanner' => [ 'class' => 'cmsgears\cms\common\actions\content\mbanner\Assign' ],
+			'clear-mbanner' => [ 'class' => 'cmsgears\cms\common\actions\content\mbanner\Clear' ],
 			// Video
 			'assign-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Clear' ],

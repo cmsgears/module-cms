@@ -37,6 +37,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property integer $id
  * @property integer $templateId
  * @property integer $bannerId
+ * @property integer $mbannerId
  * @property integer $videoId
  * @property integer $galleryId
  * @property integer $parentId
@@ -104,7 +105,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'bannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -127,6 +128,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		return [
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'mbannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER_M ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),

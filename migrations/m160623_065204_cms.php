@@ -176,6 +176,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
+			'mbannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
 			'galleryId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
@@ -194,6 +195,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		// Index for columns base, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content', 'mbannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId' );
 	}
 
@@ -238,6 +240,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		// Model Content
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content', 'mbannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 
 		// Model Link
@@ -286,6 +289,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		// Model Content
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content' );
 
 		// Model Link

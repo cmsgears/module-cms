@@ -144,7 +144,5 @@ Editor::widget();
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
-	</div>
+	<div class="box-crud-wrap-sidebar colf colf3"></div>
 </div>

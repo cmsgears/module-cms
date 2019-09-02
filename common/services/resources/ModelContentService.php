@@ -97,6 +97,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$parent		= $config[ 'parent' ];
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
@@ -111,7 +112,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$model->parentType	= $config[ 'parentType' ];
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'mbannerId' => $mbanner, 'videoId' => $video ] );
 
 		// Link gallery
 		if( isset( $gallery ) && $gallery->id > 0 ) {
@@ -128,6 +129,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
@@ -138,7 +140,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		}
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'mbannerId' => $mbanner, 'videoId' => $video ] );
 
 		// Link gallery
 		if( empty( $model->galleryId ) ) {
@@ -147,7 +149,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'bannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
+			'attributes' => [ 'templateId', 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
 		]);
 	}
 

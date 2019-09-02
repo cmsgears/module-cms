@@ -125,6 +125,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
@@ -162,7 +163,7 @@ class ArticleService extends ContentService implements IArticleService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -186,6 +187,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/article/review';
@@ -228,7 +230,7 @@ class ArticleService extends ContentService implements IArticleService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -268,6 +270,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
@@ -299,7 +302,7 @@ class ArticleService extends ContentService implements IArticleService {
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
 			]);
 		}
 
