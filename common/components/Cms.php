@@ -61,6 +61,11 @@ class Cms extends \cmsgears\core\common\base\Component {
 		$this->pageMap[ CmsGlobal::TYPE_POST ]		= Post::class;
 	}
 
+	public function addToPageMap( $key, $value ) {
+
+		$this->pageMap[ $key ] = $value;
+	}
+
 	public function getPageClass( $type ) {
 
 		return $this->pageMap[ $type ];

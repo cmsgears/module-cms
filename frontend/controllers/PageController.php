@@ -22,14 +22,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\cms\frontend\controllers\base\Controller;
-
 /**
  * PageController consist of actions specific to site pages.
  *
  * @since 1.0.0
  */
-class PageController extends Controller {
+class PageController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

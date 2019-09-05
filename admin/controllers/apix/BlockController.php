@@ -61,41 +61,41 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// Avatar
-					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
 					// Banner
-					'assign-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'clear-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
 					// Video
-					'assign-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'clear-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-video' => [ 'permission' => $this->crudPermission ],
+					'clear-video' => [ 'permission' => $this->crudPermission ],
 					// Files
-					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-file' => [ 'permission' => $this->crudPermission ],
+					'clear-file' => [ 'permission' => $this->crudPermission ],
 					// Gallery
-					'update-gallery' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'get-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'add-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'update-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'delete-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'update-gallery' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					// Metas
-					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'add-meta' => [ 'permission' => $this->crudPermission ],
+					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission ],
+					'delete-meta' => [ 'permission' => $this->crudPermission ],
 					// Elements
-					'assign-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'remove-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-element' => [ 'permission' => $this->crudPermission ],
+					'remove-element' => [ 'permission' => $this->crudPermission ],
 					// Widgets
-					'assign-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'remove-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-widget' => [ 'permission' => $this->crudPermission ],
+					'remove-widget' => [ 'permission' => $this->crudPermission ],
 					// Sidebars
-					'assign-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'remove-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'assign-sidebar' => [ 'permission' => $this->crudPermission ],
+					'remove-sidebar' => [ 'permission' => $this->crudPermission ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
-					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
-					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
+					'generic' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
