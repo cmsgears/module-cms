@@ -7,7 +7,7 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PageController extends \cmsgears\core\api\controllers\BaseController {
+class PostController extends \cmsgears\core\api\controllers\BaseController {
 
 	// Variables ---------------------------------------------------
 
@@ -15,7 +15,7 @@ class PageController extends \cmsgears\core\api\controllers\BaseController {
 
 	// Public -----------------
 
-	public $modelService;
+	public $pageService;
 	
 	// Protected --------------
 
@@ -33,7 +33,7 @@ class PageController extends \cmsgears\core\api\controllers\BaseController {
 
 	public function init(){
 		
-		$this->modelService	= Yii::$app->factory->get( 'pageService' );
+		$this->modelService	= Yii::$app->factory->get( 'modelService' );
 	}
 
 	// yii\base\Controller ----
