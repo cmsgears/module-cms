@@ -13,7 +13,7 @@ namespace cmsgears\cms\api;
  *
  * @since 1.0.0
  */
-class Module extends \cmsgears\core\frontend\Module {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 

@@ -33,7 +33,7 @@ class PostController extends \cmsgears\core\api\controllers\BaseController {
 
 	public function init(){
 		
-		$this->modelService	= Yii::$app->factory->get( 'modelService' );
+		$this->modelService	= Yii::$app->factory->get( 'postService' );
 	}
 
 	// yii\base\Controller ----
