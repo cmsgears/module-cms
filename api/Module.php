@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2019
  */
 
-namespace cmsgears\core\api;
+namespace cmsgears\cms\api;
 
 /**
  * The api module component of cms module.
@@ -35,7 +35,7 @@ class Module extends \cmsgears\core\frontend\Module {
 
 		parent::init();
 
-		$this->setViewPath( '@century/module-cms/api/views' );
+		$this->setViewPath( '@cmsgears/module-cms/api/views' );
 	}
 
 	// Instance methods --------------------------------------------
