@@ -6,6 +6,7 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\config\CoreGlobal;
 
 class PostController extends \cmsgears\core\api\controllers\BaseController {
 
@@ -15,7 +16,7 @@ class PostController extends \cmsgears\core\api\controllers\BaseController {
 
 	// Public -----------------
 
-	public $pageService;
+	public $modelService;
 	
 	// Protected --------------
 
@@ -44,27 +45,48 @@ class PostController extends \cmsgears\core\api\controllers\BaseController {
 
 	// PageController ------------------------
 	
-	public function actionSingle( $slug, $type ) {
-
-		$errors = '';
+	public function actionAll(){
+	
+		$dataprovider = $this->modelService->getPage();
 		
-		$models = $this->modelService->getBySlugType( $slug, $type );
-
-		if( isset( $models ) ) {
-
-			$response = [];
+		$models =  $dataprovider->getModels();
+		
+		$response = [];
+		
+		foreach( $models as $model ){
 			
-			foreach( $models as $model ) {
-				
-				$response[] = $model->getAttributes();
-			}
+			$modelContent = $model->modelContent;
 			
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+			$attributes = $model->getAttributes();
+			
+			$attributes[ 'content' ] = $modelContent->content;
+			$attributes[ 'bannerUrl' ] = $modelContent->bannerUrl;
+			
+			$response[] = $attributes;
 		}
 		
-		$errors = "";
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+	}
+	
+	public function actionSingle( $slug, $type ) {
+
+		$model = $this->modelService->getBySlugType( $slug, $type );
+
+		$response = [];
+
+		if( isset( $model ) ) {
+
+			$modelContent = $model->modelContent;
+			
+			$attributes = $model->getAttributes();
+			
+			$attributes[ 'content' ] = $modelContent->content;
+			$attributes[ 'bannerUrl' ] = $modelContent->bannerUrl;
+			
+			$response[] = $attributes;
+		}
 		
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 	}
 }
+
