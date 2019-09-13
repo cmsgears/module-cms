@@ -47,7 +47,10 @@ class PostController extends \cmsgears\core\api\controllers\BaseController {
 	
 	public function actionAll(){
 	
-		$dataprovider = $this->modelService->getPage();
+		$dataprovider = $this->modelService->getPageForSearch( [
+				'route' => 'blog/search', 'searchContent' => true,
+				'searchCategory' => true, 'searchTag' => true,  'public' => true
+			] );
 		
 		$models =  $dataprovider->getModels();
 		
@@ -63,6 +66,35 @@ class PostController extends \cmsgears\core\api\controllers\BaseController {
 			$attributes[ 'bannerUrl' ] = $modelContent->bannerUrl;
 			
 			$response[] = $attributes;
+		}
+		
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+	}
+	
+	public function actionSearch( ) {
+
+		$dataprovider = $this->modelService->getPageForSearch( [
+				'route' => 'blog/search', 'searchContent' => true,
+				'searchCategory' => true, 'searchTag' => true, 'public' => true
+			] );
+
+		$models = $dataprovider->getModels(); 
+		
+		$response = [];
+
+		if( isset( $models ) ) {
+
+			foreach( $models as $model ) {
+			
+				$modelContent = $model->modelContent;
+
+				$attributes = $model->getAttributes();
+
+				$attributes[ 'content' ] = $modelContent->content;
+				$attributes[ 'bannerUrl' ] = $modelContent->bannerUrl;
+
+				$response[] = $attributes;
+			}
 		}
 		
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
