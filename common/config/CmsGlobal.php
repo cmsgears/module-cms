@@ -137,6 +137,7 @@ class CmsGlobal {
 	const FIELD_SEO_DESCRIPTION		= 'seoDescriptionField';
 	const FIELD_SEO_KEYWORDS		= 'seoKeywordsField';
 	const FIELD_SEO_ROBOT			= 'seoRobotField';
+	const FIELD_SEO_SCHEMA			= 'seoSchemaField';
 
 	// Link
 	const FIELD_ABSOLUTE	= 'absoluteField';

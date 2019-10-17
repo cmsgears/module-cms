@@ -99,7 +99,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		$rules = [
 			// Required, Safe
 			// [ [ 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id', 'summary', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'summary', 'content', 'data', 'seoSchema' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
@@ -139,6 +139,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 			'seoDescription' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
 			'seoRobot' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'seoSchema' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_SCHEMA ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
