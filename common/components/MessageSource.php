@@ -41,6 +41,7 @@ class MessageSource extends \cmsgears\core\common\base\MessageSource {
 		CmsGlobal::FIELD_SEO_DESCRIPTION => 'SEO Description',
 		CmsGlobal::FIELD_SEO_KEYWORDS => 'SEO Keywords',
 		CmsGlobal::FIELD_SEO_ROBOT => 'SEO Robot',
+		CmsGlobal::FIELD_SEO_SCHEMA => 'SEO Schema',
 		// Link
 		CmsGlobal::FIELD_ABSOLUTE => 'Absolute',
 		CmsGlobal::FIELD_URL_OPTIONS => 'Url Options'
