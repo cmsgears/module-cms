@@ -10,26 +10,15 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\Meta;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
  * PageMeta stores meta and attributes specific to page and post.
  *
- * @property integer $id
- * @property integer $modelId
- * @property string $name
- * @property string $label
- * @property string $type
- * @property boolean $active
- * @property string $valueType
- * @property string $value
- * @property string $data
- *
- * @since 1.0.0
+ * @inheritdoc
  */
-class PageMeta extends Meta {
+class PageMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 

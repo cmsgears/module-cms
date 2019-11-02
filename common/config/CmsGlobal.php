@@ -85,7 +85,7 @@ class CmsGlobal {
 
 	// Config ----------------------------------------------------------
 
-	const CONFIG_BLOG	= 'blog';
+	const CONFIG_BLOG = 'blog';
 
 	// Roles -----------------------------------------------------------
 
@@ -119,25 +119,25 @@ class CmsGlobal {
 	// Model Fields ----------------------------------------------------
 
 	// Generic Fields
-	const FIELD_ELEMENT			= 'elementField';
-	const FIELD_BLOCK			= 'blockField';
+	const FIELD_ELEMENT		= 'elementField';
+	const FIELD_BLOCK		= 'blockField';
 
-	const FIELD_LINK			= 'linkField';
-	const FIELD_MENU			= 'menuField';
+	const FIELD_LINK		= 'linkField';
+	const FIELD_MENU		= 'menuField';
 
-	const FIELD_WIDGET			= 'widgetField';
-	const FIELD_SIDEBAR			= 'sidebarField';
+	const FIELD_WIDGET		= 'widgetField';
+	const FIELD_SIDEBAR		= 'sidebarField';
 
-	const FIELD_PAGE			= 'pageField';
+	const FIELD_PAGE		= 'pageField';
 
-	const FIELD_KEYWORDS		= 'keywordsField';
+	const FIELD_KEYWORDS	= 'keywordsField';
 
 	// SEO
-	const FIELD_SEO_NAME			= 'seoNameField';
-	const FIELD_SEO_DESCRIPTION		= 'seoDescriptionField';
-	const FIELD_SEO_KEYWORDS		= 'seoKeywordsField';
-	const FIELD_SEO_ROBOT			= 'seoRobotField';
-	const FIELD_SEO_SCHEMA			= 'seoSchemaField';
+	const FIELD_SEO_NAME		= 'seoNameField';
+	const FIELD_SEO_DESCRIPTION	= 'seoDescriptionField';
+	const FIELD_SEO_KEYWORDS	= 'seoKeywordsField';
+	const FIELD_SEO_ROBOT		= 'seoRobotField';
+	const FIELD_SEO_SCHEMA		= 'seoSchemaField';
 
 	// Link
 	const FIELD_ABSOLUTE	= 'absoluteField';
