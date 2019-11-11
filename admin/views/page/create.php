@@ -15,6 +15,7 @@ use cmsgears\icons\widgets\TextureChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$parentName		= isset( $model->parentId ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>
@@ -72,7 +73,7 @@ Editor::widget();
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'url' => 'cms/page/auto-search' ] ) ?>
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => 'cms/page/auto-search' ] ) ?>
 						</div>
 					</div>
 				</div>

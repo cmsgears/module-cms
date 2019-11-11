@@ -19,6 +19,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Block | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
+$parentName		= isset( $model->parentId ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>
@@ -80,6 +81,11 @@ Editor::widget();
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => "core/object-data/auto-search" ] ) ?>
 						</div>
 					</div>
 				</div>
