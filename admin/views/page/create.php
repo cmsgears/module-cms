@@ -152,6 +152,11 @@ Editor::widget();
 							<?= $form->field( $content, 'seoDescription' )->textarea() ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col1">
+							<?= $form->field( $content, 'seoSchema' )->textarea() ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
