@@ -37,6 +37,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Protected --------------
 
+	protected $type;
+
 	protected $templateService;
 
 	// Private ----------------
@@ -51,7 +53,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->type		= CmsGlobal::TYPE_PAGE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'pageService' );
@@ -112,10 +115,11 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
-		$user			= Yii::$app->user->getIdentity();
-		$dataProvider 	= null;
+		$user = Yii::$app->core->getUser();
+
+		$dataProvider = null;
 
 		if( isset( $status ) ) {
 
@@ -160,7 +164,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	 */
 	public function actionSingle( $slug = 'home' ) {
 
-		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$model = $this->modelService->getBySlugType( $slug, $this->type );
 
 		if( isset( $model ) ) {
 
