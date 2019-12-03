@@ -9,22 +9,22 @@
 
 namespace cmsgears\cms\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Mailer as BaseMailer;
-
 /**
  * Mailer triggers the mails provided by CMS Module.
  *
  * @since 1.0.0
  */
-class Mailer extends BaseMailer {
+class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Global -----------------
 
+	const MAIL_POST_CREATE		= 'post/create';
+	const MAIL_POST_REGISTER	= 'post/register';
+
 	// Public -----------------
 
-	public $htmlLayout	= '@cmsgears/module-cms/common/mails/layouts/html';
-	public $textLayout	= '@cmsgears/module-cms/common/mails/layouts/text';
+	public $htmlLayout	= '@cmsgears/module-core/common/mails/layouts/html';
+	public $textLayout	= '@cmsgears/module-core/common/mails/layouts/text';
 	public $viewPath	= '@cmsgears/module-cms/common/mails/views';
 
 	// Protected --------------
@@ -40,5 +40,43 @@ class Mailer extends BaseMailer {
 	// CMG parent classes --------------------
 
 	// Mailer --------------------------------
+
+	public function sendCreatePostMail( $post ) {
+
+		$fromEmail	= $this->mailProperties->getSenderEmail();
+		$fromName	= $this->mailProperties->getSenderName();
+
+		$author = $post->creator;
+
+		$name	= $author->getName();
+		$email	= $author->email;
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_POST_CREATE, [ 'coreProperties' => $this->coreProperties, 'post' => $post, 'name' => $name, 'email' => $email ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Post Registration | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "text" )
+			->send();
+	}
+
+	public function sendRegisterPostMail( $post ) {
+
+		$fromEmail	= $this->mailProperties->getSenderEmail();
+		$fromName	= $this->mailProperties->getSenderName();
+
+		$author = $post->creator;
+
+		$name	= $author->getName();
+		$email	= $author->email;
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_POST_REGISTER, [ 'coreProperties' => $this->coreProperties, 'post' => $post, 'name' => $name, 'email' => $email ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Post Registration | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "text" )
+			->send();
+	}
 
 }

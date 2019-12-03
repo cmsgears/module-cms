@@ -223,8 +223,11 @@ class PostService extends ContentService implements IPostService {
 	public function register( $model, $config = [] ) {
 
 		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$mail	= isset( $config[ 'mail' ] ) ? $config[ 'mail' ] : true;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : Yii::$app->core->getUser();
 
 		$modelClass = static::$modelClass;
+		$parentType	= static::$parentType;
 
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
@@ -241,8 +244,6 @@ class PostService extends ContentService implements IPostService {
 
 		$galleryClass = $galleryService->getModelClass();
 
-		$user = Yii::$app->core->getUser();
-
 		$registered	= false;
 
 		$transaction = Yii::$app->db->beginTransaction();
@@ -255,7 +256,7 @@ class PostService extends ContentService implements IPostService {
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
-				$gallery->type		= static::$parentType;
+				$gallery->type		= $parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 				$gallery->siteId	= Yii::$app->core->siteId;
 
@@ -264,7 +265,7 @@ class PostService extends ContentService implements IPostService {
 			else {
 
 				$gallery = $galleryService->createByParams([
-					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'type' => $parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title,
 					'siteId' => Yii::$app->core->siteId
 				]);
@@ -272,16 +273,16 @@ class PostService extends ContentService implements IPostService {
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => static::$parentType,
+				'parent' => $model, 'parentType' => $parentType,
 				'publish' => $publish,
 				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindCategories( $model->id, $parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
-			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+			$modelTagService->bindTags( $model->id, $parentType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 
@@ -299,11 +300,16 @@ class PostService extends ContentService implements IPostService {
 			// Notify Site Admin
 			if( $notify ) {
 
-				// Trigger Notification
-				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_POST_REGISTER,
-					[ 'model' => $model, 'service' => $this, 'user' => $user ],
-					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
-				);
+				$this->notifyAdmin( $model, [
+					'template' => CmsGlobal::TPL_NOTIFY_POST_NEW,
+					'adminLink' => "{$adminLink}?id={$model->id}"
+				]);
+			}
+
+			// Email Post Admin
+			if( $mail ) {
+
+				Yii::$app->cmsMailer->sendRegisterPostMail( $model );
 			}
 		}
 
@@ -423,6 +429,16 @@ class PostService extends ContentService implements IPostService {
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		$user = $model->creator;
+
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
+		$config[ 'users' ]	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $user->id ];
+
+		return parent::applyBulk( $model, $column, $action, $target, $config );
+	}
 
 	// Notifications ------
 

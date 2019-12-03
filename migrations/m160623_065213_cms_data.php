@@ -70,6 +70,8 @@ class m160623_065213_cms_data extends Migration {
 
 		// Init system pages
 		$this->insertSystemPages();
+
+		$this->insertNotificationTemplates();
 	}
 
 	private function insertRolePermission() {
@@ -296,6 +298,22 @@ class m160623_065213_cms_data extends Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );
+	}
+
+	private function insertNotificationTemplates() {
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'message', 'content', 'data' ];
+
+		$templates = [
+			// Page
+			[ $this->master->id, $this->master->id, 'New Page', CmsGlobal::TPL_NOTIFY_PAGE_NEW, null, 'notification', 'Trigger Notification and Email to Admin, when new Page is created by site users.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'New Page - <b>{{model.displayName}}</b>', 'New Page - <b>{{model.displayName}}</b> has been submitted for registration. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			// Post
+			[ $this->master->id, $this->master->id, 'New Post', CmsGlobal::TPL_NOTIFY_POST_NEW, null, 'notification', 'Trigger Notification and Email to Admin, when new Post is created by site users.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'New Post - <b>{{model.displayName}}</b>', 'New Post - <b>{{model.displayName}}</b> has been submitted for registration. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			// Article
+			[ $this->master->id, $this->master->id, 'New Article', CmsGlobal::TPL_NOTIFY_ARTICLE_NEW, null, 'notification', 'Trigger Notification and Email to Admin, when new Article is created by site users.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'New Article - <b>{{model.displayName}}</b>', 'New Article - <b>{{model.displayName}}</b> has been submitted for registration. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );
 	}
 
 	public function down() {

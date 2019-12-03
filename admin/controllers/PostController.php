@@ -74,7 +74,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 			'create' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'review' => [ [ 'label' => 'Events', 'url' => $this->returnUrl ], [ 'label' => 'Review' ] ],
+			'review' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Review' ] ],
 			'gallery' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
 			'attributes' => [ [ 'label' => 'Posts', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],

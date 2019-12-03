@@ -116,12 +116,17 @@ class CommentController extends \cmsgears\core\frontend\controllers\base\Control
 
 	public function actionRequestSpam( $id, $pid ) {
 
-		$user = Yii::$app->core->GetUser();
+		$user = Yii::$app->core->getUser();
 
 		$model	= $this->modelService->getById( $id );
 		$parent	= $this->parentService->getById( $pid );
 
 		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
+
+			$parentType = $this->parentService->getParentType();
+			$adminLink	= "cms/post/comment/all?pid={$parent->id}";
+
+			$this->modelService->spamRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
