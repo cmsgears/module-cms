@@ -15,6 +15,7 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**

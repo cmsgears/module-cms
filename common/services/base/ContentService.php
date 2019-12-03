@@ -58,7 +58,6 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Traits ------------------------------------------------------
 
-	use ApprovalTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use GridCacheTrait;
@@ -67,6 +66,11 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	use SlugTypeTrait;
 	use VisibilityTrait;
 	use VisualTrait;
+
+	use ApprovalTrait {
+
+		activate as baseActivate;
+	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -315,6 +319,18 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Create -------------
 
 	// Update -------------
+
+	public function activate( $model, $config = [] ) {
+
+		$content = $model->modelContent;
+
+		if( isset( $content ) && empty( $content->publishedAt ) ) {
+
+			Yii::$app->factory->get( 'modelContentService' )->update( $content, [ 'publish' => true ] );
+		}
+
+		return $this->baseActivate( $model, $config );
+	}
 
 	// Delete -------------
 

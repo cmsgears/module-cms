@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\frontend\controllers\post;
+namespace cmsgears\cms\frontend\controllers\apix\post;
 
 // Yii Imports
 use Yii;
@@ -19,7 +19,14 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-class CommentController extends \cmsgears\cms\frontend\controllers\base\Controller {
+use cmsgears\core\common\utilities\AjaxUtil;
+
+/**
+ * CommentController provides actions specific to post comment model.
+ *
+ * @since 1.0.0
+ */
+class CommentController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -32,6 +39,7 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 	protected $parentType;
 	protected $commentType;
 
+	protected $userService;
 	protected $parentService;
 
 	// Private ----------------
@@ -52,7 +60,8 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );
 
-		$this->parentService = Yii::$app->factory->get( 'postService' );
+		$this->userService		= Yii::$app->factory->get( 'userService' );
+		$this->parentService	= Yii::$app->factory->get( 'postService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -69,13 +78,21 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'all' => [ 'permission' => $this->crudPermission ]
+					'request-spam' => [ 'permission' => $this->crudPermission ],
+					'request-approve' => [ 'permission' => $this->crudPermission ],
+					'request-delete' => [ 'permission' => $this->crudPermission ],
+					// Model
+					'bulk' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'all'  => [ 'get' ]
+					'request-spam' => [ 'post' ],
+					'request-approve' => [ 'post' ],
+					'request-delete' => [ 'post' ],
+					// Model
+					'bulk' => [ 'post' ]
 				]
 			]
 		];
@@ -83,27 +100,35 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// yii\base\Controller ----
 
+	public function actions() {
+
+		return [
+			// Model
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ]
+		];
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// CommentController ---------------------
 
-	public function actionAll( $slug ) {
+	public function actionRequestSpam( $id, $pid ) {
 
-		$modelClass	= $this->modelService->getModelClass();
+		$user = Yii::$app->core->GetUser();
 
-        $commentTable = $this->modelService->getModelTable();
+		$model	= $this->modelService->getById( $id );
+		$parent	= $this->parentService->getById( $pid );
 
-		$parent = $this->parentService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
 
-		$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		}
 
-		return $this->render( 'all', [
-			'dataProvider' => $dataProvider,
-			'statusMap' => $modelClass::$statusMap,
-			'parent' => $parent
-		]);
-	}
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+    }
 
 }

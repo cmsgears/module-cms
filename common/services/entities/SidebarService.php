@@ -31,9 +31,9 @@ class SidebarService extends ObjectDataService implements ISidebarService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Sidebar';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Sidebar';
 
-	public static $parentType	= CmsGlobal::TYPE_SIDEBAR;
+	public static $parentType = CmsGlobal::TYPE_SIDEBAR;
 
 	// Protected --------------
 
