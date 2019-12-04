@@ -162,7 +162,7 @@ Editor::widget();
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
-			<?= Html::a( 'Cancle', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
