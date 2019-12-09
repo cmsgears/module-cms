@@ -360,6 +360,16 @@ class ArticleService extends ContentService implements IArticleService {
 
 	// Bulk ---------------
 
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		$user = $model->creator;
+
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
+		$config[ 'users' ]	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $user->id ];
+
+		return parent::applyBulk( $model, $column, $action, $target, $config );
+	}
+
 	// Notifications ------
 
 	// Cache --------------
