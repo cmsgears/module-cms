@@ -398,14 +398,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				if( $model->status < $modelClass::STATUS_SUBMITTED ) {
 
 					$this->modelService->submit( $model, [
-						'adminLink' => "/cms/post/review?id={$model->id}"
+						'adminLink' => "cms/post/review?id={$model->id}"
 					]);
 				}
 				// Re-Submit
 				else if( $model->isRejected() ) {
 
 					$this->modelService->reSubmit( $model, [
-						'adminLink' => "/cms/post//review?id={$model->id}"
+						'adminLink' => "cms/post/review?id={$model->id}"
 					]);
 				}
 				// Activation Request
@@ -416,14 +416,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 					if( $model->isFrojen() ) {
 
 						$this->modelService->upliftFreeze( $model, [
-							'adminLink' => "/cms/post//review?id={$model->id}"
+							'adminLink' => "cms/post/review?id={$model->id}"
 						]);
 					}
 
 					if( $model->isBlocked() ) {
 
 						$this->modelService->upliftBlock( $model, [
-							'adminLink' => "/cms/post//review?id={$model->id}"
+							'adminLink' => "cms/post/review?id={$model->id}"
 						]);
 					}
 				}

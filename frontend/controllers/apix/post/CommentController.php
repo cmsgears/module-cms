@@ -124,9 +124,53 @@ class CommentController extends \cmsgears\core\frontend\controllers\base\Control
 		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
 
 			$parentType = $this->parentService->getParentType();
-			$adminLink	= "cms/post/comment/all?pid={$parent->id}";
+			$adminLink	= "cms/post/comment/update?id={$model->id}";
 
 			$this->modelService->spamRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		}
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+    }
+
+	public function actionRequestApprove( $id, $pid ) {
+
+		$user = Yii::$app->core->getUser();
+
+		$model	= $this->modelService->getById( $id );
+		$parent	= $this->parentService->getById( $pid );
+
+		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
+
+			$parentType = $this->parentService->getParentType();
+			$adminLink	= "cms/post/comment/update?id={$model->id}";
+
+			$this->modelService->approveRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		}
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+    }
+
+	public function actionRequestDelete( $id, $pid ) {
+
+		$user = Yii::$app->core->getUser();
+
+		$model	= $this->modelService->getById( $id );
+		$parent	= $this->parentService->getById( $pid );
+
+		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
+
+			$parentType = $this->parentService->getParentType();
+			$adminLink	= "cms/post/comment/update?id={$model->id}";
+
+			$this->modelService->deleteRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
