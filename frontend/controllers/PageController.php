@@ -162,11 +162,13 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
-	public function actionSingle( $slug = 'home' ) {
+	public function actionSingle( $slug = 'home', $amp = false ) {
 
 		$model = $this->modelService->getBySlugType( $slug, $this->type );
 
 		if( isset( $model ) ) {
+
+			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
 			if( empty( $user ) && $model->isVisibilityProtected() ) {
@@ -197,12 +199,24 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
 			}
 
 			// Page without Template - Redirect to System Pages

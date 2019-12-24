@@ -303,7 +303,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionSingle( $slug ) {
+	public function actionSingle( $slug, $amp = false ) {
 
 		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
 
@@ -340,12 +340,24 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
 			}
 
 			// Error - Template not defined

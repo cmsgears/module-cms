@@ -22,14 +22,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Article;
 
-use cmsgears\cms\frontend\controllers\base\Controller;
-
 /**
  * ArticleController provides actions specific to article pages.
  *
  * @since 1.0.0
  */
-class ArticleController extends Controller {
+class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -114,10 +112,11 @@ class ArticleController extends Controller {
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
-		$user			= Yii::$app->user->getIdentity();
-		$dataProvider 	= null;
+		$user = Yii::$app->core->getUser();
+
+		$dataProvider = null;
 
 		if( isset( $status ) ) {
 
@@ -156,12 +155,13 @@ class ArticleController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 	}
 
-	public function actionSingle( $slug ) {
+	public function actionSingle( $slug, $amp = false ) {
 
-		$user	= Yii::$app->core->getUser();
-		$model	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
+		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $model ) ) {
+
+			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
 			if( empty( $user ) && $model->isVisibilityProtected() ) {
@@ -192,12 +192,24 @@ class ArticleController extends Controller {
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
 			}
 
 			// Error - Template not defined
