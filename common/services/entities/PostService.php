@@ -253,6 +253,9 @@ class PostService extends ContentService implements IPostService {
 			// Create Model
 			$model = $this->create( $model, $config );
 
+			// Refresh Model
+			$model->refresh();
+
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
