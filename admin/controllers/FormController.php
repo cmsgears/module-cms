@@ -213,7 +213,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content = $model->modelContent;
+			$content	= $model->modelContent;
+			$template	= $content->template;
 
 			$banner	= File::loadFile( $content->banner, 'Banner' );
 			$video	= File::loadFile( $content->video, 'Video' );
@@ -222,7 +223,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
+					'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'oldTemplate' => $template,
 					'banner' => $banner, 'video' => $video
 				]);
 

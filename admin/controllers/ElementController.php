@@ -37,6 +37,8 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 		parent::init();
 
 		// Config
+		$this->admin	= true;
+		$this->shared	= true;
 		$this->apixBase	= 'cms/element';
 
 		// Sidebar
@@ -81,6 +83,11 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'elements' );
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return parent::actionAll( $config );
 	}

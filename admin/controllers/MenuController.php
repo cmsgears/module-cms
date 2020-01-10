@@ -42,6 +42,8 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 		parent::init();
 
 		// Config
+		$this->admin		= true;
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;
 		$this->apixBase		= 'cms/menu';
@@ -90,6 +92,11 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'menus' );
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return parent::actionAll( $config );
 	}

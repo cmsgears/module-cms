@@ -42,6 +42,8 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 		parent::init();
 
 		// Config
+		$this->admin		= true;
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;
 		$this->apixBase		= 'cms/widget';
@@ -91,6 +93,11 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'widgets' );
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return parent::actionAll( $config );
 	}

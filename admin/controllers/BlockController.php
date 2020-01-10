@@ -37,6 +37,8 @@ class BlockController extends \cmsgears\cms\admin\controllers\base\BlockControll
 		parent::init();
 
 		// Config
+		$this->admin	= true;
+		$this->shared	= true;
 		$this->apixBase = 'cms/block';
 
 		// Sidebar
@@ -81,6 +83,11 @@ class BlockController extends \cmsgears\cms\admin\controllers\base\BlockControll
 	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return parent::actionAll( $config );
 	}

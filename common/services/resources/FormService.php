@@ -19,14 +19,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\cms\common\services\interfaces\resources\IFormService;
 
-use cmsgears\forms\common\services\entities\FormService as BaseFormService;
-
 /**
  * FormService provide service methods of category model.
  *
  * @since 1.0.0
  */
-class FormService extends BaseFormService implements IFormService {
+class FormService extends \cmsgears\forms\common\services\entities\FormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -364,6 +362,11 @@ class FormService extends BaseFormService implements IFormService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
@@ -418,6 +421,15 @@ class FormService extends BaseFormService implements IFormService {
 			$attributes	= ArrayHelper::merge( $attributes, [ 'status' ] );
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 

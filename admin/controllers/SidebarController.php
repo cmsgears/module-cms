@@ -42,6 +42,8 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 		parent::init();
 
 		// Config
+		$this->admin		= true;
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
 		$this->apixBase		= 'cms/sidebar';
@@ -90,6 +92,11 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'sidebars' );
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return parent::actionAll( $config );
 	}

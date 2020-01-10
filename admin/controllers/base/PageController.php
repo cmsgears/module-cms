@@ -201,7 +201,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content = $model->modelContent;
+			$content	= $model->modelContent;
+			$template	= $content->template;
 
 			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
 			$banner		= File::loadFile( $content->banner, 'Banner' );
@@ -212,7 +213,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
+					'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'oldTemplate' => $template,
 					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
 				]);
 

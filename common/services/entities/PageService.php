@@ -162,6 +162,11 @@ class PageService extends ContentService implements IPageService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
@@ -228,6 +233,11 @@ class PageService extends ContentService implements IPageService {
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
+
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
 
 			// Create Model
 			$model = $this->create( $model, $config );
@@ -310,6 +320,15 @@ class PageService extends ContentService implements IPageService {
 			]);
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
