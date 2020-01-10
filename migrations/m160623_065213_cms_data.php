@@ -11,8 +11,6 @@
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
@@ -31,7 +29,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160623_065213_cms_data extends Migration {
+class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -71,6 +69,7 @@ class m160623_065213_cms_data extends Migration {
 		// Init system pages
 		$this->insertSystemPages();
 
+		// Notifications
 		$this->insertNotificationTemplates();
 	}
 
@@ -256,10 +255,14 @@ class m160623_065213_cms_data extends Migration {
 			[ $this->site->id, $this->master->id, $this->master->id, 'Testimonial', 'testimonial', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'Help', 'help', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'FAQ', 'faq', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			// Blog Page
+			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', CmsGlobal::PAGE_BLOG, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			// Search Pages
-			[ $this->site->id, $this->master->id, $this->master->id, 'Pages', CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Articles', CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->site->id, $this->master->id, $this->master->id, 'Search Pages', CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Search Articles', CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'Search Posts', CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			// Articles Page
+			[ $this->site->id, $this->master->id, $this->master->id, 'Articles', CmsGlobal::PAGE_ARTICLES, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_page', $columns, $pages );
@@ -287,10 +290,14 @@ class m160623_065213_cms_data extends Migration {
 			[ Page::findBySlugType( 'testimonial', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'help', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'faq', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			// Blog Page
+			[ Page::findBySlugType( CmsGlobal::PAGE_BLOG, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			// Search Pages
 			[ Page::findBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ]
+			[ Page::findBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			// Articles Page
+			[ Page::findBySlugType( CmsGlobal::PAGE_ARTICLES, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'cms_model_content', $columns, $pages );

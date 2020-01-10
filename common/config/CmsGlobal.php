@@ -22,9 +22,12 @@ class CmsGlobal {
 
 	// System Pages ---------------------------------------------------
 
-	const PAGE_SEARCH_PAGES		= 'pages';
-	const PAGE_SEARCH_ARTICLES	= 'articles';
-	const PAGE_SEARCH_POSTS		= 'blog';
+	const PAGE_SEARCH_PAGES		= 'search-pages';
+	const PAGE_SEARCH_ARTICLES	= 'search-articles';
+	const PAGE_SEARCH_POSTS		= 'search-posts';
+
+	const PAGE_BLOG		= 'blog';
+	const PAGE_ARTICLES = 'articles';
 
 	// Grouping by type ------------------------------------------------
 
