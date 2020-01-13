@@ -149,7 +149,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = isset( $model ) ? json_decode( $model->data ) : [];
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'page/search', 'searchContent' => true
@@ -194,7 +195,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = json_decode( $model->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Find Template
 			$content	= $model->modelContent;

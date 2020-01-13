@@ -201,7 +201,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = isset( $model ) ? json_decode( $model->data ) : [];
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'blog/search', 'searchContent' => true,
@@ -231,7 +232,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = json_decode( $category->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Fallback to default template
 			if( empty( $template ) ) {
@@ -268,7 +270,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = json_decode( $tag->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Fallback to default template
 			if( empty( $template ) ) {
@@ -302,7 +305,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = json_decode( $author->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_POST );
 
@@ -347,7 +351,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = json_decode( $model->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Find Template
 			$content	= $model->modelContent;

@@ -82,6 +82,7 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 				'actions' => [
 					'all' => [ 'get' ],
 					'search' => [ 'get' ],
+					'author' => [ 'get' ],
 					'single' => [ 'get' ]
 				]
 			]
@@ -146,7 +147,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$data = isset( $model ) ? json_decode( $model->data ) : [];
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'article/search', 'searchContent' => true
@@ -159,6 +161,37 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Error - Template not defined
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+	}
+
+	public function actionAuthor( $slug ) {
+
+		$author = Yii::$app->factory->get( 'userService' )->getBySlug( $slug );
+
+		if( isset( $author ) ) {
+
+			// View Params
+			$this->view->params[ 'model' ] = $author;
+
+			$data = json_decode( $author->data );
+
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_ARTICLE );
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'author' => $author
+				]);
+			}
+
+			// Error - Template not defined
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+		}
+
+		// Error- Post not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionSingle( $slug, $amp = false ) {
@@ -187,7 +220,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$data = json_decode( $model->data );
 
-			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Find Template
 			$content	= $model->modelContent;
