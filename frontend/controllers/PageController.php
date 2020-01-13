@@ -143,7 +143,13 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'page/search', 'searchContent' => true
@@ -185,6 +191,10 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			// View Params
 			$this->view->params[ 'model' ] = $model;
+
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			// Find Template
 			$content	= $model->modelContent;

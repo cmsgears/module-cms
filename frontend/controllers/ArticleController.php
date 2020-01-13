@@ -140,7 +140,13 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'article/search', 'searchContent' => true
@@ -178,6 +184,10 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			// View Params
 			$this->view->params[ 'model' ] = $model;
+
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			// Find Template
 			$content	= $model->modelContent;

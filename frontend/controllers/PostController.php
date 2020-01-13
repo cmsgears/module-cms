@@ -195,7 +195,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'blog/search', 'searchContent' => true,
@@ -222,6 +228,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			// View Params
 			$this->view->params[ 'model' ] = $category;
+
+			$data = json_decode( $category->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			// Fallback to default template
 			if( empty( $template ) ) {
@@ -256,6 +266,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// View Params
 			$this->view->params[ 'model' ] = $tag;
 
+			$data = json_decode( $tag->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
+
 			// Fallback to default template
 			if( empty( $template ) ) {
 
@@ -285,6 +299,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			// View Params
 			$this->view->params[ 'model' ] = $author;
+
+			$data = json_decode( $author->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_POST );
 
@@ -326,6 +344,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			// View Params
 			$this->view->params[ 'model' ] = $model;
+
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'settings' ] = isset( $data->settings ) ? $data->settings : [];
 
 			// Find Template
 			$content	= $model->modelContent;
