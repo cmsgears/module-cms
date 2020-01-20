@@ -94,11 +94,6 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 
 		Url::remember( Yii::$app->request->getUrl(), 'widgets' );
 
-		$modelTable = $this->modelService->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
 		return parent::actionAll( $config );
 	}
 

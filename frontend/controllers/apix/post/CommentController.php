@@ -26,7 +26,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class CommentController extends \cmsgears\core\frontend\controllers\base\Controller {
+class CommentController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -168,7 +168,7 @@ class CommentController extends \cmsgears\core\frontend\controllers\base\Control
 		if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, CmsGlobal::TYPE_POST ) ) {
 
 			$parentType = $this->parentService->getParentType();
-			$adminLink	= "cms/post/comment/update?id={$model->id}";
+			$adminLink	= "cms/post/comment/delete?id={$model->id}";
 
 			$this->modelService->deleteRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
 

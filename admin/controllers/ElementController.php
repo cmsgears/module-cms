@@ -84,11 +84,6 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 
 		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
-		$modelTable = $this->modelService->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
 		return parent::actionAll( $config );
 	}
 

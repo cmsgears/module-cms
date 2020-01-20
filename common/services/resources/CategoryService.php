@@ -14,19 +14,17 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
-
-use cmsgears\core\common\services\resources\CategoryService as BaseCategoryService;
 
 /**
  * CategoryService provide service methods of category model.
  *
  * @since 1.0.0
  */
-class CategoryService extends BaseCategoryService implements ICategoryService {
+class CategoryService extends \cmsgears\core\common\services\resources\CategoryService implements ICategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -239,18 +237,26 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function create( $model, $config = [] ) {
 
-		$model = parent::create( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
-		if( isset( $content ) ) {
+		// Model content is required for all the tags to form tag page
+		if( !isset( $content ) ) {
 
-			$config[ 'parent' ]		= $model;
-			$config[ 'parentType' ]	= CoreGlobal::TYPE_CATEGORY;
-			$config[ 'publish' ]	= true;
-
-			$this->modelContentService->create( $content, $config );
+			$content = new ModelContent();
 		}
+
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		$this->copyTemplate( $model, $config );
+
+		$model = parent::create( $model, $config );
+
+		$config[ 'parent' ]		= $model;
+		$config[ 'parentType' ]	= static::$parentType;
+		$config[ 'publish' ]	= true;
+
+		$this->modelContentService->create( $content, $config );
 
 		return $model;
 	}
@@ -259,9 +265,20 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function update( $model, $config = [] ) {
 
-		$model = parent::update( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
+
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$config[ 'attributes'][] = 'data';
+		}
+
+		$model = parent::update( $model, $config );
 
 		if( isset( $content ) ) {
 

@@ -138,6 +138,11 @@ class ArticleService extends ContentService implements IArticleService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
@@ -204,6 +209,11 @@ class ArticleService extends ContentService implements IArticleService {
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
+
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
 
 			// Create Model
 			$model = $this->create( $model, $config );
@@ -286,6 +296,15 @@ class ArticleService extends ContentService implements IArticleService {
 			]);
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 

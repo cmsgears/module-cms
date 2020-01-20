@@ -29,6 +29,8 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -44,6 +46,8 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'blockService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -150,7 +154,7 @@ class BlockController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'admin' => true ],
 			// Avatar
 			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],

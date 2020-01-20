@@ -75,20 +75,25 @@ class Post extends Content implements ICategory, ITab, ITag {
 
 		$this->nextStatus = [
 			self::STATUS_NEW => self::STATUS_BASIC, self::STATUS_BASIC => self::STATUS_MEDIA,
-			self::STATUS_MEDIA => self::STATUS_ATTRIBUTES,
+			self::STATUS_MEDIA => self::STATUS_ELEMENTS, self::STATUS_ELEMENTS => self::STATUS_BLOCKS,
+			self::STATUS_BLOCKS => self::STATUS_ATTRIBUTES,
 			self::STATUS_ATTRIBUTES => self::STATUS_SETTINGS, self::STATUS_SETTINGS => self::STATUS_REVIEW
 		];
 
 		$this->previousTab = [
 			'media' => 'basic',
-			'attributes' => 'media',
+			'elements' => 'media',
+			'blocks' => 'elements',
+			'attributes' => 'blocks',
 			'settings' => 'attributes',
 			'review' => 'settings'
 		];
 
 		$this->nextTab = [
 			'basic' => 'media',
-			'media' => 'attributes',
+			'media' => 'elements',
+			'elements' => 'blocks',
+			'blocks' => 'attributes',
 			'attributes' => 'settings',
 			'settings' => 'review'
 		];

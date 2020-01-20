@@ -93,11 +93,6 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 
 		Url::remember( Yii::$app->request->getUrl(), 'sidebars' );
 
-		$modelTable = $this->modelService->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
 		return parent::actionAll( $config );
 	}
 

@@ -196,7 +196,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 					'bulk' => [ 'post' ],
 					'generic' => [ 'post' ],
 					'delete' => [ 'post' ],
-					// Reviews
+					// Comments
 					'submit-comment' => [ 'post' ],
 					// Community
 					'like' => [ 'post' ]
@@ -278,7 +278,7 @@ class PostController extends \cmsgears\core\admin\controllers\base\Controller {
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
-			// Reviews
+			// Comments
 			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ],
 			// Community
 			'like' => [ 'class' => 'cmsgears\core\common\actions\follower\Like' ]

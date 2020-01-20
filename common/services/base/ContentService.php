@@ -90,6 +90,9 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
 		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
@@ -216,7 +219,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
+		if( isset( $type ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -255,19 +258,24 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
-		if( isset( $searchCol ) && empty( $config[ 'search-col' ] ) ) {
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'summary' => "modelContent.summary",
-				'content' => "modelContent.content"
-			];
+		if( isset( $searchCol ) ) {
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -453,9 +461,9 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		// Search
 		$searchContent	= isset( $config[ 'searchContent' ] ) ? $config[ 'searchContent' ] : false;
-		$keywordsParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
+		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
 
-		$keywords = Yii::$app->request->getQueryParam( $keywordsParam );
+		$keywords = Yii::$app->request->getQueryParam( $searchParam );
 
 		// Sort
 		$ratingComment	= isset( $config[ 'ratingComment' ] ) ? $config[ 'ratingComment' ] : false;
@@ -473,7 +481,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 			$cache = CacheProperties::getInstance()->isCaching();
 
-			// Search in model cache - full search
+			// Search in model cache - full text search
 			if( $cache ) {
 
 				$config[ 'search-col' ][] = "$modelTable.gridCache";
@@ -485,7 +493,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 				$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithAll( [ 'relations' => [ 'modelContent', 'modelContent.template' ] ] );
 
 				// Search in model content
-				$config[ 'search-col' ][] = 'modelContent.content';
+				$config[ 'search-col' ] = [ 'modelContent.content' ];
 			}
 		}
 

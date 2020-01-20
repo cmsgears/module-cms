@@ -29,6 +29,8 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -44,6 +46,8 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'sidebarService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------

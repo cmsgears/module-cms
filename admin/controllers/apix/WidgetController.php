@@ -29,6 +29,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -44,6 +46,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		// Service
 		$this->modelService = Yii::$app->factory->get( 'widgetService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -86,7 +90,7 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'admin' => true ],
 			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],

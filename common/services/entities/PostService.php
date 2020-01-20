@@ -174,6 +174,11 @@ class PostService extends ContentService implements IPostService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
@@ -249,6 +254,11 @@ class PostService extends ContentService implements IPostService {
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
+
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
 
 			// Create Model
 			$model = $this->create( $model, $config );
@@ -345,6 +355,15 @@ class PostService extends ContentService implements IPostService {
 			]);
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );

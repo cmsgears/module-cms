@@ -52,10 +52,19 @@ trait BlockTrait {
 
 		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
+		/*
 		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+		*/
+
+		return ModelBlock::find()
+			->leftJoin( $objectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -65,10 +74,19 @@ trait BlockTrait {
 
 		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_BLOCK;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
+		/*
 		return $this->hasMany( ModelBlock::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+		*/
+
+		return ModelBlock::find()
+			->leftJoin( $objectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1 AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -92,7 +110,7 @@ trait BlockTrait {
 
 		return Block::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
-			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
 			->all();
 	}
@@ -118,7 +136,7 @@ trait BlockTrait {
 
 		return Block::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
-			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1 AND $modelObjectTable.active=1" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
 			->all();
 	}

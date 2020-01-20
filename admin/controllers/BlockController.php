@@ -84,11 +84,6 @@ class BlockController extends \cmsgears\cms\admin\controllers\base\BlockControll
 
 		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
 
-		$modelTable = $this->modelService->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
 		return parent::actionAll( $config );
 	}
 

@@ -22,7 +22,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * ElementController consist of actions specific to page elements.
+ * ElementController consist of actions specific to elements.
  *
  * @since 1.0.0
  */
@@ -111,6 +111,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
 		$modelClass = $this->modelService->getModelClass();
+		$modelTable = $this->modelService->getModelTable();
 
 		$user = Yii::$app->core->getUser();
 
@@ -118,11 +119,16 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		if( isset( $status ) ) {
 
-			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [ 'status' => Post::$urlRevStatusMap[ $status ] ] );
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [
+				'conditions' => [ "$modelTable.type" => CmsGlobal::TYPE_ELEMENT ],
+				'status' => $modelClass::$urlRevStatusMap[ $status ]
+			]);
 		}
 		else {
 
-			$dataProvider = $this->modelService->getPageByOwnerId( $user->id );
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [
+				'conditions' => [ "$modelTable.type" => CmsGlobal::TYPE_ELEMENT ]
+			]);
 		}
 
 		return $this->render( 'all', [
@@ -132,10 +138,15 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 		]);
 	}
 
-    public function actionAdd( $pid = null, $ptype = null, $template = CoreGlobal::TEMPLATE_DEFAULT ) {
+    public function actionAdd( $pid = null, $ptype = null, $template = 'box' ) {
 
 		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
 		$modelClass	= $this->modelService->getModelClass();
+
+		if( empty( $template ) ) {
+
+			$template = $this->templateService->getBySlugType( 'box', CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
+		}
 
 		if( isset( $template ) ) {
 
@@ -147,6 +158,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
+			$model->shared		= true;
 
 			// Files
 			$avatar	= File::loadFile( null, 'Avatar' );
@@ -189,16 +201,19 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 		// Model
 		$model = $this->model;
 
+		$template = $model->template;
+
 		// Files
-		$avatar	= File::loadFile( null, 'Avatar' );
-		$banner	= File::loadFile( null, 'Banner' );
-		$video	= File::loadFile( null, 'Video' );
+		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
+		$banner	= File::loadFile( $model->banner, 'Banner' );
+		$video	= File::loadFile( $model->video, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			// Register Model
+			// Update Model
 			$model = $this->modelService->update( $model, [
-				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'admin' => true, 'oldTemplate' => $template,
+				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 			]);
 
 			// Refresh Model

@@ -152,13 +152,18 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		if( isset( $model ) ) {
 
 			$content	= $model->modelContent;
-			$banner		= File::loadFile( $content->banner, 'Banner' );
-			$video		= File::loadFile( $content->video, 'Video' );
+			$template	= $content->template;
+
+			$banner	= File::loadFile( $content->banner, 'Banner' );
+			$video	= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'content' => $content, 'oldTemplate' => $template,
+					'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}

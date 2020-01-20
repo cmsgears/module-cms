@@ -21,8 +21,8 @@ $user	= $core->getUser();
 				<li class="ublock <?= $child == 'ublock' ? 'active' : null ?>"><?= Html::a( "Blocks", ['/cms/block/all'] ) ?></li>
 				<li class="uwidget <?= $child == 'uwidget' ? 'active' : null ?>"><?= Html::a( "Widgets", ['/cms/widget/all'] ) ?></li>
 				<li class="usidebar <?= $child == 'usidebar' ? 'active' : null ?>"><?= Html::a( "Sidebars", ['/cms/sidebar/all'] ) ?></li>
-				<li class="ulink <?= $child == 'ulink' ? 'active' : null ?>"><?= Html::a( "Links", ['/cms/link/all'] ) ?></li>
 				<li class="umenu <?= $child == 'umenu' ? 'active' : null ?>"><?= Html::a( "Menus", ['/cms/menu/all'] ) ?></li>
+				<li class="ulink <?= $child == 'ulink' ? 'active' : null ?>"><?= Html::a( "Links", ['/cms/link/all'] ) ?></li>
 				<li class="element-template <?= $child == 'element-template' ? 'active' : null ?>"><?= Html::a( "Element Templates", ['/cms/element/template/all'] ) ?></li>
 				<li class="block-template <?= $child == 'block-template' ? 'active' : null ?>"><?= Html::a( "Block Templates", ['/cms/block/template/all'] ) ?></li>
 				<li class="widget-template <?= $child == 'widget-template' ? 'active' : null ?>"><?= Html::a( "Widget Templates", ['/cms/widget/template/all'] ) ?></li>

@@ -93,11 +93,6 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 
 		Url::remember( Yii::$app->request->getUrl(), 'menus' );
 
-		$modelTable = $this->modelService->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= true;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
 		return parent::actionAll( $config );
 	}
 

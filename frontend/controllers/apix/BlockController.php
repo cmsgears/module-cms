@@ -18,13 +18,15 @@ use yii\filters\VerbFilter;
  *
  * @since 1.0.0
  */
-class BlockController extends \cmsgears\core\frontend\controllers\base\Controller {
+class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -38,6 +40,8 @@ class BlockController extends \cmsgears\core\frontend\controllers\base\Controlle
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'blockService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,35 +59,41 @@ class BlockController extends \cmsgears\core\frontend\controllers\base\Controlle
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// Avatar
-					'assign-avatar' => [ 'permission' => $this->crudPermission ],
-					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Banner
-					'assign-banner' => [ 'permission' => $this->crudPermission ],
-					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					'assign-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-banner' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Video
-					'assign-video' => [ 'permission' => $this->crudPermission ],
-					'clear-video' => [ 'permission' => $this->crudPermission ],
+					'assign-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Files
-					'assign-file' => [ 'permission' => $this->crudPermission ],
-					'clear-file' => [ 'permission' => $this->crudPermission ],
+					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Gallery
-					'update-gallery' => [ 'permission' => $this->crudPermission ],
-					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
-					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Metas
-					'add-meta' => [ 'permission' => $this->crudPermission ],
-					'update-meta' => [ 'permission' => $this->crudPermission ],
-					'toggle-meta' => [ 'permission' => $this->crudPermission ],
-					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'add-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'update-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Elements
-					'assign-element' => [ 'permission' => $this->crudPermission ],
-					'remove-element' => [ 'permission' => $this->crudPermission ],
+					'assign-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'remove-element' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					// Widgets
+					'assign-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'remove-widget' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					// Sidebars
+					'assign-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'remove-sidebar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
-					'generic' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
+					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
 				]
 			],
 			'verbs' => [
@@ -117,6 +127,12 @@ class BlockController extends \cmsgears\core\frontend\controllers\base\Controlle
 					// Elements
 					'assign-element' => [ 'post' ],
 					'remove-element' => [ 'post' ],
+					// Widgets
+					'assign-widget' => [ 'post' ],
+					'remove-widget' => [ 'post' ],
+					// Sidebars
+					'assign-sidebar' => [ 'post' ],
+					'remove-sidebar' => [ 'post' ],
 					// Model
 					'bulk' => [ 'post' ],
 					'generic' => [ 'post' ],
@@ -132,7 +148,7 @@ class BlockController extends \cmsgears\core\frontend\controllers\base\Controlle
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'admin' => false ],
 			// Avatar
 			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
@@ -159,8 +175,14 @@ class BlockController extends \cmsgears\core\frontend\controllers\base\Controlle
 			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Widgets
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			// Sidebars
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'userBulk' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

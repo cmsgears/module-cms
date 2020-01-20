@@ -19,14 +19,12 @@ use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
 
-use cmsgears\core\common\services\resources\TagService as BaseTagService;
-
 /**
  * TagService provide service methods of tag model.
  *
  * @since 1.0.0
  */
-class TagService extends BaseTagService implements ITagService {
+class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -183,8 +181,6 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function create( $model, $config = [] ) {
 
-		$model = parent::create( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		// Model content is required for all the tags to form tag page
@@ -193,8 +189,16 @@ class TagService extends BaseTagService implements ITagService {
 			$content = new ModelContent();
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		$this->copyTemplate( $model, $config );
+
+		$model = parent::create( $model, $config );
+
 		$config[ 'parent' ]		= $model;
-		$config[ 'parentType' ]	= self::$parentType;
+		$config[ 'parentType' ]	= static::$parentType;
+		$config[ 'publish' ]	= true;
 
 		$this->modelContentService->create( $content, $config );
 
@@ -205,9 +209,20 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function update( $model, $config = [] ) {
 
-		$model = parent::update( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
+
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$config[ 'attributes'][] = 'data';
+		}
+
+		$model = parent::update( $model, $config );
 
 		if( isset( $content ) ) {
 

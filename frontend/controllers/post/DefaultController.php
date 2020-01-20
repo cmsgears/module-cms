@@ -60,7 +60,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Config
 		$this->apixBase	= 'cms/post';
-		$this->basePath	= 'post/default';
+		$this->basePath	= '/cms/post/default';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -74,7 +74,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		$this->blockService		= Yii::$app->factory->get( 'blockService' );
 
 		// Return Url
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/default/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -150,7 +150,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_POST;
-			$model->comments	= false;
+			$model->comments	= true;
 
 			// Content
 			$content = $this->modelContentService->getModelObject();
@@ -158,9 +158,10 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$content->templateId = $template->id;
 
 			// Files
-			$avatar	= File::loadFile( null, 'Avatar' );
-			$banner	= File::loadFile( null, 'Banner' );
-			$video	= File::loadFile( null, 'Video' );
+			$avatar		= File::loadFile( null, 'Avatar' );
+			$banner		= File::loadFile( null, 'Banner' );
+			$mbanner	= File::loadFile( null, 'MobileBanner' );
+			$video		= File::loadFile( null, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
@@ -168,7 +169,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				// Register Model
 				$model = $this->modelService->register( $model, [
 					'content' => $content,
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
 				]);
 
 				// Refresh Model
@@ -185,6 +186,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				'content' => $content,
 				'avatar' => $avatar,
 				'banner' => $banner,
+				'mbanner' => $mbanner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap
 			]);
@@ -204,12 +206,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		$this->checkEditable( $model );
 
 		// Content
-		$content = $model->modelContent;
+		$content	= $model->modelContent;
+		$template	= $content->template;
 
 		// Files
-		$avatar	= File::loadFile( null, 'Avatar' );
-		$banner	= File::loadFile( null, 'Banner' );
-		$video	= File::loadFile( null, 'Video' );
+		$avatar		= File::loadFile( $model->avatar, 'Avatar' );
+		$banner		= File::loadFile( $content->banner, 'Banner' );
+		$mbanner	= File::loadFile( $content->mobileBanner, 'MobileBanner' );
+		$video		= File::loadFile( $content->video, 'Video' );
 
 		$oldSlug = $model->slug;
 
@@ -218,8 +222,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			// Register Model
 			$model = $this->modelService->update( $model, [
-				'content' => $content,
-				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'content' => $content, 'oldTemplate' => $template,
+				'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
 			]);
 
 			// Refresh Model
@@ -243,6 +247,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			'content' => $content,
 			'avatar' => $avatar,
 			'banner' => $banner,
+			'mbanner' => $mbanner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap
 		]);
@@ -293,13 +298,17 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	public function actionElements( $slug ) {
 
+		Url::remember( Yii::$app->request->getUrl(), 'elements' );
+
 		$modelClass = $this->modelService->getModelClass();
 
 		$model = $this->model;
 
+		$parentType	= $this->modelService->getParentType();
+
 		$this->checkEditable( $model );
 
-		$elements = $model->modelElements;
+		$dataProvider = $this->elementService->getPageByTypeParent( CmsGlobal::TYPE_ELEMENT, $model->id, $parentType );
 
 		if( $model->status < $modelClass::STATUS_ELEMENTS ) {
 
@@ -308,7 +317,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		return $this->render( 'elements', [
 			'model' => $model,
-			'elements' => $elements
+			'parentType' => $parentType,
+			'dataProvider' => $dataProvider
 		]);
 	}
 
@@ -318,7 +328,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		$modelClass = $this->modelService->getModelClass();
 
-		$model		= $this->model;
+		$model = $this->model;
+
 		$parentType	= $this->modelService->getParentType();
 
 		$this->checkEditable( $model );
@@ -381,49 +392,51 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	public function actionReview( $slug ) {
 
-		$model = $this->model;
-
 		$modelClass = $this->modelService->getModelClass();
+
+		$model = $this->model;
 
 		if( isset( $model ) ) {
 
+			// Ready for review
 			if( $model->status < $modelClass::STATUS_REVIEW ) {
 
 				$this->modelService->updateStatus( $model, $modelClass::STATUS_REVIEW );
 			}
 
+			// Submit for Admin review
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				// Submit
+				// Submitted first time for review
 				if( $model->status < $modelClass::STATUS_SUBMITTED ) {
 
 					$this->modelService->submit( $model, [
-						'adminLink' => "cms/post/review?id={$model->id}"
+						'adminLink' => "/cms/post/review?id={$model->id}"
 					]);
 				}
-				// Re-Submit
+				// Re-Submitted for review after rejection
 				else if( $model->isRejected() ) {
 
 					$this->modelService->reSubmit( $model, [
-						'adminLink' => "cms/post/review?id={$model->id}"
+						'adminLink' => "/cms/post/review?id={$model->id}"
 					]);
 				}
-				// Activation Request
+				// Activation Request to uplift block or freeze
 				else if( $model->isFrojen() || $model->isBlocked() ) {
 
-					//Yii::$app->orgMailer->sendActivationRequestMail( $model );
+					//Yii::$app->cmsMailer->sendActivationRequestMail( $model );
 
 					if( $model->isFrojen() ) {
 
 						$this->modelService->upliftFreeze( $model, [
-							'adminLink' => "cms/post/review?id={$model->id}"
+							'adminLink' => "/cms/post/review?id={$model->id}"
 						]);
 					}
 
 					if( $model->isBlocked() ) {
 
 						$this->modelService->upliftBlock( $model, [
-							'adminLink' => "cms/post/review?id={$model->id}"
+							'adminLink' => "/cms/post/review?id={$model->id}"
 						]);
 					}
 				}
@@ -439,8 +452,9 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				$this->view->params[ 'model' ] = $model;
 
 				return Yii::$app->templateManager->renderViewAdmin( $template, [
-					'model' => $model,
+					'modelService' => $this->modelService,
 					'metaService' => $this->metaService,
+					'model' => $model,
 					'content' => $content,
 					'userReview' => true,
 					'adminReview' => false,
@@ -472,6 +486,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				return $this->redirect( [ "$this->basePath/media?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_MEDIA: {
+
+				return $this->redirect( [ "$this->basePath/elements?slug=$model->slug" ] );
+			}
+			case $modelClass::STATUS_ELEMENTS: {
+
+				return $this->redirect( [ "$this->basePath/blocks?slug=$model->slug" ] );
+			}
+			case $modelClass::STATUS_BLOCKS: {
 
 				return $this->redirect( [ "$this->basePath/attributes?slug=$model->slug" ] );
 			}
