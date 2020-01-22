@@ -11,15 +11,11 @@ namespace cmsgears\cms\frontend\controllers\post;
 
 // Yii Imports
 use Yii;
-use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\resources\ModelComment;
-
-class CommentController extends \cmsgears\cms\frontend\controllers\base\Controller {
+class CommentController extends \cmsgears\core\frontend\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -29,11 +25,6 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// Protected --------------
 
-	protected $parentType;
-	protected $commentType;
-
-	protected $parentService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -42,16 +33,10 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		parent::init();
 
-		// Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
-
 		// Config
-		$this->parentType	= CmsGlobal::TYPE_POST;
-		$this->commentType	= ModelComment::TYPE_COMMENT;
+		$this->parentType = CmsGlobal::TYPE_POST;
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );
-
 		$this->parentService = Yii::$app->factory->get( 'postService' );
 	}
 
@@ -63,24 +48,6 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// yii\base\Component -----
 
-	public function behaviors() {
-
-		return [
-			'rbac' => [
-				'class' => Yii::$app->core->getRbacFilterClass(),
-				'actions' => [
-					'all' => [ 'permission' => $this->crudPermission ]
-				]
-			],
-			'verbs' => [
-				'class' => VerbFilter::class,
-				'actions' => [
-					'all'  => [ 'get' ]
-				]
-			]
-		];
-	}
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -88,22 +55,5 @@ class CommentController extends \cmsgears\cms\frontend\controllers\base\Controll
 	// CMG parent classes --------------------
 
 	// CommentController ---------------------
-
-	public function actionAll( $slug ) {
-
-		$modelClass	= $this->modelService->getModelClass();
-
-        $commentTable = $this->modelService->getModelTable();
-
-		$parent = $this->parentService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
-
-		$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
-
-		return $this->render( 'all', [
-			'dataProvider' => $dataProvider,
-			'statusMap' => $modelClass::$statusMap,
-			'parent' => $parent
-		]);
-	}
 
 }
