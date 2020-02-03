@@ -10,8 +10,6 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Category as BaseCategory;
-
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
@@ -25,7 +23,7 @@ use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 /**
  * @inheritdoc
  */
-class Category extends BaseCategory implements IBlock, IElement, IPageContent, IWidget {
+class Category extends \cmsgears\core\common\models\resources\Category implements IBlock, IElement, IPageContent, IWidget {
 
 	// Variables ---------------------------------------------------
 

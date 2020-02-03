@@ -36,6 +36,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $templateService;
@@ -61,6 +63,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
@@ -370,6 +373,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				if( $amp ) {
 
 					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
@@ -379,6 +384,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				else {
 
 					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
