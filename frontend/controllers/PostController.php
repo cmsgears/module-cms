@@ -213,7 +213,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -246,8 +247,15 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			if( isset( $template ) ) {
 
+				$dataProvider = $this->modelService->getPageForSearch([
+					'category' => $category,
+					'route' => "blog/category/$category->slug"
+				]);
+
 				return Yii::$app->templateManager->renderViewCategory( $template, [
-					'category' => $category
+					'dataProvider' => $dataProvider,
+					'category' => $category,
+					'template' => $template
 				]);
 			}
 
@@ -284,8 +292,15 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewTag( $template, [
-					'tag' => $tag
+				$dataProvider = $this->modelService->getPageForSearch([
+					'tag' => $tag,
+					'route' => "blog/tag/$tag->slug"
+				]);
+
+				return Yii::$app->templateManager->renderViewCategory( $template, [
+					'dataProvider' => $dataProvider,
+					'tag' => $tag,
+					'template' => $template
 				]);
 			}
 
@@ -316,7 +331,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'author' => $author
+					'author' => $author,
+					'template' => $template
 				]);
 			}
 
@@ -375,6 +391,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					return Yii::$app->templateManager->renderViewAmp( $template, [
 						'modelService' => $this->modelService,
 						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
@@ -386,6 +403,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					return Yii::$app->templateManager->renderViewPublic( $template, [
 						'modelService' => $this->modelService,
 						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,

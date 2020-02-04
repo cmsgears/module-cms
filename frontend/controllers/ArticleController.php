@@ -35,6 +35,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $templateService;
@@ -55,6 +57,7 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'articleService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
@@ -155,7 +158,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -182,7 +186,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'author' => $author
+					'author' => $author,
+					'template' => $template
 				]);
 			}
 
@@ -239,6 +244,9 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 				if( $amp ) {
 
 					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
@@ -248,6 +256,9 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 				else {
 
 					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,

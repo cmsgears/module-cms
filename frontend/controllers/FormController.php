@@ -36,8 +36,6 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
 	// Protected --------------
 
-	protected $formService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -46,7 +44,7 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
         parent::init();
 
-		$this->formService = Yii::$app->factory->get( 'formService' );
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -67,7 +65,7 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
     public function actionSingle( $slug ) {
 
-		$model = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
+		$model = $this->modelService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
 		if( isset( $model ) ) {
 
@@ -114,7 +112,7 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 			if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 				// Save Model
-				if( $this->formService->processForm( $model, $form ) ) {
+				if( $this->modelService->processForm( $model, $form ) ) {
 
 					// Set success message
 					if( isset( $model->success ) ) {
@@ -136,6 +134,8 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'modelService' => $this->modelService,
+					'template' => $template,
 		        	'model' => $model,
 					'form' => $form,
 					'content' => $content,

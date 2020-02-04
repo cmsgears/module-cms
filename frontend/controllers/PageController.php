@@ -35,6 +35,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $type;
@@ -58,6 +60,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'pageService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
@@ -157,7 +160,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -214,6 +218,9 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				if( $amp ) {
 
 					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
@@ -223,6 +230,9 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 				else {
 
 					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
 						'model' => $model,
 						'author' => $model->createdBy,
 						'content' => $content,
