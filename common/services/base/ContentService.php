@@ -29,6 +29,7 @@ use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
+
 /**
  * ContentService is base service of page and post.
  *

@@ -20,6 +20,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	const MAIL_POST_CREATE		= 'post/create';
 	const MAIL_POST_REGISTER	= 'post/register';
+	const MAIL_PAGE_REGISTER	= 'page/register';
 
 	// Public -----------------
 
@@ -75,6 +76,25 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Post Registration | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "text" )
+			->send();
+	}
+
+	public function sendRegisterPageMail( $page ) {
+
+		$fromEmail	= $this->mailProperties->getSenderEmail();
+		$fromName	= $this->mailProperties->getSenderName();
+
+		$author = $page->creator;
+
+		$name	= $author->getName();
+		$email	= $author->email;
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_PAGE_REGISTER, [ 'coreProperties' => $this->coreProperties, 'page' => $page, 'name' => $name, 'email' => $email ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Page Registration | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "text" )
 			->send();
 	}

@@ -300,6 +300,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
+		$this->apixBase	= 'cms/post/element';
+
 		$modelClass = $this->modelService->getModelClass();
 
 		$model = $this->model;
@@ -325,6 +327,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 	public function actionBlocks( $slug ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
+
+		$this->apixBase	= 'cms/post/block';
 
 		$modelClass = $this->modelService->getModelClass();
 

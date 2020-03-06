@@ -158,6 +158,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_BLOCK;
 			$model->templateId	= $template->id;
+			$model->admin		= false;
 			$model->shared		= true;
 
 			// Files

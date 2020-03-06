@@ -210,6 +210,8 @@ class PageService extends ContentService implements IPageService {
 	public function register( $model, $config = [] ) {
 
 		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$mail	= isset( $config[ 'mail' ] ) ? $config[ 'mail' ] : true;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : Yii::$app->core->getUser();
 
 		$modelClass = static::$modelClass;
 
@@ -219,7 +221,7 @@ class PageService extends ContentService implements IPageService {
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
-		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/page/review';
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/page/review';
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
@@ -283,11 +285,16 @@ class PageService extends ContentService implements IPageService {
 			// Notify Site Admin
 			if( $notify ) {
 
-				// Trigger Notification
-				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_PAGE_REGISTER,
-					[ 'model' => $model, 'service' => $this, 'user' => $user ],
-					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
-				);
+				$this->notifyAdmin( $model, [
+					'template' => CmsGlobal::TPL_NOTIFY_PAGE_NEW,
+					'adminLink' => "{$adminLink}?id={$model->id}"
+				]);
+			}
+
+			// Email Post Admin
+			if( $mail ) {
+
+				Yii::$app->cmsMailer->sendRegisterPageMail( $model );
 			}
 		}
 

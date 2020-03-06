@@ -158,6 +158,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
+			$model->admin		= false;
 			$model->shared		= true;
 
 			// Files
