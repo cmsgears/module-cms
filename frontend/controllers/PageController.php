@@ -197,6 +197,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// View Params
 			$this->view->params[ 'model' ] = $model;
 
+			$this->model = $model;
+
 			$data = json_decode( $model->data );
 
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
