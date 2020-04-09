@@ -54,13 +54,13 @@ Editor::widget();
 					</div>
 					<div class="row">
 						<div class="col col4">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments' ) ?>
 						</div>
 						<div class="col col4">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
 						</div>
 						<div class="col col4">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
 						</div>
 					</div>
 					<div class="row">

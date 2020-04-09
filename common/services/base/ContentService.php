@@ -178,6 +178,12 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -254,6 +260,15 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 					break;
 				}
+				case 'popular': {
+
+					if( empty( $config[ 'conditions' ][ "$modelTable.popular" ] ) ) {
+
+						$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+					}
+
+					break;
+				}
 			}
 		}
 
@@ -293,7 +308,8 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 				'visibility' => "$modelTable.visibility",
 				'order' => "$modelTable.order",
 				'pinned' => "$modelTable.pinned",
-				'featured' => "$modelTable.featured"
+				'featured' => "$modelTable.featured",
+				'popular' => "$modelTable.popular"
 			];
 		}
 
@@ -423,6 +439,14 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

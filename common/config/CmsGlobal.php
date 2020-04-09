@@ -26,6 +26,7 @@ class CmsGlobal {
 	const PAGE_SEARCH_ARTICLES	= 'search-articles';
 	const PAGE_SEARCH_POSTS		= 'search-posts';
 
+	const PAGE_HOME		= 'home';
 	const PAGE_BLOG		= 'blog';
 	const PAGE_ARTICLES = 'articles';
 

@@ -32,13 +32,13 @@ use cmsgears\icons\widgets\IconChooser;
 			</div>
 			<div class="row">
 				<div class="col col3">
-					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', [ 'disabled' => true ] ) ?>
 				</div>
 				<div class="col col3">
-					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', [ 'disabled' => true ] ) ?>
 				</div>
 				<div class="col col3">
-					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', [ 'disabled' => true ] ) ?>
 				</div>
 			</div>
 			<div class="row">
@@ -50,6 +50,9 @@ use cmsgears\icons\widgets\IconChooser;
 				</div>
 			</div>
 			<div class="row">
+				<div class="col col3">
+					<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'popular', [ 'disabled' => true ] ) ?>
+				</div>
 				<div class="col col2">
 					<?= $form->field( $model, 'order' )->textInput( [ 'readonly' => 'true' ] ) ?>
 				</div>

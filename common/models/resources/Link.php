@@ -51,6 +51,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $absolute
  * @property boolean $user
+ * @property boolean $active
  * @property date $createdAt
  * @property date $modifiedAt
  * @property string $htmlOptions
@@ -131,10 +132,11 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'title', 'url' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'absolute', 'user' ], 'boolean' ],
+			[ [ 'absolute', 'user', 'active' ], 'boolean' ],
 			[ [ 'siteId', 'pageId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -166,6 +168,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'absolute' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_ABSOLUTE ),
 			'user' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'urlOptions' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_URL_OPTIONS ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
@@ -228,6 +231,16 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 	public function getUserStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->user );
+	}
+
+	/**
+	 * Returns string representation of active flag.
+	 *
+	 * @return string
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -351,7 +351,7 @@ class PostService extends ContentService implements IPostService {
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured', 'comments'
+				'status', 'order', 'pinned', 'featured', 'popular', 'comments'
 			]);
 		}
 

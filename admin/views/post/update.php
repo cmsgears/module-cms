@@ -74,13 +74,13 @@ Editor::widget();
 					</div>
 					<div class="row">
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -89,6 +89,11 @@ Editor::widget();
 						</div>
 						<div class="col col2">
 							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'popular' ) ?>
 						</div>
 					</div>
 				</div>

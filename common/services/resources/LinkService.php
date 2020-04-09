@@ -130,6 +130,12 @@ class LinkService extends ResourceService implements ILinkService {
 	                'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
+	            ],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -183,6 +189,18 @@ class LinkService extends ResourceService implements ILinkService {
 
 					break;
 				}
+				case 'user': {
+
+					$config[ 'conditions' ][ "$modelTable.user" ] = true;
+
+					break;
+				}
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
 			}
 		}
 
@@ -208,7 +226,8 @@ class LinkService extends ResourceService implements ILinkService {
 			'title' => "$modelTable.title",
 			'url' => "$modelTable.url",
 			'absolute' => "$modelTable.absolute",
-			'user' => "$modelTable.user"
+			'user' => "$modelTable.user",
+			'active' => "$modelTable.active"
 		];
 
 		// Result -----------
@@ -239,7 +258,9 @@ class LinkService extends ResourceService implements ILinkService {
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'pageId', 'name', 'title', 'url', 'icon', 'order', 'absolute', 'user', 'htmlOptions', 'urlOptions'
+			'pageId', 'name', 'title', 'url', 'icon', 'order',
+			'absolute', 'user', 'active',
+			'htmlOptions', 'urlOptions'
 		];
 
 		return parent::update( $model, [
@@ -271,6 +292,22 @@ class LinkService extends ResourceService implements ILinkService {
 					case 'absolute': {
 
 						$model->absolute = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'user': {
+
+						$model->user = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'active': {
+
+						$model->active = true;
 
 						$model->update();
 

@@ -42,13 +42,13 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 					</div>
 					<div class="row">
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'absolute', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'absolute' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'user', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'user' ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'order' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -60,6 +60,9 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 						</div>
 					</div>
 					<div class="row">
+						<div class="col colw">
+							<?= $form->field( $model, 'order' ) ?>
+						</div>
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
