@@ -156,6 +156,16 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		]);
 	}
 
+	public function publish( $model, $config = [] ) {
+
+		if( empty( $model->publishedAt ) ) {
+
+			$model->publishedAt	= DateUtil::getDateTime();
+		}
+
+		return parent::update( $model, [ 'attributes' => [ 'publishedAt' ] ] );
+	}
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {

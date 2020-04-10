@@ -23,8 +23,7 @@ use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
-
-use cmsgears\cms\common\services\base\ContentService;
+use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
 use cmsgears\core\common\services\traits\base\SimilarTrait;
 use cmsgears\core\common\services\traits\mappers\CategoryTrait;
@@ -34,7 +33,7 @@ use cmsgears\core\common\services\traits\mappers\CategoryTrait;
  *
  * @since 1.0.0
  */
-class PostService extends ContentService implements IPostService {
+class PostService extends \cmsgears\cms\common\services\base\ContentService implements IPostService {
 
 	// Variables ---------------------------------------------------
 
@@ -58,6 +57,7 @@ class PostService extends ContentService implements IPostService {
 
 	protected $fileService;
 	protected $metaService;
+	protected $followerService;
 
 	// Private ----------------
 
@@ -68,10 +68,11 @@ class PostService extends ContentService implements IPostService {
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, IPageFollowerService $followerService, $config = [] ) {
 
 		$this->fileService	= $fileService;
 		$this->metaService 	= $metaService;
+		$this->followerService	= $followerService;
 
 		parent::__construct( $config );
 	}

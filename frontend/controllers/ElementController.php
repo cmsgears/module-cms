@@ -104,7 +104,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// CMG parent classes --------------------
 
-	// ElementController -----------------------
+	// ElementController ---------------------
 
 	public function actionAll( $status = null ) {
 
@@ -182,12 +182,15 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 				return $this->redirect( $this->returnUrl );
 			}
 
+			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
+
 			return $this->render( 'add', [
 				'model' => $model,
 				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
-				'statusMap' => $modelClass::$baseStatusMap
+				'statusMap' => $modelClass::$baseStatusMap,
+				'templatesMap' => $templatesMap
 			]);
 		}
 
@@ -226,12 +229,15 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			return $this->redirect( $this->returnUrl );
 		}
 
+		$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );
+
 		return $this->render( 'update', [
 			'model' => $model,
 			'avatar' => $avatar,
 			'banner' => $banner,
 			'video' => $video,
-			'statusMap' => $modelClass::$baseStatusMap
+			'statusMap' => $modelClass::$baseStatusMap,
+			'templatesMap' => $templatesMap
 		]);
 	}
 

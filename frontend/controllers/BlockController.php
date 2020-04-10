@@ -182,12 +182,15 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 				return $this->redirect( $this->returnUrl );
 			}
 
+			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+
 			return $this->render( 'add', [
 				'model' => $model,
 				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
-				'statusMap' => $modelClass::$baseStatusMap
+				'statusMap' => $modelClass::$baseStatusMap,
+				'templatesMap' => $templatesMap
 			]);
 		}
 
@@ -226,12 +229,15 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 			return $this->redirect( $this->returnUrl );
 		}
 
+		$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+
 		return $this->render( 'update', [
 			'model' => $model,
 			'avatar' => $avatar,
 			'banner' => $banner,
 			'video' => $video,
-			'statusMap' => $modelClass::$baseStatusMap
+			'statusMap' => $modelClass::$baseStatusMap,
+			'templatesMap' => $templatesMap
 		]);
 	}
 

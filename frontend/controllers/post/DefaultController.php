@@ -40,6 +40,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// Protected --------------
 
+	protected $type;
+
 	protected $templateService;
 
 	protected $modelContentService;
@@ -60,7 +62,9 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Config
 		$this->apixBase	= 'cms/post';
+		$this->baseUrl	= '/cms/post';
 		$this->basePath	= '/cms/post/default';
+		$this->type		= CmsGlobal::TYPE_POST;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -138,7 +142,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	public function actionAdd( $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_POST, [ 'ignoreSite' => true ] );
+		$template	= $this->templateService->getBySlugType( $template, $this->type, [ 'ignoreSite' => true ] );
 		$modelClass	= $this->modelService->getModelClass();
 
 		if( isset( $template ) ) {
@@ -149,7 +153,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
-			$model->type		= CmsGlobal::TYPE_POST;
+			$model->type		= $this->type;
 			$model->comments	= true;
 
 			// Content
@@ -300,7 +304,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		Url::remember( Yii::$app->request->getUrl(), 'elements' );
 
-		$this->apixBase	= 'cms/post/element';
+		$this->apixBase	= $this->apixBase . '/element';
 
 		$modelClass = $this->modelService->getModelClass();
 
@@ -328,7 +332,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
 
-		$this->apixBase	= 'cms/post/block';
+		$this->apixBase	= $this->apixBase . '/block';
 
 		$modelClass = $this->modelService->getModelClass();
 
@@ -415,14 +419,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				if( $model->status < $modelClass::STATUS_SUBMITTED ) {
 
 					$this->modelService->submit( $model, [
-						'adminLink' => "/cms/post/review?id={$model->id}"
+						'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
 					]);
 				}
 				// Re-Submitted for review after rejection
 				else if( $model->isRejected() ) {
 
 					$this->modelService->reSubmit( $model, [
-						'adminLink' => "/cms/post/review?id={$model->id}"
+						'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
 					]);
 				}
 				// Activation Request to uplift block or freeze
@@ -433,14 +437,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 					if( $model->isFrojen() ) {
 
 						$this->modelService->upliftFreeze( $model, [
-							'adminLink' => "/cms/post/review?id={$model->id}"
+							'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
 						]);
 					}
 
 					if( $model->isBlocked() ) {
 
 						$this->modelService->upliftBlock( $model, [
-							'adminLink' => "/cms/post/review?id={$model->id}"
+							'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
 						]);
 					}
 				}

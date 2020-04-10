@@ -138,6 +138,8 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 
 						$this->modelService->approve( $model, [ 'notify' => false ] );
 
+						$this->modelContentService->publish( $model->modelContent );
+
 						Yii::$app->coreMailer->sendApproveMail( $model, $email, $message );
 
 						break;
