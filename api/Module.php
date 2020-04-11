@@ -1,9 +1,10 @@
 <?php
 /**
- * This file is part of project Cmsgears. Please view License file distributed
+ * This file is part of CMSGears Framework. Please view License file distributed
  * with the source code for license details.
  *
- * @copyright Copyright (c) 2019
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
 namespace cmsgears\cms\api;
