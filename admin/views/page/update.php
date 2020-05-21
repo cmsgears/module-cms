@@ -87,6 +87,14 @@ Editor::widget();
 							<?= TextureChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $content, 'classPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $content, 'viewPath' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

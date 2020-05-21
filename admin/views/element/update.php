@@ -83,6 +83,14 @@ Editor::widget();
 					</div>
 					<div class="row">
 						<div class="col col2">
+							<?= $form->field( $model, 'classPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'viewPath' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => "core/object-data/auto-search" ] ) ?>
 						</div>
 					</div>

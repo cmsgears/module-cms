@@ -150,7 +150,7 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 
 		return parent::update( $model, [
 			'attributes' => [
-				'templateId', 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'summary',
+				'templateId', 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'summary', 'classPath', 'viewPath',
 				'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'seoSchema'
 			]
 		]);

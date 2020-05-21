@@ -87,6 +87,14 @@ Editor::widget();
 							<?= TextureChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $content, 'classPath' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $content, 'viewPath' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -69,6 +69,8 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
 		if( isset( $model ) ) {
 
+			$this->model = $model;
+
 			// Find Template
 			$content	= $model->modelContent;
 			$template	= $content->template;
@@ -81,7 +83,12 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
 			$form->captchaAction = '/cms/form/captcha';
 
-			$this->view->params[ 'model' ] = $model;
+			// View Params
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
 			// Form need a valid user
 			if( !$model->isVisibilityPublic() ) {

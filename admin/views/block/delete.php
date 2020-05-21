@@ -81,6 +81,14 @@ Editor::widget();
 							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'classPath' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

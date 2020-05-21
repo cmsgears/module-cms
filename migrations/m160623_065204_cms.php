@@ -188,6 +188,8 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'summary' => $this->text(),
+			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'viewPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'seoName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'seoDescription' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'seoKeywords' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
@@ -195,7 +197,8 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'seoSchema' => $this->text(),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
-			'data' => $this->mediumText()
+			'data' => $this->mediumText(),
+			'schema' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns base, creator and modifier

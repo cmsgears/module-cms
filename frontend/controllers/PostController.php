@@ -381,6 +381,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		if( isset( $model ) ) {
 
+			$this->model = $model;
+
 			$user = Yii::$app->core->getUser();
 
 			// No user & Protected/Private
@@ -397,10 +399,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
-
 			$data = json_decode( $model->data );
 
+			$this->view->params[ 'model' ]		= $model;
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 

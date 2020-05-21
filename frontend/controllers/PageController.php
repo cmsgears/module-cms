@@ -179,6 +179,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		if( isset( $model ) ) {
 
+			$this->model = $model;
+
 			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
@@ -195,12 +197,9 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
-
-			$this->model = $model;
-
 			$data = json_decode( $model->data );
 
+			$this->view->params[ 'model' ]		= $model;
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
@@ -239,7 +238,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 						'author' => $model->createdBy,
 						'content' => $content,
 						'banner' => $content->banner
-					], [ 'page' => true ] );
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
 				}
 			}
 

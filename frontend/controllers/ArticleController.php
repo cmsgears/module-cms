@@ -205,6 +205,8 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		if( isset( $model ) ) {
 
+			$this->model = $model;
+
 			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
@@ -221,10 +223,9 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
-
 			$data = json_decode( $model->data );
 
+			$this->view->params[ 'model' ]		= $model;
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 
