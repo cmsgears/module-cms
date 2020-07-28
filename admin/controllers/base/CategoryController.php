@@ -116,9 +116,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 		$model = $this->modelService->getModelObject();
 
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->type	= $this->type;
-		$model->order	= 0;
+		$model->type = $this->type;
 
 		$content	= new ModelContent();
 		$banner		= File::loadFile( null, 'Banner' );

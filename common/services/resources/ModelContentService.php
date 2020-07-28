@@ -16,8 +16,6 @@ use Yii;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 use cmsgears\core\common\services\traits\resources\VisualTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
@@ -28,7 +26,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class ModelContentService extends ModelResourceService implements IModelContentService {
+class ModelContentService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelContentService {
 
 	// Variables ---------------------------------------------------
 

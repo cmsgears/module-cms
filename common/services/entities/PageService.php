@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -373,10 +374,10 @@ class PageService extends ContentService implements IPageService {
 
 			try {
 
-				// Delete metas
+				// Delete Meta
 				$this->metaService->deleteByModelId( $model->id );
 
-				// Delete files
+				// Delete Model Files
 				$this->fileService->deleteFiles( $model->files );
 
 				// Delete Model Content

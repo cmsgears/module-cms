@@ -410,10 +410,10 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 			try {
 
-				// Delete metas
+				// Delete Meta
 				$this->metaService->deleteByModelId( $model->id );
 
-				// Delete files
+				// Delete Model Files
 				$this->fileService->deleteFiles( $model->files );
 
 				// Delete Model Content
