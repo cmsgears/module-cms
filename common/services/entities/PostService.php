@@ -209,7 +209,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
 			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
@@ -293,7 +293,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, $parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, $parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
 			$modelTagService->bindTags( $model->id, $parentType, [ 'binder' => 'TagBinder' ] );
@@ -388,7 +388,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		}
 
 		// Bind categories
-		$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+		$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
 		// Bind tags
 		$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
