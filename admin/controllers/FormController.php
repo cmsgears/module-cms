@@ -21,8 +21,6 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\behaviors\ActivityBehavior;
-
 /**
  * FormController provides actions specific to form model.
  *
@@ -89,6 +87,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'attributes' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
 			'config' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
@@ -109,26 +108,18 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
 		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
-		$behaviors[ 'activity' ] = [
-			'class' => ActivityBehavior::class,
-			'admin' => true,
-			'create' => [ 'create' ],
-			'update' => [ 'update' ],
-			'delete' => [ 'delete' ]
-		];
-
 		return $behaviors;
 	}
-
-	// yii\base\Controller ----
 
 	// yii\base\Controller ----
 
@@ -136,10 +127,11 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$actions = parent::actions();
 
-		$actions[ 'gallery' ]	= [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
-		$actions[ 'data' ]		= [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
-		$actions[ 'config' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
-		$actions[ 'settings' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Manage' ];
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\cms\common\actions\data\attributes\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
 
 		return $actions;
 	}

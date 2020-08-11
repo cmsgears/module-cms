@@ -68,9 +68,10 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 			'create' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
+			'data' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
-			'data' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

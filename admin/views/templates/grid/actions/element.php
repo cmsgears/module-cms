@@ -13,6 +13,9 @@ $template = $model->template;
 	<?php if( !empty( $template->dataForm ) ) { ?>
 		<span title="Data"><?= Html::a( "", [ "data?id=$model->id" ], [ 'class' => 'cmti cmti-briefcase' ] ) ?></span>
 	<?php } ?>
+	<?php if( !empty( $template->attributesForm ) ) { ?>
+		<span title="Attributes"><?= Html::a( "", [ "attributes?id=$model->id" ], [ 'class' => 'cmti cmti cmti-tag-o' ] ) ?></span>
+	<?php } ?>
 	<?php if( !empty( $template->configForm ) ) { ?>
 		<span title="Config"><?= Html::a( "", [ "config?id=$model->id" ], [ 'class' => 'cmti cmti-setting-o' ] ) ?></span>
 	<?php } ?>

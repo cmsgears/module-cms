@@ -68,8 +68,10 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 			'create' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'data' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

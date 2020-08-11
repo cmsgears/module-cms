@@ -20,8 +20,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\behaviors\ActivityBehavior;
-
 /**
  * PageController provides actions specific to page model.
  *
@@ -99,14 +97,6 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
-
-		$behaviors[ 'activity' ] = [
-			'class' => ActivityBehavior::class,
-			'admin' => true,
-			'create' => [ 'create' ],
-			'update' => [ 'update' ],
-			'delete' => [ 'delete' ]
-		];
 
 		return $behaviors;
 	}
