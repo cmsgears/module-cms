@@ -9,15 +9,12 @@
 
 namespace cmsgears\cms\common\models\mappers;
 
-// CMG Imports
-use cmsgears\core\common\models\mappers\ModelObject;
-
 /**
  * ModelWidget mapper can be used to map widgets to other models.
  *
  * @since 1.0.0
  */
-class ModelWidget extends ModelObject {
+class ModelWidget extends \cmsgears\core\common\models\mappers\ModelObject {
 
 	// Variables ---------------------------------------------------
 

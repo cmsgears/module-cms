@@ -9,15 +9,12 @@
 
 namespace cmsgears\cms\common\models\mappers;
 
-// CMG Imports
-use cmsgears\core\common\models\mappers\ModelObject;
-
 /**
  * ModelElement mapper can be used to map elements to other models.
  *
  * @since 1.0.0
  */
-class ModelElement extends ModelObject {
+class ModelElement extends \cmsgears\core\common\models\mappers\ModelObject {
 
 	// Variables ---------------------------------------------------
 

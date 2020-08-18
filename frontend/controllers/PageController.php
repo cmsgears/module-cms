@@ -18,6 +18,7 @@ use yii\web\UnauthorizedHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Page;
@@ -152,8 +153,11 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			$data = isset( $model ) ? json_decode( $model->data ) : [];
 
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'page/search', 'searchContent' => true
@@ -200,8 +204,11 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			$data = json_decode( $model->data );
 
 			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			// Find Template
 			$content	= $model->modelContent;

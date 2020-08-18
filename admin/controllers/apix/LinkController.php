@@ -14,6 +14,8 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**
@@ -21,7 +23,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class LinkController extends \cmsgears\core\admin\controllers\base\Controller {
+class LinkController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -60,6 +62,8 @@ class LinkController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
@@ -88,7 +92,7 @@ class LinkController extends \cmsgears\core\admin\controllers\base\Controller {
 			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

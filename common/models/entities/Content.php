@@ -35,13 +35,14 @@ use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IFollower;
+
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
+
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\PageMeta;
 use cmsgears\cms\common\models\mappers\PageFollower;
@@ -62,6 +63,7 @@ use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\FollowerTrait;
+
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 use cmsgears\cms\common\models\traits\mappers\ElementTrait;
@@ -102,9 +104,10 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData,
-	IElement, IFeatured, IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent,
-	ISlugType, IVisibility, IVisual, IWidget {
+class Content extends \cmsgears\core\common\models\base\Entity implements IApproval,
+	IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured, IFile, IFollower,
+	IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility,
+	IVisual, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -281,10 +284,13 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 				$this->parentId = null;
 			}
 
-			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			return true;
 		}

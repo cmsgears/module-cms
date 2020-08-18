@@ -22,14 +22,12 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\cms\common\services\base\ContentService;
-
 /**
  * PageService provide service methods of page model.
  *
  * @since 1.0.0
  */
-class PageService extends ContentService implements IPageService {
+class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
 	// Variables ---------------------------------------------------
 
@@ -86,34 +84,6 @@ class PageService extends ContentService implements IPageService {
 
 	// Read - Models ---
 
-	public function getMenuPages( $ids, $map = false ) {
-
-		if( count( $ids ) > 0 ) {
-
-			$modelClass	= static::$modelClass;
-
-			if( $map ) {
-
-				$pages = $modelClass::find()->filterWhere( [ 'in', 'id', $ids ] )->all();
-
-				$pageMap = [];
-
-				foreach( $pages as $page ) {
-
-					$pageMap[ $page->id ] = $page;
-				}
-
-				return $pageMap;
-			}
-			else {
-
-				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $ids ] )->all();
-			}
-		}
-
-		return [];
-	}
-
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -152,6 +122,7 @@ class PageService extends ContentService implements IPageService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -176,7 +147,6 @@ class PageService extends ContentService implements IPageService {
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -184,8 +154,7 @@ class PageService extends ContentService implements IPageService {
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -193,7 +162,9 @@ class PageService extends ContentService implements IPageService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -221,6 +192,7 @@ class PageService extends ContentService implements IPageService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/page/review';
 
@@ -250,7 +222,6 @@ class PageService extends ContentService implements IPageService {
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -258,8 +229,7 @@ class PageService extends ContentService implements IPageService {
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -267,7 +237,9 @@ class PageService extends ContentService implements IPageService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -314,6 +286,7 @@ class PageService extends ContentService implements IPageService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -353,7 +326,10 @@ class PageService extends ContentService implements IPageService {
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 		}
 
@@ -378,6 +354,7 @@ class PageService extends ContentService implements IPageService {
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete Model Files
+				$this->fileService->deleteFiles( [ $model->avatar ] );
 				$this->fileService->deleteFiles( $model->files );
 
 				// Delete Model Content

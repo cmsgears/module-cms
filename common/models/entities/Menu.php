@@ -14,10 +14,9 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\interfaces\mappers\ILink;
 
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\cms\common\models\traits\mappers\LinkTrait;
 
-class Menu extends ObjectData implements ILink {
+class Menu extends \cmsgears\core\common\models\entities\ObjectData implements ILink {
 
 	// Variables ---------------------------------------------------
 

@@ -287,31 +287,28 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		if( empty( $config[ 'report-col' ] ) ) {
-
-			$config[ 'report-col' ]	= [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'summary' => "modelContent.summary",
-				'content' => "modelContent.content",
-				'status' => "$modelTable.status",
-				'visibility' => "$modelTable.visibility",
-				'order' => "$modelTable.order",
-				'pinned' => "$modelTable.pinned",
-				'featured' => "$modelTable.featured",
-				'popular' => "$modelTable.popular"
-			];
-		}
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
+		];
 
 		// Result -----------
 
@@ -322,17 +319,32 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Read - Models ---
 
-	public function getWithContent( $id, $slug = null ) {
+	public function getWithContentById( $id, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		if( isset( $slug ) ) {
+		$config[ 'conditions' ][ "$modelTable.id" ]	= $id;
 
-			return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.slug" => $slug ] ] )->one();
+		return $modelClass::queryWithContent( $config )->one();
+	}
+
+	public function getWithContentBySlug( $slug, $config = [] ) {
+
+		$siteId		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
 		}
 
-		return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.id" => $id ] ] )->one();
+		$config[ 'conditions' ][ "$modelTable.slug" ] = $slug;
+
+		return $modelClass::queryWithContent( $config )->one();
 	}
 
 	// Read - Lists ----
@@ -351,7 +363,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		if( isset( $content ) && empty( $content->publishedAt ) ) {
 
-			Yii::$app->factory->get( 'modelContentService' )->update( $content, [ 'publish' => true ] );
+			Yii::$app->factory->get( 'modelContentService' )->publish( $content );
 		}
 
 		return $this->baseActivate( $model, $config );

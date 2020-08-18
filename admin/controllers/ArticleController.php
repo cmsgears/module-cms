@@ -90,7 +90,7 @@ class ArticleController extends \cmsgears\cms\admin\controllers\base\PageControl
 
 	// CMG parent classes --------------------
 
-	// PostController ------------------------
+	// ArticleController ---------------------
 
 	public function actionAll( $config = [] ) {
 

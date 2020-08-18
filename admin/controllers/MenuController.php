@@ -21,7 +21,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectController {
+class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectDataController {
 
 	// Variables ---------------------------------------------------
 
@@ -42,7 +42,8 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 		parent::init();
 
 		// Config
-		$this->admin		= true;
+		$this->backend		= true;
+		$this->frontend		= false;
 		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;

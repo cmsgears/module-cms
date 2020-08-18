@@ -67,9 +67,9 @@ class BlockController extends \cmsgears\cms\frontend\controllers\BlockController
 
 	// BlockController -----------------------
 
-    public function actionAdd( $pid = null, $ptype = null, $template = CmsGlobal::TEMPLATE_SLIDER ) {
+    public function actionAdd( $pid = null, $ptype = null, $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_BLOCK, [ 'ignoreSite' => true ] );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_BLOCK );
 		$modelClass	= $this->modelService->getModelClass();
 
 		$user	= Yii::$app->core->getUser();
@@ -77,7 +77,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\BlockController
 
 		if( empty( $template ) ) {
 
-			$template = $this->templateService->getBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_BLOCK, [ 'ignoreSite' => true ] );
+			$template = $this->templateService->getBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_BLOCK );
 		}
 
 		if( isset( $template ) && $parent->isOwner( $user ) ) {
@@ -85,11 +85,13 @@ class BlockController extends \cmsgears\cms\frontend\controllers\BlockController
 			$model = new $modelClass;
 
 			// Block
-			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_BLOCK;
 			$model->templateId	= $template->id;
+			$model->backend		= false;
+			$model->frontend	= true;
+			$model->shared		= false;
 
 			// Files
 			$avatar	= File::loadFile( null, 'Avatar' );
@@ -100,7 +102,8 @@ class BlockController extends \cmsgears\cms\frontend\controllers\BlockController
 
 				// Register Model
 				$model = $this->modelService->register( $model, [
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video, 'addGallery' => true
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
+					'addGallery' => true
 				]);
 
 				// Create Mapper

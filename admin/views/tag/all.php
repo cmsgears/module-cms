@@ -16,7 +16,10 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'parentPath' => $parentPath ],
 	'title' => 'Tags', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description',
+		'summary' => 'Summary', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title',
 	],
@@ -25,6 +28,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'summary' => [ 'title' => 'Summary', 'type' => 'text' ],
 		'content' => [ 'title' => 'Content', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
@@ -48,16 +52,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/tag",
 	//'cardView' => "$moduleTemplates/grid/cards/tag",
 	'actionView' => "$moduleTemplates/grid/actions/tag"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Tag', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Tag', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Tag', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

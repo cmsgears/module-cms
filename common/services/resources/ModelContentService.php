@@ -97,6 +97,7 @@ class ModelContentService extends \cmsgears\core\common\services\base\ModelResou
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo		= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		// Publish
@@ -110,7 +111,10 @@ class ModelContentService extends \cmsgears\core\common\services\base\ModelResou
 		$model->parentType	= $config[ 'parentType' ];
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'mbannerId' => $mbanner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'bannerId' => $banner, 'mbannerId' => $mbanner,
+			'videoId' => $video, 'mvideoId' => $mvideo
+		]);
 
 		// Link gallery
 		if( isset( $gallery ) && $gallery->id > 0 ) {
@@ -129,7 +133,14 @@ class ModelContentService extends \cmsgears\core\common\services\base\ModelResou
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo		= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$attributes = [
+			'templateId', 'bannerId', 'mbannerId', 'videoId', 'mvideoId', 'galleryId',
+			'summary', 'classPath', 'viewPath', 'content', 'publishedAt',
+			'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'seoSchema'
+		];
 
 		// Publish
 		if( $publish && empty( $model->publishedAt ) ) {
@@ -138,19 +149,19 @@ class ModelContentService extends \cmsgears\core\common\services\base\ModelResou
 		}
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'mbannerId' => $mbanner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'bannerId' => $banner, 'mbannerId' => $mbanner,
+			'videoId' => $video, 'mvideoId' => $mvideo
+		]);
 
 		// Link gallery
-		if( empty( $model->galleryId ) ) {
+		if( empty( $model->galleryId ) && isset( $gallery ) ) {
 
 			$this->linkModel( $model, 'galleryId', $gallery );
 		}
 
 		return parent::update( $model, [
-			'attributes' => [
-				'templateId', 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'summary', 'classPath', 'viewPath',
-				'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'seoSchema'
-			]
+			'attributes' => $attributes
 		]);
 	}
 
@@ -169,7 +180,10 @@ class ModelContentService extends \cmsgears\core\common\services\base\ModelResou
 	public function delete( $model, $config = [] ) {
 
 		// Delete resources
-		$this->fileService->deleteMultiple( [ $model->banner, $model->video ] );
+		$this->fileService->deleteMultiple([
+			$model->banner, $model->mobileBanner,
+			$model->video, $model->mobileVideo
+		]);
 
 		// Delete Gallery
 		if( isset( $model->gallery ) ) {

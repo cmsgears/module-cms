@@ -13,6 +13,7 @@ namespace cmsgears\cms\common\models\traits\mappers;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+
 use cmsgears\cms\common\models\entities\Element;
 use cmsgears\cms\common\models\mappers\ModelElement;
 

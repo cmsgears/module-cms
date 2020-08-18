@@ -16,15 +16,17 @@ use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 
-use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\core\common\models\base\ModelResource;
 use cmsgears\core\common\models\resources\Gallery;
+
+use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
@@ -39,6 +41,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property integer $bannerId
  * @property integer $mbannerId
  * @property integer $videoId
+ * @property integer $mvideoId
  * @property integer $galleryId
  * @property integer $parentId
  * @property string $parentType
@@ -50,6 +53,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
+ * @property string $seoSchema
  * @property date $publishedAt
  * @property string $content
  * @property string $data
@@ -108,7 +112,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 			[ [ 'classPath', 'viewPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'bannerId', 'mbannerId', 'videoId', 'mvideoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -133,6 +137,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'mbannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER_M ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'mvideoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO_M ),
 			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),

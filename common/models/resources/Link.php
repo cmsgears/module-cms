@@ -17,6 +17,7 @@ use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
@@ -25,7 +26,6 @@ use cmsgears\core\common\models\interfaces\base\IName;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\core\common\models\base\Resource;
 use cmsgears\cms\common\models\entities\Content;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -50,7 +50,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property integer $order
  * @property boolean $absolute
- * @property boolean $user
+ * @property boolean $private
  * @property boolean $active
  * @property date $createdAt
  * @property date $modifiedAt
@@ -58,7 +58,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $urlOptions
  * @property string $data
  */
-class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
+class Link extends \cmsgears\core\common\models\base\Resource implements IAuthor, IData, IMultiSite, IName {
 
 	// Variables ---------------------------------------------------
 
@@ -136,7 +136,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 			[ [ 'title', 'url' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'absolute', 'user', 'active' ], 'boolean' ],
+			[ [ 'absolute', 'private', 'active' ], 'boolean' ],
 			[ [ 'siteId', 'pageId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -167,7 +167,7 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'absolute' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_ABSOLUTE ),
-			'user' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'private' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PRIVATE ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'urlOptions' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_URL_OPTIONS ),
@@ -184,10 +184,13 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 
 		if( parent::beforeSave( $insert ) ) {
 
-			if( $this->order <= 0 ) {
+			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			return true;
 		}
@@ -224,13 +227,13 @@ class Link extends Resource implements IAuthor, IData, IMultiSite, IName {
 	}
 
 	/**
-	 * Returns string representation of user flag.
+	 * Returns string representation of private flag.
 	 *
 	 * @return string
 	 */
-	public function getUserStr() {
+	public function getPrivateStr() {
 
-		return Yii::$app->formatter->asBoolean( $this->user );
+		return Yii::$app->formatter->asBoolean( $this->private );
 	}
 
 	/**

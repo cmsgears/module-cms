@@ -75,6 +75,11 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -139,9 +144,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -160,11 +163,39 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		// Searching --------
 
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
+
+		if( isset( $searchCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
+		}
+
 		// Reporting --------
+
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
 		// Result -----------
 
-		return parent::findPage( $config );
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -198,7 +229,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		$config[ 'parent' ]		= $model;
 		$config[ 'parentType' ]	= static::$parentType;
-		$config[ 'publish' ]	= true;
+		$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 		$this->modelContentService->create( $content, $config );
 
@@ -212,7 +243,9 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
 
 		// Copy Template
 		$config[ 'template' ] = $content->template;
@@ -226,7 +259,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ] = true;
+			$config[ 'publish' ] = isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->update( $content, $config );
 		}

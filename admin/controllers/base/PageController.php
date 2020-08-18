@@ -106,7 +106,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 	public function actions() {
 
 		return [
-			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ],
+			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Manage' ],
 			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ],
 			'attributes' => [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ],
 			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
@@ -139,7 +139,6 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		$model = new $modelClass;
 
-		$model->siteId		= Yii::$app->core->siteId;
 		$model->type		= $this->type;
 		$model->comments	= $this->comments;
 
@@ -149,6 +148,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		$banner		= File::loadFile( null, 'Banner' );
 		$mbanner	= File::loadFile( null, 'MobileBanner' );
 		$video		= File::loadFile( null, 'Video' );
+		$mvideo		= File::loadFile( null, 'MobileVideo' );
 
 		if( isset( $this->parentModel ) ) {
 
@@ -159,8 +159,10 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			$model->validate() && $content->validate() ) {
 
 			$this->model = $this->modelService->add( $model, [
-				'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-				'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
+				'admin' => true, 'content' => $content,
+				'publish' => $model->isActive(), 'avatar' => $avatar,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo
 			]);
 
 			return $this->redirect( $this->returnUrl );
@@ -175,6 +177,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			'banner' => $banner,
 			'mbanner' => $mbanner,
 			'video' => $video,
+			'mvideo' => $mvideo,
 			'visibilityMap' => $modelClass::$visibilityMap,
 			'statusMap' => $modelClass::$statusMap,
 			'templatesMap' => $templatesMap
@@ -198,13 +201,16 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$mbanner	= File::loadFile( $content->mobileBanner, 'MobileBanner' );
 			$video		= File::loadFile( $content->video, 'Video' );
+			$mvideo		= File::loadFile( $content->mvideo, 'MobileVideo' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'oldTemplate' => $template,
-					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video
+					'admin' => true, 'content' => $content,
+					'publish' => $model->isActive(), 'oldTemplate' => $template,
+					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner,
+					'video' => $video, 'mvideo' => $mvideo
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -219,6 +225,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'banner' => $banner,
 				'mbanner' => $mbanner,
 				'video' => $video,
+				'mvideo' => $mvideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
 				'templatesMap' => $templatesMap
@@ -266,6 +273,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'banner' => $content->banner,
 				'mbanner' => $content->mobileBanner,
 				'video' => $content->video,
+				'mvideo' => $content->mobileVideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$statusMap,
 				'templatesMap' => $templatesMap

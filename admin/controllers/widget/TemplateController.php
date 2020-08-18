@@ -44,7 +44,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Type
 		$this->type		= CmsGlobal::TYPE_WIDGET;
-		$this->apixBase	= 'cms/page/template';
+		$this->apixBase	= 'cms/widget/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'widget-template' ];

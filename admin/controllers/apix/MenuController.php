@@ -21,7 +21,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
+class MenuController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -90,10 +90,10 @@ class MenuController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			// Links
-			'assign-link' => [ 'class' => 'cmsgears\cms\common\actions\link\Assign' ],
-			'remove-link' => [ 'class' => 'cmsgears\cms\common\actions\link\Remove' ],
+			'assign-link' => [ 'class' => 'cmsgears\cms\common\actions\link\mapper\Assign' ],
+			'remove-link' => [ 'class' => 'cmsgears\cms\common\actions\link\mapper\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

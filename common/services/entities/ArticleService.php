@@ -21,8 +21,6 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IArticleService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\cms\common\services\base\ContentService;
-
 use cmsgears\core\common\services\traits\base\FeaturedTrait;
 
 /**
@@ -30,7 +28,7 @@ use cmsgears\core\common\services\traits\base\FeaturedTrait;
  *
  * @since 1.0.0
  */
-class ArticleService extends ContentService implements IArticleService {
+class ArticleService extends \cmsgears\cms\common\services\base\ContentService implements IArticleService {
 
 	// Variables ---------------------------------------------------
 
@@ -127,6 +125,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -151,7 +150,6 @@ class ArticleService extends ContentService implements IArticleService {
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -159,8 +157,7 @@ class ArticleService extends ContentService implements IArticleService {
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -168,7 +165,9 @@ class ArticleService extends ContentService implements IArticleService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -194,6 +193,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/article/review';
 
@@ -223,7 +223,6 @@ class ArticleService extends ContentService implements IArticleService {
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -231,8 +230,7 @@ class ArticleService extends ContentService implements IArticleService {
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -240,7 +238,9 @@ class ArticleService extends ContentService implements IArticleService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -259,11 +259,10 @@ class ArticleService extends ContentService implements IArticleService {
 			// Notify Site Admin
 			if( $notify ) {
 
-				// Trigger Notification
-				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_ARTICLE_REGISTER,
-					[ 'model' => $model, 'service' => $this, 'user' => $user ],
-					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
-				);
+				$this->notifyAdmin( $model, [
+					'template' => CmsGlobal::TPL_NOTIFY_ARTICLE_NEW,
+					'adminLink' => "{$adminLink}?id={$model->id}"
+				]);
 			}
 		}
 
@@ -282,6 +281,7 @@ class ArticleService extends ContentService implements IArticleService {
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -321,7 +321,10 @@ class ArticleService extends ContentService implements IArticleService {
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 		}
 
@@ -346,6 +349,7 @@ class ArticleService extends ContentService implements IArticleService {
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete files
+				$this->fileService->deleteFiles( [ $model->avatar ] );
 				$this->fileService->deleteFiles( $model->files );
 
 				// Delete Model Content

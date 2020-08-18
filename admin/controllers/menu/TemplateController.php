@@ -44,7 +44,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Type
 		$this->type		= CmsGlobal::TYPE_MENU;
-		$this->apixBase	= 'cms/page/template';
+		$this->apixBase	= 'cms/menu/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'menu-template' ];

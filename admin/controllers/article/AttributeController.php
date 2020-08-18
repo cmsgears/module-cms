@@ -44,7 +44,7 @@ class AttributeController extends \cmsgears\core\admin\controllers\base\Attribut
 
 		// Config
 		$this->title	= 'Article Attribute';
-		$this->apixBase	= 'cms/article/attribute';
+		$this->apixBase	= 'cms/page/attribute';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'pageMetaService' );

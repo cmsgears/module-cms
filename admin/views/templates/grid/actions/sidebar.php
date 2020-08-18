@@ -3,7 +3,7 @@ use yii\helpers\Html;
 
 $template = $model->template;
 ?>
-<span title="Files"><?= Html::a( "", [ "sidebar/file/all?pid=$model->id" ], [ 'class' => 'cmti cmti-file' ] ) ?></span>
+<span title="Files"><?= Html::a( "", [ "sidebar/model-file/all?pid=$model->id" ], [ 'class' => 'cmti cmti-file' ] ) ?></span>
 <span title="Attributes"><?= Html::a( "", [ "sidebar/attribute/all?pid=$model->id" ], [ 'class' => 'cmti cmti-tag' ] ) ?></span>
 <span title="Update"><?= Html::a( "", [ "update?id=$model->id" ], [ 'class' => 'cmti cmti-edit' ] ) ?></span>
 

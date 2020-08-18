@@ -9,15 +9,12 @@
 
 namespace cmsgears\cms\frontend;
 
-// CMG Imports
-use cmsgears\core\common\base\Module as BaseModule;
-
 /**
- * The Frontend Module of CMS Module.
+ * The frontend Module of CMS Module.
  *
  * @since 1.0.0
  */
-class Module extends BaseModule {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 

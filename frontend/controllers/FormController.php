@@ -63,7 +63,7 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
 	// FormController ------------------------
 
-    public function actionSingle( $slug ) {
+    public function actionSingle( $slug, $amp = false ) {
 
 		$model = $this->modelService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
@@ -71,24 +71,7 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 
 			$this->model = $model;
 
-			// Find Template
-			$content	= $model->modelContent;
-			$template	= $content->template;
-
-			// Fields
-			$formFields	= $model->getFieldsMap();
-
-	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
-			$user	= Yii::$app->core->getUser();
-
-			$form->captchaAction = '/cms/form/captcha';
-
-			// View Params
-			$data = json_decode( $model->data );
-
-			$this->view->params[ 'model' ]		= $model;
-			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
-			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$user = Yii::$app->core->getUser();
 
 			// Form need a valid user
 			if( !$model->isVisibilityPublic() ) {
@@ -110,6 +93,27 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 					return $this->redirect( [ '/login' ] );
 				}
 			}
+
+			// Find Template
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			// Fields
+			$formFields	= $model->getFieldsMap();
+
+	 		$form = new GenericForm( [ 'fields' => $formFields ] );
+
+			$form->captchaAction = '/cms/form/captcha';
+
+			// View Params
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			if( $model->captcha ) {
 
@@ -138,16 +142,31 @@ class FormController extends \cmsgears\forms\frontend\controllers\FormController
 				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CoreGlobal::TYPE_FORM );
 			}
 
+			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'modelService' => $this->modelService,
-					'template' => $template,
-		        	'model' => $model,
-					'form' => $form,
-					'content' => $content,
-					'banner' => $content->banner
-		        ], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'template' => $template,
+						'model' => $model,
+						'form' => $form,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'template' => $template,
+						'model' => $model,
+						'form' => $form,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
+				}
 			}
 
 	        return $this->render( CoreGlobalWeb::PAGE_INDEX, [

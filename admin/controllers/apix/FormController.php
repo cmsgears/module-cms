@@ -14,6 +14,8 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\behaviors\ActivityBehavior;
@@ -23,7 +25,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-class FormController extends \cmsgears\core\admin\controllers\base\Controller {
+class FormController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -62,6 +64,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					// Banner
 					'assign-banner' => [ 'permission' => $this->crudPermission ],
 					'clear-banner' => [ 'permission' => $this->crudPermission ],
@@ -155,19 +159,19 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Elements
-			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Widgets
-			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Sidebars
-			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Blocks
-			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

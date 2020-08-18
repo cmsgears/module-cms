@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\filters\UserExistFilter;
 
-class PostController extends \cmsgears\cms\frontend\controllers\base\Controller {
+class PostController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -64,6 +64,8 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => $this->crudPermission ],
 					// Avatar
 					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
@@ -76,6 +78,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					// Video
 					'assign-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'clear-video' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					// Mobile Video
+					'assign-mvideo' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
+					'clear-mvideo' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Files
 					'assign-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'clear-file' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
@@ -123,7 +128,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					'set-custom' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'remove-custom' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Model
-					'bulk' => [ 'permission' => $this->crudPermission ],
+					'bulk' => [ 'permission' => $this->crudPermission, 'user' => true ],
 					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
 				]
@@ -145,6 +150,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					// Video
 					'assign-video' => [ 'post' ],
 					'clear-video' => [ 'post' ],
+					// Mobile Video
+					'assign-mvideo' => [ 'post' ],
+					'clear-mvideo' => [ 'post' ],
 					// Files
 					'assign-file' => [ 'post' ],
 					'clear-file' => [ 'post' ],
@@ -223,9 +231,12 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Video
 			'assign-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\cms\common\actions\content\video\Clear' ],
+			// Mobile Video
+			'assign-mvideo' => [ 'class' => 'cmsgears\cms\common\actions\content\mvideo\Assign' ],
+			'clear-mvideo' => [ 'class' => 'cmsgears\cms\common\actions\content\mvideo\Clear' ],
 			// Files
-			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
-			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Assign' ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Clear' ],
 			// Gallery
 			'update-gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Update' ],
 			'get-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Read' ],
@@ -233,29 +244,29 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Categories
-			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\Assign' ],
-			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\Remove' ],
-			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\Toggle' ],
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Assign' ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Remove' ],
+			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Toggle' ],
 			// Tags
-			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\Assign' ],
-			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\Remove' ],
+			'assign-tags' => [ 'class' => 'cmsgears\core\common\actions\tag\mapper\Assign' ],
+			'remove-tag' => [ 'class' => 'cmsgears\core\common\actions\tag\mapper\Remove' ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			// Elements
-			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Widgets
-			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Sidebars
-			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Blocks
-			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Data Object - Reserved
 			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set' ],
 			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove' ],
@@ -269,7 +280,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			'set-custom' => [ 'class' => 'cmsgears\core\common\actions\data\custom\Set' ],
 			'remove-custom' => [ 'class' => 'cmsgears\core\common\actions\data\custom\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'userBulk' => true ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'user' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			// Comments

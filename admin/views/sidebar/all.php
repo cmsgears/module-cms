@@ -16,7 +16,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
 		'visibility' => 'Visibility',
@@ -29,12 +31,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
-		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ]
+		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
+		'order' => [ 'title' => 'Order', 'type' => 'range' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject', 'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'status' => [
+			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
+			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
+		],
+		'model' => [ 
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x4', 'x2', null, null, 'x2' ] ],

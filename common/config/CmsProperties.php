@@ -9,15 +9,12 @@
 
 namespace cmsgears\cms\common\config;
 
-// CMG Imports
-use cmsgears\core\common\config\Properties;
-
 /**
  * CmsProperties provide methods to access the properties specific to blog.
  *
  * @since 1.0.0
  */
-class CmsProperties extends Properties {
+class CmsProperties extends \cmsgears\core\common\config\Properties {
 
 	// Variables ---------------------------------------------------
 
@@ -26,38 +23,38 @@ class CmsProperties extends Properties {
 	/**
 	 * The property to find whether comments are enabled at page level.
 	 */
-	const PROP_COMMENT_PAGE		= 'page_comment';
+	const PROP_COMMENT_PAGE = 'page_comment';
 
 	/**
 	 * The property to find whether comments are enabled at article level.
 	 */
-	const PROP_COMMENT_ARTICLE	= 'article_comment';
+	const PROP_COMMENT_ARTICLE = 'article_comment';
 
 	/**
 	 * The property to find whether comments are enabled at post level.
 	 */
-	const PROP_COMMENT_POST		= 'post_comment';
+	const PROP_COMMENT_POST = 'post_comment';
 
 	/**
 	 * The property to limit number of posts displayed on blog page. It can also be
 	 * used to limit the number of pages and posts on search pages.
 	 */
-	const PROP_POST_LIMIT		= 'post_limit';
+	const PROP_POST_LIMIT = 'post_limit';
 
 	/**
 	 * Check to add the application title while generating page title.
 	 */
-	const PROP_TITLE_SITE		= 'title_site';
+	const PROP_TITLE_SITE = 'title_site';
 
 	/**
 	 * Separator used to separate the page title with site title.
 	 */
-	const PROP_TITLE_SEPARATOR	= 'title_separator';
+	const PROP_TITLE_SEPARATOR = 'title_separator';
 
 	/**
 	 * Check to append or prepend site title with page title.
 	 */
-	const PROP_TITLE_APPEND		= 'append_title';
+	const PROP_TITLE_APPEND = 'append_title';
 
 	// Public -----------------
 
@@ -145,7 +142,7 @@ class CmsProperties extends Properties {
 	}
 
 	/**
-	 * Checks whether site title needs to appended or prepended.
+	 * Checks whether site title needs to appended or prepend.
 	 */
 	public function isAppendTitle() {
 

@@ -44,7 +44,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Config
 		$this->type		= CmsGlobal::TYPE_ARTICLE;
-		$this->apixBase = 'cms/article/template';
+		$this->apixBase = 'cms/page/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'article-template' ];

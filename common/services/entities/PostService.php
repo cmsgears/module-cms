@@ -72,7 +72,8 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 		$this->fileService	= $fileService;
 		$this->metaService 	= $metaService;
-		$this->followerService	= $followerService;
+
+		$this->followerService = $followerService;
 
 		parent::__construct( $config );
 	}
@@ -162,6 +163,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -188,7 +190,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -196,8 +197,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -205,7 +205,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			// Bind categories
@@ -240,6 +242,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/post/review';
 
@@ -272,7 +275,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				$gallery->type		= $parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -280,8 +282,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				$gallery = $galleryService->createByParams([
 					'type' => $parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -289,7 +290,9 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => $parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			// Bind categories
@@ -342,6 +345,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -383,7 +387,10 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'mbanner' => $mbanner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 		}
 
@@ -414,6 +421,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete Model Files
+				$this->fileService->deleteFiles( [ $model->avatar ] );
 				$this->fileService->deleteFiles( $model->files );
 
 				// Delete Model Content

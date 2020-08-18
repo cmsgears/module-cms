@@ -75,6 +75,11 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -150,6 +155,12 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 	                'default' => SORT_DESC,
 	                'label' => 'Featured'
 	            ],
+	            'popular' => [
+	                'asc' => [ "$modelTable.popular" => SORT_ASC ],
+	                'desc' => [ "$modelTable.popular" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Popular'
+	            ],
 	            'order' => [
 	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
@@ -169,9 +180,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -190,28 +199,37 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "modelContent.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
 			'content' => "modelContent.content",
+			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular",
 			'pname' => 'parent.name',
 			'pdesc' => 'parent.description',
 			'rname' => 'root.name',
@@ -254,7 +272,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		$config[ 'parent' ]		= $model;
 		$config[ 'parentType' ]	= static::$parentType;
-		$config[ 'publish' ]	= true;
+		$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 		$this->modelContentService->create( $content, $config );
 
@@ -268,7 +286,9 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
 
 		// Copy Template
 		$config[ 'template' ] = $content->template;
@@ -282,7 +302,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ] = true;
+			$config[ 'publish' ] = isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->update( $content, $config );
 		}

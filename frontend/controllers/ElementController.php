@@ -138,14 +138,14 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 		]);
 	}
 
-    public function actionAdd( $pid = null, $ptype = null, $template = 'box' ) {
+    public function actionAdd( $pid = null, $ptype = null, $template = CmsGlobal::TEMPLATE_ELEMENT_CARD ) {
 
-		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT );
 		$modelClass	= $this->modelService->getModelClass();
 
 		if( empty( $template ) ) {
 
-			$template = $this->templateService->getBySlugType( 'box', CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
+			$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ELEMENT_CARD, CmsGlobal::TYPE_ELEMENT );
 		}
 
 		if( isset( $template ) ) {
@@ -153,12 +153,12 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model = new $modelClass;
 
 			// Element
-			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
-			$model->admin		= false;
+			$model->backend		= false;
+			$model->frontend	= true;
 			$model->shared		= true;
 
 			// Files
@@ -170,7 +170,8 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 				// Register Model
 				$model = $this->modelService->register( $model, [
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video, 'addGallery' => true
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
+					'addGallery' => true
 				]);
 
 				// Refresh Model

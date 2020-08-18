@@ -9,6 +9,7 @@
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\entities\Site;
@@ -20,7 +21,7 @@ use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\cms\common\models\entities\Page;
 
-use cmsgears\core\common\services\base\ActiveRecordService;
+use cmsgears\cms\common\services\entities\PostService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -85,9 +86,9 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$blogAdminRole		= Role::findBySlugType( 'blog-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$blogAdminRole	= Role::findBySlugType( 'blog-admin', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
@@ -224,7 +225,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 1, 'flag', '0', NULL ],
 			[ $this->site->id, 'article_comment', 'Article Comment', 'blog', 1, 'flag', '0', NULL ],
 			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 1, 'text', ActiveRecordService::PAGE_LIMIT, NULL ],
+			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 1, 'text', PostService::PAGE_LIMIT, NULL ],
 			[ $this->site->id, 'title_site', 'Title Site', 'blog', 1, 'flag', '1', NULL ],
 			[ $this->site->id, 'title_separator', 'Title Separator', 'blog', 1, 'text', '|', NULL ],
 			[ $this->site->id, 'append_title', 'Append Title', 'blog', 1, 'flag', '1', NULL ]

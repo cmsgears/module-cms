@@ -18,6 +18,7 @@ use yii\web\UnauthorizedHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Article;
@@ -150,8 +151,11 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$data = isset( $model ) ? json_decode( $model->data ) : [];
 
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'article/search', 'searchContent' => true
@@ -178,8 +182,11 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			$data = json_decode( $author->data );
 
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_ARTICLE );
 
@@ -226,8 +233,11 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$data = json_decode( $model->data );
 
 			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
 			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			// Find Template
 			$content	= $model->modelContent;
@@ -264,7 +274,7 @@ class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controll
 						'author' => $model->createdBy,
 						'content' => $content,
 						'banner' => $content->banner
-					], [ 'page' => true ] );
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
 				}
 			}
 

@@ -18,8 +18,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\resources\ILinkService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class LinkService extends ResourceService implements ILinkService {
+class LinkService extends \cmsgears\core\common\services\base\ResourceService implements ILinkService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +35,9 @@ class LinkService extends ResourceService implements ILinkService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\resources\Link';
+	public static $modelClass = '\cmsgears\cms\common\models\resources\Link';
 
-	public static $parentType	= CmsGlobal::TYPE_LINK;
+	public static $parentType = CmsGlobal::TYPE_LINK;
 
 	// Protected --------------
 
@@ -72,6 +70,11 @@ class LinkService extends ResourceService implements ILinkService {
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -118,17 +121,23 @@ class LinkService extends ResourceService implements ILinkService {
 	                'default' => SORT_DESC,
 	                'label' => 'Type'
 	            ],
+	            'order' => [
+	                'asc' => [ "$modelTable.order" => SORT_ASC ],
+	                'desc' => [ "$modelTable.order" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Order'
+	            ],
 	            'absolute' => [
 	                'asc' => [ "$modelTable.absolute" => SORT_ASC ],
 	                'desc' => [ "$modelTable.absolute" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Absolute'
 	            ],
-	            'user' => [
-	                'asc' => [ "$modelTable.user" => SORT_ASC ],
-	                'desc' => [ "$modelTable.user" => SORT_DESC ],
+	            'private' => [
+	                'asc' => [ "$modelTable.private" => SORT_ASC ],
+	                'desc' => [ "$modelTable.private" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'User'
+	                'label' => 'Private'
 	            ],
 	            'active' => [
 	                'asc' => [ "$modelTable.active" => SORT_ASC ],
@@ -149,9 +158,7 @@ class LinkService extends ResourceService implements ILinkService {
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -189,9 +196,9 @@ class LinkService extends ResourceService implements ILinkService {
 
 					break;
 				}
-				case 'user': {
+				case 'private': {
 
-					$config[ 'conditions' ][ "$modelTable.user" ] = true;
+					$config[ 'conditions' ][ "$modelTable.private" ] = true;
 
 					break;
 				}
@@ -201,32 +208,44 @@ class LinkService extends ResourceService implements ILinkService {
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'url' => "$modelTable.url"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'url' => "$modelTable.url"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'url' => "$modelTable.url",
+			'order' => "$modelTable.order",
 			'absolute' => "$modelTable.absolute",
-			'user' => "$modelTable.user",
+			'private' => "$modelTable.private",
 			'active' => "$modelTable.active"
 		];
 
@@ -259,7 +278,7 @@ class LinkService extends ResourceService implements ILinkService {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'pageId', 'name', 'title', 'url', 'icon', 'order',
-			'absolute', 'user', 'active',
+			'absolute', 'private', 'active',
 			'htmlOptions', 'urlOptions'
 		];
 
@@ -273,7 +292,7 @@ class LinkService extends ResourceService implements ILinkService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		Yii::$app->factory->get( 'modelObjectService' )->deleteByParent( $model->id, static::$parentType );
+		Yii::$app->factory->get( 'modelLinkService' )->deleteByParent( $model->id, static::$parentType );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -297,17 +316,25 @@ class LinkService extends ResourceService implements ILinkService {
 
 						break;
 					}
-					case 'user': {
+					case 'private': {
 
-						$model->user = true;
+						$model->private = true;
 
 						$model->update();
 
 						break;
 					}
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
 
 						$model->update();
 

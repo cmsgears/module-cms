@@ -23,7 +23,8 @@ use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 /**
  * @inheritdoc
  */
-class Category extends \cmsgears\core\common\models\resources\Category implements IBlock, IElement, IPageContent, IWidget {
+class Category extends \cmsgears\core\common\models\resources\Category implements IBlock,
+	IElement, IPageContent, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -102,7 +103,7 @@ class Category extends \cmsgears\core\common\models\resources\Category implement
 	 */
 	public static function queryWithContent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template', 'parent', 'root' ];
+		$config[ 'relations' ] = [ 'modelContent', 'modelContent.template', 'parent', 'root' ];
 
 		return parent::queryWithAll( $config );
 	}

@@ -38,7 +38,8 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $direct = false;
+	public $admin	= false;
+	public $user	= false;
 
 	// Protected --------------
 
@@ -83,7 +84,7 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 		$model		= $this->model;
 		$gallery	= $this->galleryService->getById( $cid );
 
-		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model->modelContent ) ) ) {
+		if( isset( $gallery ) && ( $this->admin || ( isset( $model ) && $gallery->belongsTo( $model->modelContent ) ) ) ) {
 
 			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 

@@ -20,7 +20,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class BlockController extends ObjectController {
+class BlockController extends ObjectDataController {
 
 	// Variables ---------------------------------------------------
 

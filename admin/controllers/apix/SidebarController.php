@@ -21,7 +21,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class SidebarController extends \cmsgears\core\admin\controllers\base\Controller {
+class SidebarController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -94,10 +94,10 @@ class SidebarController extends \cmsgears\core\admin\controllers\base\Controller
 
 		return [
 			// Widgets
-			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

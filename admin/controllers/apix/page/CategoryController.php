@@ -168,19 +168,19 @@ class CategoryController extends \cmsgears\core\admin\controllers\apix\CategoryC
 			'update-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\cms\common\actions\gallery\item\Delete' ],
 			// Elements
-			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Widgets
-			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-widget' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Sidebars
-			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-sidebar' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Blocks
-			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\object\Assign' ],
-			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\object\Remove' ],
+			'assign-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
+			'remove-block' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
 			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],

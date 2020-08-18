@@ -67,6 +67,7 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 			'delete' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Post Categories', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];

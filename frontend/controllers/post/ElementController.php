@@ -67,9 +67,9 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 
 	// ElementController ---------------------
 
-    public function actionAdd( $pid = null, $ptype = null, $template = 'box-slider' ) {
+    public function actionAdd( $pid = null, $ptype = null, $template = CmsGlobal::TEMPLATE_ELEMENT_CARD ) {
 
-		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_ELEMENT );
 		$modelClass	= $this->modelService->getModelClass();
 
 		$user	= Yii::$app->core->getUser();
@@ -77,7 +77,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 
 		if( empty( $template ) ) {
 
-			$template = $this->templateService->getBySlugType( 'box', CmsGlobal::TYPE_ELEMENT, [ 'ignoreSite' => true ] );
+			$template = $this->templateService->getBySlugType( CmsGlobal::TEMPLATE_ELEMENT_CARD, CmsGlobal::TYPE_ELEMENT );
 		}
 
 		if( isset( $template ) && $parent->isOwner( $user ) ) {
@@ -85,11 +85,13 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 			$model = new $modelClass;
 
 			// Element
-			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
+			$model->backend		= false;
+			$model->frontend	= true;
+			$model->shared		= false;
 
 			// Files
 			$avatar	= File::loadFile( null, 'Avatar' );
@@ -100,7 +102,8 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 
 				// Register Model
 				$model = $this->modelService->register( $model, [
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video, 'addGallery' => true
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
+					'addGallery' => true
 				]);
 
 				// Create Mapper

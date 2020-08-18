@@ -37,7 +37,8 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 		parent::init();
 
 		// Config
-		$this->admin	= true;
+		$this->backend	= true;
+		$this->frontend	= false;
 		$this->shared	= true;
 		$this->apixBase	= 'cms/element';
 

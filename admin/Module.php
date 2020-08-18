@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\base\Module as BaseModule;
-
 /**
  * The Admin Module of CMS Module.
  *
  * @since 1.0.0
  */
-class Module extends BaseModule {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 

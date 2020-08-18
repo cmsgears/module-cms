@@ -18,7 +18,7 @@ use yii\filters\VerbFilter;
  *
  * @since 1.0.0
  */
-class ElementController extends \cmsgears\cms\frontend\controllers\base\Controller {
+class ElementController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -58,6 +58,8 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => $this->crudPermission ],
 					// Avatar
 					'assign-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
@@ -82,7 +84,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 					'toggle-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'delete-meta' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					// Model
-					'bulk' => [ 'permission' => $this->crudPermission ],
+					'bulk' => [ 'permission' => $this->crudPermission, 'user' => true ],
 					'generic' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ],
 					'delete' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
 				]
@@ -130,7 +132,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'admin' => false ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'frontend' => true ],
 			// Avatar
 			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
@@ -141,8 +143,8 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear' ],
 			// Files
-			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
-			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Assign' ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Clear' ],
 			// Gallery
 			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update' ],
 			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read' ],
@@ -155,7 +157,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'userBulk' => true ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'user' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

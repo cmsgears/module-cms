@@ -212,7 +212,9 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 					'content' => $content,
 					'avatar' => $model->avatar,
 					'banner' => $content->banner,
+					'mbanner' => $content->mobileBanner,
 					'video' => $content->video,
+					'mvideo' => $content->mobileVideo,
 					'visibilityMap' => $modelClass::$visibilityMap,
 					'statusMap' => $modelClass::$statusMap,
 					'templatesMap' => $templatesMap

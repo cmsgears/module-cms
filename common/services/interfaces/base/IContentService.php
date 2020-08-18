@@ -26,13 +26,13 @@ interface IContentService extends IEntityService, IApproval, IData, IFeatured, I
 
 	// Data Provider ------
 
-	public function getPageByType( $type, $config = [] );
-
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getWithContent( $id, $slug = null );
+	public function getWithContentById( $id, $config = [] );
+
+	public function getWithContentBySlug( $slug, $config = [] );
 
 	// Read - Lists ----
 

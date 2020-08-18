@@ -12,14 +12,12 @@ namespace cmsgears\cms\common\services\resources;
 // CMG Imports
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\core\common\services\base\MetaService;
-
 /**
  * PageMetaService provide service methods of content meta.
  *
  * @since 1.0.0
  */
-class PageMetaService extends MetaService implements IPageMetaService {
+class PageMetaService extends \cmsgears\core\common\services\base\MetaService implements IPageMetaService {
 
 	// Variables ---------------------------------------------------
 

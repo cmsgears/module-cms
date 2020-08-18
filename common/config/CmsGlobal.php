@@ -53,9 +53,9 @@ class CmsGlobal {
 	const TEMPLATE_BLOG		= 'blog';
 	const TEMPLATE_QNA		= 'qna';
 
-	const TEMPLATE_POST		= 'post';
+	const TEMPLATE_POST = 'post';
 
-	const TEMPLATE_ARTICLE	= 'article';
+	const TEMPLATE_ARTICLE = 'article';
 
 	const TEMPLATE_SOCIAL	= 'social';
 	const TEMPLATE_GALLERY	= 'gallery';
@@ -74,6 +74,9 @@ class CmsGlobal {
 	const TEMPLATE_ARCHIVE	= 'archive';
 
 	const TEMPLATE_TAG_CLOUD = 'tag-cloud';
+
+	const TEMPLATE_ELEMENT_CARD	= 'card';
+	const TEMPLATE_ELEMENT_BOX	= 'box';
 
 	const TEMPLATE_SIDEBAR_VERTICAL		= 'vsidebar';
 	const TEMPLATE_SIDEBAR_HORIZONTAL	= 'hsidebar';
