@@ -201,7 +201,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			$banner		= File::loadFile( $content->banner, 'Banner' );
 			$mbanner	= File::loadFile( $content->mobileBanner, 'MobileBanner' );
 			$video		= File::loadFile( $content->video, 'Video' );
-			$mvideo		= File::loadFile( $content->mvideo, 'MobileVideo' );
+			$mvideo		= File::loadFile( $content->mobileVideo, 'MobileVideo' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
