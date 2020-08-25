@@ -10,10 +10,14 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
+use cmsgears\core\common\models\interfaces\mappers\IFile;
+
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
+
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
@@ -24,7 +28,7 @@ use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
  * @inheritdoc
  */
 class Form extends \cmsgears\core\common\models\resources\Form implements IBlock,
-	IElement, IPageContent, IWidget {
+	IElement, IFile, IPageContent, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -48,6 +52,7 @@ class Form extends \cmsgears\core\common\models\resources\Form implements IBlock
 
 	use BlockTrait;
 	use ElementTrait;
+	use FileTrait;
 	use PageContentTrait;
 	use WidgetTrait;
 

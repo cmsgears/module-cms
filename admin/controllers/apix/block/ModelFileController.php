@@ -9,6 +9,9 @@
 
 namespace cmsgears\cms\admin\controllers\apix\block;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 

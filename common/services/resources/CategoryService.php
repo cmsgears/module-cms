@@ -192,7 +192,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = $modelClass::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		// Filters ----------
@@ -230,6 +230,7 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
 			'popular' => "$modelTable.popular",
+			'order' => "$modelTable.order",
 			'pname' => 'parent.name',
 			'pdesc' => 'parent.description',
 			'rname' => 'root.name',

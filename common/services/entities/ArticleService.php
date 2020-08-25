@@ -353,8 +353,8 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete files
-				$this->fileService->deleteFiles( [ $model->avatar ] );
-				$this->fileService->deleteFiles( $model->files );
+				$this->fileService->deleteMultiple( [ $model->avatar ] );
+				$this->fileService->deleteMultiple( $model->files );
 
 				// Delete Model Content
 				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
@@ -368,6 +368,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				// Delete Followers
 				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
 
+				// Commit
 				$transaction->commit();
 
 				// Delete model

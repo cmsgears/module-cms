@@ -156,7 +156,7 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = $modelClass::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		// Filters ----------

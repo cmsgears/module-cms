@@ -487,35 +487,42 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 
 	public function delete( $model, $config = [] ) {
 
-		$transaction = Yii::$app->db->beginTransaction();
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		try {
+		if( $config[ 'hard' ] ) {
 
-			// Delete Model Files
-			$this->fileService->deleteFiles( $model->files );
+			$transaction = Yii::$app->db->beginTransaction();
 
-			// Delete mappings
-			Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+			try {
 
-			// Delete Fields
-			Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+				// Delete Model Files
+				$this->fileService->deleteMultiple( $model->files );
 
-			// Delete Model Content
-			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-			$transaction->commit();
+				// Delete mappings
+				Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
 
-			// Delete model
-			return parent::delete( $model, $config );
+				// Delete Fields
+				Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+
+				// Commit
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
 		}
-		catch( Exception $e ) {
 
-			$transaction->rollBack();
-
-			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-		}
-
-		return false;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
 	// Bulk ---------------
