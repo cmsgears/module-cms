@@ -125,10 +125,10 @@ class Link extends \cmsgears\core\common\models\base\Resource implements IAuthor
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ 'name', 'required' ],
+			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'data', 'htmlOptions', 'urlOptions' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],

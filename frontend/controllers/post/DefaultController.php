@@ -150,6 +150,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model = new $modelClass;
 
 			// Post
+			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= $this->type;
@@ -171,19 +172,18 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				$model->validate() && $content->validate() ) {
 
 				// Register Model
-				$model = $this->modelService->register( $model, [
+				$this->model = $this->modelService->register( $model, [
 					'content' => $content, 'avatar' => $avatar,
 					'banner' => $banner, 'mbanner' => $mbanner,
 					'video' => $video, 'mvideo' => $mvideo
 				]);
 
-				// Refresh Model
-				$model->refresh();
+				if( $this->model ) {
 
-				// Set model in action to cache
-				$this->model = $model;
+					$this->model->refresh();
 
-				return $this->updateStatus( $model, $modelClass::STATUS_BASIC );
+					return $this->updateStatus( $this->model, $modelClass::STATUS_BASIC );
+				}
 			}
 
 			return $this->render( 'add', [

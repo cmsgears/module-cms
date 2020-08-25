@@ -7,12 +7,13 @@ use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Sidebar | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Menu | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-menu', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
@@ -49,6 +50,11 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => "core/object-data/auto-search" ] ) ?>
 						</div>
 					</div>
 				</div>

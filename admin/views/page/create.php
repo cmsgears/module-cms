@@ -15,7 +15,7 @@ use cmsgears\icons\widgets\TextureChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
-$parentName		= isset( $model->parentId ) ? $model->parent->name : null;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>

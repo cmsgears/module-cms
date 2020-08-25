@@ -106,7 +106,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 	public function actions() {
 
 		return [
-			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Manage' ],
+			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Manage' ],
 			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ],
 			'attributes' => [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ],
 			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
@@ -139,6 +139,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		$model = new $modelClass;
 
+		$model->siteId		= Yii::$app->core->siteId;
 		$model->type		= $this->type;
 		$model->comments	= $this->comments;
 
@@ -165,7 +166,10 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'video' => $video, 'mvideo' => $mvideo
 			]);
 
-			return $this->redirect( $this->returnUrl );
+			if( $this->model ) {
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

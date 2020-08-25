@@ -13,14 +13,12 @@ namespace cmsgears\cms\common\services\mappers;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
 use cmsgears\cms\common\services\interfaces\mappers\IModelTagService;
 
-use cmsgears\core\common\services\mappers\ModelTagService as BaseModelTagService;
-
 /**
  * ModelTagService provide service methods of model tag mapper.
  *
  * @since 1.0.0
  */
-class ModelTagService extends BaseModelTagService implements IModelTagService {
+class ModelTagService extends \cmsgears\core\common\services\mappers\ModelTagService implements IModelTagService {
 
 	// Variables ---------------------------------------------------
 

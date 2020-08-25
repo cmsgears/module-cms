@@ -153,6 +153,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 			$model = new $modelClass;
 
 			// Block
+			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_BLOCK;
@@ -169,18 +170,15 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				// Register Model
-				$model = $this->modelService->register( $model, [
+				$this->model = $this->modelService->register( $model, [
 					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
 					'addGallery' => true
 				]);
 
-				// Refresh Model
-				$model->refresh();
+				if( $this->model ) {
 
-				// Set model in action to cache
-				$this->model = $model;
-
-				return $this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );

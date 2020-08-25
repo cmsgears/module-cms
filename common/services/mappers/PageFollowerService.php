@@ -12,14 +12,12 @@ namespace cmsgears\cms\common\services\mappers;
 // CMG Imports
 use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
-use cmsgears\core\common\services\base\FollowerService;
-
 /**
  * PageFollowerService provide service methods of page followers.
  *
  * @since 1.0.0
  */
-class PageFollowerService extends FollowerService implements IPageFollowerService {
+class PageFollowerService extends \cmsgears\core\common\services\base\FollowerService implements IPageFollowerService {
 
 	// Variables ---------------------------------------------------
 

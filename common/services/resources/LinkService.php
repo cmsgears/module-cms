@@ -18,6 +18,7 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\resources\ILinkService;
 
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -51,6 +52,7 @@ class LinkService extends \cmsgears\core\common\services\base\ResourceService im
 
 	// Traits ------------------------------------------------------
 
+	use MultiSiteTrait;
 	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------

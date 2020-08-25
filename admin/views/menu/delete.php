@@ -8,12 +8,12 @@ use cmsgears\icons\widgets\IconChooser;
 use cmsgears\widgets\elements\mappers\LinkSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Sidebar | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Menu | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-menu', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>

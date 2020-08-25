@@ -145,6 +145,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 
@@ -153,6 +154,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title
 				]);
@@ -220,6 +222,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 
@@ -228,6 +231,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title
 				]);

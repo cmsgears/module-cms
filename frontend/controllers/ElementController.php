@@ -153,6 +153,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$model = new $modelClass;
 
 			// Element
+			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
@@ -169,18 +170,15 @@ class ElementController extends \cmsgears\cms\frontend\controllers\base\Controll
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				// Register Model
-				$model = $this->modelService->register( $model, [
+				$this->model = $this->modelService->register( $model, [
 					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
 					'addGallery' => true
 				]);
 
-				// Refresh Model
-				$model->refresh();
+				if( $this->model ) {
 
-				// Set model in action to cache
-				$this->model = $model;
-
-				return $this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );

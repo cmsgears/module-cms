@@ -13,7 +13,7 @@ $returnUrl		= $this->context->returnUrl;
 $pageName = isset( $model->page ) ? $model->page->name : null;
 ?>
 <div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -45,7 +45,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'absolute', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'user', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'private', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col3">
 							<?= $form->field( $model, 'order' )->textInput( [ 'readonly' => 'true' ] ) ?>
@@ -74,8 +74,5 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

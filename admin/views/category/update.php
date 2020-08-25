@@ -18,7 +18,7 @@ use cmsgears\widgets\elements\mappers\WidgetSuggest;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
-$parent			= isset( $model->parentId ) ? $model->parent->name : null;
+$parent			= isset( $model->parent ) ? $model->parent->name : null;
 $apixBase		= $this->context->apixBase;
 
 Editor::widget();

@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
@@ -265,8 +266,8 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
-			'success' => "$modelTable.description",
-			'failure' => "$modelTable.description",
+			'success' => "$modelTable.success",
+			'failure' => "$modelTable.failure",
 			'summary' => "modelContent.summary",
 			'content' => "modelContent.content"
 		];
@@ -392,6 +393,7 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 
@@ -400,10 +402,18 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title
 				]);
 			}
+
+			// Create and attach model content
+			$modelContentService->create( $content, [
+				'parent' => $model, 'parentType' => CoreGlobal::TYPE_FORM,
+				'publish' => $publish,
+				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			]);
 
 			$transaction->commit();
 

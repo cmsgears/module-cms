@@ -227,11 +227,14 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 		$model = parent::create( $model, $config );
 
-		$config[ 'parent' ]		= $model;
-		$config[ 'parentType' ]	= static::$parentType;
-		$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
+		if( $model ) {
 
-		$this->modelContentService->create( $content, $config );
+			$config[ 'parent' ]		= $model;
+			$config[ 'parentType' ]	= static::$parentType;
+			$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
+
+			$this->modelContentService->create( $content, $config );
+		}
 
 		return $model;
 	}

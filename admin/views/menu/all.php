@@ -17,7 +17,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description'
 	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
@@ -31,7 +31,6 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
-		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ]

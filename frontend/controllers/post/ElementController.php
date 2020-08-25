@@ -85,6 +85,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 			$model = new $modelClass;
 
 			// Element
+			$model->siteId		= Yii::$app->core->siteId;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
@@ -101,25 +102,24 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				// Register Model
-				$model = $this->modelService->register( $model, [
+				$this->model = $this->modelService->register( $model, [
 					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
 					'addGallery' => true
 				]);
 
-				// Create Mapper
-				$this->modelElementService->createByParams([
-					'modelId' => $model->id,
-					'parentId' => $parent->id, 'parentType' => $this->parentService->getParentType(),
-					'type' => CmsGlobal::TYPE_ELEMENT, 'active' => true
-				]);
+				if( $this->model ) {
 
-				// Refresh Model
-				$model->refresh();
+					$this->model->refresh();
 
-				// Set model in action to cache
-				$this->model = $model;
+					// Create Mapper
+					$this->modelElementService->createByParams([
+						'modelId' => $this->model->id,
+						'parentId' => $parent->id, 'parentType' => $this->parentService->getParentType(),
+						'type' => CmsGlobal::TYPE_ELEMENT, 'active' => true
+					]);
 
-				return $this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_ELEMENT, [ 'default' => true ] );

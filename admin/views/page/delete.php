@@ -19,8 +19,7 @@ use cmsgears\widgets\elements\mappers\WidgetSuggest;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
-
-$parentName = isset( $model->parent ) ? $model->parent->name : null;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>

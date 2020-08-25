@@ -127,7 +127,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$actions = parent::actions();
 
-		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Manage' ];
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\gallery\Manage' ];
 		$actions[ 'data' ] = [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
 		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\cms\common\actions\data\attributes\Form' ];
 		$actions[ 'config' ] = [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
@@ -179,7 +179,10 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 				'banner' => $banner, 'video' => $video
 			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

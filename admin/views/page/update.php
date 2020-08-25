@@ -20,7 +20,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
-$parentName		= isset( $model->parentId ) ? $model->parent->name : null;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>
