@@ -48,6 +48,7 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectDataC
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
 		$this->apixBase		= 'cms/sidebar';
+		$this->baseUrl		= 'sidebar';
 		$this->title		= 'Sidebar';
 
 		// Services

@@ -41,6 +41,7 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 		$this->frontend	= false;
 		$this->shared	= true;
 		$this->apixBase	= 'cms/element';
+		$this->baseUrl	= 'element';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'uelement' ];

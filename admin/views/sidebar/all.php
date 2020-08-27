@@ -8,13 +8,14 @@ $coreProperties = $this->context->getCoreProperties();
 $title			= $this->context->title;
 $this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$baseUrl		= $this->context->baseUrl;
 
 // View Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'baseUrl' => $baseUrl, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
@@ -41,7 +42,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
 			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
 		],
-		'model' => [ 
+		'model' => [
 			'delete' => 'Delete'
 		]
 	],

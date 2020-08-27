@@ -48,6 +48,7 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectDataCont
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;
 		$this->apixBase		= 'cms/menu';
+		$this->baseUrl		= 'menu';
 		$this->title		= 'Menu';
 
 		// Services

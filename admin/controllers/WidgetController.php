@@ -48,6 +48,7 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectDataCo
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;
 		$this->apixBase		= 'cms/widget';
+		$this->baseUrl		= 'widget';
 		$this->title		= 'Widget';
 
 		// Services

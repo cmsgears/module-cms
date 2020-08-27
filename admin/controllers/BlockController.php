@@ -41,6 +41,7 @@ class BlockController extends \cmsgears\cms\admin\controllers\base\BlockControll
 		$this->frontend	= false;
 		$this->shared	= true;
 		$this->apixBase = 'cms/block';
+		$this->baseUrl	= 'block';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'ublock' ];
