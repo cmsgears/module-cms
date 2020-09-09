@@ -255,6 +255,7 @@ class PostController extends \cmsgears\core\frontend\controllers\apix\base\Contr
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple' ],
 			// Elements
 			'assign-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Assign' ],
 			'remove-element' => [ 'class' => 'cmsgears\core\common\actions\objectdata\mapper\Remove' ],

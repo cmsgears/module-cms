@@ -129,7 +129,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap
 		]);
 	}
 
@@ -183,7 +183,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			'video' => $video,
 			'mvideo' => $mvideo,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap,
+			'statusMap' => $modelClass::$subStatusMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -231,7 +231,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'video' => $video,
 				'mvideo' => $mvideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
+				'statusMap' => $modelClass::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}
@@ -279,7 +279,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'video' => $content->video,
 				'mvideo' => $content->mobileVideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
+				'statusMap' => $modelClass::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

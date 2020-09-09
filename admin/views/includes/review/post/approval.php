@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 	<?= $form->field( $model, 'name' )->hiddenInput()->label( false ) ?>
 	<div class="align align-center">
 		<?php if( $model->isSubmitted() ) { ?>
-			<input type="radio" name="status" value="<?= $modelClass::STATUS_SUBMITTED ?>" checked>Approve &nbsp;&nbsp;
+			<input type="radio" name="status" value="<?= $modelClass::STATUS_APPROVED ?>" checked>Approve &nbsp;&nbsp;
 		<?php } else { ?>
 			<input type="radio" name="status" value="<?= $modelClass::STATUS_ACTIVE ?>" checked>Approve &nbsp;&nbsp;
 		<?php } ?>

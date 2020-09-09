@@ -148,6 +148,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -203,8 +204,6 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 		$galleryClass = $galleryService->getModelClass();
 
-		$user = Yii::$app->core->getUser();
-
 		$registered	= false;
 
 		$transaction = Yii::$app->db->beginTransaction();
@@ -225,6 +224,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -301,7 +301,7 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured', 'comments'
+				'status', 'order', 'pinned', 'featured', 'popular', 'comments'
 			]);
 		}
 
@@ -361,6 +361,9 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 				$this->fileService->deleteMultiple( [ $model->avatar ] );
 				$this->fileService->deleteMultiple( $model->files );
 
+				// Delete File Mappings of Shared Files
+				Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
+
 				// Delete Model Content
 				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
@@ -375,9 +378,6 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 

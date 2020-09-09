@@ -30,7 +30,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'filters' => [
 		'status' => [
-			'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked'
+			'new' => 'New', 'submitted' => 'Submitted', 're-submitted' => 'Re Submitted',
+			'rejected' => 'Rejected', 'active' => 'Active',
+			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
 		],
 		'model' => [
 			'captcha' => 'Captcha', 'umail' => 'User Mail', 'amail' => 'Admin Mail',
@@ -55,8 +59,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
 		'status' => [
-			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
-			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
 		],
 		'model' => [ 'delete' => 'Delete' ]
 	],

@@ -134,7 +134,7 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 
 				switch( $status ) {
 
-					case $modelClass::STATUS_SUBMITTED: {
+					case $modelClass::STATUS_APPROVED: {
 
 						$this->modelService->approve( $model, [ 'notify' => false ] );
 

@@ -28,8 +28,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'popular' => 'Popular', 'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular' ]
+		'status' => [
+			'new' => 'New', 'submitted' => 'Submitted', 're-submitted' => 'Re Submitted',
+			'rejected' => 'Rejected', 'active' => 'Active',
+			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -44,10 +52,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
 		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
 		'status' => [
-			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
-			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
 		],
 		'model' => [
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',

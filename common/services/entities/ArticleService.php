@@ -151,6 +151,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -226,6 +227,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -356,6 +358,9 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				$this->fileService->deleteMultiple( [ $model->avatar ] );
 				$this->fileService->deleteMultiple( $model->files );
 
+				// Delete File Mappings of Shared Files
+				Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
+
 				// Delete Model Content
 				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
@@ -370,9 +375,6 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 
 				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 
@@ -392,8 +394,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 
 		$user = $model->creator;
 
-		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
-		$config[ 'users' ]	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $user->id ];
+		$config[ 'users' ] = isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $user->id ];
 
 		return parent::applyBulk( $model, $column, $action, $target, $config );
 	}

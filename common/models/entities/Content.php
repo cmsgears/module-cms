@@ -212,7 +212,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
@@ -282,6 +282,11 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			if( $this->parentId <= 0 ) {
 
 				$this->parentId = null;
+			}
+
+			if( empty( $this->status ) || $this->status <= 0 ) {
+
+				$this->status = self::STATUS_NEW;
 			}
 
 			if( empty( $this->order ) || $this->order <= 0 ) {

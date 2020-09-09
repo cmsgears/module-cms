@@ -375,7 +375,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
 		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
 
 		switch( $column ) {

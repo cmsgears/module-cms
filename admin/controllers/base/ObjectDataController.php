@@ -38,6 +38,9 @@ abstract class ObjectDataController extends \cmsgears\core\admin\controllers\bas
 		// Permission
 		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
+		// Config
+		$this->minStatusMap = true;
+
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
 	}
 

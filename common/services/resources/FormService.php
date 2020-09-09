@@ -510,8 +510,7 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 				// Commit
 				$transaction->commit();
 
-				// Delete model
-				return parent::delete( $model, $config );
+				$config[ 'hard' ] = false;
 			}
 			catch( Exception $e ) {
 

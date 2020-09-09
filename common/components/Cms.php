@@ -21,7 +21,7 @@ use cmsgears\cms\common\models\entities\Post;
  *
  * @since 1.0.0
  */
-class Cms extends \cmsgears\core\common\base\Component {
+class Cms extends \cmsgears\core\common\base\Config {
 
 	// Global -----------------
 

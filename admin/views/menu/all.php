@@ -26,7 +26,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ]
+		'status' => [
+			'new' => 'New', 'active' => 'Active',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -38,8 +42,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
 		'status' => [
-			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
-			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
+			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block',
+			'terminate' => 'Terminate'
 		],
 		'model' => [
 			'delete' => 'Delete'

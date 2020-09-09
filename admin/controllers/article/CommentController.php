@@ -49,6 +49,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\CommentCon
 		$this->commentType	= ModelComment::TYPE_COMMENT;
 		$this->apixBase		= 'cms/page/comment';
 		$this->parentUrl	= '/cms/article/update?id=';
+		$this->parentCol	= 'Article';
 		$this->urlKey		= 'article-comments';
 
 		// Services
