@@ -75,7 +75,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->modelContent->getTemplateName(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
-		'popular' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		//'publishedAt' =>[ 'title' => 'Published At', 'generate' => function( $model ) { return $model->modelContent->publishedAt; } ],
 		'actions' => 'Actions'

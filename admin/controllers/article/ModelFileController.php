@@ -44,7 +44,7 @@ class ModelFileController extends \cmsgears\core\admin\controllers\base\ModelFil
 
 		// Config
 		$this->title	= 'Article File';
-		$this->apixBase	= 'cms/page/model-file';
+		$this->apixBase	= 'cms/article/model-file';
 
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'articleService' );
