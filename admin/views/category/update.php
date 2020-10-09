@@ -16,7 +16,8 @@ use cmsgears\widgets\elements\mappers\BlockSuggest;
 use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "Update $title Category | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parent ) ? $model->parent->name : null;
 $apixBase		= $this->context->apixBase;

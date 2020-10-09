@@ -306,11 +306,14 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 		}
 
 		// Copy Template
-		$config[ 'template' ] = $content->template;
+		if( isset( $content ) ) {
 
-		if( $this->copyTemplate( $model, $config ) ) {
+			$config[ 'template' ] = $content->template;
 
-			$attributes[] = 'data';
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
 		}
 
 		// Services

@@ -10,7 +10,8 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Category | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "Delete $title Category | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parentId ) ? $model->parent->name : null;
 

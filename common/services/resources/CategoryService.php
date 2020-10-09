@@ -295,11 +295,14 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 		];
 
 		// Copy Template
-		$config[ 'template' ] = $content->template;
+		if( isset( $content ) ) {
 
-		if( $this->copyTemplate( $model, $config ) ) {
+			$config[ 'template' ] = $content->template;
 
-			$config[ 'attributes'][] = 'data';
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
 		}
 
 		$model = parent::update( $model, $config );

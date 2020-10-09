@@ -10,7 +10,8 @@ use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Category | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "Add $title Category | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parent ) ? $model->parent->name : null;
 
