@@ -18,31 +18,38 @@ namespace cmsgears\cms\common\models\interfaces\mappers;
 interface IWidget {
 
 	/**
-	 * Return all the widget mappings associated with the parent.
+	 * Return all the shared widget mappings associated with the parent.
 	 *
 	 * @return \cmsgears\cms\common\models\mappers\ModelWidget[]
 	 */
 	public function getModelWidgets();
 
 	/**
-	 * Return all the active widget mappings associated with the parent.
+	 * Return all the active shared widget mappings associated with the parent.
 	 *
 	 * @return \cmsgears\cms\common\models\mappers\ModelWidget[]
 	 */
 	public function getActiveModelWidgets();
 
 	/**
-	 * Return all the widgets associated with the parent.
+	 * Return all the shared widgets associated with the parent.
 	 *
 	 * @return \cmsgears\cms\common\models\entities\ModelWidget[]
 	 */
 	public function getWidgets();
 
 	/**
-	 * Return all the active widgets associated with the parent.
+	 * Return all the active shared widgets associated with the parent.
 	 *
 	 * @return \cmsgears\cms\common\models\entities\ModelWidget[]
 	 */
 	public function getActiveWidgets();
+
+	/**
+	 * Return all the active widgets associated with the parent.
+	 *
+	 * @return \cmsgears\cms\common\models\entities\ModelWidget[]
+	 */
+	public function getDisplayWidgets();
 
 }

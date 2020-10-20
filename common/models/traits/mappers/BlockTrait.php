@@ -142,6 +142,22 @@ trait BlockTrait {
 			->all();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getDisplayBlocks() {
+
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_BLOCK;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
+
+		return Block::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

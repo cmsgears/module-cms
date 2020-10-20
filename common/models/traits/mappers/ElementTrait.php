@@ -142,6 +142,22 @@ trait ElementTrait {
 			->all();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getDisplayElements() {
+
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_ELEMENT;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
+
+		return Element::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------
