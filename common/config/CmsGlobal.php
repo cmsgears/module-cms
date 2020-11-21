@@ -73,7 +73,8 @@ class CmsGlobal {
 	const TEMPLATE_AUTHOR	= 'author';
 	const TEMPLATE_ARCHIVE	= 'archive';
 
-	const TEMPLATE_TAG_CLOUD = 'tag-cloud';
+	const TEMPLATE_CATEGORIES	= 'categories';
+	const TEMPLATE_TAG_CLOUD	= 'tag-cloud';
 
 	const TEMPLATE_ELEMENT_CARD	= 'card';
 	const TEMPLATE_ELEMENT_BOX	= 'box';

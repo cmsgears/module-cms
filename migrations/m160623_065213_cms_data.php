@@ -81,7 +81,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Blog Admin', 'blog-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role blog admin is limited to manage site content and blog posts from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Blog Admin', CmsGlobal::ROLE_BLOG_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role blog admin is limited to manage site content and blog posts from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
@@ -102,7 +102,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
 		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$blogAdminPerm		= Permission::findBySlugType( 'admin-blog', CoreGlobal::TYPE_SYSTEM );
+		$blogAdminPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -124,18 +124,18 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 		$permissions = [
 			// Permission Groups - Default - Website - Individual, Organization
-			[ $this->master->id, $this->master->id, 'Manage Posts', 'manage-posts', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission manage posts allows user to manage posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Post Author', 'post-author', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission post author allows user to perform crud operations of post belonging to respective author from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Manage Posts', CmsGlobal::PERM_BLOG_MANAGE, CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission manage posts allows user to manage posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Post Author', CmsGlobal::PERM_BLOG_AUTHOR, CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission post author allows user to perform crud operations of post belonging to respective author from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 
 			// Post Permissions - Hard Coded - Website - Individual, Organization
-			[ $this->master->id, $this->master->id, 'View Posts', 'view-posts', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view posts allows users to view their posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Add Post', 'add-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add post allows users to create post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Update Post', 'update-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update post allows users to update post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Delete Post', 'delete-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete post allows users to delete post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Approve Post', 'approve-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission approve post allows user to approve, freeze or block post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Print Post', 'print-post', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission print post allows user to print post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Import Posts', 'import-posts', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission import posts allows user to import posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Export Posts', 'export-posts', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission export posts allows user to export posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'View Posts', CmsGlobal::PERM_BLOG_VIEW, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view posts allows users to view their posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Add Post', CmsGlobal::PERM_BLOG_ADD, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add post allows users to create post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Update Post', CmsGlobal::PERM_BLOG_UPDATE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update post allows users to update post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Delete Post', CmsGlobal::PERM_BLOG_DELETE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete post allows users to delete post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Approve Post', CmsGlobal::PERM_BLOG_APPROVE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission approve post allows user to approve, freeze or block post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Print Post', CmsGlobal::PERM_BLOG_PRINT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission print post allows user to print post from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Import Posts', CmsGlobal::PERM_BLOG_IMPORT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission import posts allows user to import posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Export Posts', CmsGlobal::PERM_BLOG_EXPORT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission export posts allows user to export posts from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
@@ -145,14 +145,14 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$postAuthorPerm		= Permission::findBySlugType( 'post-author', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
-		$vPostsPerm		= Permission::findBySlugType( 'view-posts', CoreGlobal::TYPE_SYSTEM );
-		$aPostPerm		= Permission::findBySlugType( 'add-post', CoreGlobal::TYPE_SYSTEM );
-		$uPostPerm		= Permission::findBySlugType( 'update-post', CoreGlobal::TYPE_SYSTEM );
-		$dPostPerm		= Permission::findBySlugType( 'delete-post', CoreGlobal::TYPE_SYSTEM );
-		$apPostPerm		= Permission::findBySlugType( 'approve-post', CoreGlobal::TYPE_SYSTEM );
-		$pPostPerm		= Permission::findBySlugType( 'print-post', CoreGlobal::TYPE_SYSTEM );
-		$iPostsPerm		= Permission::findBySlugType( 'import-posts', CoreGlobal::TYPE_SYSTEM );
-		$ePostsPerm		= Permission::findBySlugType( 'export-posts', CoreGlobal::TYPE_SYSTEM );
+		$vPostsPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_VIEW, CoreGlobal::TYPE_SYSTEM );
+		$aPostPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_ADD, CoreGlobal::TYPE_SYSTEM );
+		$uPostPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_UPDATE, CoreGlobal::TYPE_SYSTEM );
+		$dPostPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_DELETE, CoreGlobal::TYPE_SYSTEM );
+		$apPostPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_APPROVE, CoreGlobal::TYPE_SYSTEM );
+		$pPostPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_PRINT, CoreGlobal::TYPE_SYSTEM );
+		$iPostsPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_IMPORT, CoreGlobal::TYPE_SYSTEM );
+		$ePostsPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_EXPORT, CoreGlobal::TYPE_SYSTEM );
 
 		//Hierarchy
 
@@ -255,7 +255,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 			[ $this->site->id, $this->master->id, $this->master->id, 'Feedback', 'feedback', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'Testimonial', 'testimonial', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->site->id, $this->master->id, $this->master->id, 'Help', 'help', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $this->master->id, $this->master->id, 'FAQ', 'faq', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->site->id, $this->master->id, $this->master->id, 'FAQs', 'faqs', CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			// Blog Page
 			[ $this->site->id, $this->master->id, $this->master->id, 'Blog', CmsGlobal::PAGE_BLOG, CmsGlobal::TYPE_PAGE, null, null, Page::STATUS_ACTIVE, Page::VISIBILITY_PUBLIC, 0, false, false, DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			// Search Pages
@@ -290,7 +290,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 			[ Page::findBySlugType( 'feedback', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'testimonial', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			[ Page::findBySlugType( 'help', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
-			[ Page::findBySlugType( 'faq', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
+			[ Page::findBySlugType( 'faqs', CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			// Blog Page
 			[ Page::findBySlugType( CmsGlobal::PAGE_BLOG, CmsGlobal::TYPE_PAGE )->id, CmsGlobal::TYPE_PAGE, null, null, null, null, $summary, $content, DateUtil::getDateTime() ],
 			// Search Pages
