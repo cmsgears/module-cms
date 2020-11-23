@@ -33,8 +33,6 @@ interface IPageService extends IContentService {
 
 	// Create -------------
 
-	public function register( $model, $config = [] );
-
 	// Update -------------
 
 	// Delete -------------
