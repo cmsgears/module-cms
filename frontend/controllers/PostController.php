@@ -332,7 +332,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 					'route' => "{$this->route}/tag/$tag->slug"
 				]);
 
-				return Yii::$app->templateManager->renderViewCategory( $template, [
+				return Yii::$app->templateManager->renderViewTag( $template, [
 					'dataProvider' => $dataProvider,
 					'tag' => $tag,
 					'template' => $template

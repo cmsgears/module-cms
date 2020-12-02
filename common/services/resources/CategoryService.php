@@ -14,6 +14,8 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
@@ -256,7 +258,8 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 
 	public function create( $model, $config = [] ) {
 
-		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$widgetSlug	= isset( $config[ 'widgetSlug' ] ) ? $config[ 'widgetSlug' ] : null;
 
 		// Model content is required for all the tags to form tag page
 		if( !isset( $content ) ) {
@@ -278,6 +281,19 @@ class CategoryService extends \cmsgears\core\common\services\resources\CategoryS
 			$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->create( $content, $config );
+
+			if( isset( $widgetSlug ) ) {
+
+				$categoryWidget = Yii::$app->factory->get( 'widgetService' )->getBySlugType( $widgetSlug, CmsGlobal::TYPE_WIDGET );
+
+				if( isset( $categoryWidget ) ) {
+
+					Yii::$app->factory->get( 'modelWidgetService' )->createByParams([
+						'modelId' => $categoryWidget->id, 'type' => CmsGlobal::TYPE_WIDGET,
+						'parentId' => $model->id, 'parentType' => static::$parentType
+					]);
+				}
+			}
 		}
 
 		return $model;

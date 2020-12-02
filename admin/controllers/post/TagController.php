@@ -49,6 +49,8 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 		$this->apixBase		= 'cms/page/tag';
 		$this->parentPath	= '/cms/post/tag';
 
+		$this->widgetSlug = 'tag-posts';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
 

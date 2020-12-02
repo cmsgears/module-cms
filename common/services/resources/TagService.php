@@ -14,6 +14,8 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
@@ -212,7 +214,8 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 
 	public function create( $model, $config = [] ) {
 
-		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$widgetSlug	= isset( $config[ 'widgetSlug' ] ) ? $config[ 'widgetSlug' ] : null;
 
 		// Model content is required for all the tags to form tag page
 		if( !isset( $content ) ) {
@@ -221,7 +224,20 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 		}
 
 		// Copy Template
-		$config[ 'template' ] = $content->template;
+		$template = $content->template;
+
+		// Tags CSV request
+		if( empty( $template ) && !empty( Yii::$app->request->post( 'template-id' ) ) ) {
+
+			$template = Yii::$app->factory->get( 'templateService' )->getById( Yii::$app->request->post( 'template-id' ) );
+
+			if( isset( $template ) ) {
+
+				$content->templateId = $template->id;
+			}
+		}
+
+		$config[ 'template' ] = $template;
 
 		$this->copyTemplate( $model, $config );
 
@@ -234,6 +250,24 @@ class TagService extends \cmsgears\core\common\services\resources\TagService imp
 			$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->create( $content, $config );
+
+			if( empty( $widgetSlug ) ) {
+
+				$widgetSlug = Yii::$app->request->post( 'widget-slug' );
+			}
+
+			if( !empty( $widgetSlug ) ) {
+
+				$tagWidget = Yii::$app->factory->get( 'widgetService' )->getBySlugType( $widgetSlug, CmsGlobal::TYPE_WIDGET );
+
+				if( isset( $tagWidget ) ) {
+
+					Yii::$app->factory->get( 'modelWidgetService' )->createByParams([
+						'modelId' => $tagWidget->id, 'type' => CmsGlobal::TYPE_WIDGET,
+						'parentId' => $model->id, 'parentType' => static::$parentType
+					]);
+				}
+			}
 		}
 
 		return $model;

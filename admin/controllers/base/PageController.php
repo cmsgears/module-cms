@@ -36,6 +36,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 	public $title;
 	public $comments;
 
+	public $parentType;
+
 	public $metaService;
 
 	// Protected --------------
@@ -63,6 +65,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		// Config
 		$this->type			= CmsGlobal::TYPE_PAGE;
+		$this->parentType	= CmsGlobal::TYPE_PAGE;
 		$this->templateType	= CmsGlobal::TYPE_PAGE;
 		$this->comments		= false;
 
@@ -222,6 +225,9 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
+			$tagPostsTemplate	= Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( 'tag', $this->templateType );
+			$tagPostsTemplateId	= isset( $tagPostsTemplate ) ? $tagPostsTemplate->id : null;
+
 			return $this->render( 'update', [
 				'model' => $model,
 				'content' => $content,
@@ -232,7 +238,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'mvideo' => $mvideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$subStatusMap,
-				'templatesMap' => $templatesMap
+				'templatesMap' => $templatesMap,
+				'tagPostsTemplateId' => $tagPostsTemplateId
 			]);
 		}
 

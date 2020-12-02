@@ -37,6 +37,8 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// Protected --------------
 
+	protected $widgetSlug; // The widget to show data on category page
+
 	protected $templateType;
 
 	protected $templateService;
@@ -126,7 +128,10 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+			$this->model = $this->modelService->create( $model, [
+				'admin' => true, 'widgetSlug' => $this->widgetSlug,
+				'content' => $content, 'banner' => $banner, 'video' => $video
+			]);
 
 			if( $this->model ) {
 

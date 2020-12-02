@@ -49,6 +49,8 @@ class CategoryController extends \cmsgears\cms\admin\controllers\base\CategoryCo
 		$this->apixBase		= 'cms/page/category';
 		$this->parentPath	= '/cms/post/category';
 
+		$this->widgetSlug = 'category-posts';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-category' ];
 

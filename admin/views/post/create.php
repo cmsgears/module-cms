@@ -13,7 +13,8 @@ use cmsgears\icons\widgets\IconChooser;
 use cmsgears\icons\widgets\TextureChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Post | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title 	= "Add {$title} | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
 

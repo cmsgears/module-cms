@@ -3,8 +3,6 @@
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\cms\common\config\CmsGlobal;
-
 use cmsgears\core\common\widgets\ActiveForm;
 
 use cmsgears\core\common\widgets\Editor;
@@ -22,7 +20,9 @@ use cmsgears\widgets\elements\mappers\BlockSuggest;
 use cmsgears\widgets\elements\mappers\WidgetSuggest;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Post | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title 	= "Update {$title} | " . $coreProperties->getSiteTitle();
+$parentType		= $this->context->parentType;
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
 
@@ -206,7 +206,7 @@ Editor::widget();
 				</div>
 				<div class="box-content padding padding-small">
 					<?= CategorySuggest::widget([
-						'model' => $model, 'type' => CmsGlobal::TYPE_POST,
+						'model' => $model, 'type' => $parentType,
 						'mapActionUrl' => "$apixBase/assign-category?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-category?slug=$model->slug&type=$model->type"
 					])?>
@@ -219,7 +219,7 @@ Editor::widget();
 				</div>
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
-						'model' => $model,
+						'model' => $model, 'widgetSlug' => 'tag-posts', 'templateId' => $tagPostsTemplateId,
 						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
 					])?>
