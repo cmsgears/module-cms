@@ -62,7 +62,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Config
 		$this->apixBase	= 'cms/post';
-		$this->baseUrl	= '/cms/post';
+		$this->baseUrl	= 'cms/post';
 		$this->basePath	= '/cms/post/default';
 		$this->type		= CmsGlobal::TYPE_POST;
 
@@ -78,7 +78,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		$this->blockService		= Yii::$app->factory->get( 'blockService' );
 
 		// Return Url
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ "$this->baseUrl/all" ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ "/$this->baseUrl/all" ], true );
 	}
 
 	// Instance methods --------------------------------------------
