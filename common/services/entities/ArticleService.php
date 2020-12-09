@@ -358,8 +358,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete files
-				$this->fileService->deleteMultiple( [ $model->avatar ] );
-				$this->fileService->deleteMultiple( $model->files );
+				$this->fileService->deleteMultiple( ArrayHelper::merge( $model->files, [ $model->avatar ] ) );
 
 				// Delete File Mappings of Shared Files
 				Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );

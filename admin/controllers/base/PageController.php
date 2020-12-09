@@ -225,8 +225,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-			$tagPostsTemplate	= Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( 'tag', $this->templateType );
-			$tagPostsTemplateId	= isset( $tagPostsTemplate ) ? $tagPostsTemplate->id : null;
+			$tagTemplate	= Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
+			$tagTemplateId	= isset( $tagTemplate ) ? $tagTemplate->id : null;
 
 			return $this->render( 'update', [
 				'model' => $model,
@@ -239,7 +239,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $modelClass::$subStatusMap,
 				'templatesMap' => $templatesMap,
-				'tagPostsTemplateId' => $tagPostsTemplateId
+				'tagTemplateId' => $tagTemplateId
 			]);
 		}
 

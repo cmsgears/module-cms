@@ -54,7 +54,7 @@ class ModelFileController extends \cmsgears\core\admin\controllers\base\ModelFil
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'widget-files' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/file/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/widget/model-file/all' ], true );
 
 		// All Url
 		$allUrl = Url::previous( 'widgets' );

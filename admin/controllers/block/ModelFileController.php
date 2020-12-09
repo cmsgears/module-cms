@@ -54,7 +54,7 @@ class ModelFileController extends \cmsgears\core\admin\controllers\base\ModelFil
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'block-files' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/file/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/model-file/all' ], true );
 
 		// All Url
 		$allUrl = Url::previous( 'blocks' );

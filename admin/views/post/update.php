@@ -219,7 +219,7 @@ Editor::widget();
 				</div>
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
-						'model' => $model, 'widgetSlug' => 'tag-posts', 'templateId' => $tagPostsTemplateId,
+						'model' => $model, 'widgetSlug' => 'tag-posts', 'templateId' => $tagTemplateId,
 						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
 					])?>
