@@ -111,8 +111,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
 		$config[ 'query' ] = $this->generateSimilarQuery( $config );
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
 		return $this->getPublicPage( $config );
 	}
 

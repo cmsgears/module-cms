@@ -86,22 +86,22 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$blogAdminRole	= Role::findBySlugType( 'blog-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( CoreGlobal::ROLE_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$blogAdminRole	= Role::findBySlugType( CmsGlobal::ROLE_BLOG_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'Admin Blog', 'admin-blog', CoreGlobal::TYPE_SYSTEM, null, 'The permission admin blog is to manage elements, blocks, pages, page templates, posts, post templates, post categories, post tags, menus, sidebars and widgets from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin Blog', CmsGlobal::PERM_BLOG_ADMIN, CoreGlobal::TYPE_SYSTEM, null, 'The permission admin blog is to manage elements, blocks, pages, page templates, posts, post templates, post categories, post tags, menus, sidebars and widgets from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm			= Permission::findBySlugType( CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM );
 		$blogAdminPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
@@ -141,8 +141,8 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Permission Groups
-		$postManagerPerm	= Permission::findBySlugType( 'manage-posts', CoreGlobal::TYPE_SYSTEM );
-		$postAuthorPerm		= Permission::findBySlugType( 'post-author', CoreGlobal::TYPE_SYSTEM );
+		$postManagerPerm	= Permission::findBySlugType( CmsGlobal::PERM_BLOG_MANAGE, CoreGlobal::TYPE_SYSTEM );
+		$postAuthorPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_AUTHOR, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 		$vPostsPerm		= Permission::findBySlugType( CmsGlobal::PERM_BLOG_VIEW, CoreGlobal::TYPE_SYSTEM );
@@ -189,7 +189,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Blog', 'slug' => 'config-blog',
+			'name' => 'Config Blog', 'slug' => 'config-' . CmsGlobal::CONFIG_BLOG,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Blog configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -200,7 +200,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-blog', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CmsGlobal::CONFIG_BLOG, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -222,13 +222,13 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas	= [
-			[ $this->site->id, 'page_comment', 'Page Comment', 'blog', 1, 'flag', '0', NULL ],
-			[ $this->site->id, 'article_comment', 'Article Comment', 'blog', 1, 'flag', '0', NULL ],
-			[ $this->site->id, 'post_comment', 'Post Comment', 'blog', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'post_limit', 'Post Limit', 'blog', 1, 'text', PostService::PAGE_LIMIT, NULL ],
-			[ $this->site->id, 'title_site', 'Title Site', 'blog', 1, 'flag', '1', NULL ],
-			[ $this->site->id, 'title_separator', 'Title Separator', 'blog', 1, 'text', '|', NULL ],
-			[ $this->site->id, 'append_title', 'Append Title', 'blog', 1, 'flag', '1', NULL ]
+			[ $this->site->id, 'page_comment', 'Page Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
+			[ $this->site->id, 'article_comment', 'Article Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
+			[ $this->site->id, 'post_comment', 'Post Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'post_limit', 'Post Limit', CmsGlobal::CONFIG_BLOG, 1, 'text', PostService::PAGE_LIMIT, NULL ],
+			[ $this->site->id, 'title_site', 'Title Site', CmsGlobal::CONFIG_BLOG, 1, 'flag', '1', NULL ],
+			[ $this->site->id, 'title_separator', 'Title Separator', CmsGlobal::CONFIG_BLOG, 1, 'text', '|', NULL ],
+			[ $this->site->id, 'append_title', 'Append Title', CmsGlobal::CONFIG_BLOG, 1, 'flag', '1', NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
