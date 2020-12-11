@@ -25,6 +25,7 @@ $this->title 	= "Update {$title} | " . $coreProperties->getSiteTitle();
 $parentType		= $this->context->parentType;
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
+$tagWidgetSlug	= $this->context->tagWidgetSlug;
 
 Editor::widget();
 ?>
@@ -219,7 +220,7 @@ Editor::widget();
 				</div>
 				<div class="box-content padding padding-small">
 					<?= TagMapper::widget([
-						'model' => $model, 'widgetSlug' => 'tag-posts', 'templateId' => $tagTemplateId,
+						'model' => $model, 'widgetSlug' => $tagWidgetSlug, 'templateId' => $tagTemplateId,
 						'mapActionUrl' => "$apixBase/assign-tags?slug=$model->slug&type=$model->type",
 						'deleteActionUrl' => "$apixBase/remove-tag?slug=$model->slug&type=$model->type"
 					])?>

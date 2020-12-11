@@ -47,14 +47,15 @@ class PostController extends \cmsgears\cms\admin\controllers\base\PageController
 		$this->setViewPath( '@cmsgears/module-cms/admin/views/post' );
 
 		// Config
-		$this->type			= CmsGlobal::TYPE_POST;
-		$this->parentType	= CmsGlobal::TYPE_POST;
-		$this->templateType	= CmsGlobal::TYPE_POST;
-		$this->title		= 'Post';
-		$this->baseUrl		= 'post';
-		$this->apixBase		= 'cms/post';
-		$this->comments		= true;
-		$this->prettyReview	= false;
+		$this->type				= CmsGlobal::TYPE_POST;
+		$this->parentType		= CmsGlobal::TYPE_POST;
+		$this->templateType		= CmsGlobal::TYPE_POST;
+		$this->title			= 'Post';
+		$this->baseUrl			= 'post';
+		$this->apixBase			= 'cms/post';
+		$this->comments			= true;
+		$this->prettyReview		= false;
+		$this->tagWidgetSlug	= 'tag-posts';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );

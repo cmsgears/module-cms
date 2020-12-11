@@ -36,6 +36,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 	public $title;
 	public $comments;
 
+	public $tagWidgetSlug;
+
 	public $parentType;
 
 	public $metaService;
