@@ -12,7 +12,7 @@ $returnUrl		= $this->context->returnUrl;
 
 $pageName = isset( $model->page ) ? $model->page->name : null;
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -21,7 +21,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col5x2">
 							<?= $form->field( $model, 'url' ) ?>
 						</div>
@@ -32,7 +32,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'pageId', [ 'placeholder' => 'Page', 'icon' => 'cmti cmti-search', 'value' => $pageName, 'url' => 'cms/page/auto-search' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
@@ -40,7 +40,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'absolute' ) ?>
 						</div>
@@ -51,7 +51,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
@@ -59,7 +59,7 @@ $pageName = isset( $model->page ) ? $model->page->name : null;
 							<?= $form->field( $model, 'urlOptions' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'order' ) ?>
 						</div>

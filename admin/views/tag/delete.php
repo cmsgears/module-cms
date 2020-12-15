@@ -15,7 +15,7 @@ $returnUrl		= $this->context->returnUrl;
 
 Editor::widget();
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap row max-cols-100">
 	<div class="box-crud-wrap-main colf colf3x2">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-tag', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -24,7 +24,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -35,7 +35,7 @@ Editor::widget();
 							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -43,7 +43,7 @@ Editor::widget();
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
@@ -57,7 +57,7 @@ Editor::widget();
 				<div class="box-header-title">Files</div>
 			</div>
 			<div class="box-content">
-				<div class="row padding padding-small-v">
+				<div class="row max-cols-50 padding padding-small-v">
 					<div class="col col12x4">
 						<label>Banner</label>
 						<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => 'true' ] ) ?>
@@ -98,7 +98,7 @@ Editor::widget();
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoName' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -106,7 +106,7 @@ Editor::widget();
 							<?= $form->field( $content, 'seoRobot' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoKeywords' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>
