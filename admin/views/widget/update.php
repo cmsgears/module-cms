@@ -71,6 +71,14 @@ Editor::widget();
 					</div>
 					<div class="row max-cols-100">
 						<div class="col col2">
+							<?= $form->field( $model, 'classPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'viewPath' ) ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
