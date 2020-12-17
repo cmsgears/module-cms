@@ -73,7 +73,7 @@ Editor::widget();
 					</div>
 					<div class="row max-cols-100">
 						<div class="col col2">
-							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datetimepicker' ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => 'cms/page/auto-search' ] ) ?>

@@ -89,7 +89,7 @@ Editor::widget();
 							<?= $form->field( $model, 'order' )->textInput() ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datetimepicker' ] ) ?>
 						</div>
 					</div>
 					<div class="row max-cols-100">

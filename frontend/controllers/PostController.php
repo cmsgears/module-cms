@@ -41,8 +41,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Protected --------------
 
-	protected $type;
 	protected $route;
+
+	protected $parentType;
 	protected $searchPage;
 
 	protected $templateService;
@@ -65,10 +66,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
 		$this->baseUrl	= '/cms/post';
 		$this->apixBase	= 'cms/post';
-		$this->type		= CmsGlobal::TYPE_POST;
 		$this->route	= 'blog';
 
-		$this->searchPage = CmsGlobal::PAGE_SEARCH_POSTS;
+		$this->parentType	= CmsGlobal::TYPE_POST;
+		$this->searchPage	= CmsGlobal::PAGE_SEARCH_POSTS;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -219,7 +220,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->type );
+		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->parentType );
 
 		if( isset( $template ) ) {
 
@@ -253,7 +254,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionCategory( $slug ) {
 
-		$category = $this->categoryService->getBySlugType( $slug, $this->type );
+		$category = $this->categoryService->getBySlugType( $slug, $this->parentType );
 
 		if( isset( $category ) ) {
 
@@ -274,7 +275,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->type );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_CATEGORY, $this->parentType );
 			}
 
 			if( isset( $template ) ) {
@@ -301,7 +302,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionTag( $slug ) {
 
-		$tag = $this->tagService->getBySlugType( $slug, $this->type );
+		$tag = $this->tagService->getBySlugType( $slug, $this->parentType );
 
 		if( isset( $tag ) ) {
 
@@ -322,7 +323,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->type );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->parentType );
 			}
 
 			if( isset( $template ) ) {
@@ -364,7 +365,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
-			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, $this->type );
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, $this->parentType );
 
 			if( isset( $template ) ) {
 
@@ -390,7 +391,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionSingle( $slug, $amp = false ) {
 
-		$model = $this->modelService->getBySlugType( $slug, $this->type );
+		$model = $this->modelService->getFirstBySlug( $slug );
 
 		if( isset( $model ) ) {
 
@@ -428,7 +429,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->type );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->parentType );
 			}
 
 			// Render Template
