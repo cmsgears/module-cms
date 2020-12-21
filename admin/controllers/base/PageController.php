@@ -227,7 +227,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-			$tagTemplate	= Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
+			$tagTemplate	= $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
 			$tagTemplateId	= isset( $tagTemplate ) ? $tagTemplate->id : null;
 
 			return $this->render( 'update', [

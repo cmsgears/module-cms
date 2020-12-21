@@ -43,7 +43,10 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	protected $route;
 
+	protected $type;
 	protected $parentType;
+	protected $templateType;
+
 	protected $searchPage;
 
 	protected $templateService;
@@ -68,7 +71,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		$this->apixBase	= 'cms/post';
 		$this->route	= 'blog';
 
+		$this->type			= CmsGlobal::TYPE_POST;
 		$this->parentType	= CmsGlobal::TYPE_POST;
+		$this->templateType	= CmsGlobal::TYPE_POST;
 		$this->searchPage	= CmsGlobal::PAGE_SEARCH_POSTS;
 
 		// Services
@@ -220,7 +225,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->parentType );
+		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->templateType );
 
 		if( isset( $template ) ) {
 
@@ -275,7 +280,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_CATEGORY, $this->parentType );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_CATEGORY, $this->templateType );
 			}
 
 			if( isset( $template ) ) {
@@ -323,7 +328,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->parentType );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
 			}
 
 			if( isset( $template ) ) {
@@ -365,7 +370,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
 			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
-			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, $this->parentType );
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, $this->templateType );
 
 			if( isset( $template ) ) {
 
@@ -429,7 +434,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->parentType );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->templateType );
 			}
 
 			// Render Template

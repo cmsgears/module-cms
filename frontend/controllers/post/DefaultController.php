@@ -36,11 +36,15 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	public $basePath;
 
+	public $tagWidgetSlug;
+
 	public $metaService;
 
 	// Protected --------------
 
 	protected $type;
+	protected $parentType;
+	protected $templateType;
 
 	protected $templateService;
 
@@ -61,10 +65,13 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->apixBase	= 'cms/post';
-		$this->baseUrl	= 'cms/post';
-		$this->basePath	= '/cms/post/default';
-		$this->type		= CmsGlobal::TYPE_POST;
+		$this->apixBase		= 'cms/post';
+		$this->baseUrl		= 'cms/post';
+		$this->basePath		= '/cms/post/default';
+		$this->type			= CmsGlobal::TYPE_POST;
+		$this->parentType	= CmsGlobal::TYPE_POST;
+		$this->templateType	= CmsGlobal::TYPE_POST;
+		$this->tagWidgetSlug = 'tag-posts';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
@@ -142,7 +149,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	public function actionAdd( $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-		$template	= $this->templateService->getBySlugType( $template, $this->type );
+		$template	= $this->templateService->getBySlugType( $template, $this->templateType );
 		$modelClass	= $this->modelService->getModelClass();
 
 		if( isset( $template ) ) {
@@ -403,9 +410,13 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 			$this->modelService->updateStatus( $model, $modelClass::STATUS_SETTINGS );
 		}
 
+		$tagTemplate	= $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
+		$tagTemplateId	= isset( $tagTemplate ) ? $tagTemplate->id : null;
+
 		return $this->render( 'settings', [
 			'model' => $model,
-			'parentType' => $parentType
+			'parentType' => $parentType,
+			'tagTemplateId' => $tagTemplateId
 		]);
 	}
 
