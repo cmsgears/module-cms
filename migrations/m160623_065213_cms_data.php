@@ -18,7 +18,6 @@ use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\resources\FormField;
-
 use cmsgears\cms\common\models\entities\Page;
 
 use cmsgears\cms\common\services\entities\PostService;
@@ -205,6 +204,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
+			[ $config->id, 'blog_email', 'Blog Email', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Blog Email to receive Blog specific emails.","placeholder":"Blog Email"}' ],
 			[ $config->id, 'page_comment','Page Comment', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable comments on pages. It can also be set for individual pages from Edit Page."}' ],
 			[ $config->id, 'article_comment','Article Comment', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable comments on articles. It can also be set for individual articles from Edit Article."}' ],
 			[ $config->id, 'post_comment','Post Comment', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable/disable comments on posts. It can also be set for individual pages from Edit Post."}' ],
@@ -222,6 +222,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas	= [
+			[ $this->site->id, 'blog_email', 'Blog Email', CmsGlobal::CONFIG_BLOG, 1, 'text', NULL, NULL ],
 			[ $this->site->id, 'page_comment', 'Page Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
 			[ $this->site->id, 'article_comment', 'Article Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
 			[ $this->site->id, 'post_comment', 'Post Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '1', NULL ],

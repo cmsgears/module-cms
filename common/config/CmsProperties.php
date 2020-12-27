@@ -21,6 +21,11 @@ class CmsProperties extends \cmsgears\core\common\config\Properties {
 	// Global -----------------
 
 	/**
+	 * The property to receive blog specific emails.
+	 */
+	const PROP_BLOG_EMAIL = 'blog_email';
+
+	/**
 	 * The property to find whether comments are enabled at page level.
 	 */
 	const PROP_COMMENT_PAGE = 'page_comment';
@@ -92,6 +97,14 @@ class CmsProperties extends \cmsgears\core\common\config\Properties {
 	// CMG parent classes --------------------
 
 	// CmsProperties -------------------------
+
+	/**
+	 * Returns blog email required to send blog specific emails.
+	 */
+	public function getBlogEmail() {
+
+		return $this->properties[ self::PROP_BLOG_EMAIL ];
+	}
 
 	/**
 	 * Returns whether comments are required for pages.
