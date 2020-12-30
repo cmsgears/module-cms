@@ -345,19 +345,6 @@ class FormService extends \cmsgears\forms\common\services\resources\FormService 
 
 	// Create -------------
 
-	public function create( $model, $config = [] ) {
-
-		$modelClass = static::$modelClass;
-
-		// Default Private
-		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
-
-		// Default New
-		$model->status = $model->status ?? $modelClass::STATUS_NEW;
-
-		return parent::create( $model, $config );
-	}
-
 	public function add( $model, $config = [] ) {
 
 		return $this->register( $model, $config );
