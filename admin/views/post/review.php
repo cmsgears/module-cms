@@ -1,10 +1,8 @@
 <?php
-// Yii Imports
-use yii\widgets\ActiveForm;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\widgets\popup\Popup;
 

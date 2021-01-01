@@ -28,13 +28,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'popular' => 'Popular', 'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
 	],
 	'filters' => [
-		'status' => [
-			'new' => 'New', 'submitted' => 'Submitted', 're-submitted' => 'Re Submitted',
-			'rejected' => 'Rejected', 'active' => 'Active',
-			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
-			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
-			'terminated' => 'Terminated'
-		],
+		'status' => $filterStatusMap,
 		'model' => [
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
 		]

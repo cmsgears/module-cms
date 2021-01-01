@@ -134,7 +134,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$subStatusMap
+			'statusMap' => $modelClass::$subStatusMap,
+			'filterStatusMap' => $modelClass::$filterSubStatusMap
 		]);
 	}
 
