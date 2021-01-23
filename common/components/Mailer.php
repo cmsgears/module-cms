@@ -47,10 +47,15 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$author = $post->creator;
+		$user = $post->user;
 
-		$name	= $author->getName();
-		$email	= $author->email;
+		$name	= $user->getName();
+		$email	= $user->email;
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_POST_CREATE, [ 'coreProperties' => $this->coreProperties, 'post' => $post, 'name' => $name, 'email' => $email ] )
@@ -66,10 +71,15 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$author = $post->creator;
+		$user = $post->user;
 
-		$name	= $author->getName();
-		$email	= $author->email;
+		$name	= $user->getName();
+		$email	= $user->email;
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_POST_REGISTER, [ 'coreProperties' => $this->coreProperties, 'post' => $post, 'name' => $name, 'email' => $email ] )
@@ -85,10 +95,15 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$author = $page->creator;
+		$user = $page->user;
 
-		$name	= $author->getName();
-		$email	= $author->email;
+		$name	= $user->getName();
+		$email	= $user->email;
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_PAGE_REGISTER, [ 'coreProperties' => $this->coreProperties, 'page' => $page, 'name' => $name, 'email' => $email ] )

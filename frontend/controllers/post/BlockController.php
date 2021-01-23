@@ -90,8 +90,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\BlockController
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_BLOCK;
 			$model->templateId	= $template->id;
-			$model->backend		= false;
-			$model->frontend	= true;
+			$model->userId		= $user->id;
 			$model->shared		= false;
 
 			// Files

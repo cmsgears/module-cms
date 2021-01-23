@@ -42,8 +42,6 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectDataCont
 		parent::init();
 
 		// Config
-		$this->backend		= true;
-		$this->frontend		= false;
 		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;

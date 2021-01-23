@@ -42,8 +42,6 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectDataCo
 		parent::init();
 
 		// Config
-		$this->backend		= true;
-		$this->frontend		= false;
 		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;

@@ -150,7 +150,8 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 
 		if( isset( $template ) ) {
 
-			$model = new $modelClass;
+			$user	= Yii::$app->core->getUser();
+			$model	= new $modelClass;
 
 			// Block
 			$model->siteId		= Yii::$app->core->siteId;
@@ -158,8 +159,7 @@ class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_BLOCK;
 			$model->templateId	= $template->id;
-			$model->backend		= false;
-			$model->frontend	= true;
+			$model->userId		= $user->id;
 			$model->shared		= true;
 
 			// Files

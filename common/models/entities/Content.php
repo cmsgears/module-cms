@@ -42,6 +42,7 @@ use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\PageMeta;
@@ -76,6 +77,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $avatarId
  * @property integer $parentId
  * @property integer $createdBy
@@ -226,7 +228,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'pinned', 'featured', 'popular', 'comments', 'gridCacheValid' ], 'boolean' ],
 			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -248,6 +250,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
@@ -279,9 +282,16 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 
 		if( parent::beforeSave( $insert ) ) {
 
-			if( $this->parentId <= 0 ) {
+			// Default Parent
+			if( empty( $this->parentId ) || $this->parentId <= 0 ) {
 
 				$this->parentId = null;
+			}
+
+			// Default User
+			if( empty( $this->userId ) || $this->userId <= 0 ) {
+
+				$this->userId = null;
 			}
 
 			// Default Status - New
@@ -315,6 +325,16 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Validators ----------------------------
 
 	// Content -------------------------------
+
+	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return \cmsgears\core\common\models\entities\User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
 
 	/**
 	 * Returns the immediate parent.
@@ -365,7 +385,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -380,9 +400,9 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public static function queryWithAuthor( $config = [] ) {
 
-		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'creator' ];
+		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'user' ];
 
-		$config[ 'relations' ][] = [ 'creator.avatar'  => function ( $query ) {
+		$config[ 'relations' ][] = [ 'user.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 			$query->from( "$fileTable avatar" ); }
 		];

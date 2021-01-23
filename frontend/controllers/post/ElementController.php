@@ -90,8 +90,7 @@ class ElementController extends \cmsgears\cms\frontend\controllers\ElementContro
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= CmsGlobal::TYPE_ELEMENT;
 			$model->templateId	= $template->id;
-			$model->backend		= false;
-			$model->frontend	= true;
+			$model->userId		= $user->id;
 			$model->shared		= false;
 
 			// Files

@@ -329,9 +329,24 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 			]);
 		}
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( isset( $model->userId ) && $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->userId ];
+
+			$config[ 'data' ][ 'message' ] = 'Article status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	// Delete -------------
@@ -386,9 +401,7 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$user = $model->creator;
-
-		$config[ 'users' ] = isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $user->id ];
+		$config[ 'users' ] = isset( $config[ 'users' ] ) ? $config[ 'users' ] : ( isset( $model->userId ) ? [ $model->userId ] : [] );
 
 		return parent::applyBulk( $model, $column, $action, $target, $config );
 	}

@@ -154,10 +154,12 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		if( isset( $template ) ) {
 
-			$model = new $modelClass;
+			$user	= Yii::$app->core->getUser();
+			$model	= new $modelClass;
 
 			// Post
 			$model->siteId		= Yii::$app->core->siteId;
+			$model->userId		= $user->id;
 			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 			$model->status		= $modelClass::STATUS_NEW;
 			$model->type		= $this->type;

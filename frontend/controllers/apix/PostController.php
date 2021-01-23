@@ -285,7 +285,10 @@ class PostController extends \cmsgears\core\frontend\controllers\apix\base\Contr
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			// Comments
-			'submit-comment' => [ 'class' => 'cmsgears\core\common\actions\comment\Comment' ],
+			'submit-comment' => [
+				'class' => 'cmsgears\core\common\actions\comment\Comment', 'notifyAdmin' => true,
+				'notifyAdminUrl' => 'cms/post/comment/update'
+			],
 			// Community
 			'like' => [ 'class' => 'cmsgears\core\common\actions\follower\Like' ]
 		];

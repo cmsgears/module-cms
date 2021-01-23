@@ -37,8 +37,6 @@ class BlockController extends \cmsgears\cms\admin\controllers\base\BlockControll
 		parent::init();
 
 		// Config
-		$this->backend	= true;
-		$this->frontend	= false;
 		$this->shared	= true;
 		$this->apixBase = 'cms/block';
 		$this->baseUrl	= 'block';

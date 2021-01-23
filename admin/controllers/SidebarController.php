@@ -42,8 +42,6 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectDataC
 		parent::init();
 
 		// Config
-		$this->backend		= true;
-		$this->frontend		= false;
 		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
