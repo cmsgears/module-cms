@@ -34,7 +34,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 	// Public -----------------
 
-	public $basePath;
+	public $adminUrl;
 
 	public $tagWidgetSlug;
 
@@ -66,8 +66,8 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		// Config
 		$this->apixBase		= 'cms/post';
-		$this->baseUrl		= 'cms/post';
-		$this->basePath		= '/cms/post/default';
+		$this->baseUrl		= 'cms/post/default';
+		$this->adminUrl		= 'cms/post';
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->parentType	= CmsGlobal::TYPE_POST;
 		$this->templateType	= CmsGlobal::TYPE_POST;
@@ -443,14 +443,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 				if( $model->status < $modelClass::STATUS_SUBMITTED ) {
 
 					$this->modelService->submit( $model, [
-						'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
+						'adminLink' => "{$this->adminUrl}/review?id={$model->id}"
 					]);
 				}
 				// Re-Submitted for review after rejection
 				else if( $model->isRejected() ) {
 
 					$this->modelService->reSubmit( $model, [
-						'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
+						'adminLink' => "{$this->adminUrl}/review?id={$model->id}"
 					]);
 				}
 				// Activation Request to uplift block or freeze
@@ -461,14 +461,14 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 					if( $model->isFrojen() ) {
 
 						$this->modelService->upliftFreeze( $model, [
-							'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
+							'adminLink' => "{$this->adminUrl}/review?id={$model->id}"
 						]);
 					}
 
 					if( $model->isBlocked() ) {
 
 						$this->modelService->upliftBlock( $model, [
-							'adminLink' => "{$this->baseUrl}/review?id={$model->id}"
+							'adminLink' => "{$this->adminUrl}/review?id={$model->id}"
 						]);
 					}
 				}
@@ -511,43 +511,43 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 			case $modelClass::STATUS_NEW: {
 
-				return $this->redirect( [ "$this->basePath/basic?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/basic?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_BASIC: {
 
-				return $this->redirect( [ "$this->basePath/media?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/media?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_MEDIA: {
 
-				return $this->redirect( [ "$this->basePath/elements?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/elements?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_ELEMENTS: {
 
-				return $this->redirect( [ "$this->basePath/blocks?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/blocks?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_BLOCKS: {
 
-				return $this->redirect( [ "$this->basePath/attributes?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/attributes?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_ATTRIBUTES: {
 
-				return $this->redirect( [ "$this->basePath/settings?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/settings?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_SETTINGS: {
 
-				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/review?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_REJECTED: {
 
-				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/review?slug=$model->slug" ] );
 			}
 			case $modelClass::STATUS_RE_SUBMIT: {
 
-				return $this->redirect( [ "$this->basePath/review?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/review?slug=$model->slug" ] );
 			}
 			default: {
 
-				return $this->redirect( [ "$this->basePath/basic?slug=$model->slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/basic?slug=$model->slug" ] );
 			}
 		}
 	}
@@ -559,7 +559,7 @@ class DefaultController extends \cmsgears\cms\frontend\controllers\base\Controll
 
 		if( !$model->isEditable() ) {
 
-			Yii::$app->getResponse()->redirect( [ "$this->basePath/review?slug=$model->slug" ] )->send();
+			Yii::$app->getResponse()->redirect( [ "/{$this->baseUrl}/review?slug=$model->slug" ] )->send();
 		}
 	}
 
