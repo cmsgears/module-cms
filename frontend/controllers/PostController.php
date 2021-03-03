@@ -37,6 +37,9 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 	// Public -----------------
 
+	public $adminUrl;
+	public $allUrl;
+
 	public $metaService;
 
 	// Protected --------------
@@ -67,9 +70,12 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		// Config
 		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
-		$this->baseUrl	= '/cms/post';
 		$this->apixBase	= 'cms/post';
-		$this->route	= 'blog';
+		$this->baseUrl	= 'cms/post';
+		$this->adminUrl	= 'cms/post';
+		$this->allUrl	= '/cms/post/all';
+
+		$this->route = 'blog';
 
 		$this->type			= CmsGlobal::TYPE_POST;
 		$this->parentType	= CmsGlobal::TYPE_POST;
@@ -87,7 +93,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'posts' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/post/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ $this->allUrl ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -164,7 +170,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			if( isset( $template ) ) {
 
-				return $this->redirect( [ "{$this->baseUrl}/{$template->slug}/home?slug=$slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/{$template->slug}/home?slug=$slug" ] );
 			}
 
 			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
@@ -190,7 +196,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 
 			if( isset( $template ) ) {
 
-				return $this->redirect( [ "{$this->baseUrl}/{$template->slug}/review?slug=$slug" ] );
+				return $this->redirect( [ "/{$this->baseUrl}/{$template->slug}/review?slug=$slug" ] );
 			}
 
 			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
@@ -301,7 +307,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Model not found
+		// Error - Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
@@ -349,7 +355,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Model not found
+		// Error - Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
@@ -407,13 +413,13 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// No user & Protected/Private
 			if( empty( $user ) && $model->isVisibilityProtected( false ) ) {
 
-				// Error- Not allowed
+				// Error - Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
 			// Published
 			else if( !$model->isPublished() ) {
 
-				// Error- No access
+				// Error - No access
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
@@ -459,7 +465,7 @@ class PostController extends \cmsgears\cms\frontend\controllers\base\Controller 
 						'metaService' => $this->metaService,
 						'template' => $template,
 						'model' => $model,
-						'author' => $model->createdBy,
+						'author' => $model->user,
 						'content' => $content,
 						'banner' => $content->banner
 					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
