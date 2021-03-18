@@ -199,6 +199,8 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'seoKeywords' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'seoRobot' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'seoSchema' => $this->text(),
+			'createdAt' => $this->dateTime(),
+			'modifiedAt' => $this->dateTime(),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),

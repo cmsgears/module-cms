@@ -11,6 +11,8 @@ namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 
@@ -54,6 +56,8 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property string $seoKeywords
  * @property string $seoRobot
  * @property string $seoSchema
+ * @property date $createdAt
+ * @property date $modifiedAt
  * @property date $publishedAt
  * @property string $content
  * @property string $data
@@ -94,6 +98,21 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 
 	// yii\base\Component -----
 
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
+
+		return [
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
+
 	// yii\base\Model ---------
 
 	/**
@@ -113,7 +132,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 			// Other
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'bannerId', 'mbannerId', 'videoId', 'mvideoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		// Trim Text
