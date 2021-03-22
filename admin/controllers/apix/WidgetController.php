@@ -14,6 +14,8 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 /**
@@ -21,13 +23,15 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class WidgetController extends \cmsgears\core\admin\controllers\base\Controller {
+class WidgetController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -44,6 +48,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		// Service
 		$this->modelService = Yii::$app->factory->get( 'widgetService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -60,6 +66,8 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
@@ -86,9 +94,9 @@ class WidgetController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'backend' => true ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

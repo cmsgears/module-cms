@@ -12,9 +12,7 @@ namespace cmsgears\cms\common\models\entities;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\entities\ObjectData;
-
-class Widget extends ObjectData {
+class Widget extends \cmsgears\core\common\models\entities\ObjectData {
 
 	// Variables ---------------------------------------------------
 
@@ -33,6 +31,8 @@ class Widget extends ObjectData {
 	// Protected --------------
 
 	protected $modelType = CmsGlobal::TYPE_WIDGET;
+
+	protected $testOwner = true;
 
 	// Private ----------------
 

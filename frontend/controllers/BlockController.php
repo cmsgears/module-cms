@@ -11,23 +11,22 @@ namespace cmsgears\cms\frontend\controllers;
 
 // Yii Imports
 use Yii;
+use yii\helpers\Url;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\cms\common\models\entities\Block;
-use cmsgears\cms\common\models\mappers\ModelBlock;
-use cmsgears\core\common\models\resources\Gallery;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-// EC Imports
-use empathyconnects\core\common\config\CoreGlobal;
-use empathyconnects\cms\common\config\CmsGlobal;
+use cmsgears\core\common\models\resources\File;
 
 /**
- * PageController consist of actions specific to site pages.
+ * BlockController consist of actions specific to blocks.
  *
  * @since 1.0.0
  */
-class BlockController extends Controller {
+class BlockController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -35,26 +34,37 @@ class BlockController extends Controller {
 
 	// Public -----------------
 
-    public $blockService;
-    public $modelBlockService;
-    public $galleryService;
-    public $modelGalleryService;
-
 	// Protected --------------
+
+	protected $templateService;
+
+	protected $modelBlockService;
 
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->blockService         = Yii::$app->factory->get( 'blockService' );
-        $this->modelBlockService    = Yii::$app->factory->get( 'modelBlockService' );
-        $this->galleryService       = Yii::$app->factory->get( 'galleryService' );
-        $this->modelGalleryService  = Yii::$app->factory->get( 'modelGalleryService' );
-    }
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
+
+		// Config
+		$this->apixBase	= 'cms/block';
+
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'blockService' );
+
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
+
+		$this->modelBlockService = Yii::$app->factory->get( 'modelBlockService' );
+
+		// Return Url
+		$this->returnUrl = Url::previous( 'blocks' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/cms/block/all' ], true );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -64,83 +74,170 @@ class BlockController extends Controller {
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'add' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover', 'owner' ] ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::class,
+				'actions' => [
+					'index' => [ 'get' ],
+					'all' => [ 'get' ],
+					'add' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ]
+				]
+			]
+		];
+	}
+
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// ContentController ---------------------
+	// BlockController -----------------------
 
-    public function actionCreate( $slug ) {
+	public function actionAll( $status = null ) {
 
-        $post   = $this->modelService->getBySlug( $slug, true );
+		Url::remember( Yii::$app->request->getUrl(), 'blocks' );
 
-        $this->view->params[ 'model' ]  = $post;
+		$modelClass = $this->modelService->getModelClass();
+		$modelTable = $this->modelService->getModelTable();
 
-        $this->view->params[ 'step' ]   = 'content';
+		$user = Yii::$app->core->getUser();
 
-        if( isset( $post ) ) {
+		$dataProvider = null;
 
-            $model          = new Block();
-            $modelBlock     = new ModelBlock();
+		if( isset( $status ) ) {
 
-            $model->siteId  = Yii::$app->core->site->id;
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [
+				'conditions' => [ "$modelTable.type" => CmsGlobal::TYPE_BLOCK ],
+				'status' => $modelClass::$urlRevStatusMap[ $status ]
+			]);
+		}
+		else {
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+			$dataProvider = $this->modelService->getPageByOwnerId( $user->id, [
+				'conditions' => [ "$modelTable.type" => CmsGlobal::TYPE_BLOCK ]
+			]);
+		}
 
-                $this->blockService->create( $model );
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider,
+			'statusMap' => $modelClass::$statusMap,
+			'status' => $status
+		]);
+	}
 
-                $modelBlock->modelId    = $model->id;
-                $modelBlock->parentId   = $post->id;
-                $modelBlock->parentType = $post->type;
+    public function actionAdd( $pid = null, $ptype = null, $template = CoreGlobal::TEMPLATE_DEFAULT ) {
 
-                $this->modelBlockService->create( $modelBlock );
+		$template	= $this->templateService->getBySlugType( $template, CmsGlobal::TYPE_BLOCK );
+		$modelClass	= $this->modelService->getModelClass();
 
-                // Create Gallery
-                $gallery            = new Gallery();
-                $gallery->name      = $model->name;
-                $gallery->siteId    = Yii::$app->core->siteId;
-                $modelGallery       = $this->modelGalleryService->create( $gallery, [ 'parentId' => $model->id, 'parentType' => CmsGlobal::TYPE_BLOG_CONTENT ] );
+		if( empty( $template ) ) {
 
-                return $this->redirect( [ "update?slug=$model->slug&pslug=$post->slug" ] );
-            }
+			$template = $this->templateService->getBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_BLOCK );
+		}
 
-            return $this->render( 'create', [
-                'model' => $model,
-                'post' => $post
-            ] );
-        }
+		if( isset( $template ) ) {
 
-        // Error- Page not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+			$user	= Yii::$app->core->getUser();
+			$model	= new $modelClass;
 
-    public function actionUpdate( $slug, $pslug ) {
+			// Block
+			$model->siteId		= Yii::$app->core->siteId;
+			$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
+			$model->status		= $modelClass::STATUS_NEW;
+			$model->type		= CmsGlobal::TYPE_BLOCK;
+			$model->templateId	= $template->id;
+			$model->userId		= $user->id;
+			$model->shared		= true;
 
-        $post   = $this->modelService->getBySlug( $pslug, true );
-        $model  = $this->blockService->getBySlug( $slug );
+			// Files
+			$avatar	= File::loadFile( null, 'Avatar' );
+			$banner	= File::loadFile( null, 'Banner' );
+			$video	= File::loadFile( null, 'Video' );
 
-        $this->view->params[ 'model' ]  = $post;
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-        $this->view->params[ 'step' ]   = 'content';
+				// Register Model
+				$this->model = $this->modelService->register( $model, [
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video,
+					'addGallery' => true
+				]);
 
-        if( isset( $post ) && isset( $model ) ) {
+				if( $this->model ) {
 
-            $model      = $this->blockService->getBySlug( $slug, true );
+					return $this->redirect( $this->returnUrl );
+				}
+			}
 
-            $gallery    = $this->galleryService->getBySlug( $model->slug, true );
+			$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+			return $this->render( 'add', [
+				'model' => $model,
+				'avatar' => $avatar,
+				'banner' => $banner,
+				'video' => $video,
+				'statusMap' => $modelClass::$baseStatusMap,
+				'templatesMap' => $templatesMap
+			]);
+		}
 
-                $this->blockService->update( $model );
-            }
+		// Template not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+	}
 
-            return $this->render( 'update', [
-                'model' => $model,
-                'post' => $post,
-                'gallery' => $gallery
-            ] );
-        }
-    }
+	public function actionUpdate( $id ) {
+
+		$modelClass = $this->modelService->getModelClass();
+
+		// Model
+		$model = $this->model;
+
+		$template = $model->template;
+
+		// Files
+		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
+		$banner	= File::loadFile( $model->banner, 'Banner' );
+		$video	= File::loadFile( $model->video, 'Video' );
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+			// Update Model
+			$model = $this->modelService->update( $model, [
+				'admin' => true, 'oldTemplate' => $template,
+				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+			]);
+
+			// Refresh Model
+			$model->refresh();
+
+			// Set model in action to cache
+			$this->model = $model;
+
+			return $this->redirect( $this->returnUrl );
+		}
+
+		$templatesMap = $this->templateService->getFrontendIdNameMapByType( CmsGlobal::TYPE_BLOCK, [ 'default' => true ] );
+
+		return $this->render( 'update', [
+			'model' => $model,
+			'avatar' => $avatar,
+			'banner' => $banner,
+			'video' => $video,
+			'statusMap' => $modelClass::$baseStatusMap,
+			'templatesMap' => $templatesMap
+		]);
+	}
+
 }

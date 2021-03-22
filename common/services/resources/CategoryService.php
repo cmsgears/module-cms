@@ -14,19 +14,19 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
+
+use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\resources\ICategoryService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
-
-use cmsgears\core\common\services\resources\CategoryService as BaseCategoryService;
 
 /**
  * CategoryService provide service methods of category model.
  *
  * @since 1.0.0
  */
-class CategoryService extends BaseCategoryService implements ICategoryService {
+class CategoryService extends \cmsgears\core\common\services\resources\CategoryService implements ICategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -76,6 +76,11 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -152,6 +157,12 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 	                'default' => SORT_DESC,
 	                'label' => 'Featured'
 	            ],
+	            'popular' => [
+	                'asc' => [ "$modelTable.popular" => SORT_ASC ],
+	                'desc' => [ "$modelTable.popular" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Popular'
+	            ],
 	            'order' => [
 	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
@@ -171,9 +182,7 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -185,35 +194,45 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = $modelClass::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		// Filters ----------
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "modelContent.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
 			'content' => "modelContent.content",
+			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular",
+			'order' => "$modelTable.order",
 			'pname' => 'parent.name',
 			'pdesc' => 'parent.description',
 			'rname' => 'root.name',
@@ -239,17 +258,42 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function create( $model, $config = [] ) {
 
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$widgetSlug	= isset( $config[ 'widgetSlug' ] ) ? $config[ 'widgetSlug' ] : null;
+
+		// Model content is required for all the tags to form tag page
+		if( !isset( $content ) ) {
+
+			$content = new ModelContent();
+		}
+
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		$this->copyTemplate( $model, $config );
+
 		$model = parent::create( $model, $config );
 
-		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
-
-		if( isset( $content ) ) {
+		if( $model ) {
 
 			$config[ 'parent' ]		= $model;
-			$config[ 'parentType' ]	= CoreGlobal::TYPE_CATEGORY;
-			$config[ 'publish' ]	= true;
+			$config[ 'parentType' ]	= static::$parentType;
+			$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->create( $content, $config );
+
+			if( isset( $widgetSlug ) ) {
+
+				$categoryWidget = Yii::$app->factory->get( 'widgetService' )->getBySlugType( $widgetSlug, CmsGlobal::TYPE_WIDGET );
+
+				if( isset( $categoryWidget ) ) {
+
+					Yii::$app->factory->get( 'modelWidgetService' )->createByParams([
+						'modelId' => $categoryWidget->id, 'type' => CmsGlobal::TYPE_WIDGET,
+						'parentId' => $model->id, 'parentType' => static::$parentType
+					]);
+				}
+			}
 		}
 
 		return $model;
@@ -259,13 +303,29 @@ class CategoryService extends BaseCategoryService implements ICategoryService {
 
 	public function update( $model, $config = [] ) {
 
-		$model = parent::update( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
+
+		// Copy Template
+		if( isset( $content ) ) {
+
+			$config[ 'template' ] = $content->template;
+
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
+		}
+
+		$model = parent::update( $model, $config );
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ] = true;
+			$config[ 'publish' ] = isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->update( $content, $config );
 		}

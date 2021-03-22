@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\services\entities;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -21,16 +22,12 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
-use cmsgears\cms\common\services\base\ContentService;
-
-use cmsgears\core\common\services\traits\base\FeaturedTrait;
-
 /**
  * PageService provide service methods of page model.
  *
  * @since 1.0.0
  */
-class PageService extends ContentService implements IPageService {
+class PageService extends \cmsgears\cms\common\services\base\ContentService implements IPageService {
 
 	// Variables ---------------------------------------------------
 
@@ -58,8 +55,6 @@ class PageService extends ContentService implements IPageService {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -89,34 +84,6 @@ class PageService extends ContentService implements IPageService {
 
 	// Read - Models ---
 
-	public function getMenuPages( $ids, $map = false ) {
-
-		if( count( $ids ) > 0 ) {
-
-			$modelClass	= static::$modelClass;
-
-			if( $map ) {
-
-				$pages = $modelClass::find()->filterWhere( [ 'in', 'id', $ids ] )->all();
-
-				$pageMap = [];
-
-				foreach( $pages as $page ) {
-
-					$pageMap[ $page->id ] = $page;
-				}
-
-				return $pageMap;
-			}
-			else {
-
-				return $modelClass::find()->andFilterWhere( [ 'in', 'id', $ids ] )->all();
-			}
-		}
-
-		return [];
-	}
-
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -129,16 +96,8 @@ class PageService extends ContentService implements IPageService {
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
-		$modelClass = static::$modelClass;
-
 		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
-
-		// Default Private
-		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
-
-		// Default New
-		$model->status = $model->status ?? $modelClass::STATUS_NEW;
 
 		// Create Model
 		return parent::create( $model, $config );
@@ -153,7 +112,9 @@ class PageService extends ContentService implements IPageService {
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -165,24 +126,30 @@ class PageService extends ContentService implements IPageService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -190,7 +157,9 @@ class PageService extends ContentService implements IPageService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -208,22 +177,24 @@ class PageService extends ContentService implements IPageService {
 	public function register( $model, $config = [] ) {
 
 		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$mail	= isset( $config[ 'mail' ] ) ? $config[ 'mail' ] : true;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : Yii::$app->core->getUser();
 
 		$modelClass = static::$modelClass;
 
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
-		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/page/review';
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/page/review';
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
 		$galleryClass = $galleryService->getModelClass();
-
-		$user = Yii::$app->core->getUser();
 
 		$registered	= false;
 
@@ -231,24 +202,30 @@ class PageService extends ContentService implements IPageService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -256,7 +233,9 @@ class PageService extends ContentService implements IPageService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			$transaction->commit();
@@ -275,11 +254,16 @@ class PageService extends ContentService implements IPageService {
 			// Notify Site Admin
 			if( $notify ) {
 
-				// Trigger Notification
-				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_PAGE_REGISTER,
-					[ 'model' => $model, 'service' => $this, 'user' => $user ],
-					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
-				);
+				$this->notifyAdmin( $model, [
+					'template' => CmsGlobal::TPL_NOTIFY_PAGE_NEW,
+					'adminLink' => "{$adminLink}?id={$model->id}"
+				]);
+			}
+
+			// Email Post Admin
+			if( $mail ) {
+
+				Yii::$app->cmsMailer->sendRegisterPageMail( $model );
 			}
 		}
 
@@ -296,7 +280,9 @@ class PageService extends ContentService implements IPageService {
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -307,10 +293,22 @@ class PageService extends ContentService implements IPageService {
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured', 'comments'
+				'status', 'order', 'pinned', 'featured', 'popular', 'comments'
 			]);
 		}
 
+		// Copy Template
+		if( isset( $content ) ) {
+
+			$config[ 'template' ] = $content->template;
+
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
@@ -327,7 +325,10 @@ class PageService extends ContentService implements IPageService {
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 		}
 
@@ -348,11 +349,14 @@ class PageService extends ContentService implements IPageService {
 
 			try {
 
-				// Delete metas
+				// Delete Meta
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete files
-				$this->fileService->deleteFiles( $model->files );
+				$this->fileService->deleteMultiple( ArrayHelper::merge( $model->files, [ $model->avatar ] ) );
+
+				// Delete File Mappings of Shared Files
+				Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
 
 				// Delete Model Content
 				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
@@ -366,10 +370,8 @@ class PageService extends ContentService implements IPageService {
 				// Delete Followers
 				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
 
+				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 

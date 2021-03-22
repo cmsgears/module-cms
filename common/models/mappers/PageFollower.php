@@ -10,25 +10,15 @@
 namespace cmsgears\cms\common\models\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\Follower;
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\entities\Content;
 
 /**
  * PageFollower represents interest of user in page or post.
  *
- * @property int $id
- * @property int $modelId
- * @property int $parentId
- * @property string $type
- * @property boolean $active
- * @property int $createdAt
- * @property int $modifiedAt
- * @property string data
- *
- * @since 1.0.0
+ * @inheritdoc
  */
-class PageFollower extends Follower {
+class PageFollower extends \cmsgears\core\common\models\base\Follower {
 
 	// Variables ---------------------------------------------------
 

@@ -7,9 +7,6 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// CMG Imports
-use cmsgears\core\common\base\Migration;
-
 /**
  * The cms index migration inserts the recommended indexes for better performance. It
  * also list down other possible index commented out. These indexes can be created using
@@ -17,7 +14,7 @@ use cmsgears\core\common\base\Migration;
  *
  * @since 1.0.0
  */
-class m160623_065815_cms_index extends Migration {
+class m160623_065815_cms_index extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -60,6 +57,7 @@ class m160623_065815_cms_index extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type', $this->prefix . 'cms_model_content', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_type_p', $this->prefix . 'cms_model_content', 'parentType' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_content_piptt', $this->prefix . 'cms_model_content', [ 'parentId', 'parentType', 'type' ] );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'cms_model_content' . ' ADD INDEX ' . '`idx_' . $this->prefix . 'model_content_pub` ' . '(`publishedAt` DESC)' );
 	}
 
 	public function down() {

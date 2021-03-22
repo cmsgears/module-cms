@@ -21,8 +21,6 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\behaviors\ActivityBehavior;
-
 /**
  * FormController provides actions specific to form model.
  *
@@ -35,6 +33,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -62,6 +62,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->type			= CoreGlobal::TYPE_FORM;
 		$this->templateType	= CoreGlobal::TYPE_FORM;
 		$this->apixBase		= 'cms/form';
+		$this->title		= 'Form';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
@@ -86,6 +87,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
+			'attributes' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
 			'config' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
@@ -106,26 +108,18 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$behaviors[ 'rbac' ][ 'actions' ][ 'gallery' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
 		$behaviors[ 'verbs' ][ 'actions' ][ 'gallery' ] = [ 'get' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
-		$behaviors[ 'activity' ] = [
-			'class' => ActivityBehavior::class,
-			'admin' => true,
-			'create' => [ 'create' ],
-			'update' => [ 'update' ],
-			'delete' => [ 'delete' ]
-		];
-
 		return $behaviors;
 	}
-
-	// yii\base\Controller ----
 
 	// yii\base\Controller ----
 
@@ -133,10 +127,11 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		$actions = parent::actions();
 
-		$actions[ 'gallery' ]	= [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
-		$actions[ 'data' ]		= [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
-		$actions[ 'config' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
-		$actions[ 'settings' ]	= [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\gallery\Manage' ];
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\cms\common\actions\data\attributes\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\cms\common\actions\data\setting\Form' ];
 
 		return $actions;
 	}
@@ -184,7 +179,10 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 				'banner' => $banner, 'video' => $video
 			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -210,7 +208,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content = $model->modelContent;
+			$content	= $model->modelContent;
+			$template	= $content->template;
 
 			$banner	= File::loadFile( $content->banner, 'Banner' );
 			$video	= File::loadFile( $content->video, 'Video' );
@@ -219,7 +218,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\CrudControlle
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
+					'admin' => true, 'content' => $content, 'publish' => $model->isActive(), 'oldTemplate' => $template,
 					'banner' => $banner, 'video' => $video
 				]);
 

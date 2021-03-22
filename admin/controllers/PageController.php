@@ -59,6 +59,7 @@ class PageController extends \cmsgears\cms\admin\controllers\base\PageController
 			'delete' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Pages', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];

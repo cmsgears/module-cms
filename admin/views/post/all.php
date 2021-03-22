@@ -6,9 +6,9 @@ use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
 $title			= $this->context->title;
-$this->title	= $title . 's | ' . $coreProperties->getSiteTitle();
-$baseUrl		= $this->context->baseUrl;
+$this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$baseUrl		= $this->context->baseUrl;
 $comments		= $this->context->comments;
 
 // View Templates
@@ -18,15 +18,20 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'baseUrl' => $baseUrl, 'add' => true, 'addUrl' => 'create', 'data' => [ 'comments' => $comments ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'summary' => 'Summary', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description',
+		'summary' => 'Summary', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status', 'template' => 'Template',
 		'visibility' => 'Visibility', 'order' => 'Order', 'pinned' => 'Pinned', 'featured' => 'Featured',
-		'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
+		'popular' => 'Popular', 'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured' ]
+		'status' => $filterStatusMap,
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -38,14 +43,22 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'confirmed' => 'Confirm', 'rejected' => 'Reject', 'active' => 'Activate', 'frozen' => 'Freeze', 'blocked' => 'Block' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'status' => [
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x2', 'x2', null, null, null, 'x2', 'x2' ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x3', 'x2', null, null, null, null, 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
@@ -56,8 +69,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->modelContent->getTemplateName(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
-		'publishedAt'=>[ 'title' => 'Published At', 'generate' => function( $model ) { return $model->modelContent->publishedAt; } ],
+		//'publishedAt' =>[ 'title' => 'Published At', 'generate' => function( $model ) { return $model->modelContent->publishedAt; } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

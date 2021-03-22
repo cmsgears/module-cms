@@ -10,14 +10,14 @@
 namespace cmsgears\cms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 
 /**
  * IBlockService declares methods specific to block model.
  *
  * @since 1.0.0
  */
-interface IBlockService extends IObjectService {
+interface IBlockService extends IObjectDataService {
 
 	// Data Provider ------
 

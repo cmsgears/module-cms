@@ -46,6 +46,7 @@ class ArticleController extends \cmsgears\cms\admin\controllers\base\PageControl
 		$this->type			= CmsGlobal::TYPE_ARTICLE;
 		$this->templateType	= CmsGlobal::TYPE_ARTICLE;
 		$this->apixBase		= 'cms/article';
+		$this->title		= 'Article';
 		$this->comments		= true;
 
 		// Services
@@ -69,6 +70,7 @@ class ArticleController extends \cmsgears\cms\admin\controllers\base\PageControl
 			'delete' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Articles', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
@@ -88,7 +90,7 @@ class ArticleController extends \cmsgears\cms\admin\controllers\base\PageControl
 
 	// CMG parent classes --------------------
 
-	// PostController ------------------------
+	// ArticleController ---------------------
 
 	public function actionAll( $config = [] ) {
 

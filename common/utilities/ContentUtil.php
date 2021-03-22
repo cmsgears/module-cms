@@ -57,6 +57,7 @@ class ContentUtil {
 			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $model->description;
 			$view->params[ 'keywords' ]	= $content->seoKeywords;
 			$view->params[ 'robot' ]	= $content->seoRobot;
+			$view->params[ 'schema' ]	= isset( $content->seoSchema ) ?  $content->seoSchema : null;
 
 			// SEO - Page Title
 			$siteTitle		= $coreProperties->getSiteTitle();
@@ -163,6 +164,7 @@ class ContentUtil {
 			$view->params[ 'desc' ]		= isset( $content->seoDescription ) ? $content->seoDescription : $model->description;
 			$view->params[ 'keywords' ]	= $content->seoKeywords;
 			$view->params[ 'robot' ]	= $content->seoRobot;
+ 			$view->params[ 'schema' ]	= isset( $content->seoSchema ) ?  $content->seoSchema : null;
 
 			// SEO - Page Title
 			$siteTitle		= $coreProperties->getSiteTitle();

@@ -10,14 +10,14 @@
 namespace cmsgears\cms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 
 /**
  * IMenuService declares methods specific to menu model.
  *
  * @since 1.0.0
  */
-interface IMenuService extends IObjectService {
+interface IMenuService extends IObjectDataService {
 
 	// Data Provider ------
 

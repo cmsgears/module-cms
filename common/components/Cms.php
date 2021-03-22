@@ -21,7 +21,7 @@ use cmsgears\cms\common\models\entities\Post;
  *
  * @since 1.0.0
  */
-class Cms extends \cmsgears\core\common\base\Component {
+class Cms extends \cmsgears\core\common\base\Config {
 
 	// Global -----------------
 
@@ -59,6 +59,11 @@ class Cms extends \cmsgears\core\common\base\Component {
 		$this->pageMap[ CmsGlobal::TYPE_PAGE ]		= Page::class;
 		$this->pageMap[ CmsGlobal::TYPE_ARTICLE ]	= Article::class;
 		$this->pageMap[ CmsGlobal::TYPE_POST ]		= Post::class;
+	}
+
+	public function addToPageMap( $key, $value ) {
+
+		$this->pageMap[ $key ] = $value;
 	}
 
 	public function getPageClass( $type ) {

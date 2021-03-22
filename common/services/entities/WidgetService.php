@@ -14,14 +14,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\entities\IWidgetService;
 
-use cmsgears\core\common\services\entities\ObjectDataService;
-
 /**
  * WidgetService provide service methods of widget model.
  *
  * @since 1.0.0
  */
-class WidgetService extends ObjectDataService implements IWidgetService {
+class WidgetService extends \cmsgears\core\common\services\entities\ObjectDataService implements IWidgetService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,9 +29,9 @@ class WidgetService extends ObjectDataService implements IWidgetService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Widget';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Widget';
 
-	public static $parentType	= CmsGlobal::TYPE_WIDGET;
+	public static $parentType = CmsGlobal::TYPE_WIDGET;
 
 	// Protected --------------
 

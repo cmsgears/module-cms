@@ -44,7 +44,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Config
 		$this->type		= CmsGlobal::TYPE_ARTICLE;
-		$this->apixBase = 'cms/article/template';
+		$this->apixBase = 'cms/page/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'article-template' ];
@@ -61,7 +61,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 			'all' => [ [ 'label' => 'Article Templates' ] ],
 			'create' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'data' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Article Templates', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

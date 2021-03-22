@@ -5,35 +5,46 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Sidebars | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$baseUrl		= $this->context->baseUrl;
 
 // View Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description' ],
+	'dataProvider' => $dataProvider, 'baseUrl' => $baseUrl, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
 		'visibility' => 'Visibility',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ]
+		'status' => $filterStatusMap
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
-		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ]
+		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
+		'order' => [ 'title' => 'Order', 'type' => 'range' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'confirmed' => 'Confirm', 'rejected' => 'Reject', 'active' => 'Activate', 'frozen' => 'Freeze', 'blocked' => 'Block' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'status' => [
+			'activate' => 'Activate', 'block' => 'Block',
+			'terminate' => 'Terminate'
+		],
+		'model' => [
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x4', 'x2', null, null, 'x2' ] ],
@@ -59,11 +70,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Sidebar', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ])?>
 
 <?= Popup::widget([
-	'title' => 'Delete Sidebar', 'size' => 'medium',
+	'title' => "Delete $title", 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'Sidebar', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ])?>

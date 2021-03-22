@@ -16,18 +16,22 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\cms\common\config\CmsGlobal;
+
 /**
  * ElementController provides actions specific to element model.
  *
  * @since 1.0.0
  */
-class ElementController extends \cmsgears\core\admin\controllers\base\Controller {
+class ElementController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -40,10 +44,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CmsGlobal::PERM_BLOG_ADMIN;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'elementService' );
+
+		$this->metaService = Yii::$app->factory->get( 'objectMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -60,6 +66,8 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					// Avatar
 					'assign-avatar' => [ 'permission' => $this->crudPermission ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission ],
@@ -132,7 +140,7 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 
 		return [
 			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\ObjectSearch', 'backend' => true ],
 			// Avatar
 			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
@@ -143,8 +151,8 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear' ],
 			// Files
-			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign' ],
-			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear' ],
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Assign' ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Clear' ],
 			// Gallery
 			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update' ],
 			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read' ],
@@ -152,12 +160,12 @@ class ElementController extends \cmsgears\core\admin\controllers\base\Controller
 			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ],
 			// Metas
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta' ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta' ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

@@ -25,7 +25,9 @@ interface IFormService extends IBaseFormService {
 
 	// Read - Models ---
 
-	public function getWithContent( $id, $slug = null );
+	public function getWithContentById( $id, $config = [] );
+
+	public function getWithContentBySlug( $slug, $config = [] );
 
 	// Read - Lists ----
 

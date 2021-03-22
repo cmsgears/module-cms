@@ -61,7 +61,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 			'all' => [ [ 'label' => 'Page Templates' ] ],
 			'create' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'data' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Page Templates', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

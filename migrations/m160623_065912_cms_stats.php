@@ -8,8 +8,6 @@
  */
 
 // CMG Imports
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\resources\Stats;
 use cmsgears\cms\common\models\base\CmsTables;
 
@@ -19,7 +17,7 @@ use cmsgears\cms\common\models\base\CmsTables;
  *
  * @since 1.0.0
  */
-class m160623_065912_cms_stats extends Migration {
+class m160623_065912_cms_stats extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -32,10 +30,10 @@ class m160623_065912_cms_stats extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
-		$this->options		= Yii::$app->migration->getTableOptions();
+		$this->options = Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -58,7 +56,9 @@ class m160623_065912_cms_stats extends Migration {
 			[ $this->prefix . 'cms_page', 'rows', 0 ],
 			[ $this->prefix . 'cms_page_meta', 'rows', 0 ],
 			[ $this->prefix . 'cms_page_follower', 'rows', 0 ],
-			[ $this->prefix . 'cms_model_content', 'rows', 0 ]
+			[ $this->prefix . 'cms_model_content', 'rows', 0 ],
+			[ $this->prefix . 'cms_link', 'rows', 0 ],
+			[ $this->prefix . 'cms_model_link', 'rows', 0 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_stats', $columns, $tableData );
@@ -70,6 +70,8 @@ class m160623_065912_cms_stats extends Migration {
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_META ) );
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_FOLLOWER ) );
 		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT ) );
+		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_LINK ) );
+		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK ) );
 	}
 
 }

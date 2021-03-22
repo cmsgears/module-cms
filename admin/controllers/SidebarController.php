@@ -21,13 +21,15 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectController {
+class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectDataController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -40,9 +42,12 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 		parent::init();
 
 		// Config
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_SIDEBAR;
 		$this->templateType = CmsGlobal::TYPE_SIDEBAR;
 		$this->apixBase		= 'cms/sidebar';
+		$this->baseUrl		= 'sidebar';
+		$this->title		= 'Sidebar';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'sidebarService' );
@@ -63,8 +68,10 @@ class SidebarController extends \cmsgears\cms\admin\controllers\base\ObjectContr
 			'create' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'data' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Sidebars', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

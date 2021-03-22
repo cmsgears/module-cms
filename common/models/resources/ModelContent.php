@@ -11,20 +11,24 @@ namespace cmsgears\cms\common\models\resources;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 
-use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\core\common\models\base\ModelResource;
 use cmsgears\core\common\models\resources\Gallery;
+
+use cmsgears\cms\common\models\base\CmsTables;
 
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
@@ -37,16 +41,23 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property integer $id
  * @property integer $templateId
  * @property integer $bannerId
+ * @property integer $mbannerId
  * @property integer $videoId
+ * @property integer $mvideoId
  * @property integer $galleryId
  * @property integer $parentId
  * @property string $parentType
  * @property string $type
  * @property string $summary
+ * @property string $classPath
+ * @property string $viewPath
  * @property string $seoName
  * @property string $seoDescription
  * @property string $seoKeywords
  * @property string $seoRobot
+ * @property string $seoSchema
+ * @property date $createdAt
+ * @property date $modifiedAt
  * @property date $publishedAt
  * @property string $content
  * @property string $data
@@ -87,6 +98,21 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 
 	// yii\base\Component -----
 
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
+
+		return [
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
+
 	// yii\base\Model ---------
 
 	/**
@@ -98,14 +124,15 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		$rules = [
 			// Required, Safe
 			// [ [ 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id', 'summary', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'summary', 'content', 'data', 'seoSchema' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'classPath', 'viewPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'bannerId', 'videoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'publishedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'bannerId', 'mbannerId', 'videoId', 'mvideoId', 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'publishedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		// Trim Text
@@ -127,16 +154,21 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		return [
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'mbannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER_M ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'mvideoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO_M ),
 			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
+			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
+			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'seoName' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_NAME ),
 			'seoDescription' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_DESCRIPTION ),
 			'seoKeywords' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_KEYWORDS ),
 			'seoRobot' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_ROBOT ),
+			'seoSchema' => Yii::$app->cmsMessage->getMessage( CmsGlobal::FIELD_SEO_SCHEMA ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
@@ -186,9 +218,9 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 	 * @param integer $limit
 	 * @return string
 	 */
-	public function getLimitedSummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getLimitedSummary( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
-		$summary = $this->summary;
+		$summary = strip_tags( $this->summary );
 
 		if( strlen( $summary ) > $limit ) {
 
@@ -204,9 +236,9 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 	 * @param integer $limit
 	 * @return string
 	 */
-	public function getLimitedContent( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getLimitedContent( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
-		$content = $this->content;
+		$content = strip_tags( $this->content );
 
 		if( strlen( $content ) > $limit ) {
 
@@ -216,7 +248,7 @@ class ModelContent extends ModelResource implements IData, ITemplate, IVisual {
 		return HtmlPurifier::process( $content );
 	}
 
-	public function getDisplaySummary( $limit = CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+	public function getDisplaySummary( $limit = CoreGlobal::TEXT_MEDIUM ) {
 
 		if( empty( $this->summary ) || strlen( $this->summary ) < 10 ) {
 

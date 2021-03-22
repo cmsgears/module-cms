@@ -37,7 +37,9 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 		parent::init();
 
 		// Config
+		$this->shared	= true;
 		$this->apixBase	= 'cms/element';
+		$this->baseUrl	= 'element';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'uelement' ];
@@ -57,6 +59,7 @@ class ElementController extends \cmsgears\cms\admin\controllers\base\ElementCont
 			'delete' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Elements', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];

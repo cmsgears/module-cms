@@ -11,7 +11,6 @@ namespace cmsgears\cms\common\models\mappers;
 
 // CMG Imports
 use cmsgears\cms\common\models\base\CmsTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\cms\common\models\resources\Link;
 
 /**
@@ -27,7 +26,7 @@ use cmsgears\cms\common\models\resources\Link;
  *
  * @since 1.0.0
  */
-class ModelLink extends ModelMapper {
+class ModelLink extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

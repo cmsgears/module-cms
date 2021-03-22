@@ -10,14 +10,14 @@
 namespace cmsgears\cms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 
 /**
  * IWidgetService declares methods specific to widget model.
  *
  * @since 1.0.0
  */
-interface IWidgetService extends IObjectService {
+interface IWidgetService extends IObjectDataService {
 
 	// Data Provider ------
 

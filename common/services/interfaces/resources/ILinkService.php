@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\IName;
 
 /**
@@ -18,7 +19,7 @@ use cmsgears\core\common\services\interfaces\base\IName;
  *
  * @since 1.0.0
  */
-interface ILinkService extends IResourceService, IName {
+interface ILinkService extends IResourceService, IMultiSite, IName {
 
 	// Data Provider ------
 

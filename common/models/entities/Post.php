@@ -34,10 +34,12 @@ class Post extends Content implements ICategory, ITab, ITag {
 	// Constants --------------
 
 	// Pre-Defined Status
-	const STATUS_BASIC		=  20;
+	const STATUS_BASIC		=  10;
 	const STATUS_MEDIA		=  40;
-	const STATUS_ATTRIBUTES	= 480;
-	const STATUS_SETTINGS	= 490;
+	const STATUS_ELEMENTS	=  60;
+	const STATUS_BLOCKS		=  80;
+	const STATUS_ATTRIBUTES	= 470;
+	const STATUS_SETTINGS	= 480;
 	const STATUS_REVIEW		= 499;
 
 	// Public -----------------
@@ -64,15 +66,37 @@ class Post extends Content implements ICategory, ITab, ITag {
 
 	public function init() {
 
-		parent::init();
+		$this->tabStatus = [
+			'basic' => self::STATUS_BASIC, 'media' => self::STATUS_MEDIA,
+			'elements' => self::STATUS_ELEMENTS, 'blocks' => self::STATUS_BLOCKS,
+			'attributes' => self::STATUS_ATTRIBUTES,
+			'settings' => self::STATUS_SETTINGS, 'review' => self::STATUS_REVIEW
+		];
 
-		$this->tabStatus	= [ 'basic' => self::STATUS_BASIC, 'media' => self::STATUS_MEDIA, 'attributes' => self::STATUS_ATTRIBUTES, 'settings' => self::STATUS_SETTINGS, 'review' => self::STATUS_REVIEW ];
+		$this->nextStatus = [
+			self::STATUS_NEW => self::STATUS_BASIC, self::STATUS_BASIC => self::STATUS_MEDIA,
+			self::STATUS_MEDIA => self::STATUS_ELEMENTS, self::STATUS_ELEMENTS => self::STATUS_BLOCKS,
+			self::STATUS_BLOCKS => self::STATUS_ATTRIBUTES,
+			self::STATUS_ATTRIBUTES => self::STATUS_SETTINGS, self::STATUS_SETTINGS => self::STATUS_REVIEW
+		];
 
-		$this->nextStatus	= [ self::STATUS_BASIC => self::STATUS_MEDIA, self::STATUS_MEDIA => self::STATUS_ATTRIBUTES, self::STATUS_ATTRIBUTES => self::STATUS_SETTINGS, self::STATUS_SETTINGS => self::STATUS_REVIEW ];
+		$this->previousTab = [
+			'media' => 'basic',
+			'elements' => 'media',
+			'blocks' => 'elements',
+			'attributes' => 'blocks',
+			'settings' => 'attributes',
+			'review' => 'settings'
+		];
 
-		$this->previousTab	= [ 'media' => 'basic', 'attributes' => 'media', 'settings' => 'attributes', 'review' => 'settings' ];
-
-		$this->nextTab		= [ 'basic' => 'media', 'media' => 'attributes', 'attributes' => 'settings', 'settings' => 'review' ];
+		$this->nextTab = [
+			'basic' => 'media',
+			'media' => 'elements',
+			'elements' => 'blocks',
+			'blocks' => 'attributes',
+			'attributes' => 'settings',
+			'settings' => 'review'
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -127,6 +151,8 @@ class Post extends Content implements ICategory, ITab, ITag {
 
 Post::$statusMap[ Post::STATUS_BASIC ]		= 'Basic';
 Post::$statusMap[ Post::STATUS_MEDIA ]		= 'Media';
+Post::$statusMap[ Post::STATUS_ELEMENTS ]	= 'Elements';
+Post::$statusMap[ Post::STATUS_BLOCKS ]		= 'Blocks';
 Post::$statusMap[ Post::STATUS_ATTRIBUTES ]	= 'Attributes';
 Post::$statusMap[ Post::STATUS_SETTINGS ]	= 'Settings';
 Post::$statusMap[ Post::STATUS_REVIEW ]		= 'Review';

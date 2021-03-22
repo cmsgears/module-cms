@@ -16,25 +16,36 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'parentPath' => $parentPath ],
 	'title' => 'Categories', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description',
+		'summary' => 'Summary', 'content' => 'Content'
+	],
 	'sortColumns' => [
-		'name' => 'Name', 'title' => 'Title',
-		'order' => 'Order', 'pinned' => 'Pinned', 'featured' => 'Featured'
+		'name' => 'Name', 'title' => 'Title', 'order' => 'Order',
+		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
 	],
 	'filters' => [
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'top' => 'Top Level' ]
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'top' => 'Top Level'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'summary' => [ 'title' => 'Summary', 'type' => 'text' ],
 		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x2', 'x2', 'x2', null, null, null, 'x2' ] ],
@@ -57,16 +68,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/category",
 	//'cardView' => "$moduleTemplates/grid/cards/category",
 	'actionView' => "$moduleTemplates/grid/actions/category"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Category', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Category', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Category', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

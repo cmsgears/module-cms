@@ -36,6 +36,8 @@ interface IModelContentService extends IModelResourceService, IVisual {
 
 	// Update -------------
 
+	public function publish( $model, $config = [] );
+
 	// Delete -------------
 
 	// Bulk ---------------

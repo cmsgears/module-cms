@@ -21,13 +21,15 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectController {
+class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectDataController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -40,9 +42,12 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 		parent::init();
 
 		// Config
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_MENU;
 		$this->templateType = CmsGlobal::TYPE_MENU;
 		$this->apixBase		= 'cms/menu';
+		$this->baseUrl		= 'menu';
+		$this->title		= 'Menu';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'menuService' );
@@ -63,8 +68,10 @@ class MenuController extends \cmsgears\cms\admin\controllers\base\ObjectControll
 			'create' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
-			'data' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'data' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Menus', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

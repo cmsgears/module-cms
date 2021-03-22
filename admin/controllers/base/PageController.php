@@ -20,8 +20,6 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\behaviors\ActivityBehavior;
-
 /**
  * PageController provides actions specific to page model.
  *
@@ -37,6 +35,10 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 	public $title;
 	public $comments;
+
+	public $tagWidgetSlug;
+
+	public $parentType;
 
 	public $metaService;
 
@@ -65,6 +67,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		// Config
 		$this->type			= CmsGlobal::TYPE_PAGE;
+		$this->parentType	= CmsGlobal::TYPE_PAGE;
 		$this->templateType	= CmsGlobal::TYPE_PAGE;
 		$this->comments		= false;
 
@@ -100,14 +103,6 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
-		$behaviors[ 'activity' ] = [
-			'class' => ActivityBehavior::class,
-			'admin' => true,
-			'create' => [ 'create' ],
-			'update' => [ 'update' ],
-			'delete' => [ 'delete' ]
-		];
-
 		return $behaviors;
 	}
 
@@ -116,7 +111,7 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 	public function actions() {
 
 		return [
-			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ],
+			'gallery' => [ 'class' => 'cmsgears\cms\common\actions\gallery\Manage' ],
 			'data' => [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ],
 			'attributes' => [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ],
 			'config' => [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ],
@@ -139,7 +134,8 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap,
+			'filterStatusMap' => $modelClass::$filterSubStatusMap
 		]);
 	}
 
@@ -155,9 +151,11 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 		$content = $this->modelContentService->getModelObject();
 
-		$avatar	= File::loadFile( null, 'Avatar' );
-		$banner	= File::loadFile( null, 'Banner' );
-		$video	= File::loadFile( null, 'Video' );
+		$avatar		= File::loadFile( null, 'Avatar' );
+		$banner		= File::loadFile( null, 'Banner' );
+		$mbanner	= File::loadFile( null, 'MobileBanner' );
+		$video		= File::loadFile( null, 'Video' );
+		$mvideo		= File::loadFile( null, 'MobileVideo' );
 
 		if( isset( $this->parentModel ) ) {
 
@@ -168,11 +166,16 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			$model->validate() && $content->validate() ) {
 
 			$this->model = $this->modelService->add( $model, [
-				'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-				'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'admin' => true, 'content' => $content,
+				'publish' => $model->isActive(), 'avatar' => $avatar,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo
 			]);
 
-			return $this->redirect( $this->returnUrl );
+			if( $this->model ) {
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -182,9 +185,11 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 			'content' => $content,
 			'avatar' => $avatar,
 			'banner' => $banner,
+			'mbanner' => $mbanner,
 			'video' => $video,
+			'mvideo' => $mvideo,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap,
+			'statusMap' => $modelClass::$subStatusMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -199,18 +204,23 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$content = $model->modelContent;
+			$content	= $model->modelContent;
+			$template	= $content->template;
 
-			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
-			$banner	= File::loadFile( $content->banner, 'Banner' );
-			$video	= File::loadFile( $content->video, 'Video' );
+			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
+			$banner		= File::loadFile( $content->banner, 'Banner' );
+			$mbanner	= File::loadFile( $content->mobileBanner, 'MobileBanner' );
+			$video		= File::loadFile( $content->video, 'Video' );
+			$mvideo		= File::loadFile( $content->mobileVideo, 'MobileVideo' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'content' => $content, 'publish' => $model->isActive(),
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+					'admin' => true, 'content' => $content,
+					'publish' => $model->isActive(), 'oldTemplate' => $template,
+					'avatar' => $avatar, 'banner' => $banner, 'mbanner' => $mbanner,
+					'video' => $video, 'mvideo' => $mvideo
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -218,15 +228,21 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
+			$tagTemplate	= $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
+			$tagTemplateId	= isset( $tagTemplate ) ? $tagTemplate->id : null;
+
 			return $this->render( 'update', [
 				'model' => $model,
 				'content' => $content,
 				'avatar' => $avatar,
 				'banner' => $banner,
+				'mbanner' => $mbanner,
 				'video' => $video,
+				'mvideo' => $mvideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
-				'templatesMap' => $templatesMap
+				'statusMap' => $modelClass::$subStatusMap,
+				'templatesMap' => $templatesMap,
+				'tagTemplateId' => $tagTemplateId
 			]);
 		}
 
@@ -269,9 +285,11 @@ abstract class PageController extends \cmsgears\core\admin\controllers\base\Crud
 				'content' => $content,
 				'avatar' => $model->avatar,
 				'banner' => $content->banner,
+				'mbanner' => $content->mobileBanner,
 				'video' => $content->video,
+				'mvideo' => $content->mobileVideo,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
+				'statusMap' => $modelClass::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

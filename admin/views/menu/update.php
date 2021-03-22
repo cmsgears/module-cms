@@ -11,8 +11,9 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Menu | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap row max-cols-100">
 	<div class="box-crud-wrap-main colf colf3x2">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-sidebar', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -21,7 +22,7 @@ $apixBase		= $this->context->apixBase;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
@@ -32,7 +33,7 @@ $apixBase		= $this->context->apixBase;
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -40,7 +41,7 @@ $apixBase		= $this->context->apixBase;
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -48,12 +49,17 @@ $apixBase		= $this->context->apixBase;
 							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => "core/object-data/auto-search" ] ) ?>
 						</div>
 					</div>
 				</div>

@@ -20,12 +20,11 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Page | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $apixBase		= $this->context->apixBase;
-
-$parentName = isset( $model->parent ) ? $model->parent->name : null;
+$parentName		= isset( $model->parent ) ? $model->parent->name : null;
 
 Editor::widget();
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap row max-cols-100">
 	<div class="box-crud-wrap-main colf colf3x2">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -34,7 +33,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
@@ -45,7 +44,7 @@ Editor::widget();
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -53,7 +52,7 @@ Editor::widget();
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -61,31 +60,39 @@ Editor::widget();
 							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'comments' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
 						</div>
 						<div class="col col3">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
-							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+							<?= $form->field( $content, 'publishedAt' )->textInput( [ 'class' => 'datetimepicker' ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'parentId', [ 'placeholder' => 'Parent', 'icon' => 'cmti cmti-search', 'type' => $model->type, 'value' => $parentName, 'url' => 'cms/page/auto-search' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= TextureChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= $form->field( $content, 'classPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $content, 'viewPath' ) ?>
 						</div>
 					</div>
 				</div>
@@ -98,22 +105,29 @@ Editor::widget();
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row padding padding-small-v">
-						<div class="col col12x4">
+					<div class="row max-cols-50 padding padding-small-v">
+						<div class="col col12x3">
 							<label>Avatar</label>
 							<?= AvatarUploader::widget([
 								'model' => $avatar, 'clearAction' => true,
 								'clearActionUrl' => "$apixBase/clear-avatar?slug=$model->slug&type=$model->type"
 							])?>
 						</div>
-						<div class="col col12x4">
+						<div class="col col12x3">
 							<label>Banner</label>
 							<?= ImageUploader::widget([
 								'model' => $banner, 'clearAction' => true,
 								'clearActionUrl' => "$apixBase/clear-banner?slug=$model->slug&type=$model->type"
 							])?>
 						</div>
-						<div class="col col12x4">
+						<div class="col col12x3">
+							<label>Mobile Banner</label>
+							<?= ImageUploader::widget([
+								'model' => $mbanner, 'modelClass' => 'MobileBanner', 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-mbanner?slug=$model->slug&type=$model->type"
+							])?>
+						</div>
+						<div class="col col12x3">
 							<label>Video</label>
 							<?= VideoUploader::widget([
 								'model' => $video, 'clearAction' => true,
@@ -153,7 +167,7 @@ Editor::widget();
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoName' ) ?>
 						</div>
@@ -161,12 +175,17 @@ Editor::widget();
 							<?= $form->field( $content, 'seoRobot' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $content, 'seoKeywords' )->textarea() ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $content, 'seoDescription' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col1">
+							<?= $form->field( $content, 'seoSchema' )->textarea() ?>
 						</div>
 					</div>
 				</div>

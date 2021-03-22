@@ -108,7 +108,7 @@ trait PageContentTrait {
 	 */
 	public static function queryWithContent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template' ];
+		$config[ 'relations' ] = [ 'modelContent', 'modelContent.template' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -121,7 +121,7 @@ trait PageContentTrait {
 	 */
 	public static function queryWithFullContent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template', 'modelContent.banner', 'modelContent.video', 'modelContent.gallery' ];
+		$config[ 'relations' ] = [ 'modelContent', 'modelContent.template', 'modelContent.banner', 'modelContent.video', 'modelContent.gallery' ];
 
 		return parent::queryWithAll( $config );
 	}

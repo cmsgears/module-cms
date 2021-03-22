@@ -16,8 +16,6 @@ use Yii;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 use cmsgears\core\common\services\traits\resources\VisualTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
@@ -28,7 +26,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class ModelContentService extends ModelResourceService implements IModelContentService {
+class ModelContentService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelContentService {
 
 	// Variables ---------------------------------------------------
 
@@ -97,7 +95,9 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$parent		= $config[ 'parent' ];
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo		= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		// Publish
@@ -111,7 +111,10 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		$model->parentType	= $config[ 'parentType' ];
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'bannerId' => $banner, 'mbannerId' => $mbanner,
+			'videoId' => $video, 'mvideoId' => $mvideo
+		]);
 
 		// Link gallery
 		if( isset( $gallery ) && $gallery->id > 0 ) {
@@ -128,8 +131,16 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo		= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
+		$attributes = [
+			'templateId', 'bannerId', 'mbannerId', 'videoId', 'mvideoId', 'galleryId',
+			'summary', 'classPath', 'viewPath', 'content', 'publishedAt',
+			'seoName', 'seoDescription', 'seoKeywords', 'seoRobot', 'seoSchema'
+		];
 
 		// Publish
 		if( $publish && empty( $model->publishedAt ) ) {
@@ -138,17 +149,30 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 		}
 
 		// Save resources
-		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'bannerId' => $banner, 'mbannerId' => $mbanner,
+			'videoId' => $video, 'mvideoId' => $mvideo
+		]);
 
 		// Link gallery
-		if( empty( $model->galleryId ) ) {
+		if( empty( $model->galleryId ) && isset( $gallery ) ) {
 
 			$this->linkModel( $model, 'galleryId', $gallery );
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'bannerId', 'videoId', 'galleryId', 'summary', 'content', 'publishedAt', 'seoName', 'seoDescription', 'seoKeywords', 'seoRobot' ]
+			'attributes' => $attributes
 		]);
+	}
+
+	public function publish( $model, $config = [] ) {
+
+		if( empty( $model->publishedAt ) ) {
+
+			$model->publishedAt	= DateUtil::getDateTime();
+		}
+
+		return parent::update( $model, [ 'attributes' => [ 'publishedAt' ] ] );
 	}
 
 	// Delete -------------
@@ -156,7 +180,10 @@ class ModelContentService extends ModelResourceService implements IModelContentS
 	public function delete( $model, $config = [] ) {
 
 		// Delete resources
-		$this->fileService->deleteMultiple( [ $model->banner, $model->video ] );
+		$this->fileService->deleteMultiple([
+			$model->banner, $model->mobileBanner,
+			$model->video, $model->mobileVideo
+		]);
 
 		// Delete Gallery
 		if( isset( $model->gallery ) ) {

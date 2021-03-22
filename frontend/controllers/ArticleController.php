@@ -18,24 +18,25 @@ use yii\web\UnauthorizedHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Article;
-
-use cmsgears\cms\frontend\controllers\base\Controller;
 
 /**
  * ArticleController provides actions specific to article pages.
  *
  * @since 1.0.0
  */
-class ArticleController extends Controller {
+class ArticleController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -57,6 +58,7 @@ class ArticleController extends Controller {
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'articleService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
@@ -84,6 +86,7 @@ class ArticleController extends Controller {
 				'actions' => [
 					'all' => [ 'get' ],
 					'search' => [ 'get' ],
+					'author' => [ 'get' ],
 					'single' => [ 'get' ]
 				]
 			]
@@ -114,10 +117,11 @@ class ArticleController extends Controller {
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
-		$user			= Yii::$app->user->getIdentity();
-		$dataProvider 	= null;
+		$user = Yii::$app->core->getUser();
+
+		$dataProvider = null;
 
 		if( isset( $status ) ) {
 
@@ -141,14 +145,25 @@ class ArticleController extends Controller {
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_ARTICLES, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'article/search', 'searchContent' => true
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -156,12 +171,50 @@ class ArticleController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 	}
 
-	public function actionSingle( $slug ) {
+	public function actionAuthor( $slug ) {
 
-		$user	= Yii::$app->core->getUser();
-		$model	= $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
+		$author = Yii::$app->factory->get( 'userService' )->getBySlug( $slug );
+
+		if( isset( $author ) ) {
+
+			// View Params
+			$this->view->params[ 'model' ] = $author;
+
+			$data = json_decode( $author->data );
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
+
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_ARTICLE );
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'author' => $author,
+					'template' => $template
+				]);
+			}
+
+			// Error - Template not defined
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
+		}
+
+		// Error- Post not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionSingle( $slug, $amp = false ) {
+
+		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_ARTICLE );
 
 		if( isset( $model ) ) {
+
+			$this->model = $model;
+
+			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
 			if( empty( $user ) && $model->isVisibilityProtected() ) {
@@ -177,7 +230,14 @@ class ArticleController extends Controller {
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			// Find Template
 			$content	= $model->modelContent;
@@ -192,12 +252,30 @@ class ArticleController extends Controller {
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
+				}
 			}
 
 			// Error - Template not defined

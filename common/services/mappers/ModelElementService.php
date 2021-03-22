@@ -12,14 +12,12 @@ namespace cmsgears\cms\common\services\mappers;
 // CMG Imports
 use cmsgears\cms\common\services\interfaces\mappers\IModelElementService;
 
-use cmsgears\core\common\services\mappers\ModelObjectService;
-
 /**
  * ModelElementService provide service methods of model element mapper.
  *
  * @since 1.0.0
  */
-class ModelElementService extends  ModelObjectService implements IModelElementService {
+class ModelElementService extends \cmsgears\core\common\services\mappers\ModelObjectService implements IModelElementService {
 
 	// Variables ---------------------------------------------------
 

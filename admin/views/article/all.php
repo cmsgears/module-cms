@@ -5,25 +5,33 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Articles | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
+$baseUrl		= $this->context->baseUrl;
+$comments		= $this->context->comments;
 
 // View Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'summary' => 'Summary', 'content' => 'Content' ],
+	'dataProvider' => $dataProvider, 'baseUrl' => $baseUrl, 'add' => true, 'addUrl' => 'create', 'data' => [ 'comments' => $comments ],
+	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description',
+		'summary' => 'Summary', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status', 'template' => 'Template',
 		'visibility' => 'Visibility', 'order' => 'Order', 'pinned' => 'Pinned', 'featured' => 'Featured',
-		'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
+		'popular' => 'Popular', 'cdate' => 'Created At', 'udate' => 'Updated At', 'pdate' => 'Published At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured' ]
+		'status' => $filterStatusMap,
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -35,11 +43,18 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'confirmed' => 'Confirm', 'rejected' => 'Reject', 'active' => 'Activate', 'frozen' => 'Freeze', 'blocked' => 'Block' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+		'status' => [
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', null, null, null, 'x2', 'x2' ] ],
@@ -61,16 +76,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/article",
 	//'cardView' => "$moduleTemplates/grid/cards/article",
 	'actionView' => "$moduleTemplates/grid/actions/article"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Article', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+])?>
 
 <?= Popup::widget([
-	'title' => 'Delete Article', 'size' => 'medium',
+	'title' => "Delete $title", 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'Article', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+])?>

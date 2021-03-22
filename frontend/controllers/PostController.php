@@ -12,24 +12,24 @@ namespace cmsgears\cms\frontend\controllers;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Post;
-
-use cmsgears\cms\frontend\controllers\base\Controller;
 
 /**
  * PostController consist of actions specific to blog posts.
  *
  * @since 1.0.0
  */
-class PostController extends Controller {
+class PostController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +37,20 @@ class PostController extends Controller {
 
 	// Public -----------------
 
+	public $adminUrl;
+	public $allUrl;
+
+	public $metaService;
+
 	// Protected --------------
+
+	protected $route;
+
+	protected $type;
+	protected $parentType;
+	protected $templateType;
+
+	protected $searchPage;
 
 	protected $templateService;
 
@@ -56,15 +69,31 @@ class PostController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->apixBase	= 'cms/post';
+		$this->baseUrl	= 'cms/post';
+		$this->adminUrl	= 'cms/post';
+		$this->allUrl	= '/cms/post/all';
+
+		$this->route = 'blog';
+
+		$this->type			= CmsGlobal::TYPE_POST;
+		$this->parentType	= CmsGlobal::TYPE_POST;
+		$this->templateType	= CmsGlobal::TYPE_POST;
+		$this->searchPage	= CmsGlobal::PAGE_SEARCH_POSTS;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'postService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 		$this->tagService		= Yii::$app->factory->get( 'tagService' );
+
+		// Return Url
+		$this->returnUrl = Url::previous( 'posts' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ $this->allUrl ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -81,13 +110,16 @@ class PostController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// secure actions
+					'home' => [ 'permission' => $this->crudPermission ],
+					'review' => [ 'permission' => $this->crudPermission ],
 					'all' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'home' => [ 'get' ],
+					'review' => [ 'get' ],
 					'all' => [ 'get' ],
 					'search' => [ 'get' ],
 					'category' => [ 'get' ],
@@ -121,6 +153,58 @@ class PostController extends Controller {
 
 	// PostController ------------------------
 
+	/**
+	 * Redirects user to appropriate page according to the status.
+	 */
+	public function actionHome( $slug ) {
+
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
+
+		$user	= Yii::$app->core->getUser();
+		$model	= $this->modelService->getFirstBySlug( $slug );
+
+		if( isset( $model ) && $model->isOwner( $user ) ) {
+
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			if( isset( $template ) ) {
+
+				return $this->redirect( [ "/{$this->baseUrl}/{$template->slug}/home?slug=$slug" ] );
+			}
+
+			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
+		}
+
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	/**
+	 * Redirects user to review page according to the status.
+	 */
+	public function actionReview( $slug ) {
+
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
+
+		$user	= Yii::$app->core->getUser();
+		$model	= $this->modelService->getFirstBySlug( $slug );
+
+		if( isset( $model ) && $model->isOwner( $user ) ) {
+
+			$content	= $model->modelContent;
+			$template	= $content->template;
+
+			if( isset( $template ) ) {
+
+				return $this->redirect( [ "/{$this->baseUrl}/{$template->slug}/review?slug=$slug" ] );
+			}
+
+			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
+		}
+
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
 	public function actionAll( $status = null ) {
 
 		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
@@ -140,26 +224,38 @@ class PostController extends Controller {
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
+			'statusMap' => Post::$statusMap,
 			'status' => $status
 		]);
 	}
 
 	public function actionSearch() {
 
-		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_POST );
+		$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->templateType );
 
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_POSTS, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( $this->searchPage, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
-				'route' => 'blog/search', 'searchContent' => true,
+				'route' => "{$this->route}/search", 'searchContent' => true,
 				'searchCategory' => true, 'searchTag' => true
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -169,7 +265,7 @@ class PostController extends Controller {
 
 	public function actionCategory( $slug ) {
 
-		$category = $this->categoryService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$category = $this->categoryService->getBySlugType( $slug, $this->parentType );
 
 		if( isset( $category ) ) {
 
@@ -179,16 +275,31 @@ class PostController extends Controller {
 			// View Params
 			$this->view->params[ 'model' ] = $category;
 
+			$data = json_decode( $category->data );
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
+
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_CATEGORY, $this->templateType );
 			}
 
 			if( isset( $template ) ) {
 
+				$dataProvider = $this->modelService->getPageForSearch([
+					'category' => $category,
+					'route' => "{$this->route}/category/$category->slug"
+				]);
+
 				return Yii::$app->templateManager->renderViewCategory( $template, [
-					'category' => $category
+					'dataProvider' => $dataProvider,
+					'category' => $category,
+					'template' => $template
 				]);
 			}
 
@@ -196,13 +307,13 @@ class PostController extends Controller {
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Post not found
+		// Error - Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionTag( $slug ) {
 
-		$tag = $this->tagService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$tag = $this->tagService->getBySlugType( $slug, $this->parentType );
 
 		if( isset( $tag ) ) {
 
@@ -212,16 +323,31 @@ class PostController extends Controller {
 			// View Params
 			$this->view->params[ 'model' ] = $tag;
 
+			$data = json_decode( $tag->data );
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
+
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_TAG, $this->templateType );
 			}
 
 			if( isset( $template ) ) {
 
+				$dataProvider = $this->modelService->getPageForSearch([
+					'tag' => $tag,
+					'route' => "{$this->route}/tag/$tag->slug"
+				]);
+
 				return Yii::$app->templateManager->renderViewTag( $template, [
-					'tag' => $tag
+					'dataProvider' => $dataProvider,
+					'tag' => $tag,
+					'template' => $template
 				]);
 			}
 
@@ -229,7 +355,7 @@ class PostController extends Controller {
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Post not found
+		// Error - Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
@@ -242,12 +368,27 @@ class PostController extends Controller {
 			// View Params
 			$this->view->params[ 'model' ] = $author;
 
-			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, CmsGlobal::TYPE_POST );
+			$data = json_decode( $author->data );
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
+
+			$template = $this->templateService->getGlobalBySlugType( CmsGlobal::TEMPLATE_AUTHOR, $this->templateType );
 
 			if( isset( $template ) ) {
 
+				$dataProvider = $this->modelService->getPageForSearch([
+					'author' => $author,
+					'route' => "{$this->route}/author/$author->slug"
+				]);
+
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'author' => $author
+					'dataProvider' => $dataProvider,
+					'author' => $author,
+					'template' => $template
 				]);
 			}
 
@@ -255,33 +396,42 @@ class PostController extends Controller {
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Post not found
+		// Error- Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionSingle( $slug ) {
+	public function actionSingle( $slug, $amp = false ) {
 
-		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_POST );
+		$model = $this->modelService->getFirstBySlug( $slug );
 
 		if( isset( $model ) ) {
+
+			$this->model = $model;
 
 			$user = Yii::$app->core->getUser();
 
 			// No user & Protected/Private
 			if( empty( $user ) && $model->isVisibilityProtected( false ) ) {
 
-				// Error- Not allowed
+				// Error - Not allowed
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
 			// Published
 			else if( !$model->isPublished() ) {
 
-				// Error- No access
+				// Error - No access
 				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			// Find Template
 			$content	= $model->modelContent;
@@ -290,25 +440,43 @@ class PostController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_POST );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->templateType );
 			}
 
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->user,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
+				}
 			}
 
 			// Error - Template not defined
 			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_TEMPLATE ) );
 		}
 
-		// Error- Post not found
+		// Error- Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 

@@ -14,19 +14,19 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\cms\common\config\CmsGlobal;
+
 use cmsgears\cms\common\models\resources\ModelContent;
 
 use cmsgears\cms\common\services\interfaces\resources\IModelContentService;
 use cmsgears\cms\common\services\interfaces\resources\ITagService;
-
-use cmsgears\core\common\services\resources\TagService as BaseTagService;
 
 /**
  * TagService provide service methods of tag model.
  *
  * @since 1.0.0
  */
-class TagService extends BaseTagService implements ITagService {
+class TagService extends \cmsgears\core\common\services\resources\TagService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -76,6 +76,11 @@ class TagService extends BaseTagService implements ITagService {
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -141,9 +146,7 @@ class TagService extends BaseTagService implements ITagService {
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -155,18 +158,46 @@ class TagService extends BaseTagService implements ITagService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = $modelClass::queryWithContent();
+			$config[ 'query' ] = $modelClass::queryWithContent();
 		}
 
 		// Filters ----------
 
 		// Searching --------
 
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
+
+		if( isset( $searchCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
+		}
+
 		// Reporting --------
+
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
 		// Result -----------
 
-		return parent::findPage( $config );
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -183,9 +214,8 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function create( $model, $config = [] ) {
 
-		$model = parent::create( $model, $config );
-
-		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$content	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$widgetSlug	= isset( $config[ 'widgetSlug' ] ) ? $config[ 'widgetSlug' ] : null;
 
 		// Model content is required for all the tags to form tag page
 		if( !isset( $content ) ) {
@@ -193,10 +223,52 @@ class TagService extends BaseTagService implements ITagService {
 			$content = new ModelContent();
 		}
 
-		$config[ 'parent' ]		= $model;
-		$config[ 'parentType' ]	= self::$parentType;
+		// Copy Template
+		$template = $content->template;
 
-		$this->modelContentService->create( $content, $config );
+		// Tags CSV request
+		if( empty( $template ) && !empty( Yii::$app->request->post( 'template-id' ) ) ) {
+
+			$template = Yii::$app->factory->get( 'templateService' )->getById( Yii::$app->request->post( 'template-id' ) );
+
+			if( isset( $template ) ) {
+
+				$content->templateId = $template->id;
+			}
+		}
+
+		$config[ 'template' ] = $template;
+
+		$this->copyTemplate( $model, $config );
+
+		$model = parent::create( $model, $config );
+
+		if( $model ) {
+
+			$config[ 'parent' ]		= $model;
+			$config[ 'parentType' ]	= static::$parentType;
+			$config[ 'publish' ]	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
+
+			$this->modelContentService->create( $content, $config );
+
+			if( empty( $widgetSlug ) ) {
+
+				$widgetSlug = Yii::$app->request->post( 'widget-slug' );
+			}
+
+			if( !empty( $widgetSlug ) ) {
+
+				$tagWidget = Yii::$app->factory->get( 'widgetService' )->getBySlugType( $widgetSlug, CmsGlobal::TYPE_WIDGET );
+
+				if( isset( $tagWidget ) ) {
+
+					Yii::$app->factory->get( 'modelWidgetService' )->createByParams([
+						'modelId' => $tagWidget->id, 'type' => CmsGlobal::TYPE_WIDGET,
+						'parentId' => $model->id, 'parentType' => static::$parentType
+					]);
+				}
+			}
+		}
 
 		return $model;
 	}
@@ -205,13 +277,29 @@ class TagService extends BaseTagService implements ITagService {
 
 	public function update( $model, $config = [] ) {
 
-		$model = parent::update( $model, $config );
-
 		$content = isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
+
+		// Copy Template
+		if( isset( $content ) ) {
+
+			$config[ 'template' ] = $content->template;
+
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
+		}
+
+		$model = parent::update( $model, $config );
 
 		if( isset( $content ) ) {
 
-			$config[ 'publish' ] = true;
+			$config[ 'publish' ] = isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : true;
 
 			$this->modelContentService->update( $content, $config );
 		}

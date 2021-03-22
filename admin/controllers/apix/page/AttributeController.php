@@ -20,7 +20,7 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class AttributeController extends \cmsgears\core\admin\controllers\apix\AttributeController {
+class AttributeController extends \cmsgears\core\admin\controllers\apix\base\AttributeController {
 
 	// Variables ---------------------------------------------------
 

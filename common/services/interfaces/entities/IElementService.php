@@ -10,14 +10,14 @@
 namespace cmsgears\cms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 
 /**
  * IElementService declares methods specific to element model.
  *
  * @since 1.0.0
  */
-interface IElementService extends IObjectService {
+interface IElementService extends IObjectDataService {
 
 	// Data Provider ------
 

@@ -9,36 +9,33 @@
 
 namespace cmsgears\cms\common\models\base;
 
-// CMG Imports
-use cmsgears\core\common\models\base\DbTables;
-
 /**
  * It provide table name constants of db tables available in CMS Module.
  *
  * @since 1.0.0
  */
-class CmsTables extends DbTables {
+class CmsTables extends \cmsgears\core\common\models\base\DbTables {
 
 	// Entities -------------
 
 	// Content - Page and Post
-	const TABLE_PAGE			= 'cmg_cms_page';
+	const TABLE_PAGE = 'cmg_cms_page';
 
 	// Resources ------------
 
 	// Page attributes
-	const TABLE_PAGE_META		= 'cmg_cms_page_meta';
+	const TABLE_PAGE_META = 'cmg_cms_page_meta';
 
 	// Page Followers
-	const TABLE_PAGE_FOLLOWER	= 'cmg_cms_page_follower';
+	const TABLE_PAGE_FOLLOWER = 'cmg_cms_page_follower';
 
-	const TABLE_LINK			= 'cmg_cms_link';
+	const TABLE_LINK = 'cmg_cms_link';
 
 	// Model Resources
-	const TABLE_MODEL_CONTENT	= 'cmg_cms_model_content';
+	const TABLE_MODEL_CONTENT = 'cmg_cms_model_content';
 
 	// Mappers --------------
 
-	const TABLE_MODEL_LINK		= 'cmg_cms_model_link';
+	const TABLE_MODEL_LINK = 'cmg_cms_model_link';
 
 }

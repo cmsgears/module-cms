@@ -29,6 +29,7 @@ use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
+
 /**
  * ContentService is base service of page and post.
  *
@@ -58,7 +59,6 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Traits ------------------------------------------------------
 
-	use ApprovalTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use GridCacheTrait;
@@ -67,6 +67,11 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	use SlugTypeTrait;
 	use VisibilityTrait;
 	use VisualTrait;
+
+	use ApprovalTrait {
+
+		activate as baseActivate;
+	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -85,6 +90,9 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
 
 		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
@@ -170,6 +178,12 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -212,7 +226,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
+		if( isset( $type ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -246,43 +260,55 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 					break;
 				}
+				case 'popular': {
+
+					if( empty( $config[ 'conditions' ][ "$modelTable.popular" ] ) ) {
+
+						$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+					}
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
-		if( isset( $searchCol ) && empty( $config[ 'search-col' ] ) ) {
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'summary' => "modelContent.summary",
-				'content' => "modelContent.content"
-			];
+		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		if( empty( $config[ 'report-col' ] ) ) {
-
-			$config[ 'report-col' ]	= [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'summary' => "modelContent.summary",
-				'content' => "modelContent.content",
-				'status' => "$modelTable.status",
-				'visibility' => "$modelTable.visibility",
-				'order' => "$modelTable.order",
-				'pinned' => "$modelTable.pinned",
-				'featured' => "$modelTable.featured"
-			];
-		}
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
+		];
 
 		// Result -----------
 
@@ -293,17 +319,32 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Read - Models ---
 
-	public function getWithContent( $id, $slug = null ) {
+	public function getWithContentById( $id, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		if( isset( $slug ) ) {
+		$config[ 'conditions' ][ "$modelTable.id" ]	= $id;
 
-			return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.slug" => $slug ] ] )->one();
+		return $modelClass::queryWithContent( $config )->one();
+	}
+
+	public function getWithContentBySlug( $slug, $config = [] ) {
+
+		$siteId		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
 		}
 
-		return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.id" => $id ] ] )->one();
+		$config[ 'conditions' ][ "$modelTable.slug" ] = $slug;
+
+		return $modelClass::queryWithContent( $config )->one();
 	}
 
 	// Read - Lists ----
@@ -316,11 +357,26 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 	// Update -------------
 
+	public function activate( $model, $config = [] ) {
+
+		$content = $model->modelContent;
+
+		if( isset( $content ) && empty( $content->publishedAt ) ) {
+
+			Yii::$app->factory->get( 'modelContentService' )->publish( $content );
+		}
+
+		return $this->baseActivate( $model, $config );
+	}
+
 	// Delete -------------
 
 	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
 
 		switch( $column ) {
 
@@ -328,45 +384,51 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 				switch( $action ) {
 
-					case 'confirmed': {
+					case 'accept': {
 
-						$this->confirm( $model );
-
-						break;
-					}
-					case 'approved': {
-
-						$this->approve( $model );
+						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'rejected': {
+					case 'confirm': {
 
-						$this->reject( $model );
-
-						break;
-					}
-					case 'active': {
-
-						$this->activate( $model );
+						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'frozen': {
+					case 'approve': {
 
-						$this->freeze( $model );
-
-						break;
-					}
-					case 'blocked': {
-
-						$this->block( $model );
+						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'terminated': {
+					case 'reject': {
 
-						$this->terminate( $model );
+						$this->reject( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'activate': {
+
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'freeze': {
+
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'block': {
+
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
@@ -389,6 +451,14 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 
@@ -428,9 +498,9 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		// Search
 		$searchContent	= isset( $config[ 'searchContent' ] ) ? $config[ 'searchContent' ] : false;
-		$keywordsParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
+		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
 
-		$keywords = Yii::$app->request->getQueryParam( $keywordsParam );
+		$keywords = Yii::$app->request->getQueryParam( $searchParam );
 
 		// Sort
 		$ratingComment	= isset( $config[ 'ratingComment' ] ) ? $config[ 'ratingComment' ] : false;
@@ -448,7 +518,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 			$cache = CacheProperties::getInstance()->isCaching();
 
-			// Search in model cache - full search
+			// Search in model cache - full text search
 			if( $cache ) {
 
 				$config[ 'search-col' ][] = "$modelTable.gridCache";
@@ -460,7 +530,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 				$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithAll( [ 'relations' => [ 'modelContent', 'modelContent.template' ] ] );
 
 				// Search in model content
-				$config[ 'search-col' ][] = 'modelContent.content';
+				$config[ 'search-col' ] = [ 'modelContent.content' ];
 			}
 		}
 

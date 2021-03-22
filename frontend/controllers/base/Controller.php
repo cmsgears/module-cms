@@ -13,14 +13,12 @@ namespace cmsgears\cms\frontend\controllers\base;
 use cmsgears\core\common\config\CommentProperties;
 use cmsgears\cms\common\config\CmsProperties;
 
-use cmsgears\core\frontend\controllers\base\Controller as BaseController;
-
 /**
  * Base Controller of all frontend controllers specific to CMS module.
  *
  * @since 1.0.0
  */
-abstract class Controller extends BaseController {
+abstract class Controller extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

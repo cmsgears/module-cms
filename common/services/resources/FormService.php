@@ -11,6 +11,7 @@ namespace cmsgears\cms\common\services\resources;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
@@ -19,14 +20,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\cms\common\services\interfaces\resources\IFormService;
 
-use cmsgears\forms\common\services\entities\FormService as BaseFormService;
-
 /**
  * FormService provide service methods of category model.
  *
  * @since 1.0.0
  */
-class FormService extends BaseFormService implements IFormService {
+class FormService extends \cmsgears\forms\common\services\resources\FormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -67,6 +66,11 @@ class FormService extends BaseFormService implements IFormService {
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -150,7 +154,7 @@ class FormService extends BaseFormService implements IFormService {
 					'default' => SORT_DESC,
 					'label' => 'Admin Mail'
 				],
-				'unsubmit' => [
+				'uqsubmit' => [
 					'asc' => [ "$modelTable.uniqueSubmit" => SORT_ASC ],
 					'desc' => [ "$modelTable.uniqueSubmit" => SORT_DESC ],
 					'default' => SORT_DESC,
@@ -181,9 +185,7 @@ class FormService extends BaseFormService implements IFormService {
 					'label' => 'Published At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -240,7 +242,7 @@ class FormService extends BaseFormService implements IFormService {
 
 					break;
 				}
-				case 'unsubmit': {
+				case 'uqsubmit': {
 
 					$config[ 'conditions' ][ "$modelTable.uniqueSubmit" ] = true;
 
@@ -257,26 +259,31 @@ class FormService extends BaseFormService implements IFormService {
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'success' => "$modelTable.success",
+			'failure' => "$modelTable.failure",
+			'summary' => "modelContent.summary",
+			'content' => "modelContent.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'success' => "$modelTable.description",
-				'failure' => "$modelTable.description",
-				'summary' => "modelContent.summary",
-				'content' => "modelContent.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
@@ -289,7 +296,7 @@ class FormService extends BaseFormService implements IFormService {
 			'visibility' => "$modelTable.visibility",
 			'umail' => "$modelTable.userMail",
 			'amail' => "$modelTable.adminMail",
-			'unsubmit' => "$modelTable.uniqueSubmit",
+			'uqsubmit' => "$modelTable.uniqueSubmit",
 			'upsubmit' => "$modelTable.updateSubmit"
 		];
 
@@ -302,17 +309,32 @@ class FormService extends BaseFormService implements IFormService {
 
 	// Read - Models ---
 
-	public function getWithContent( $id, $slug = null ) {
+	public function getWithContentById( $id, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		if( isset( $slug ) ) {
+		$config[ 'conditions' ][ "$modelTable.id" ]	= $id;
 
-			return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.slug" => $slug ] ] )->one();
+		return $modelClass::queryWithContent( $config )->one();
+	}
+
+	public function getWithContentBySlug( $slug, $config = [] ) {
+
+		$siteId		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
 		}
 
-		return $modelClass::queryWithContent( [ 'conditions' => [ "$modelTable.id" => $id ] ] )->one();
+		$config[ 'conditions' ][ "$modelTable.slug" ] = $slug;
+
+		return $modelClass::queryWithContent( $config )->one();
 	}
 
 	// Read - Lists ----
@@ -322,25 +344,6 @@ class FormService extends BaseFormService implements IFormService {
 	// Read - Others ---
 
 	// Create -------------
-
-	public function create( $model, $config = [] ) {
-
-		$modelClass = static::$modelClass;
-
-		// Default Private
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
-
-		// Default New
-		if( !isset( $model->status ) ) {
-
-			$model->status = $modelClass::STATUS_NEW;
-		}
-
-		return parent::create( $model, $config );
-	}
 
 	public function add( $model, $config = [] ) {
 
@@ -352,7 +355,9 @@ class FormService extends BaseFormService implements IFormService {
 		$content 	= $config[ 'content' ];
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -364,16 +369,30 @@ class FormService extends BaseFormService implements IFormService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
-			// Create gallery
-			if( $gallery ) {
+			// Create Gallery
+			if( isset( $gallery ) ) {
 
-				$gallery->type		= OrgGlobal::TYPE_ORG;
+				$gallery->siteId	= $model->siteId;
+				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 
 				$gallery = $galleryService->create( $gallery );
+			}
+			else {
+
+				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title
+				]);
 			}
 
 			// Create and attach model content
@@ -403,7 +422,9 @@ class FormService extends BaseFormService implements IFormService {
 		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -418,6 +439,15 @@ class FormService extends BaseFormService implements IFormService {
 			$attributes	= ArrayHelper::merge( $attributes, [ 'status' ] );
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $content->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 
@@ -429,7 +459,10 @@ class FormService extends BaseFormService implements IFormService {
 
 		// Update model content
 		$modelContentService->update( $content, [
-			'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+			'publish' => $publish,
+			'banner' => $banner, 'mbanner' => $mbanner,
+			'video' => $video, 'mvideo' => $mvideo,
+			'gallery' => $gallery
 		]);
 
 		return parent::update( $model, [
@@ -441,32 +474,41 @@ class FormService extends BaseFormService implements IFormService {
 
 	public function delete( $model, $config = [] ) {
 
-		$transaction = Yii::$app->db->beginTransaction();
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		try {
+		if( $config[ 'hard' ] ) {
 
-			// Delete mappings
-			Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+			$transaction = Yii::$app->db->beginTransaction();
 
-			// Delete Fields
-			Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+			try {
 
-			// Delete Model Content
-			Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
+				// Delete Model Files
+				$this->fileService->deleteMultiple( $model->files );
 
-			$transaction->commit();
+				// Delete Model Content
+				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
 
-			// Delete model
-			return parent::delete( $model, $config );
+				// Delete mappings
+				Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+
+				// Delete Fields
+				Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+
+				// Commit
+				$transaction->commit();
+
+				$config[ 'hard' ] = false;
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
 		}
-		catch( Exception $e ) {
 
-			$transaction->rollBack();
-
-			throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-		}
-
-		return false;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
 	// Bulk ---------------

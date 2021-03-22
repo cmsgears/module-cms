@@ -26,6 +26,10 @@ class CmsGlobal {
 	const PAGE_SEARCH_ARTICLES	= 'search-articles';
 	const PAGE_SEARCH_POSTS		= 'search-posts';
 
+	const PAGE_HOME		= 'home';
+	const PAGE_BLOG		= 'blog';
+	const PAGE_ARTICLES = 'articles';
+
 	// Grouping by type ------------------------------------------------
 
 	const TYPE_ELEMENT	= 'element';
@@ -49,11 +53,17 @@ class CmsGlobal {
 	const TEMPLATE_BLOG		= 'blog';
 	const TEMPLATE_QNA		= 'qna';
 
-	const TEMPLATE_POST		= 'post';
+	const TEMPLATE_POST = 'post';
 
-	const TEMPLATE_ARTICLE	= 'article';
+	const TEMPLATE_ARTICLE = 'article';
 
 	const TEMPLATE_SOCIAL	= 'social';
+	const TEMPLATE_GALLERY	= 'gallery';
+	const TEMPLATE_SLIDER	= 'slider';
+
+	const TEMPLATE_ATTRIBUTES_SLIDER	= 'attributes-slider';
+	const TEMPLATE_ATTRIBUTES_ACCORDIAN = 'attributes-accordian';
+
 	const TEMPLATE_CONTACT	= 'contact';
 	const TEMPLATE_EDITOR	= 'editor';
 	const TEMPLATE_SEARCH	= 'search';
@@ -63,7 +73,11 @@ class CmsGlobal {
 	const TEMPLATE_AUTHOR	= 'author';
 	const TEMPLATE_ARCHIVE	= 'archive';
 
-	const TEMPLATE_TAG_CLOUD = 'tag-cloud';
+	const TEMPLATE_CATEGORIES	= 'categories';
+	const TEMPLATE_TAG_CLOUD	= 'tag-cloud';
+
+	const TEMPLATE_ELEMENT_CARD	= 'card';
+	const TEMPLATE_ELEMENT_BOX	= 'box';
 
 	const TEMPLATE_SIDEBAR_VERTICAL		= 'vsidebar';
 	const TEMPLATE_SIDEBAR_HORIZONTAL	= 'hsidebar';
@@ -71,15 +85,15 @@ class CmsGlobal {
 	const TEMPLATE_MENU_VERTICAL	= 'vmenu';
 	const TEMPLATE_MENU_HORIZONTAL	= 'hmenu';
 
-	const TEMPLATE_NOTIFY_POST_REGISTER = 'post-register';
+	const TPL_NOTIFY_PAGE_NEW = 'page-new';
 
-	const TEMPLATE_NOTIFY_PAGE_REGISTER = 'page-register';
+	const TPL_NOTIFY_POST_NEW = 'post-new';
 
-	const TEMPLATE_NOTIFY_ARTICLE_REGISTER = 'article-register';
+	const TPL_NOTIFY_ARTICLE_NEW = 'article-new';
 
 	// Config ----------------------------------------------------------
 
-	const CONFIG_BLOG	= 'blog';
+	const CONFIG_BLOG = 'blog';
 
 	// Roles -----------------------------------------------------------
 
@@ -113,24 +127,25 @@ class CmsGlobal {
 	// Model Fields ----------------------------------------------------
 
 	// Generic Fields
-	const FIELD_ELEMENT			= 'elementField';
-	const FIELD_BLOCK			= 'blockField';
+	const FIELD_ELEMENT		= 'elementField';
+	const FIELD_BLOCK		= 'blockField';
 
-	const FIELD_LINK			= 'linkField';
-	const FIELD_MENU			= 'menuField';
+	const FIELD_LINK		= 'linkField';
+	const FIELD_MENU		= 'menuField';
 
-	const FIELD_WIDGET			= 'widgetField';
-	const FIELD_SIDEBAR			= 'sidebarField';
+	const FIELD_WIDGET		= 'widgetField';
+	const FIELD_SIDEBAR		= 'sidebarField';
 
-	const FIELD_PAGE			= 'pageField';
+	const FIELD_PAGE		= 'pageField';
 
-	const FIELD_KEYWORDS		= 'keywordsField';
+	const FIELD_KEYWORDS	= 'keywordsField';
 
 	// SEO
-	const FIELD_SEO_NAME			= 'seoNameField';
-	const FIELD_SEO_DESCRIPTION		= 'seoDescriptionField';
-	const FIELD_SEO_KEYWORDS		= 'seoKeywordsField';
-	const FIELD_SEO_ROBOT			= 'seoRobotField';
+	const FIELD_SEO_NAME		= 'seoNameField';
+	const FIELD_SEO_DESCRIPTION	= 'seoDescriptionField';
+	const FIELD_SEO_KEYWORDS	= 'seoKeywordsField';
+	const FIELD_SEO_ROBOT		= 'seoRobotField';
+	const FIELD_SEO_SCHEMA		= 'seoSchemaField';
 
 	// Link
 	const FIELD_ABSOLUTE	= 'absoluteField';

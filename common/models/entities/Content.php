@@ -35,13 +35,15 @@ use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IFollower;
+
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
+use cmsgears\core\common\models\entities\User;
+
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\PageMeta;
 use cmsgears\cms\common\models\mappers\PageFollower;
@@ -62,6 +64,7 @@ use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\FollowerTrait;
+
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
 use cmsgears\cms\common\models\traits\mappers\ElementTrait;
@@ -74,6 +77,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $avatarId
  * @property integer $parentId
  * @property integer $createdBy
@@ -90,6 +94,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property integer $pinned
  * @property integer $featured
+ * @property integer $popular
  * @property integer $comments
  * @property date $createdAt
  * @property date $modifiedAt
@@ -101,9 +106,10 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IContent, IData,
-	IElement, IFeatured, IFile, IFollower, IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent,
-	ISlugType, IVisibility, IVisual, IWidget {
+class Content extends \cmsgears\core\common\models\base\Entity implements IApproval,
+	IAuthor, IBlock, IComment, IContent, IData, IElement, IFeatured, IFile, IFollower,
+	IGridCache, IMeta, IMultiSite, INameType, IOwner, IPageContent, ISlugType, IVisibility,
+	IVisual, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -208,9 +214,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -220,9 +226,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'status', 'visibility', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'pinned', 'featured', 'comments', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'comments', 'gridCacheValid' ], 'boolean' ],
 			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -244,6 +250,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
@@ -258,6 +265,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENT ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
@@ -274,15 +282,35 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 
 		if( parent::beforeSave( $insert ) ) {
 
-			if( $this->parentId <= 0 ) {
+			// Default Parent
+			if( empty( $this->parentId ) || $this->parentId <= 0 ) {
 
 				$this->parentId = null;
 			}
 
-			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+			// Default User
+			if( empty( $this->userId ) || $this->userId <= 0 ) {
+
+				$this->userId = null;
+			}
+
+			// Default Status - New
+			if( empty( $this->status ) || $this->status <= 0 ) {
+
+				$this->status = self::STATUS_NEW;
+			}
+
+			// Default Order - zero
+			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			// Default Visibility - Private
+			$this->visibility = $this->visibility ?? self::VISIBILITY_PRIVATE;
 
 			return true;
 		}
@@ -297,6 +325,16 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	// Validators ----------------------------
 
 	// Content -------------------------------
+
+	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return \cmsgears\core\common\models\entities\User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
 
 	/**
 	 * Returns the immediate parent.
@@ -347,7 +385,7 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -362,9 +400,9 @@ class Content extends Entity implements IApproval, IAuthor, IBlock, IComment, IC
 	 */
 	public static function queryWithAuthor( $config = [] ) {
 
-		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'creator' ];
+		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'user' ];
 
-		$config[ 'relations' ][] = [ 'creator.avatar'  => function ( $query ) {
+		$config[ 'relations' ][] = [ 'user.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 			$query->from( "$fileTable avatar" ); }
 		];

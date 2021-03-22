@@ -14,14 +14,12 @@ use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\services\interfaces\entities\ISidebarService;
 
-use cmsgears\core\common\services\entities\ObjectDataService;
-
 /**
  * SidebarService provide service methods of sidebar model.
  *
  * @since 1.0.0
  */
-class SidebarService extends ObjectDataService implements ISidebarService {
+class SidebarService extends \cmsgears\core\common\services\entities\ObjectDataService implements ISidebarService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,9 +29,9 @@ class SidebarService extends ObjectDataService implements ISidebarService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\cms\common\models\entities\Sidebar';
+	public static $modelClass = '\cmsgears\cms\common\models\entities\Sidebar';
 
-	public static $parentType	= CmsGlobal::TYPE_SIDEBAR;
+	public static $parentType = CmsGlobal::TYPE_SIDEBAR;
 
 	// Protected --------------
 

@@ -13,6 +13,7 @@ namespace cmsgears\cms\common\models\traits\mappers;
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+
 use cmsgears\cms\common\models\entities\Widget;
 use cmsgears\cms\common\models\mappers\ModelWidget;
 
@@ -52,10 +53,19 @@ trait WidgetTrait {
 
 		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_WIDGET;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
+		/*
 		return $this->hasMany( ModelWidget::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+		*/
+
+		return ModelWidget::find()
+			->leftJoin( $objectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -65,10 +75,19 @@ trait WidgetTrait {
 
 		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 		$mapperType			= CmsGlobal::TYPE_WIDGET;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
+		/*
 		return $this->hasMany( ModelWidget::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $modelObjectTable.active=1" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+		*/
+
+		return ModelWidget::find()
+			->leftJoin( $objectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1 AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -92,7 +111,7 @@ trait WidgetTrait {
 
 		return Widget::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
-			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType'" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1" )
 			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
 			->all();
 	}
@@ -115,6 +134,22 @@ trait WidgetTrait {
 				}
 			);
 		*/
+
+		return Widget::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=$this->id AND $modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.type='$mapperType' AND $objectTable.shared=1 AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] )
+			->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getDisplayWidgets() {
+
+		$modelObjectTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$mapperType			= CmsGlobal::TYPE_WIDGET;
+		$objectTable		= CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 
 		return Widget::find()
 			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )

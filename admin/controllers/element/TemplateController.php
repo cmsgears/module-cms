@@ -44,7 +44,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Type
 		$this->type		= CmsGlobal::TYPE_ELEMENT;
-		$this->apixBase	= 'cms/page/template';
+		$this->apixBase	= 'cms/element/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-ui', 'child' => 'element-template' ];
@@ -61,7 +61,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 			'all' => [ [ 'label' => 'Element Templates' ] ],
 			'create' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'data' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Element Templates', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

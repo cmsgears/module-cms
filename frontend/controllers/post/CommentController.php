@@ -11,14 +11,11 @@ namespace cmsgears\cms\frontend\controllers\post;
 
 // Yii Imports
 use Yii;
-use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\cms\common\config\CmsGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
-class CommentController extends \cmsgears\cms\admin\controllers\post\CommentController {
+class CommentController extends \cmsgears\core\frontend\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -34,13 +31,13 @@ class CommentController extends \cmsgears\cms\admin\controllers\post\CommentCont
 
  	public function init() {
 
-            parent::init();
+		parent::init();
 
-            // Views
-            $this->setViewPath( '@cmsgears/module-cms/frontend/views/comment' );
+		// Config
+		$this->parentType = CmsGlobal::TYPE_POST;
 
-            // Permission
-            $this->crudPermission	= CoreGlobal::PERM_USER;
+		// Services
+		$this->parentService = Yii::$app->factory->get( 'postService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -58,31 +55,5 @@ class CommentController extends \cmsgears\cms\admin\controllers\post\CommentCont
 	// CMG parent classes --------------------
 
 	// CommentController ---------------------
-        public function actionAll( $slug = null ) {
-
-            Url::remember( Yii::$app->request->getUrl(), $this->commentUrl );
-
-            $model			= null;
-            $dataProvider	= null;
-            $mCommentTable	= CoreTables::TABLE_MODEL_COMMENT;
-
-            if( isset( $slug ) ) {
-
-                $model          = $this->parentService->getBySlug( $slug, true );
-                $dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
-            }
-            else {
-
-                $dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
-            }
-
-            $parent	= isset( $pid ) ? true : false;
-
-            return $this->render( 'all', [
-                     'dataProvider' => $dataProvider,
-                     'model' => $model,
-                     'parent' => $parent
-            ]);
-	}
 
 }

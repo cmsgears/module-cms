@@ -10,8 +10,6 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Tag as BaseTag;
-
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
@@ -25,7 +23,8 @@ use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 /**
  * @inheritdoc
  */
-class Tag extends BaseTag implements IBlock, IElement, IPageContent, IWidget {
+class Tag extends \cmsgears\core\common\models\resources\Tag implements IBlock, IElement,
+	IPageContent, IWidget {
 
 	// Variables ---------------------------------------------------
 

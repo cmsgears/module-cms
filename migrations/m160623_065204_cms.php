@@ -68,6 +68,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'cms_page', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
@@ -84,6 +85,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'comments' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
@@ -96,6 +98,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns site, parent, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'page_user', $this->prefix . 'cms_page', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy' );
@@ -111,8 +114,8 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'active' => $this->boolean()->defaultValue( false ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
 			'value' => $this->text(),
 			'data' => $this->mediumText()
@@ -128,8 +131,12 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
-			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'data' => $this->mediumText()
@@ -153,9 +160,10 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'absolute' => $this->boolean()->notNull()->defaultValue( false ),
-			'user' => $this->boolean()->notNull()->defaultValue( false ),
+			'private' => $this->boolean()->notNull()->defaultValue( false ),
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
@@ -176,25 +184,35 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
+			'mbannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
+			'mvideoId' => $this->bigInteger( 20 ),
 			'galleryId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'summary' => $this->text(),
+			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'viewPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'seoName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'seoDescription' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'seoKeywords' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'seoRobot' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'seoSchema' => $this->text(),
+			'createdAt' => $this->dateTime(),
+			'modifiedAt' => $this->dateTime(),
 			'publishedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
-			'data' => $this->mediumText()
+			'data' => $this->mediumText(),
+			'schema' => $this->mediumText() // Confirm before removal
 		], $this->options );
 
 		// Index for columns base, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content', 'mbannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_content_mvideo', $this->prefix . 'cms_model_content', 'mvideoId' );
 	}
 
 	private function upModelLink() {
@@ -205,7 +223,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
 		], $this->options );
 
@@ -217,6 +235,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 
 		// Page
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'page_user', $this->prefix . 'cms_page', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page', 'parentId', $this->prefix . 'cms_page', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
@@ -238,7 +257,9 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		// Model Content
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content', 'mbannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_content_mvideo', $this->prefix . 'cms_model_content', 'mvideoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 
 		// Model Link
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_link_parent', $this->prefix . 'cms_model_link', 'modelId', $this->prefix . 'cms_link', 'id', 'CASCADE' );
@@ -265,6 +286,7 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 
 		// Page
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_site', $this->prefix . 'cms_page' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_user', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_avatar', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_parent', $this->prefix . 'cms_page' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'page_creator', $this->prefix . 'cms_page' );
@@ -286,7 +308,9 @@ class m160623_065204_cms extends \cmsgears\core\common\base\Migration {
 		// Model Content
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_template', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_banner', $this->prefix . 'cms_model_content' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_mbanner', $this->prefix . 'cms_model_content' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_video', $this->prefix . 'cms_model_content' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_content_mvideo', $this->prefix . 'cms_model_content' );
 
 		// Model Link
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_link_parent', $this->prefix . 'cms_model_link', 'modelId' );

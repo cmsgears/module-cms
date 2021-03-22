@@ -18,18 +18,17 @@ use yii\web\UnauthorizedHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 use cmsgears\cms\common\config\CmsGlobal;
 
 use cmsgears\cms\common\models\entities\Page;
-
-use cmsgears\cms\frontend\controllers\base\Controller;
 
 /**
  * PageController consist of actions specific to site pages.
  *
  * @since 1.0.0
  */
-class PageController extends Controller {
+class PageController extends \cmsgears\cms\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +36,11 @@ class PageController extends Controller {
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
+
+	protected $type;
 
 	protected $templateService;
 
@@ -53,10 +56,12 @@ class PageController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
+		$this->type		= CmsGlobal::TYPE_PAGE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'pageService' );
+		$this->metaService	= Yii::$app->factory->get( 'pageMetaService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
@@ -114,10 +119,11 @@ class PageController extends Controller {
 
 	public function actionAll( $status = null ) {
 
-		$this->layout	= CoreGlobalWeb::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
-		$user			= Yii::$app->user->getIdentity();
-		$dataProvider 	= null;
+		$user = Yii::$app->core->getUser();
+
+		$dataProvider = null;
 
 		if( isset( $status ) ) {
 
@@ -141,14 +147,25 @@ class PageController extends Controller {
 		if( isset( $template ) ) {
 
 			// View Params
-			$this->view->params[ 'model' ] = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+			$model = $this->modelService->getBySlugType( CmsGlobal::PAGE_SEARCH_PAGES, CmsGlobal::TYPE_PAGE );
+
+			$this->view->params[ 'model' ] = $model;
+
+			$data = isset( $model ) ? json_decode( $model->data ) : [];
+
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			$dataProvider = $this->modelService->getPageForSearch([
 				'route' => 'page/search', 'searchContent' => true
 			]);
 
 			return Yii::$app->templateManager->renderViewSearch( $template, [
-				'dataProvider' => $dataProvider
+				'dataProvider' => $dataProvider,
+				'template' => $template
 			]);
 		}
 
@@ -160,11 +177,15 @@ class PageController extends Controller {
 	 * 2. If page is found, the associated template will be used.
 	 * 3. If no template found, the cmgcore module's SiteController will handle the request.
 	 */
-	public function actionSingle( $slug = 'home' ) {
+	public function actionSingle( $slug = 'home', $amp = false ) {
 
-		$model = $this->modelService->getBySlugType( $slug, CmsGlobal::TYPE_PAGE );
+		$model = $this->modelService->getBySlugType( $slug, $this->type );
 
 		if( isset( $model ) ) {
+
+			$this->model = $model;
+
+			$user = Yii::$app->core->getUser();
 
 			// No user & Protected
 			if( empty( $user ) && $model->isVisibilityProtected() ) {
@@ -180,7 +201,14 @@ class PageController extends Controller {
 			}
 
 			// View Params
-			$this->view->params[ 'model' ] = $model;
+			$data = json_decode( $model->data );
+
+			$this->view->params[ 'model' ]		= $model;
+			$this->view->params[ 'data' ]		= isset( $data->data ) ? $data->data : [];
+			$this->view->params[ 'attributes' ]	= isset( $data->attributes ) ? $data->attributes : [];
+			$this->view->params[ 'settings' ] 	= isset( $data->settings ) ? $data->settings : [];
+			$this->view->params[ 'config' ] 	= isset( $data->config ) ? $data->config : [];
+			$this->view->params[ 'plugins' ] 	= isset( $data->plugins ) ? $data->plugins : [];
 
 			// Find Template
 			$content	= $model->modelContent;
@@ -195,12 +223,30 @@ class PageController extends Controller {
 			// Render Template
 			if( isset( $template ) ) {
 
-				return Yii::$app->templateManager->renderViewPublic( $template, [
-					'model' => $model,
-					'author' => $model->createdBy,
-					'content' => $content,
-					'banner' => $content->banner
-				], [ 'page' => true ] );
+				if( $amp ) {
+
+					return Yii::$app->templateManager->renderViewAmp( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true ] );
+				}
+				else {
+
+					return Yii::$app->templateManager->renderViewPublic( $template, [
+						'modelService' => $this->modelService,
+						'metaService' => $this->metaService,
+						'template' => $template,
+						'model' => $model,
+						'author' => $model->createdBy,
+						'content' => $content,
+						'banner' => $content->banner
+					], [ 'page' => true, 'viewPath' => $content->viewPath ] );
+				}
 			}
 
 			// Page without Template - Redirect to System Pages

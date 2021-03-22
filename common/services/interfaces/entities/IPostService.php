@@ -33,6 +33,8 @@ interface IPostService extends IContentService, ICategory, ISimilar {
 
 	// Read - Others ---
 
+	public function getEmail( $model );
+
 	// Create -------------
 
 	public function register( $model, $config = [] );

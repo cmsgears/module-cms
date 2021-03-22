@@ -49,6 +49,8 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 		$this->apixBase		= 'cms/page/tag';
 		$this->parentPath	= '/cms/post/tag';
 
+		$this->widgetSlug = 'tag-posts';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-cms', 'child' => 'post-tag' ];
 
@@ -67,6 +69,7 @@ class TagController extends \cmsgears\cms\admin\controllers\base\TagController {
 			'delete' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
 			'gallery' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'data' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
 			'settings' => [ [ 'label' => 'Post Tags', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];

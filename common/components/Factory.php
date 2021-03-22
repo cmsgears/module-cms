@@ -13,7 +13,7 @@ namespace cmsgears\cms\common\components;
 use Yii;
 
 /**
- * The Cms Factory component initialise the services available in Cms Module.
+ * The CMS Factory component initialize the services available in CMS Module.
  *
  * @since 1.0.0
  */

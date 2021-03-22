@@ -21,13 +21,15 @@ use cmsgears\cms\common\config\CmsGlobal;
  *
  * @since 1.0.0
  */
-class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectController {
+class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectDataController {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -40,9 +42,12 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 		parent::init();
 
 		// Config
+		$this->shared		= true;
 		$this->type			= CmsGlobal::TYPE_WIDGET;
 		$this->templateType = CmsGlobal::TYPE_WIDGET;
 		$this->apixBase		= 'cms/widget';
+		$this->baseUrl		= 'widget';
+		$this->title		= 'Widget';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'widgetService' );
@@ -63,9 +68,10 @@ class WidgetController extends \cmsgears\cms\admin\controllers\base\ObjectContro
 			'create' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ],
+			'data' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
 			'config' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
-			'data' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ]
+			'settings' => [ [ 'label' => 'Widgets', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 

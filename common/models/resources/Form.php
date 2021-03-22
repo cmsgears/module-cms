@@ -10,12 +10,14 @@
 namespace cmsgears\cms\common\models\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Form as BaseForm;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\cms\common\models\interfaces\resources\IPageContent;
 use cmsgears\cms\common\models\interfaces\mappers\IBlock;
 use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
+
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 use cmsgears\cms\common\models\traits\resources\PageContentTrait;
 use cmsgears\cms\common\models\traits\mappers\BlockTrait;
@@ -25,7 +27,8 @@ use cmsgears\cms\common\models\traits\mappers\WidgetTrait;
 /**
  * @inheritdoc
  */
-class Form extends BaseForm implements IBlock, IElement, IPageContent, IWidget {
+class Form extends \cmsgears\core\common\models\resources\Form implements IBlock,
+	IElement, IFile, IPageContent, IWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -49,6 +52,7 @@ class Form extends BaseForm implements IBlock, IElement, IPageContent, IWidget {
 
 	use BlockTrait;
 	use ElementTrait;
+	use FileTrait;
 	use PageContentTrait;
 	use WidgetTrait;
 
@@ -104,7 +108,7 @@ class Form extends BaseForm implements IBlock, IElement, IPageContent, IWidget {
 	 */
 	public static function queryWithContent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modelContent', 'modelContent.template' ];
+		$config[ 'relations' ] = [ 'modelContent', 'modelContent.template' ];
 
 		return parent::queryWithAll( $config );
 	}

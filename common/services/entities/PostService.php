@@ -23,10 +23,8 @@ use cmsgears\cms\common\models\resources\ModelContent;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPostService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
+use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
-use cmsgears\cms\common\services\base\ContentService;
-
-use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\SimilarTrait;
 use cmsgears\core\common\services\traits\mappers\CategoryTrait;
 
@@ -35,7 +33,7 @@ use cmsgears\core\common\services\traits\mappers\CategoryTrait;
  *
  * @since 1.0.0
  */
-class PostService extends ContentService implements IPostService {
+class PostService extends \cmsgears\cms\common\services\base\ContentService implements IPostService {
 
 	// Variables ---------------------------------------------------
 
@@ -59,21 +57,23 @@ class PostService extends ContentService implements IPostService {
 
 	protected $fileService;
 	protected $metaService;
+	protected $followerService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	use CategoryTrait;
-	use FeaturedTrait;
 	use SimilarTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, IPageMetaService $metaService, $config = [] ) {
+	public function __construct( IFileService $fileService, IPageMetaService $metaService, IPageFollowerService $followerService, $config = [] ) {
 
 		$this->fileService	= $fileService;
 		$this->metaService 	= $metaService;
+
+		$this->followerService = $followerService;
 
 		parent::__construct( $config );
 	}
@@ -111,8 +111,6 @@ class PostService extends ContentService implements IPostService {
 		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
 		$config[ 'query' ] = $this->generateSimilarQuery( $config );
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
 		return $this->getPublicPage( $config );
 	}
 
@@ -126,22 +124,19 @@ class PostService extends ContentService implements IPostService {
 
 	// Read - Others ---
 
+	public function getEmail( $model ) {
+
+		return $model->creator->email;
+	}
+
 	// Create -------------
 
 	public function create( $model, $config = [] ) {
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
-		$modelClass = static::$modelClass;
-
 		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
-
-		// Default Private
-		$model->visibility = $model->visibility ?? $modelClass::VISIBILITY_PRIVATE;
-
-		// Default New
-		$model->status = $model->status ?? $modelClass::STATUS_NEW;
 
 		// Create Model
 		return parent::create( $model, $config );
@@ -156,7 +151,9 @@ class PostService extends ContentService implements IPostService {
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
@@ -170,24 +167,30 @@ class PostService extends ContentService implements IPostService {
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
 			else {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -195,11 +198,13 @@ class PostService extends ContentService implements IPostService {
 			$modelContentService->create( $content, [
 				'parent' => $model, 'parentType' => static::$parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
 			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
@@ -219,15 +224,20 @@ class PostService extends ContentService implements IPostService {
 	public function register( $model, $config = [] ) {
 
 		$notify	= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$mail	= isset( $config[ 'mail' ] ) ? $config[ 'mail' ] : true;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : Yii::$app->core->getUser();
 
 		$modelClass = static::$modelClass;
+		$parentType	= static::$parentType;
 
 		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
-		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : '/cms/post/review';
+		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/post/review';
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
@@ -236,13 +246,16 @@ class PostService extends ContentService implements IPostService {
 
 		$galleryClass = $galleryService->getModelClass();
 
-		$user = Yii::$app->core->getUser();
-
 		$registered	= false;
 
 		$transaction = Yii::$app->db->beginTransaction();
 
 		try {
+
+			// Copy Template
+			$config[ 'template' ] = $content->template;
+
+			$this->copyTemplate( $model, $config );
 
 			// Create Model
 			$model = $this->create( $model, $config );
@@ -250,33 +263,36 @@ class PostService extends ContentService implements IPostService {
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
-				$gallery->type		= static::$parentType;
+				$gallery->siteId	= $model->siteId;
+				$gallery->type		= $parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
 			else {
 
 				$gallery = $galleryService->createByParams([
-					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'siteId' => $model->siteId,
+					'type' => $parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => static::$parentType,
+				'parent' => $model, 'parentType' => $parentType,
 				'publish' => $publish,
-				'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, $parentType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
-			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+			$modelTagService->bindTags( $model->id, $parentType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 
@@ -294,11 +310,16 @@ class PostService extends ContentService implements IPostService {
 			// Notify Site Admin
 			if( $notify ) {
 
-				// Trigger Notification
-				Yii::$app->eventManager->triggerNotification( CmsGlobal::TEMPLATE_NOTIFY_POST_REGISTER,
-					[ 'model' => $model, 'service' => $this, 'user' => $user ],
-					[ 'parentId' => $model->id, 'parentType' => static::$parentType, 'adminLink' => "{$adminLink}?id={$model->id}" ]
-				);
+				$this->notifyAdmin( $model, [
+					'template' => CmsGlobal::TPL_NOTIFY_POST_NEW,
+					'adminLink' => "{$adminLink}?id={$model->id}"
+				]);
+			}
+
+			// Email Post Admin
+			if( $mail ) {
+
+				Yii::$app->cmsMailer->sendRegisterPostMail( $model );
 			}
 		}
 
@@ -315,7 +336,9 @@ class PostService extends ContentService implements IPostService {
 		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
@@ -326,10 +349,22 @@ class PostService extends ContentService implements IPostService {
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured', 'comments'
+				'status', 'order', 'pinned', 'featured', 'popular', 'comments'
 			]);
 		}
 
+		// Copy Template
+		if( isset( $content ) ) {
+
+			$config[ 'template' ] = $content->template;
+
+			if( $this->copyTemplate( $model, $config ) ) {
+
+				$attributes[] = 'data';
+			}
+		}
+
+		// Services
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
 		$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
@@ -348,19 +383,37 @@ class PostService extends ContentService implements IPostService {
 		if( isset( $content ) ) {
 
 			$modelContentService->update( $content, [
-				'publish' => $publish, 'banner' => $banner, 'video' => $video, 'gallery' => $gallery
+				'publish' => $publish,
+				'banner' => $banner, 'mbanner' => $mbanner,
+				'video' => $video, 'mvideo' => $mvideo,
+				'gallery' => $gallery
 			]);
 		}
 
 		// Bind categories
-		$modelCategoryService->bindCategories( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+		$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
 
 		// Bind tags
 		$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( isset( $model->userId ) && $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->userId ];
+
+			$config[ 'data' ][ 'message' ] = 'Post status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	// Delete -------------
@@ -375,11 +428,14 @@ class PostService extends ContentService implements IPostService {
 
 			try {
 
-				// Delete metas
+				// Delete Meta
 				$this->metaService->deleteByModelId( $model->id );
 
 				// Delete files
-				$this->fileService->deleteFiles( $model->files );
+				$this->fileService->deleteMultiple( ArrayHelper::merge( $model->files, [ $model->avatar ] ) );
+
+				// Delete File Mappings of Shared Files
+				Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
 
 				// Delete Model Content
 				Yii::$app->factory->get( 'modelContentService' )->delete( $model->modelContent );
@@ -399,10 +455,8 @@ class PostService extends ContentService implements IPostService {
 				// Delete Followers
 				Yii::$app->factory->get( 'pageFollowerService' )->deleteByModelId( $model->id );
 
+				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 
@@ -417,6 +471,13 @@ class PostService extends ContentService implements IPostService {
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		$config[ 'users' ] = isset( $config[ 'users' ] ) ? $config[ 'users' ] : ( isset( $model->userId ) ? [ $model->userId ] : [] );
+
+		return parent::applyBulk( $model, $column, $action, $target, $config );
+	}
 
 	// Notifications ------
 

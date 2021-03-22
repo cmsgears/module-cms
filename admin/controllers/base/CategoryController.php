@@ -37,6 +37,8 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// Protected --------------
 
+	protected $widgetSlug; // The widget to show data on category page
+
 	protected $templateType;
 
 	protected $templateService;
@@ -97,7 +99,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 		$actions = parent::actions();
 
-		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\regular\gallery\Browse' ];
+		$actions[ 'gallery' ] = [ 'class' => 'cmsgears\cms\common\actions\gallery\Manage' ];
 		$actions[ 'data' ] = [ 'class' => 'cmsgears\cms\common\actions\data\data\Form' ];
 		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\cms\common\actions\data\attribute\Form' ];
 		$actions[ 'config' ] = [ 'class' => 'cmsgears\cms\common\actions\data\config\Form' ];
@@ -126,9 +128,15 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 			$model->validate() && $content->validate() ) {
 
-			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+			$this->model = $this->modelService->create( $model, [
+				'admin' => true, 'widgetSlug' => $this->widgetSlug,
+				'content' => $content, 'banner' => $banner, 'video' => $video
+			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -151,13 +159,18 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		if( isset( $model ) ) {
 
 			$content	= $model->modelContent;
-			$banner		= File::loadFile( $content->banner, 'Banner' );
-			$video		= File::loadFile( $content->video, 'Video' );
+			$template	= $content->template;
+
+			$banner	= File::loadFile( $content->banner, 'Banner' );
+			$video	= File::loadFile( $content->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $content->load( Yii::$app->request->post(), $content->getClassName() ) &&
 				$model->validate() && $content->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'content' => $content, 'banner' => $banner, 'video' => $video ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'content' => $content, 'oldTemplate' => $template,
+					'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
