@@ -253,7 +253,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 				}
 				case 'featured': {
 
-					if( empty( $config[ 'conditions' ][ "$modelTable.pinned" ] ) ) {
+					if( empty( $config[ 'conditions' ][ "$modelTable.featured" ] ) ) {
 
 						$config[ 'conditions' ][ "$modelTable.featured" ] = true;
 					}
@@ -329,6 +329,13 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		return $modelClass::queryWithContent( $config )->one();
 	}
 
+	/**
+	 * It assumes that the slug is unique irrespective of the model type.
+	 *
+	 * @param string $slug
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function getWithContentBySlug( $slug, $config = [] ) {
 
 		$siteId		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;

@@ -47,7 +47,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$user = $post->user;
+		$user = $post->getOwner();
 
 		$name	= $user->getName();
 		$email	= $user->email;
@@ -71,7 +71,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$user = $post->user;
+		$user = $post->getOwner();
 
 		$name	= $user->getName();
 		$email	= $user->email;
@@ -95,7 +95,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
-		$user = $page->user;
+		$user = $page->getOwner();
 
 		$name	= $user->getName();
 		$email	= $user->email;

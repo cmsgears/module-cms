@@ -40,7 +40,7 @@ trait PageContentTrait {
 	// ContentTrait --------------------------
 
 	/**
-	 * @return ModelContent associated with parent.
+	 * @inheritdoc
 	 */
 	public function getModelContent() {
 
@@ -51,19 +51,19 @@ trait PageContentTrait {
 			->where( "modelContent.parentType='$this->modelType'" );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTemplateViewPath() {
 
-		$content	= $this->content;
+		$content	= $this->modelContent;
 		$template	= $content->template;
 
 		return isset( $template ) ? $template->viewPath : null;
 	}
 
 	/**
-	 * Check whether content is published. To consider a model as published, it must
-	 * be publicly visible in either active or frozen status.
-	 *
-	 * @return boolean
+	 * @inheritdoc
 	 */
 	public function isPublished() {
 

@@ -37,8 +37,6 @@ interface IPostService extends IContentService, ICategory, ISimilar {
 
 	// Create -------------
 
-	public function register( $model, $config = [] );
-
 	// Update -------------
 
 	// Delete -------------
