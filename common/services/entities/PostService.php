@@ -26,6 +26,7 @@ use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
 use cmsgears\core\common\services\traits\base\SimilarTrait;
+use cmsgears\core\common\services\traits\resources\MetaTrait;
 use cmsgears\core\common\services\traits\mappers\CategoryTrait;
 
 /**
@@ -64,6 +65,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Traits ------------------------------------------------------
 
 	use CategoryTrait;
+	use MetaTrait;
 	use SimilarTrait;
 
 	// Constructor and Initialisation ------------------------------

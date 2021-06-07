@@ -22,6 +22,8 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\cms\common\services\interfaces\entities\IPageService;
 use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 
+use cmsgears\core\common\services\traits\resources\MetaTrait;
+
 /**
  * PageService provide service methods of page model.
  *
@@ -55,6 +57,8 @@ class PageService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use MetaTrait;
 
 	// Constructor and Initialisation ------------------------------
 
