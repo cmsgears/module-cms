@@ -42,7 +42,6 @@ use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\PageMeta;
@@ -325,16 +324,6 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Validators ----------------------------
 
 	// Content -------------------------------
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return \cmsgears\core\common\models\entities\User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
-	}
 
 	/**
 	 * Returns the immediate parent.
