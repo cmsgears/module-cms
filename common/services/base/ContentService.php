@@ -99,7 +99,6 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$contentTable	= Yii::$app->factory->get( 'modelContentService' )->getModelTable();
 		$templateTable	= Yii::$app->factory->get( 'templateService' )->getModelTable();
 
 		// Sorting ----------
@@ -197,8 +196,8 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 					'label' => 'Updated At'
 				],
 				'pdate' => [
-					'asc' => [ "$contentTable.publishedAt" => SORT_ASC ],
-					'desc' => [ "$contentTable.publishedAt" => SORT_DESC ],
+					'asc' => [ "modelContent.publishedAt" => SORT_ASC ],
+					'desc' => [ "modelContent.publishedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Published At'
 				]
@@ -514,7 +513,10 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 		$ratingReview	= isset( $config[ 'ratingReview' ] ) ? $config[ 'ratingReview' ] : false;
 
 		// Filters
-		$optionFilters	= isset( $config[ 'optionFilters' ] ) ? $config[ 'optionFilters' ] : [];
+		$optionFilters = isset( $config[ 'optionFilters' ] ) ? $config[ 'optionFilters' ] : [];
+
+		// Public
+		$config[ 'public' ] = true;
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $modelClass::tableName();
