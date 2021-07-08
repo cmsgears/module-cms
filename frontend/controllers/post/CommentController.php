@@ -36,6 +36,8 @@ class CommentController extends \cmsgears\core\frontend\controllers\base\Comment
 		// Config
 		$this->parentType = CmsGlobal::TYPE_POST;
 
+		$this->apixBase = 'cms/post/comment';
+
 		// Services
 		$this->parentService = Yii::$app->factory->get( 'postService' );
 	}
