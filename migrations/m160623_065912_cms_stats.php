@@ -8,7 +8,9 @@
  */
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Stats;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\resources\ModelStats;
 use cmsgears\cms\common\models\base\CmsTables;
 
 /**
@@ -50,28 +52,28 @@ class m160623_065912_cms_stats extends \cmsgears\core\common\base\Migration {
 
 	private function insertTables() {
 
-		$columns 	= [ 'tableName', 'type', 'count' ];
+		$columns 	= [ 'parentId', 'parentType', 'name', 'type', 'count' ];
 
 		$tableData	= [
-			[ $this->prefix . 'cms_page', 'rows', 0 ],
-			[ $this->prefix . 'cms_page_meta', 'rows', 0 ],
-			[ $this->prefix . 'cms_page_follower', 'rows', 0 ],
-			[ $this->prefix . 'cms_model_content', 'rows', 0 ],
-			[ $this->prefix . 'cms_link', 'rows', 0 ],
-			[ $this->prefix . 'cms_model_link', 'rows', 0 ]
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_page', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_page_meta', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_page_follower', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_model_content', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_link', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'cms_model_link', 'rows', 0 ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_stats', $columns, $tableData );
+		$this->batchInsert( $this->prefix . 'core_model_stats', $columns, $tableData );
 	}
 
 	public function down() {
 
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE ) );
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_META ) );
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_PAGE_FOLLOWER ) );
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT ) );
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_LINK ) );
-		Stats::deleteByTableName( CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_PAGE ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_PAGE_META ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_PAGE_FOLLOWER ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_MODEL_CONTENT ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_LINK ) );
+		ModelStats::deleteByTable( CmsTables::getTableName( CmsTables::TABLE_MODEL_LINK ) );
 	}
 
 }
