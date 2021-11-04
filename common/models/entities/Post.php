@@ -34,10 +34,10 @@ class Post extends Content implements ICategory, ITab, ITag {
 	// Constants --------------
 
 	// Pre-Defined Status
-	const STATUS_BASIC		=  10;
-	const STATUS_MEDIA		=  40;
-	const STATUS_ELEMENTS	=  60;
-	const STATUS_BLOCKS		=  80;
+	const STATUS_BASIC		= 100;
+	const STATUS_MEDIA		= 120;
+	const STATUS_ELEMENTS	= 140;
+	const STATUS_BLOCKS		= 160;
 	const STATUS_ATTRIBUTES	= 470;
 	const STATUS_SETTINGS	= 480;
 	const STATUS_REVIEW		= 499;

@@ -42,7 +42,6 @@ use cmsgears\cms\common\models\interfaces\mappers\IElement;
 use cmsgears\cms\common\models\interfaces\mappers\IWidget;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\cms\common\models\base\CmsTables;
 use cmsgears\cms\common\models\resources\PageMeta;
@@ -327,16 +326,6 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	// Content -------------------------------
 
 	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return \cmsgears\core\common\models\entities\User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
-	}
-
-	/**
 	 * Returns the immediate parent.
 	 *
 	 * @return Content
@@ -385,7 +374,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'modelContent', 'modelContent.template', 'user' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user', 'modelContent', 'modelContent.template' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -400,7 +389,7 @@ class Content extends \cmsgears\core\common\models\base\Entity implements IAppro
 	 */
 	public static function queryWithAuthor( $config = [] ) {
 
-		$config[ 'relations' ][] = [ 'modelContent', 'modelContent.template', 'user' ];
+		$config[ 'relations' ][] = [ 'user', 'modelContent', 'modelContent.template' ];
 
 		$config[ 'relations' ][] = [ 'user.avatar'  => function ( $query ) {
 			$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );

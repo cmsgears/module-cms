@@ -41,6 +41,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 	// Protected --------------
 
 	protected $type;
+	protected $templateType;
 
 	protected $templateService;
 
@@ -58,6 +59,8 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 		// Config
 		$this->layout	= CoreGlobalWeb::LAYOUT_PUBLIC;
 		$this->type		= CmsGlobal::TYPE_PAGE;
+
+		$this->templateType = CmsGlobal::TYPE_PAGE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'pageService' );
@@ -217,7 +220,7 @@ class PageController extends \cmsgears\cms\frontend\controllers\base\Controller 
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CmsGlobal::TYPE_PAGE );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $this->templateType );
 			}
 
 			// Render Template

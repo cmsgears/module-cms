@@ -83,6 +83,17 @@ class ArticleService extends \cmsgears\cms\common\services\base\ContentService i
 
 	// Data Provider ------
 
+	public function getPublicPage( $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'route' ] = isset( $config[ 'route' ] ) ? $config[ 'route' ] : 'article';
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getPublicPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

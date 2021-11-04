@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\admin\controllers\apix\article;
+namespace cmsgears\cms\admin\controllers\apix\post;
 
 // Yii Imports
 use Yii;

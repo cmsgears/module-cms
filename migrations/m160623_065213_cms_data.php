@@ -221,7 +221,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
-		$metas	= [
+		$metas = [
 			[ $this->site->id, 'blog_email', 'Blog Email', CmsGlobal::CONFIG_BLOG, 1, 'text', NULL, NULL ],
 			[ $this->site->id, 'page_comment', 'Page Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
 			[ $this->site->id, 'article_comment', 'Article Comment', CmsGlobal::CONFIG_BLOG, 1, 'flag', '0', NULL ],
@@ -233,6 +233,7 @@ class m160623_065213_cms_data extends \cmsgears\core\common\base\Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
+
 	}
 
 	private function insertSystemPages() {

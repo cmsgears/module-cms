@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\cms\frontend\controllers\post;
+namespace cmsgears\cms\frontend\controllers\apix\article;
 
 // Yii Imports
 use Yii;
@@ -15,7 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\cms\common\config\CmsGlobal;
 
-class CommentController extends \cmsgears\core\frontend\controllers\base\CommentController {
+/**
+ * CommentController provides actions specific to post comment model.
+ *
+ * @since 1.0.0
+ */
+class CommentController extends \cmsgears\core\frontend\controllers\apix\CommentController {
 
 	// Variables ---------------------------------------------------
 
@@ -34,12 +39,11 @@ class CommentController extends \cmsgears\core\frontend\controllers\base\Comment
 		parent::init();
 
 		// Config
-		$this->parentType = CmsGlobal::TYPE_POST;
-
-		$this->apixBase = 'cms/post/comment';
+		$this->baseUrl		= 'cms/article/comment';
+		$this->parentType	= CmsGlobal::TYPE_ARTICLE;
 
 		// Services
-		$this->parentService = Yii::$app->factory->get( 'postService' );
+		$this->parentService = Yii::$app->factory->get( 'articleService' );
 	}
 
 	// Instance methods --------------------------------------------

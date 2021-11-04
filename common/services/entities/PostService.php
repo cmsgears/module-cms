@@ -26,6 +26,7 @@ use cmsgears\cms\common\services\interfaces\resources\IPageMetaService;
 use cmsgears\cms\common\services\interfaces\mappers\IPageFollowerService;
 
 use cmsgears\core\common\services\traits\base\SimilarTrait;
+use cmsgears\core\common\services\traits\resources\MetaTrait;
 use cmsgears\core\common\services\traits\mappers\CategoryTrait;
 
 /**
@@ -64,6 +65,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 	// Traits ------------------------------------------------------
 
 	use CategoryTrait;
+	use MetaTrait;
 	use SimilarTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -105,7 +107,6 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getPageForSimilar( $config = [] ) {
 
-		$modelTable	= $this->getModelTable();
 		$modelClass	= static::$modelClass;
 
 		$config[ 'query' ] = isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithContent();
@@ -126,7 +127,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 	public function getEmail( $model ) {
 
-		return $model->creator->email;
+		return isset( $model->userId ) ? $model->user->email : $model->creator->email;
 	}
 
 	// Create -------------
@@ -147,14 +148,16 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$modelClass = static::$modelClass;
+		$parentType	= static::$parentType;
 
-		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
-		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
-		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$content		= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish		= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner			= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner		= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
+		$video			= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo			= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
+		$gallery		= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$mappingsType	= isset( $config[ 'mappingsType' ] ) ? $config[ 'mappingsType' ] : static::$parentType;
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
@@ -179,7 +182,7 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			if( isset( $gallery ) ) {
 
 				$gallery->siteId	= $model->siteId;
-				$gallery->type		= static::$parentType;
+				$gallery->type		= $parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
@@ -189,14 +192,14 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 				$gallery = $galleryService->createByParams([
 					'siteId' => $model->siteId,
-					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'type' => $parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
 			// Create and attach model content
 			$modelContentService->create( $content, [
-				'parent' => $model, 'parentType' => static::$parentType,
+				'parent' => $model, 'parentType' => $parentType,
 				'publish' => $publish,
 				'banner' => $banner, 'mbanner' => $mbanner,
 				'video' => $video, 'mvideo' => $mvideo,
@@ -204,10 +207,10 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, $mappingsType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
-			$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+			$modelTagService->bindTags( $model->id, $mappingsType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 		}
@@ -230,14 +233,15 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		$modelClass = static::$modelClass;
 		$parentType	= static::$parentType;
 
-		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
-		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
-		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
-		$adminLink	= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/post/review';
+		$content		= isset( $config[ 'content' ] ) ? $config[ 'content' ] : new ModelContent();
+		$publish		= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$banner			= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner		= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
+		$video			= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo			= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
+		$gallery		= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$mappingsType	= isset( $config[ 'mappingsType' ] ) ? $config[ 'mappingsType' ] : static::$parentType;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : 'cms/post/review';
 
 		$galleryService			= Yii::$app->factory->get( 'galleryService' );
 		$modelContentService	= Yii::$app->factory->get( 'modelContentService' );
@@ -289,10 +293,10 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 			]);
 
 			// Bind categories
-			$modelCategoryService->bindModels( $model->id, $parentType, [ 'binder' => 'CategoryBinder' ] );
+			$modelCategoryService->bindModels( $model->id, $mappingsType, [ 'binder' => 'CategoryBinder' ] );
 
 			// Bind tags
-			$modelTagService->bindTags( $model->id, $parentType, [ 'binder' => 'TagBinder' ] );
+			$modelTagService->bindTags( $model->id, $mappingsType, [ 'binder' => 'TagBinder' ] );
 
 			$transaction->commit();
 
@@ -332,14 +336,15 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		$content 	= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
-		$publish	= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
-		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$mbanner 	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
-		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-		$mvideo 	= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
-		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$content		= isset( $config[ 'content' ] ) ? $config[ 'content' ] : null;
+		$publish		= isset( $config[ 'publish' ] ) ? $config[ 'publish' ] : false;
+		$avatar			= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner			= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner		= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
+		$video			= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$mvideo			= isset( $config[ 'mvideo' ] ) ? $config[ 'mvideo' ] : null;
+		$gallery		= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$mappingsType	= isset( $config[ 'mappingsType' ] ) ? $config[ 'mappingsType' ] : static::$parentType;
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'parentId', 'avatarId', 'name', 'slug', 'icon', 'texture',
@@ -391,10 +396,10 @@ class PostService extends \cmsgears\cms\common\services\base\ContentService impl
 		}
 
 		// Bind categories
-		$modelCategoryService->bindModels( $model->id, static::$parentType, [ 'binder' => 'CategoryBinder' ] );
+		$modelCategoryService->bindModels( $model->id, $mappingsType, [ 'binder' => 'CategoryBinder' ] );
 
 		// Bind tags
-		$modelTagService->bindTags( $model->id, static::$parentType, [ 'binder' => 'TagBinder' ] );
+		$modelTagService->bindTags( $model->id, $mappingsType, [ 'binder' => 'TagBinder' ] );
 
 		// Model Checks
 		$oldStatus = $model->getOldAttribute( 'status' );
