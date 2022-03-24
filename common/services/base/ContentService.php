@@ -545,7 +545,7 @@ abstract class ContentService extends \cmsgears\core\common\services\base\Entity
 
 		// Sort
 		$sortParam	= Yii::$app->request->get( 'sort' );
-		$sortParam	= preg_replace( '/-/', '', $sortParam );
+		$sortParam	= !empty( $sortParam ) ? preg_replace( '/-/', '', $sortParam ) : '';
 
 		// Sort using ModelComment Table
 		if( ( $ratingComment || $ratingReview ) && $sortParam == 'rating' ) {
